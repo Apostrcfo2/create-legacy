@@ -15,8 +15,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -41,6 +43,13 @@ public class BlockItemHatch extends Block {
         setHarvestLevel("pickaxe", 1);
     }
 
+    public static final AxisAlignedBB[] aabb = {
+            new AxisAlignedBB(0, 0, 0, 1, 1, 0.5),
+            new AxisAlignedBB(0.5, 0, 0, 1, 1, 1),
+            new AxisAlignedBB(0, 0, 0.5, 1, 1, 1),
+            new AxisAlignedBB(0, 0, 0, 0.5, 1, 1)
+    };
+
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
@@ -54,6 +63,11 @@ public class BlockItemHatch extends Block {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta & 3));
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return aabb[state.getValue(FACING).getHorizontalIndex()];
     }
 
     @Override
@@ -112,7 +126,7 @@ public class BlockItemHatch extends Block {
 
     private EnumFacing extract(EnumFacing facing, @Nullable EntityLivingBase player) {
         if (facing.getAxis() == EnumFacing.Axis.Y) {
-            if (player != null) return player.getHorizontalFacing();
+            if (player != null) return player.getHorizontalFacing().getOpposite();
             return EnumFacing.NORTH;
         } else return facing;
     }
@@ -121,5 +135,40 @@ public class BlockItemHatch extends Block {
                                             float hitX, float hitY, float hitZ, int meta,
                                             EntityLivingBase placer, EnumHand hand) {
         return this.getDefaultState().withProperty(FACING, extract(facing, placer));
+    }
+
+    @Override
+    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return 0;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public boolean isTranslucent(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean isNormalCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
 }

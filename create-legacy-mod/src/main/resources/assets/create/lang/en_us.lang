@@ -61,6 +61,8 @@ tile.create.casing_brass.name=Brass Casing
 tile.create.casing_train.name=Train Casing
 tile.create.chute.name=Chute
 
+tile.create.item_hatch.name=Item Hatch
+
 tile.create.blaze_burner_empty.name=Empty Blazeburner
 tile.create.blaze_burner.name=Blazeburner
 tile.create.blaze_burner_deco.name=Lit Blazeburner
