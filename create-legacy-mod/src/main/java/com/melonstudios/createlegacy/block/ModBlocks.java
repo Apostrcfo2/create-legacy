@@ -44,6 +44,7 @@ public final class ModBlocks {
     public static final BlockDepot DEPOT = registerBlockWithItem(new BlockDepot());
     public static final BlockChute CHUTE = registerBlockWithItem(new BlockChute());
     public static final BlockFunnel FUNNEL = registerBlockWithItem(new BlockFunnel(), true);
+    public static final BlockItemHatch ITEM_HATCH = registerBlockWithItem(new BlockItemHatch());
 
     public static final BlockBeltLegacy BELT_LEGACY = registerBlockWithItem(new BlockBeltLegacy());
 
