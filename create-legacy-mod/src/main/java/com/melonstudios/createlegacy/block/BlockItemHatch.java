@@ -14,9 +14,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -61,18 +61,51 @@ public class BlockItemHatch extends Block {
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity te = worldIn.getTileEntity(pos.offset(state.getValue(FACING).getOpposite()));
         if (te instanceof IInventory) {
-            IInventory inventory = (IInventory) te;
-            int size = inventory.getSizeInventory();
-            for (int i = 0; i < size; i++) {
-                if (inventory.getStackInSlot(i).isEmpty()) {
-                    if (!worldIn.isRemote) {
-                        inventory.setInventorySlotContents(i, playerIn.getHeldItem(hand));
-                        playerIn.setHeldItem(hand, ItemStack.EMPTY);
-                        playerIn.playSound(SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 1.0f, 0.9f + worldIn.rand.nextFloat() * 0.2f);
+            IInventory container = (IInventory) te;
+            int size = container.getSizeInventory();
+            if (!playerIn.isSneaking()) {
+                if (playerIn.getHeldItem(hand).isEmpty()) return false;
+                for (int i = 0; i < size; i++) {
+                    if (container.getStackInSlot(i).isEmpty()) {
+                        if (!worldIn.isRemote) {
+                            container.setInventorySlotContents(i, playerIn.getHeldItem(hand).copy());
+                            playerIn.setHeldItem(hand, ItemStack.EMPTY);
+                            playerIn.sendStatusMessage(new TextComponentTranslation(
+                                    "text.create.item_deposited"), true
+                            );
+                            worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS,
+                                    1.0f, 0.9f + worldIn.rand.nextFloat() * 0.2f);
+                        }
+                        break;
                     }
-                    return true;
+                }
+            } else {
+                boolean deposit = false;
+                NonNullList<ItemStack> inventory = playerIn.inventory.mainInventory;
+                int invSize = inventory.size();
+                inv:
+                for (int i = 9; i < invSize; i++) {
+                    ItemStack invItem = inventory.get(i).copy();
+                    if (!invItem.isEmpty()) {
+                        for (int slot = 0; slot < size; slot++) {
+                            if (container.getStackInSlot(slot).isEmpty()) {
+                                inventory.set(i, ItemStack.EMPTY);
+                                container.setInventorySlotContents(slot, invItem);
+                                deposit = true;
+                                continue inv;
+                            }
+                        }
+                    }
+                }
+                if (deposit) {
+                    worldIn.playSound(null, pos, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundCategory.BLOCKS,
+                            1.0f, 0.9f + worldIn.rand.nextFloat() * 0.2f);
+                    playerIn.sendStatusMessage(new TextComponentTranslation(
+                            "text.create.inventory_deposited"), true
+                    );
                 }
             }
+            return true;
         }
         return false;
     }
