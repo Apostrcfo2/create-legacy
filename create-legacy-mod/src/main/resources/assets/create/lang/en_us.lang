@@ -267,3 +267,7 @@ advancements.create.brass_age.desc=Use newly obtained Brass and some Wood to cre
 #JEI descriptions
 desc.create.blazecake.1=The Blazecake is a special treat for your hard working Blazes.
 desc.create.blazecake.2=Giving them one of these will make them superheated!
+
+#misc
+text.create.item_deposited=Item deposited
+text.create.inventory_deposited=Inventory deposited
