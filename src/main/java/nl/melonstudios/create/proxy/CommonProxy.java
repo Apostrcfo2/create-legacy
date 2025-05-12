@@ -8,9 +8,14 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.tileentity.*;
 
 public class CommonProxy {
+    public Side getSide() {
+        return Side.SERVER;
+    }
+
     protected static ResourceLocation create(String path) {
         return new ResourceLocation("create", path);
     }
