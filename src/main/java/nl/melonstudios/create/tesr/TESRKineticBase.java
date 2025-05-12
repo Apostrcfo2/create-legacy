@@ -26,7 +26,8 @@ import java.io.File;
 @SideOnly(Side.CLIENT)
 public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileEntitySpecialRenderer<T> {
     private static boolean porkchop = false;
-    private static final ResourceLocation PORK = new ResourceLocation("textures/entity/pig/pig.png");
+    private static final ResourceLocation PORK =
+            new ResourceLocation("create", "textures/pork.png");
 
     public static void pork() {
         porkchop = new File(Minecraft.getMinecraft().mcDataDir, "porkchop.gears").exists();
