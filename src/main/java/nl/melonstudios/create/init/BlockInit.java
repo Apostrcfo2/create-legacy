@@ -27,6 +27,7 @@ public final class BlockInit {
     public static final BlockCogwheel COG_SMALL = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, false));
     public static final BlockCogwheel COG_LARGE = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, true));
 
+    public static final BlockGearbox GEARBOX = registerBlockWithItem(new BlockGearbox(MapColor.WOOD, SoundType.WOOD), true);
     public static final BlockGearshift GEARSHIFT = (BlockGearshift)
             registerBlockWithItem(new BlockGearshift(MapColor.WOOD, SoundType.WOOD)
             .setRegistryName("gearshift").setUnlocalizedName("create.gearshift"));

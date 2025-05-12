@@ -30,6 +30,7 @@ public class ClientProxy extends CommonProxy {
     public void registerTileEntities() {
         this.registerTESR(TileEntityShaft.class, "shaft", new TESRShaft());
         this.registerTESR(TileEntityCogwheel.class, "cogwheel", new TESRCogwheel());
+        this.registerTESR(TileEntityGearbox.class, "gearbox", new TESRGearbox<>());
         this.registerTESR(TileEntityGearshift.class, "gearshift", new TESRSplitShaft<>());
         this.registerTESR(TileEntityClutch.class, "clutch", new TESRSplitShaft<>());
         this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());

@@ -44,6 +44,7 @@ public class CommonProxy {
     public void registerTileEntities() {
         this.registerTE(TileEntityShaft.class, "shaft");
         this.registerTE(TileEntityCogwheel.class, "cogwheel");
+        this.registerTE(TileEntityGearbox.class, "gearbox");
         this.registerTE(TileEntityGearshift.class, "gearshift");
         this.registerTE(TileEntityClutch.class, "clutch");
         this.registerTE(TileEntityHandCrank.class, "hand_crank");
