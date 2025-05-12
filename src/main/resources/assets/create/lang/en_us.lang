@@ -3,6 +3,12 @@
 tile.create.ore_copper.name=Copper Ore
 tile.create.ore_zinc.name=Zinc Ore
 
+tile.create.shaft.name=Shaft
+tile.create.cogwheel_small.name=Cogwheel
+tile.create.cogwheel_large.name=Large Cogwheel
+
+tile.create.hand_crank.name=Hand Crank
+
 ## ITEMS ##
 item.create.wheat_flour.name=Wheat Flour
 item.create.dough.name=Dough
