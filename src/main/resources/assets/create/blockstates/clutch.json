@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "axis=x,powered=false": {
+      "model": "create:clutch_x_off"
+    },
+    "axis=y,powered=false": {
+      "model": "create:clutch_y_off"
+    },
+    "axis=z,powered=false": {
+      "model": "create:clutch_z_off"
+    },
+    "axis=x,powered=true": {
+      "model": "create:clutch_x_on"
+    },
+    "axis=y,powered=true": {
+      "model": "create:clutch_y_on"
+    },
+    "axis=z,powered=true": {
+      "model": "create:clutch_z_on"
+    }
+  }
+}

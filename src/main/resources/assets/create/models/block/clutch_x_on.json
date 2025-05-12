@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/encased_shaft_x",
+  "textures": {
+    "casing": "create:block/clutch_on"
+  }
+}
