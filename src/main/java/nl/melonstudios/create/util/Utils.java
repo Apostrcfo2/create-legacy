@@ -11,6 +11,7 @@ import java.util.List;
 @SuppressWarnings("all")
 public class Utils {
     @Nullable
+    @SuppressWarnings("unchecked")
     public static <T> T cast(Object o, Class<T> clazz) {
         return clazz.isInstance(o) ? (T) o : null;
     }
