@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "create:ingredient",
+      "data": 15
+    }
+  },
+  "result": {
+    "item": "create:shaft",
+    "count": 8
+  }
+}

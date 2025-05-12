@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "create:ingredient",
+      "data": 16
+    }
+  },
+  "result": {
+    "item": "create:ingredient",
+    "data": 19,
+    "count": 9
+  }
+}

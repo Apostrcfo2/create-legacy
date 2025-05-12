@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bBb",
+    "B#B",
+    "bBb"
+  ],
+  "key": {
+    "#": {
+      "item": "create:ingredient",
+      "data": 15
+    },
+    "B": {
+      "type": "forge:ore_dict",
+      "ore": "plankWood"
+    },
+    "b": {
+      "item": "minecraft:wooden_button"
+    }
+  },
+  "result": {
+    "item": "create:cogwheel_large",
+    "count": 2
+  }
+}

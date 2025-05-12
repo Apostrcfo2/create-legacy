@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "ingot_brass",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetBrass"
+    }
+  },
+  "result": {
+    "item": "create:ingredient",
+    "data": 18
+  }
+}

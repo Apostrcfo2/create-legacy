@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "bbb",
+    "b#b",
+    "bbb"
+  ],
+  "key": {
+    "#": {
+      "item": "create:ingredient",
+      "data": 15
+    },
+    "b": {
+      "item": "minecraft:wooden_button"
+    }
+  },
+  "result": {
+    "item": "create:cogwheel_small",
+    "count": 8
+  }
+}
