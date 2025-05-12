@@ -17,6 +17,8 @@ import java.util.Objects;
 public final class BlockInit {
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 
+    public static final BlockRender RENDER = registerBlock(new BlockRender());
+
     public static final BlockOre ORE = registerBlockWithItem(new BlockOre(), true);
     public static final BlockMetal METAL = registerBlockWithItem(BlockMetal.get(), true);
 
