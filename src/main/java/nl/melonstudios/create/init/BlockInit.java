@@ -8,10 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.block.BlockCogwheel;
-import nl.melonstudios.create.block.BlockHandCrank;
-import nl.melonstudios.create.block.BlockOre;
-import nl.melonstudios.create.block.BlockShaft;
+import nl.melonstudios.create.block.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -21,6 +18,7 @@ public final class BlockInit {
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 
     public static final BlockOre ORE = registerBlockWithItem(new BlockOre(), true);
+    public static final BlockMetal METAL = registerBlockWithItem(BlockMetal.get(), true);
 
     public static final BlockShaft SHAFT = registerBlockWithItem(new BlockShaft(Material.ROCK, MapColor.STONE));
     public static final BlockCogwheel COG_SMALL = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, false));

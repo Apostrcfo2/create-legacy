@@ -33,6 +33,11 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 1, "ore_zinc");
 
+        CreateLegacy.proxy.setItemModel(BlockInit.METAL, 0, "block_andesite_alloy");
+        CreateLegacy.proxy.setItemModel(BlockInit.METAL, 1, "block_copper");
+        CreateLegacy.proxy.setItemModel(BlockInit.METAL, 2, "block_zinc");
+        CreateLegacy.proxy.setItemModel(BlockInit.METAL, 3, "block_brass");
+
         CreateLegacy.proxy.setItemModel(BlockInit.SHAFT);
         CreateLegacy.proxy.setItemModel(BlockInit.COG_SMALL);
         CreateLegacy.proxy.setItemModel(BlockInit.COG_LARGE);

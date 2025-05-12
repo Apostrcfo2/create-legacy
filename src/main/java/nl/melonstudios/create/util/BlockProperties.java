@@ -9,4 +9,7 @@ public class BlockProperties {
 
     public static final float ORE_HARDNESS = 3.0F;
     public static final float ORE_RESISTANCE = 1.5F;
+
+    public static final float IRON_HARDNESS = 5.0F;
+    public static final float IRON_RESISTANCE = 6.0F;
 }
