@@ -1,5 +1,6 @@
 package nl.melonstudios.create.block;
 
+import com.melonstudios.melonlib.misc.AABB;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -9,7 +10,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.TileEntityCogwheel;
@@ -76,5 +79,16 @@ public class BlockCogwheel extends BlockSimpleShaftBase implements ICogwheel {
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityCogwheel();
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        if (this.isLarge) return FULL_BLOCK_AABB;
+        switch (state.getValue(AXIS)) {
+            case X: return BlockProperties.GEAR_X_AABB;
+            case Y: return BlockProperties.GEAR_Y_AABB;
+            case Z: return BlockProperties.GEAR_Z_AABB;
+            default:return FULL_BLOCK_AABB;
+        }
     }
 }
