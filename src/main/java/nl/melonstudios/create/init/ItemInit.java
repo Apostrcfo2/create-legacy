@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.item.ItemIngredient;
+import nl.melonstudios.create.util.ModTabs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -44,20 +45,8 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.HAND_CRANK);
     }
 
-    public static final CreativeTabs TAB_CREATE = new CreativeTabs("create") {
-        private final ItemStack icon = new ItemStack(BlockInit.COG_SMALL);
-        @Override
-        public ItemStack getTabIconItem() {
-            return this.icon;
-        }
-    };
-    public static final CreativeTabs TAB_CREATE_DECORATIONS = new CreativeTabs("create.decorations") {
-        private final ItemStack icon = ItemStack.EMPTY;
-        @Override
-        public ItemStack getTabIconItem() {
-            return this.icon;
-        }
-    };
+    public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));
+    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> ItemStack.EMPTY);
 
     private ItemInit() {
         throw new AssertionError("no");
