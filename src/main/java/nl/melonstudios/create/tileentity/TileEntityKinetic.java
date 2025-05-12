@@ -9,6 +9,7 @@ import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.KineticNetwork;
 import nl.melonstudios.create.kinetics.KineticPropagator;
+import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.ICogwheel;
 import nl.melonstudios.create.util.interfaces.IRotate;
@@ -341,6 +342,9 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
         return this.flickerTally;
     }
 
+    public float getAxisShift(EnumFacing.Axis axis) {
+        return TESRKineticBase.isAxisShifted(this.pos, axis) ? 22.5F : 0.0F;
+    }
 
 
 

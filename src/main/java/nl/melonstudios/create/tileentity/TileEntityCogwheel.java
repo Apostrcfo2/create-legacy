@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.ICogwheel;
 import nl.melonstudios.create.util.interfaces.IRotate;
@@ -36,5 +37,10 @@ public class TileEntityCogwheel extends TileEntityKinetic {
         for (EnumFacing facing : Utils.getSurrounding(axis)) neighbours.add(pos2.offset(facing));
 
         return neighbours;
+    }
+
+    @Override
+    public float getAxisShift(EnumFacing.Axis axis) {
+        return TESRKineticBase.isAxisShifted(this.pos, axis) ? 22.5F : (this.isLarge() ? 11.25F : 0.0F);
     }
 }

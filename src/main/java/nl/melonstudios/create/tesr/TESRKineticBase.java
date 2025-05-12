@@ -77,13 +77,13 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     }
 
     protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float m, boolean addOffset) {
-        if (te.getSpeed() == 0) return addOffset && isAxisShifted(te.getPos(), axis) ? 22.5F : 0.0F;
+        if (te.getSpeed() == 0) return addOffset ? te.getAxisShift(axis) : 0.0F;
         float time = te.getWorld().getTotalWorldTime() + pt;
 
-        return ((time * 0.3F * te.getSpeed() * m) % 360) + (addOffset && isAxisShifted(te.getPos(), axis) ? 22.5F : 0.0F);
+        return ((time * 0.3F * te.getSpeed() * m) % 360) + (addOffset ? te.getAxisShift(axis) : 0.0F);
     }
 
-    protected static boolean isAxisShifted(BlockPos pos, EnumFacing.Axis axis) {
+    public static boolean isAxisShifted(BlockPos pos, EnumFacing.Axis axis) {
         switch (axis) {
             case X: return (pos.getY() & 1) != (pos.getZ() & 1);
             case Y: return (pos.getX() & 1) != (pos.getZ() & 1);
