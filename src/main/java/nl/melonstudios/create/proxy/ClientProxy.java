@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nl.melonstudios.create.tesr.TESRCogwheel;
+import nl.melonstudios.create.tesr.TESRHandCrank;
 import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.tesr.TESRShaft;
 import nl.melonstudios.create.tileentity.TileEntityCogwheel;
@@ -28,7 +29,7 @@ public class ClientProxy extends CommonProxy {
     public void registerTileEntities() {
         this.registerTESR(TileEntityShaft.class, "shaft", new TESRShaft());
         this.registerTESR(TileEntityCogwheel.class, "cogwheel", new TESRCogwheel());
-        this.registerTESR(TileEntityHandCrank.class, "hand_crank", null);
+        this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());
     }
 
     @Override

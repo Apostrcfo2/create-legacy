@@ -73,7 +73,7 @@ public abstract class BlockKineticRotatedPillarBase extends BlockKineticBase {
             return this.getDefaultState().withProperty(AXIS, preferredAxis);
         }
         return this.getDefaultState().withProperty(AXIS, preferredAxis != null && placer.isSneaking() ?
-                facing.getAxis() : placer.getHorizontalFacing().getAxis());
+                facing.getAxis() : EnumFacing.getDirectionFromEntityLiving(pos, placer).getAxis());
     }
 
     @Override

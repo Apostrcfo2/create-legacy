@@ -1,0 +1,30 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/hand_crank",
+		"particle": "create:block/hand_crank"
+	},
+	"elements": [
+		{
+			"name": "plane1",
+			"from": [8, 0, -3.31371],
+			"to": [8, 16, 19.31369],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 7.99999]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "plane2",
+			"from": [8, 0, -3.31371],
+			"to": [8, 16, 19.31369],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 7.99999]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		}
+	],
+	"display": {}
+}

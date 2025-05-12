@@ -1,7 +1,11 @@
 package nl.melonstudios.create.tileentity;
 
+import com.melonstudios.melonlib.misc.BlockStateProperties;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockHandCrank;
 
 public class TileEntityHandCrank extends TileEntityKineticGenerator {
@@ -55,5 +59,10 @@ public class TileEntityHandCrank extends TileEntityKineticGenerator {
                 this.updateGeneratedRotation();
             }
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public EnumFacing getRenderFacing() {
+        return this.getState().getValue(BlockStateProperties.FACING);
     }
 }
