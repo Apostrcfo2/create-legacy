@@ -10,7 +10,6 @@ import nl.melonstudios.create.util.ModTabs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Random;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -25,7 +24,7 @@ public final class ItemInit {
     }
 
     public static void setItemModels() {
-        //items
+        // items
         for (int i = 0; i < ItemIngredient.NAME_LOOKUP.length; i++) {
             CreateLegacy.proxy.setItemModel(INGREDIENT, i, "ingredient/" + ItemIngredient.NAME_LOOKUP[i]);
         }

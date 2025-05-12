@@ -1,6 +1,5 @@
 package nl.melonstudios.create.block;
 
-import com.melonstudios.melonlib.tileentity.IEntityTile;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;

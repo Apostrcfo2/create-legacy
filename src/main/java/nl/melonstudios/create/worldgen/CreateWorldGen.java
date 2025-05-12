@@ -1,6 +1,5 @@
 package nl.melonstudios.create.worldgen;
 
-import com.melonstudios.melonlib.predicates.StatePredicateBlock;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +10,6 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import nl.melonstudios.create.block.BlockOre;
-import nl.melonstudios.create.init.BlockInit;
 
 import java.util.Random;
 

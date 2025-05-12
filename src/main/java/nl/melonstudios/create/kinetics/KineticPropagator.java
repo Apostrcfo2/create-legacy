@@ -18,7 +18,8 @@ import nl.melonstudios.create.util.interfaces.IRotate;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 
-import static nl.melonstudios.create.util.Utils.*;
+import static nl.melonstudios.create.util.Utils.axis_choose;
+import static nl.melonstudios.create.util.Utils.dist_manh;
 
 public class KineticPropagator {
     public static final int MAX_FLICKER_SCORE = 128;
