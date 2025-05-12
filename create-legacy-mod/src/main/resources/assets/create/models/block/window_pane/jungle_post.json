@@ -1,7 +1,0 @@
-{
-    "parent": "block/pane_post",
-    "textures": {
-        "edge": "blocks/planks_jungle",
-        "pane": "create:block/palettes/window_jungle"
-    }
-}

@@ -1,7 +1,0 @@
-{
-    "parent": "block/pane_side_alt",
-    "textures": {
-        "edge": "blocks/planks_oak",
-        "pane": "create:block/palettes/window_oak"
-    }
-}

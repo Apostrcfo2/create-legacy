@@ -1,0 +1,44 @@
+
+## BLOCKS ##
+tile.create.ore_copper.name=Copper Ore
+tile.create.ore_zinc.name=Zinc Ore
+
+## ITEMS ##
+item.create.wheat_flour.name=Wheat Flour
+item.create.dough.name=Dough
+item.create.cinder_flour.name=Cinder Flour
+item.create.rose_quartz.name=Rose Quartz
+item.create.polished_rose_quartz.name=Polished Rose Quartz
+item.create.powdered_obsidian.name=Powdered Obsidian
+item.create.sturdy_sheet.name=Sturdy Sheet
+item.create.propeller.name=Propeller
+item.create.whisk.name=Whisk
+item.create.brass_hand.name=Brass Hand
+item.create.electron_tube.name=Electron Tube
+item.create.transmitter.name=Transmitter
+item.create.pulp.name=Pulp
+item.create.cardboard.name=Cardboard
+item.create.precision_mechanism.name=Precision Mechanism
+item.create.andesite_alloy.name=Andesite Alloy
+item.create.copper_ingot.name=Copper Ingot
+item.create.zinc_ingot.name=Zinc Ingot
+item.create.brass_ingot.name=Brass Ingot
+item.create.copper_nugget.name=Copper Nugget
+item.create.zinc_nugget.name=Zinc Nugget
+item.create.brass_nugget.name=Brass Nugget
+item.create.copper_sheet.name=Copper Sheet
+item.create.brass_sheet.name=Brass Sheet
+item.create.iron_sheet.name=Iron Sheet
+item.create.gold_sheet.name=Gold Sheet
+item.create.crushed_iron_ore.name=Crushed Iron Ore
+item.create.crushed_gold_ore.name=Crushed Gold Ore
+item.create.crushed_copper_ore.name=Crushed Copper Ore
+item.create.crushed_zinc_ore.name=Crushed Zinc Ore
+
+## TABS ##
+itemGroup.create=Create
+itemGroup.create.decorations=Create's Decorations
+
+## CONFIG ##
+Create Common Config.tooltip=Create's common configurations
+Create Client Config.tooltip=Create's client configurations

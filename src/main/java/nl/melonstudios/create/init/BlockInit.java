@@ -1,0 +1,52 @@
+package nl.melonstudios.create.init;
+
+import com.melonstudios.melonlib.item.ItemBlockVariants;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.block.BlockCogwheel;
+import nl.melonstudios.create.block.BlockHandCrank;
+import nl.melonstudios.create.block.BlockOre;
+import nl.melonstudios.create.block.BlockShaft;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Objects;
+
+public final class BlockInit {
+    public static final ArrayList<Block> BLOCKS = new ArrayList<>();
+
+    public static final BlockOre ORE = registerBlockWithItem(new BlockOre(), true);
+
+    public static final BlockShaft SHAFT = registerBlockWithItem(new BlockShaft(Material.ROCK, MapColor.STONE));
+    public static final BlockCogwheel COG_SMALL = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, false));
+    public static final BlockCogwheel COG_LARGE = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, true));
+
+    public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
+
+    private static <T extends Block> T registerBlock(T block) {
+        BLOCKS.add(block);
+        return block;
+    }
+    private static <T extends Block> T registerBlockWithItem(@Nonnull T block, @Nonnull Item item) {
+        BLOCKS.add(block);
+        ItemInit.ITEMS.add(item);
+        return block;
+    }
+    private static <T extends Block> T registerBlockWithItem(@Nonnull T block, boolean variants) {
+        Objects.requireNonNull(block.getRegistryName(), "Block has no registry name!!");
+        if (variants) return registerBlockWithItem(block, new ItemBlockVariants(block).setRegistryName(block.getRegistryName()));
+        return registerBlockWithItem(block, new ItemBlock(block).setRegistryName(block.getRegistryName()));
+    }
+    private static <T extends Block> T registerBlockWithItem(@Nonnull T block) {
+        return registerBlockWithItem(block, false);
+    }
+
+    public static void registerTileEntities() {
+        CreateLegacy.proxy.registerTileEntities();
+    }
+}

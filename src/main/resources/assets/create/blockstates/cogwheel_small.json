@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "create:cogwheel_small"
+    },
+    "axis=x": {
+      "model": "create:cogwheel_small",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "create:cogwheel_small",
+      "x": 90
+    }
+  }
+}

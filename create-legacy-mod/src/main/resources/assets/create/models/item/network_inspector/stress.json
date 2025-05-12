@@ -1,6 +1,0 @@
-{
-  "parent": "create:item/network_inspector/speed",
-  "textures": {
-    "3": "create:block/stressometer"
-  }
-}

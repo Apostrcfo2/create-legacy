@@ -1,6 +1,0 @@
-{
-  "parent": "create:block/double_block",
-  "textures": {
-    "texture": "create:block/industrial_iron_glass"
-  }
-}

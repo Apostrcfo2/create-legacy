@@ -1,8 +1,0 @@
-{
-  "parent": "create:block/column_x",
-  "textures": {
-    "end": "create:block/palettes/stone_types/cap/ochrum",
-    "side": "create:block/palettes/stone_types/pillar/ochrum_flipped",
-    "vertical": "create:block/palettes/stone_types/pillar/ochrum_flipped"
-  }
-}

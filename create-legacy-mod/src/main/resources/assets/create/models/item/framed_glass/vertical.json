@@ -1,7 +1,0 @@
-{
-  "parent": "block/cube_column",
-  "textures": {
-    "side": "create:block/palettes/framed_glass_vertical_small",
-    "end": "create:block/palettes/framed_glass_tiled"
-  }
-}
