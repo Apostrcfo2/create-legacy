@@ -45,7 +45,7 @@ public final class ItemInit {
     }
 
     public static final CreativeTabs TAB_CREATE = new CreativeTabs("create") {
-        private final ItemStack icon = ItemStack.EMPTY;
+        private final ItemStack icon = new ItemStack(BlockInit.COG_SMALL);
         @Override
         public ItemStack getTabIconItem() {
             return this.icon;
