@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " t ",
+    "###",
+    " d "
+  ],
+  "key": {
+    "t": {
+      "item": "minecraft:redstone_torch"
+    },
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "plateCopper"
+    },
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "item": "create:ingredient",
+    "data": 11
+  }
+}
