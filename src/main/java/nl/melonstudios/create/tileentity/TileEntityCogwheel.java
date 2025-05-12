@@ -3,6 +3,7 @@ package nl.melonstudios.create.tileentity;
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,5 +43,10 @@ public class TileEntityCogwheel extends TileEntityKinetic {
     @Override
     public float getAxisShift(EnumFacing.Axis axis) {
         return TESRKineticBase.isAxisShifted(this.pos, axis) ? 22.5F : (this.isLarge() ? 11.25F : 0.0F);
+    }
+
+    @Override
+    protected AxisAlignedBB createRenderBoundingBox() {
+        return super.createRenderBoundingBox().grow(1);
     }
 }

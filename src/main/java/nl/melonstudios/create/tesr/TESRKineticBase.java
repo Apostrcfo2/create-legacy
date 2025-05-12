@@ -80,17 +80,17 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         );
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);
     }
-    protected final void spinHalfShaft(World world, float speed, EnumFacing side, float pt) {
+    protected final void spinHalfShaft(TileEntityKinetic te, float speed, EnumFacing side, float pt) {
         IBlockState state = this.halfShafts[side.getIndex()];
         IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(state);
-        this.rotateModel(this.calculateAngle(world, speed, pt), side.getAxis(), model, state, 1.0F);
+        this.rotateModel(this.calculateAngle(te, side.getAxis(), pt, speed), side.getAxis(), model, state, 1.0F);
     }
 
-    protected final float calculateAngle(World world, float speed, float pt) {
-        if (speed == 0.0F) return 0.0F;
-        float time = world.getTotalWorldTime() + pt;
+    protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float speed) {
+        if (speed == 0) return te.getAxisShift(axis);
+        float time = te.getWorld().getTotalWorldTime() + pt;
 
-        return ((time * 0.3F * speed) % 360);
+        return ((time * 0.3F * speed) % 360) + te.getAxisShift(axis);
     }
     protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float m, boolean addOffset) {
         if (te.getSpeed() == 0) return addOffset ? te.getAxisShift(axis) : 0.0F;

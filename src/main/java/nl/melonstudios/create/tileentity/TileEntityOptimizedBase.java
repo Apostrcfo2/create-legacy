@@ -1,12 +1,13 @@
 package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.tileentity.ISyncedTE;
+import com.melonstudios.melonlib.tileentity.TileEntityCachedRenderBB;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import nl.melonstudios.create.util.interfaces.IStateFindable;
 
-public abstract class TileEntityOptimizedBase extends TileEntity implements ISyncedTE, ITickable, IStateFindable {
+public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB implements ISyncedTE, ITickable, IStateFindable {
     private int tickRateLazy, tickCounterLazy;
     private boolean syncNextTick = false;
     private boolean requestSyncNextTick = false;

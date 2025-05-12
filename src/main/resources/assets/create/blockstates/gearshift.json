@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "axis=x,powered=false": {
+      "model": "create:gearshift_x_off"
+    },
+    "axis=y,powered=false": {
+      "model": "create:gearshift_y_off"
+    },
+    "axis=z,powered=false": {
+      "model": "create:gearshift_z_off"
+    },
+    "axis=x,powered=true": {
+      "model": "create:gearshift_x_on"
+    },
+    "axis=y,powered=true": {
+      "model": "create:gearshift_y_on"
+    },
+    "axis=z,powered=true": {
+      "model": "create:gearshift_z_on"
+    }
+  }
+}

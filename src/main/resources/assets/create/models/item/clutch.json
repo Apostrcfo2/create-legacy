@@ -1,0 +1,6 @@
+{
+  "parent": "create:item/encased_shaft",
+  "textures": {
+    "side": "create:block/clutch_off"
+  }
+}
