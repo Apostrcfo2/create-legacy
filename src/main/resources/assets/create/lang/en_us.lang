@@ -12,6 +12,9 @@ tile.create.shaft.name=Shaft
 tile.create.cogwheel_small.name=Cogwheel
 tile.create.cogwheel_large.name=Large Cogwheel
 
+tile.create.gearshift.name=Gearshift
+tile.create.clutch.name=Clutch
+
 tile.create.hand_crank.name=Hand Crank
 
 ## ITEMS ##
