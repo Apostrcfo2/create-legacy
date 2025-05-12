@@ -4,9 +4,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityHandCrank;
 
+@SideOnly(Side.CLIENT)
 public class TESRHandCrank extends TESRKineticBase<TileEntityHandCrank> {
     public TESRHandCrank() {
         for (int i = 0; i < 6; i++) this.facings[i] = BlockInit.HAND_CRANK.getStateFromMeta(i);

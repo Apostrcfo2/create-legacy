@@ -5,6 +5,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.cfg.ClientConfig;
+import nl.melonstudios.create.cfg.CommonConfig;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.KineticNetwork;
@@ -250,7 +254,9 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
     public void onSpeedChanged(float lastSpeed) {
         boolean fromOrToZero = (lastSpeed == 0) != (this.getSpeed() == 0);
         boolean directionSwap = !fromOrToZero && Math.signum(lastSpeed) != Math.signum(this.getSpeed());
-        if (fromOrToZero || directionSwap) {}
+        if (fromOrToZero || directionSwap) {
+            if (CommonConfig.enableFlickerTally) this.flickerTally += 5;
+        }
         this.markDirty();
     }
 
@@ -346,7 +352,11 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
         return TESRKineticBase.isAxisShifted(this.pos, axis) ? 22.5F : 0.0F;
     }
 
-
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return ClientConfig.kineticRenderDistance;
+    }
 
     public static float convertToDirection(float axisSpeed, EnumFacing d) {
         return d.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;

@@ -3,6 +3,8 @@ package nl.melonstudios.create.tesr;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityCogwheel;
 import nl.melonstudios.create.util.Utils;
@@ -10,6 +12,7 @@ import nl.melonstudios.create.util.Utils;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
+@SideOnly(Side.CLIENT)
 public class TESRCogwheel extends TESRKineticBase<TileEntityCogwheel> {
     public TESRCogwheel() {
         this.smallCogX = BlockInit.COG_SMALL.getStateFromMeta(0);

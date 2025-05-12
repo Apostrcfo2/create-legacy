@@ -11,6 +11,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -21,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
 
 @ParametersAreNonnullByDefault
+@SideOnly(Side.CLIENT)
 public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileEntitySpecialRenderer<T> {
     private static boolean porkchop = false;
     private static final ResourceLocation PORK = new ResourceLocation("textures/entity/pig/pig.png");
