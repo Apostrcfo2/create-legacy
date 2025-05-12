@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.*;
+import nl.melonstudios.create.util.BlockProperties;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -25,6 +26,13 @@ public final class BlockInit {
     public static final BlockShaft SHAFT = registerBlockWithItem(new BlockShaft(Material.ROCK, MapColor.STONE));
     public static final BlockCogwheel COG_SMALL = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, false));
     public static final BlockCogwheel COG_LARGE = registerBlockWithItem(new BlockCogwheel(MapColor.WOOD, SoundType.WOOD, true));
+
+    public static final BlockGearshift GEARSHIFT = (BlockGearshift)
+            registerBlockWithItem(new BlockGearshift(MapColor.WOOD, SoundType.WOOD)
+            .setRegistryName("gearshift").setUnlocalizedName("create.gearshift"));
+    public static final BlockClutch CLUTCH = (BlockClutch)
+            registerBlockWithItem(new BlockClutch(MapColor.WOOD, SoundType.WOOD)
+            .setRegistryName("clutch").setUnlocalizedName("create.clutch"));
 
     public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
 

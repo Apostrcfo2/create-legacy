@@ -42,6 +42,10 @@ public abstract class BlockKineticBase extends Block implements IRotate {
         super.onBlockAdded(worldIn, pos, state);
     }
 
+    public boolean isPosPowered(World world, BlockPos pos) {
+        return world.isBlockPowered(pos) || world.isBlockIndirectlyGettingPowered(pos) > 0;
+    }
+
     @Override
     public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
         return 0;

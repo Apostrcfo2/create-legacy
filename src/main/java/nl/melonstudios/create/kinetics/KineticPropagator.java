@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import nl.melonstudios.create.tileentity.TileEntityDirectionalShaftHalves;
 import nl.melonstudios.create.tileentity.TileEntityGearbox;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
-import nl.melonstudios.create.tileentity.TileEntitySplitShaft;
+import nl.melonstudios.create.tileentity.TileEntitySplitShaftBase;
 import nl.melonstudios.create.util.interfaces.ICogwheel;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
@@ -116,8 +116,8 @@ public class KineticPropagator {
                     : direction.getAxisDirection() == source.getAxisDirection() ? -1 : 1;
         }
 
-        if (te instanceof TileEntitySplitShaft) {
-            return ((TileEntitySplitShaft)te).getRotationSpeedModifier(direction);
+        if (te instanceof TileEntitySplitShaftBase) {
+            return ((TileEntitySplitShaftBase)te).getRotationSpeedModifier(direction);
         }
 
         return 1.0F;

@@ -8,13 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import nl.melonstudios.create.tesr.TESRCogwheel;
-import nl.melonstudios.create.tesr.TESRHandCrank;
-import nl.melonstudios.create.tesr.TESRKineticBase;
-import nl.melonstudios.create.tesr.TESRShaft;
-import nl.melonstudios.create.tileentity.TileEntityCogwheel;
-import nl.melonstudios.create.tileentity.TileEntityHandCrank;
-import nl.melonstudios.create.tileentity.TileEntityShaft;
+import nl.melonstudios.create.tesr.*;
+import nl.melonstudios.create.tileentity.*;
 
 import javax.annotation.Nullable;
 
@@ -29,6 +24,8 @@ public class ClientProxy extends CommonProxy {
     public void registerTileEntities() {
         this.registerTESR(TileEntityShaft.class, "shaft", new TESRShaft());
         this.registerTESR(TileEntityCogwheel.class, "cogwheel", new TESRCogwheel());
+        this.registerTESR(TileEntityGearshift.class, "gearshift", new TESRSplitShaft<>());
+        this.registerTESR(TileEntityClutch.class, "clutch", new TESRSplitShaft<>());
         this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());
     }
 

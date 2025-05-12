@@ -83,6 +83,7 @@ public abstract class BlockKineticRotatedPillarBase extends BlockKineticBase {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(AXIS, EnumFacing.Axis.values()[meta % 3]);
+        int axisMeta = meta & 3;
+        return this.getDefaultState().withProperty(AXIS, EnumFacing.Axis.values()[axisMeta == 3 ? 0 : axisMeta]);
     }
 }

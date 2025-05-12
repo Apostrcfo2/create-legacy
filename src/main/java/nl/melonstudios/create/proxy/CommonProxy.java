@@ -8,9 +8,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import nl.melonstudios.create.tileentity.TileEntityCogwheel;
-import nl.melonstudios.create.tileentity.TileEntityHandCrank;
-import nl.melonstudios.create.tileentity.TileEntityShaft;
+import nl.melonstudios.create.tileentity.*;
 
 public class CommonProxy {
     protected static ResourceLocation create(String path) {
@@ -41,6 +39,8 @@ public class CommonProxy {
     public void registerTileEntities() {
         this.registerTE(TileEntityShaft.class, "shaft");
         this.registerTE(TileEntityCogwheel.class, "cogwheel");
+        this.registerTE(TileEntityGearshift.class, "gearshift");
+        this.registerTE(TileEntityClutch.class, "clutch");
         this.registerTE(TileEntityHandCrank.class, "hand_crank");
     }
 

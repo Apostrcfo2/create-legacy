@@ -10,8 +10,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,10 +35,14 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         this.shaftX = BlockInit.SHAFT.getStateFromMeta(0);
         this.shaftY = BlockInit.SHAFT.getStateFromMeta(1);
         this.shaftZ = BlockInit.SHAFT.getStateFromMeta(2);
+        for (EnumFacing side : EnumFacing.VALUES) {
+            this.halfShafts[side.getIndex()] = BlockRender.byEnum(EnumRenderPart.getHalfShaft(side));
+        }
     }
 
     protected final Minecraft mc;
     protected final IBlockState shaftX, shaftY, shaftZ;
+    protected final IBlockState[] halfShafts = new IBlockState[6];
     @Override
     public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
@@ -73,7 +80,18 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         );
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);
     }
+    protected final void spinHalfShaft(World world, float speed, EnumFacing side, float pt) {
+        IBlockState state = this.halfShafts[side.getIndex()];
+        IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(state);
+        this.rotateModel(this.calculateAngle(world, speed, pt), side.getAxis(), model, state, 1.0F);
+    }
 
+    protected final float calculateAngle(World world, float speed, float pt) {
+        if (speed == 0.0F) return 0.0F;
+        float time = world.getTotalWorldTime() + pt;
+
+        return ((time * 0.3F * speed) % 360);
+    }
     protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float m, boolean addOffset) {
         if (te.getSpeed() == 0) return addOffset ? te.getAxisShift(axis) : 0.0F;
         float time = te.getWorld().getTotalWorldTime() + pt;
