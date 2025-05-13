@@ -102,15 +102,15 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
             float stressCapacity = te.calculateCapacity() * te.getTheoreticalSpeed();
             float stressImpact = te.calculateImpact() * te.getTheoreticalSpeed();
             if (stressCapacity == 0 && stressImpact == 0) return Collections.emptyList();
-            builder.translate("goggles.generator_stats").enter();
+            builder.translate("goggles.kinetic_stats").enter();
             if (stressCapacity != 0) {
                 builder.formatting(TextFormatting.GRAY)
-                        .translate("goggles.generator_capacity")
+                        .translate("goggles.kinetic_capacity")
                         .text(": ").formatting(TextFormatting.AQUA).number(stressCapacity).text("su").enter();
             }
             if (stressImpact != 0) {
                 builder.formatting(TextFormatting.GRAY)
-                        .translate("goggles.generator_impact")
+                        .translate("goggles.kinetic_impact")
                         .text(": ").formatting(TextFormatting.AQUA).number(stressImpact).text("su").enter();
             }
             return builder.build();
