@@ -81,8 +81,12 @@ public class CreateLegacyEventHandler {
     @SubscribeEvent
     public static void renderGoggleOverlay(RenderGameOverlayEvent.Pre event) {
         final Minecraft mc = Minecraft.getMinecraft();
+        if (mc.getRenderManager().options == null) return;
         final FontRenderer font = RenderMelon.getDefaultFontRenderer();
-        if (mc.player != null && mc.world != null && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+        if (mc.player != null && mc.world != null &&
+                !mc.getRenderManager().options.hideGUI &&
+                event.getType() == RenderGameOverlayEvent.ElementType.ALL &&
+                mc.getRenderViewEntity() == mc.player) {
             final ItemStack helmet = mc.player.inventory.armorInventory.get(3);
             if (helmet.getItem() instanceof ItemGoggles) {
                 RayTraceResult result = mc.objectMouseOver;
@@ -97,7 +101,6 @@ public class CreateLegacyEventHandler {
                             float x = event.getResolution().getScaledWidth() / 2.0F;
                             float y = event.getResolution().getScaledHeight() / 2.0F;
                             mc.getRenderItem().renderItemIntoGUI(goggles, (int)x - 24, (int)y - 8);
-                            info.add(0, Localizer.translate("goggles.header") + ":");
                             GuiUtils.drawHoveringText(goggles, info, (int)x, (int)y,
                                     event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(),
                                     Integer.MAX_VALUE, font

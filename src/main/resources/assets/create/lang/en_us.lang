@@ -56,6 +56,11 @@ item.create.crushed_gold_ore.name=Crushed Gold Ore
 item.create.crushed_copper_ore.name=Crushed Copper Ore
 item.create.crushed_zinc_ore.name=Crushed Zinc Ore
 
+## GOGGLE TOOLTIPS ##
+goggles.generator_stats=Generator Stats
+goggles.generator_capacity=Stress Capacity
+goggles.generator_impact=Stress Impact
+
 ## TABS ##
 itemGroup.create=Create
 itemGroup.create.decorations=Create's Decorations
