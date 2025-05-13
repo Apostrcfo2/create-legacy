@@ -5,10 +5,19 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public final class SoundInit {
-    public static SoundEvent wrenchRemove, wrenchRotate;
+    public static SoundEvent item_sandpaper_used;
+    public static SoundEvent block_cog_ambient;
+    public static SoundEvent block_press_activate;
+    public static SoundEvent item_wrench_used_rotate;
+    public static SoundEvent item_wrench_used_dismantle;
+    public static SoundEvent block_millstone_ambient;
     public static void init() {
-        wrenchRemove = registerSound("wrench_remove");
-        wrenchRotate = registerSound("wrench_rotate");
+        item_sandpaper_used = registerSound("item.sandpaper.used");
+        block_cog_ambient = registerSound("block.cog.ambient");
+        block_press_activate = registerSound("block.press.activate");
+        item_wrench_used_rotate = registerSound("item.wrench.used.rotate");
+        item_wrench_used_dismantle = registerSound("item.wrench.used.dismantle");
+        block_millstone_ambient = registerSound("block.millstone.ambient");
     }
 
     private static SoundEvent registerSound(String registry) {
