@@ -5,6 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.block.BlockCasing;
 import nl.melonstudios.create.item.ItemIngredient;
 import nl.melonstudios.create.util.ModTabs;
 
@@ -37,6 +38,10 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.METAL, 1, "block_copper");
         CreateLegacy.proxy.setItemModel(BlockInit.METAL, 2, "block_zinc");
         CreateLegacy.proxy.setItemModel(BlockInit.METAL, 3, "block_brass");
+
+        for (int i = 0; i < 4; i++) {
+            CreateLegacy.proxy.setItemModel(BlockInit.CASING, i, "casing_" + BlockCasing.Variant.byID(i).getName());
+        }
 
         CreateLegacy.proxy.setItemModel(BlockInit.SHAFT);
         CreateLegacy.proxy.setItemModel(BlockInit.COG_SMALL);
