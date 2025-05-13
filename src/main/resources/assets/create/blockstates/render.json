@@ -37,6 +37,9 @@
       "model": "create:render/half_shaft",
       "x": 90,
       "y": 270
+    },
+    "render_part=dial": {
+      "model": "create:render/dial"
     }
   }
 }

@@ -2,6 +2,7 @@ package nl.melonstudios.create.block;
 
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -24,8 +25,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class BlockKineticHorizontalAxisBase extends BlockKineticBase {
     public static final PropertyEnum<EnumFacing.Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
-    public BlockKineticHorizontalAxisBase(Material blockMaterialIn, MapColor blockMapColorIn) {
-        super(blockMaterialIn, blockMapColorIn);
+    public BlockKineticHorizontalAxisBase(MapColor color, SoundType soundType) {
+        super(Material.ROCK, color);
+        this.blockSoundType = soundType;
     }
 
     @Override

@@ -54,6 +54,8 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.GEARSHIFT);
         CreateLegacy.proxy.setItemModel(BlockInit.CLUTCH);
         CreateLegacy.proxy.setItemModel(BlockInit.HAND_CRANK);
+        CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
+        CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
     }
 
     public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));

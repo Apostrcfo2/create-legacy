@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockHandCrank;
 
-public class TileEntityHandCrank extends TileEntityKineticGenerator {
+public class TileEntityHandCrank extends TileEntityKineticGeneratorBase {
     public int inUse;
     public boolean backwards;
 

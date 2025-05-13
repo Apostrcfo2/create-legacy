@@ -24,6 +24,9 @@ tile.create.clutch.name=Clutch
 
 tile.create.hand_crank.name=Hand Crank
 
+tile.create.speedometer.name=Speedometer
+tile.create.stressometer.name=Stressometer
+
 ## ITEMS ##
 item.create.wheat_flour.name=Wheat Flour
 item.create.dough.name=Dough
@@ -55,6 +58,8 @@ item.create.crushed_iron_ore.name=Crushed Iron Ore
 item.create.crushed_gold_ore.name=Crushed Gold Ore
 item.create.crushed_copper_ore.name=Crushed Copper Ore
 item.create.crushed_zinc_ore.name=Crushed Zinc Ore
+
+item.create.goggles.name=Engineer's Goggles
 
 ## GOGGLE TOOLTIPS ##
 goggles.kinetic_stats=Kinetic Stats

@@ -4,10 +4,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.kinetics.KineticNetwork;
 
-public abstract class TileEntityKineticGenerator extends TileEntityKinetic {
+public abstract class TileEntityKineticGeneratorBase extends TileEntityKinetic {
     public boolean reactivateSource;
 
-    public TileEntityKineticGenerator() {}
+    public TileEntityKineticGeneratorBase() {}
 
     protected void notifyStressCapacityChange(float capacity) {
         this.getOrCreateNetwork().updateCapacityFor(this, capacity);

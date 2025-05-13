@@ -1,9 +1,11 @@
 package nl.melonstudios.create.proxy;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -48,11 +50,17 @@ public class CommonProxy {
         this.registerTE(TileEntityGearshift.class, "gearshift");
         this.registerTE(TileEntityClutch.class, "clutch");
         this.registerTE(TileEntityHandCrank.class, "hand_crank");
+        this.registerTE(TileEntitySpeedometer.class, "speedometer");
+        this.registerTE(TileEntityStressometer.class, "stressometer");
     }
 
     public void pork() {}
 
     private void registerTE(Class<? extends TileEntity> te, String name) {
         GameRegistry.registerTileEntity(te, create(name));
+    }
+
+    public void spawnRedstoneFX(World world, double x, double y, double z, double mx, double my, double mz, float size, float r, float g, float b) {
+
     }
 }

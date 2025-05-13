@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create:stressometer",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "create:stressometer"
+    }
+  }
+}

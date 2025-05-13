@@ -39,6 +39,13 @@ public final class BlockInit {
 
     public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
 
+    public static final BlockGauge SPEEDOMETER = (BlockGauge)
+            registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)
+            .setRegistryName("speedometer").setUnlocalizedName("create.speedometer"));
+    public static final BlockGauge STRESSOMETER = (BlockGauge)
+            registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.STRESS)
+            .setRegistryName("stressometer").setUnlocalizedName("create.stressometer"));
+
     private static <T extends Block> T registerBlock(T block) {
         BLOCKS.add(block);
         return block;

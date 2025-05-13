@@ -17,6 +17,8 @@ public enum EnumRenderPart implements IStringSerializable {
     HALF_SHAFT_SOUTH,
     HALF_SHAFT_WEST,
     HALF_SHAFT_EAST,
+
+    DIAL
     ;
 
     private final int id = this.ordinal();
