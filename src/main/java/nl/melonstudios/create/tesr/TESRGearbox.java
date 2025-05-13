@@ -9,7 +9,7 @@ import nl.melonstudios.create.tileentity.TileEntityGearbox;
 
 @SideOnly(Side.CLIENT)
 public class TESRGearbox<T extends TileEntityGearbox> extends TESRKineticBase<T> {
-    @Override //TODO: fix incorrectly rotating shaft halves
+    @Override
     protected void render(T te, float pt, float alpha) {
         final EnumFacing.Axis boxAxis = te.getState().getValue(BlockStateProperties.AXIS);
         final BlockPos pos = te.getPos();

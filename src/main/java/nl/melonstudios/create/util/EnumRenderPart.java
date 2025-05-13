@@ -11,12 +11,12 @@ public enum EnumRenderPart implements IStringSerializable {
     SAW_Y,
     SAW_Z,
 
-    HALF_SHAFT_UP,
     HALF_SHAFT_DOWN,
+    HALF_SHAFT_UP,
     HALF_SHAFT_NORTH,
     HALF_SHAFT_SOUTH,
-    HALF_SHAFT_EAST,
     HALF_SHAFT_WEST,
+    HALF_SHAFT_EAST,
     ;
 
     private final int id = this.ordinal();
@@ -51,12 +51,12 @@ public enum EnumRenderPart implements IStringSerializable {
         SAWS[1] = SAW_Y;
         SAWS[2] = SAW_Z;
 
-        HALF_SHAFTS[0] = HALF_SHAFT_UP;
-        HALF_SHAFTS[1] = HALF_SHAFT_DOWN;
+        HALF_SHAFTS[0] = HALF_SHAFT_DOWN;
+        HALF_SHAFTS[1] = HALF_SHAFT_UP;
         HALF_SHAFTS[2] = HALF_SHAFT_NORTH;
         HALF_SHAFTS[3] = HALF_SHAFT_SOUTH;
-        HALF_SHAFTS[4] = HALF_SHAFT_EAST;
-        HALF_SHAFTS[5] = HALF_SHAFT_WEST;
+        HALF_SHAFTS[4] = HALF_SHAFT_WEST;
+        HALF_SHAFTS[5] = HALF_SHAFT_EAST;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
