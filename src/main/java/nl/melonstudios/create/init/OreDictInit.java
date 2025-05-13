@@ -11,9 +11,13 @@ import java.util.HashSet;
 
 public final class OreDictInit {
     public static void init() {
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CASING, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SHAFT, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.COG_SMALL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.COG_LARGE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.GEARBOX, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.GEARSHIFT, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CLUTCH, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.HAND_CRANK, true);
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
