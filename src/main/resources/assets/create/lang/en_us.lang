@@ -2,7 +2,7 @@
 ## BLOCKS ##
 tile.create.ore_copper.name=Copper Ore
 tile.create.ore_zinc.name=Zinc Ore
-d
+
 tile.create.block_andesite_alloy.name=Block of Andesite Alloy
 tile.create.block_copper.name=Block of Copper
 tile.create.block_zinc.name=Block of Zinc

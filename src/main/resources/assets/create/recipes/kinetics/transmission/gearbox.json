@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "B#B",
+    " B "
+  ],
+  "key": {
+    "#": {
+      "item": "create:casing",
+      "data": 0
+    },
+    "B": {
+      "item": "create:cogwheel_small"
+    }
+  },
+  "result": {
+    "item": "create:gearbox",
+    "data": 0
+  }
+}
