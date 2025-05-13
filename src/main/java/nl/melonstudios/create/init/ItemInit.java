@@ -8,6 +8,7 @@ import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockCasing;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.item.ItemIngredient;
+import nl.melonstudios.create.item.ItemSandpaper;
 import nl.melonstudios.create.util.ModTabs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -16,10 +17,14 @@ import java.util.ArrayList;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public final class ItemInit {
+    public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));
+    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> ItemStack.EMPTY);
+
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
 
     public static final ItemIngredient INGREDIENT = registerItem(new ItemIngredient());
     public static final ItemGoggles GOGGLES = registerItem(new ItemGoggles());
+    public static final ItemSandpaper SANDPAPER = registerItem(new ItemSandpaper());
 
     private static <T extends Item> T registerItem(T item) {
         ITEMS.add(item);
@@ -32,6 +37,7 @@ public final class ItemInit {
             CreateLegacy.proxy.setItemModel(INGREDIENT, i, "ingredient/" + ItemIngredient.NAME_LOOKUP[i]);
         }
         CreateLegacy.proxy.setItemModel(GOGGLES);
+        CreateLegacy.proxy.setItemModel(SANDPAPER);
 
         // blocks
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");
@@ -57,9 +63,6 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
     }
-
-    public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));
-    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> ItemStack.EMPTY);
 
     private ItemInit() {
         throw new AssertionError("no");
