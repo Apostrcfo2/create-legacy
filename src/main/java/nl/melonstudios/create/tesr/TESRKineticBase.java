@@ -10,12 +10,12 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.Utils;
 
@@ -54,6 +54,7 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         this.bindTexture(porkchop ? PORK : TextureMap.LOCATION_BLOCKS_TEXTURE);
         this.render(te, partialTicks, alpha);
         GlStateManager.popMatrix();
+        PerFrameDebugInfo.kineticTileEntitiesRendered++;
     }
 
     protected abstract void render(T te, float pt, float alpha);

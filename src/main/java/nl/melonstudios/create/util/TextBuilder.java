@@ -64,4 +64,8 @@ public class TextBuilder {
     public TextBuilder object(@Nullable Object obj) {
         return this.text(obj == null ? "null" : obj.toString());
     }
+
+    public boolean isEmpty() {
+        return this.currentlyBuilding.isEmpty() && this.finishedLines.isEmpty();
+    }
 }

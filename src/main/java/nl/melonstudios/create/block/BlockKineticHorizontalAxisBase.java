@@ -84,11 +84,11 @@ public abstract class BlockKineticHorizontalAxisBase extends BlockKineticBase {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(HORIZONTAL_AXIS).ordinal();
+        return state.getValue(HORIZONTAL_AXIS) == EnumFacing.Axis.X ? 0 : 1;
     }
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(HORIZONTAL_AXIS, EnumFacing.Axis.values()[meta % 3]);
+        return this.getDefaultState().withProperty(HORIZONTAL_AXIS, (meta & 1) == 0 ? EnumFacing.Axis.X : EnumFacing.Axis.Z);
     }
 }

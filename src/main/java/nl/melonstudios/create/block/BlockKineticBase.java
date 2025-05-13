@@ -5,12 +5,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.util.BlockProperties;
@@ -99,8 +102,8 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
         TileEntityKinetic te = getKineticTE(world, pos);
         if (te != null) {
             TextBuilder builder = new TextBuilder();
-            float stressCapacity = te.calculateCapacity() * te.getTheoreticalSpeed();
-            float stressImpact = te.calculateImpact() * te.getTheoreticalSpeed();
+            float stressCapacity = te.calculateCapacity() * Math.abs(te.getTheoreticalSpeed());
+            float stressImpact = te.calculateImpact() * Math.abs(te.getTheoreticalSpeed());
             if (stressCapacity == 0 && stressImpact == 0) return Collections.emptyList();
             builder.translate("goggles.kinetic_stats").enter();
             if (stressCapacity != 0) {
@@ -116,5 +119,22 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
             return builder.build();
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+
+        float capacity = BlockStressValues.getStressCapacity(this);
+        float impact = BlockStressValues.getStressImpact(this);
+
+        TextBuilder builder = new TextBuilder();
+        if (capacity != 0.0F) {
+            builder.space().text("Kinetic Stress Capacity: ").formatting(TextFormatting.AQUA).number(capacity).text("x RPM").enter();
+        }
+        if (impact != 0.0F) {
+            builder.space().text("Kinetic Stress Impact: ").formatting(TextFormatting.AQUA).number(impact).text("x RPM").enter();
+        }
+        if (!builder.isEmpty()) tooltip.addAll(builder.build());
     }
 }

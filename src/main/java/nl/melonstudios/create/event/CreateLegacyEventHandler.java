@@ -1,19 +1,13 @@
 package nl.melonstudios.create.event;
 
-import com.melonstudios.melonlib.misc.Localizer;
 import com.melonstudios.melonlib.render.RenderMelon;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.InventoryEffectRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -25,6 +19,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.init.BlockInit;
@@ -32,9 +27,9 @@ import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.init.OreDictInit;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.kinetics.KNManager;
+import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = "create")
@@ -111,5 +106,27 @@ public class CreateLegacyEventHandler {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void renderDebugGoggleOverlay(RenderGameOverlayEvent.Post event) {
+        if (PerFrameDebugInfo.renderAgain) {
+            PerFrameDebugInfo.renderAgain = false;
+            final Minecraft mc = Minecraft.getMinecraft();
+            final FontRenderer font = RenderMelon.getDefaultFontRenderer();
+            if (mc.world != null && mc.getRenderManager().options != null && mc.getRenderManager().options.hideGUI) {
+                font.drawStringWithShadow("CREATE LEGACY DEBUG INTERFACE", 2, 2, -1);
+                font.drawStringWithShadow("TESRKinetics rendered: " + PerFrameDebugInfo.kineticTileEntitiesRendered,
+                        2, 12, -1);
+                PerFrameDebugInfo.reset();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void postFrame(TickEvent.RenderTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) PerFrameDebugInfo.renderAgain = true;
     }
 }

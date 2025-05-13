@@ -60,6 +60,7 @@ item.create.crushed_copper_ore.name=Crushed Copper Ore
 item.create.crushed_zinc_ore.name=Crushed Zinc Ore
 
 item.create.goggles.name=Engineer's Goggles
+item.create.sandpaper.name=Sandpaper
 
 ## GOGGLE TOOLTIPS ##
 goggles.kinetic_stats=Kinetic Stats

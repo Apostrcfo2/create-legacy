@@ -128,7 +128,7 @@ public class BlockGauge extends BlockKineticHorizontalAxisBase implements ITileE
         if (tileEntity instanceof TileEntitySpeedometer) {
             TileEntitySpeedometer te = (TileEntitySpeedometer) tileEntity;
 
-            float speed = te.getSpeed();
+            float speed = Math.abs(te.getSpeed());
             boolean overstressed = te.overstressed;
 
             builder.formatting(TextFormatting.GRAY).text("Network Speed: ");
