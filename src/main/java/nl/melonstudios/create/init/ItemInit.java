@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockCasing;
+import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.item.ItemIngredient;
 import nl.melonstudios.create.util.ModTabs;
 
@@ -18,6 +19,7 @@ public final class ItemInit {
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
 
     public static final ItemIngredient INGREDIENT = registerItem(new ItemIngredient());
+    public static final ItemGoggles GOGGLES = registerItem(new ItemGoggles());
 
     private static <T extends Item> T registerItem(T item) {
         ITEMS.add(item);
@@ -29,6 +31,7 @@ public final class ItemInit {
         for (int i = 0; i < ItemIngredient.NAME_LOOKUP.length; i++) {
             CreateLegacy.proxy.setItemModel(INGREDIENT, i, "ingredient/" + ItemIngredient.NAME_LOOKUP[i]);
         }
+        CreateLegacy.proxy.setItemModel(GOGGLES);
 
         // blocks
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");
