@@ -73,7 +73,7 @@ public class BlockGearbox extends BlockKineticRotatedPillarBase implements ITile
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return stack.getMetadata() == 0 ? "tile.create.gearbox.name" : "tile.create.gearbox_vertical.name";
+        return stack.getMetadata() == 0 ? "tile.create.gearbox" : "tile.create.gearbox_vertical";
     }
 
     @Override

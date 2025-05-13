@@ -11,6 +11,8 @@ tile.create.block_brass.name=Block of Brass
 tile.create.shaft.name=Shaft
 tile.create.cogwheel_small.name=Cogwheel
 tile.create.cogwheel_large.name=Large Cogwheel
+tile.create.gearbox.name=Gearbox
+tile.create.gearbox_vertical.name=Vertical Gearbox
 
 tile.create.gearshift.name=Gearshift
 tile.create.clutch.name=Clutch

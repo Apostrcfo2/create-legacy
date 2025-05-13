@@ -41,6 +41,8 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.SHAFT);
         CreateLegacy.proxy.setItemModel(BlockInit.COG_SMALL);
         CreateLegacy.proxy.setItemModel(BlockInit.COG_LARGE);
+        CreateLegacy.proxy.setItemModel(BlockInit.GEARBOX, 0, "gearbox");
+        CreateLegacy.proxy.setItemModel(BlockInit.GEARBOX, 1, "gearbox_vertical");
         CreateLegacy.proxy.setItemModel(BlockInit.GEARSHIFT);
         CreateLegacy.proxy.setItemModel(BlockInit.CLUTCH);
         CreateLegacy.proxy.setItemModel(BlockInit.HAND_CRANK);
