@@ -6,8 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.recipe.SandingRecipes;
 
 public class ItemSandpaper extends Item {
@@ -39,6 +41,8 @@ public class ItemSandpaper extends Item {
                     playerIn.getCooldownTracker().setCooldown(this, 40);
                     offhand.shrink(1);
                 }
+                worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ,
+                        SoundInit.item_sandpaper_used, SoundCategory.PLAYERS, 1.0F, 0.9F + worldIn.rand.nextFloat() * 0.2F);
                 return ActionResult.newResult(EnumActionResult.SUCCESS, paper);
             }
         }
