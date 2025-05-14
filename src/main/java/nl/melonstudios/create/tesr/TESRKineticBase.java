@@ -2,14 +2,19 @@ package nl.melonstudios.create.tesr;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
@@ -19,8 +24,10 @@ import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.Utils;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @SideOnly(Side.CLIENT)
@@ -51,7 +58,7 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        this.bindTexture(porkchop ? PORK : TextureMap.LOCATION_BLOCKS_TEXTURE);
+        this.bindTexture(destroyStage >= 0 ? DESTROY_STAGES[destroyStage] : porkchop ? PORK : TextureMap.LOCATION_BLOCKS_TEXTURE);
         this.render(te, partialTicks, alpha);
         GlStateManager.popMatrix();
         PerFrameDebugInfo.kineticTileEntitiesRendered++;
@@ -72,8 +79,8 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     protected final void rotateModel(float angle, EnumFacing.Axis axis, IBakedModel model, IBlockState state, float brightness) {
         GlStateManager.pushMatrix();
         this.glRotate(angle, axis);
-        GlStateManager.rotate(-90, 0, 1, 0);
-        this.mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightness(model, state, brightness, true);
+        this.renderBakedModel(brightness, model, state);
+        //this.mc.getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightness(model, state, brightness, true);
         GlStateManager.popMatrix();
     }
     protected final void glRotate(float angle, EnumFacing.Axis axis) {
@@ -102,6 +109,24 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         float time = te.getWorld().getTotalWorldTime() + pt;
 
         return ((time * 0.3F * te.getSpeed() * m) % 360) + (addOffset ? te.getAxisShift(axis) : 0.0F);
+    }
+
+    protected final void renderBakedModel(float brightness, IBakedModel model, @Nullable IBlockState state) {
+        for (EnumFacing facing : EnumFacing.VALUES) this.renderBakedQuads(brightness, model.getQuads(state, facing, 0));
+        this.renderBakedQuads(brightness, model.getQuads(state, null, 0));
+    }
+    protected final void renderBakedQuads(float brightness, List<BakedQuad> quads) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        for (BakedQuad quad : quads) {
+            builder.begin(7, DefaultVertexFormats.ITEM);
+            builder.addVertexData(quad.getVertexData());
+            builder.putColorRGB_F4(brightness, brightness, brightness);
+
+            Vec3i vec3i = quad.getFace().getDirectionVec();
+            builder.putNormal(vec3i.getX(), vec3i.getY(), vec3i.getZ());
+            tessellator.draw();
+        }
     }
 
     public static boolean isAxisShifted(BlockPos pos, EnumFacing.Axis axis) {

@@ -353,6 +353,11 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
     }
 
     @Override
+    public boolean canRenderBreaking() {
+        return true;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared() {
         return ClientConfig.kineticRenderDistance;
