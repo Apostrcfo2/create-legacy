@@ -69,6 +69,7 @@ public class CreateLegacyEventHandler {
     @SubscribeEvent
     public static void registerStressValues(RegisterStressValuesEvent event) {
         event.registerCapacity(BlockInit.HAND_CRANK, 8.0F);
+        event.registerStress(BlockInit.DRILL, 4.0F);
     }
 
     private static final ItemStack goggles = new ItemStack(ItemInit.GOGGLES);

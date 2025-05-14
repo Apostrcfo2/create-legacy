@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "b"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:compass"
+    },
+    "b": {
+      "item": "create:casing",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "create:speedometer"
+  }
+}

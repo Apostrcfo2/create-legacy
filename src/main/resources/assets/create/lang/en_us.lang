@@ -27,6 +27,8 @@ tile.create.hand_crank.name=Hand Crank
 tile.create.speedometer.name=Speedometer
 tile.create.stressometer.name=Stressometer
 
+tile.create.drill.name=Mechanical Drill
+
 ## ITEMS ##
 item.create.wheat_flour.name=Wheat Flour
 item.create.dough.name=Dough

@@ -53,10 +53,11 @@ public class KineticNetwork {
 
     public void updateCapacityFor(TileEntityKinetic te, float capacity) {
         this.sources.put(te, capacity);
+        this.updateCapacity();
     }
     public void updateImpactFor(TileEntityKinetic te, float stress) {
         this.members.put(te, stress);
-
+        this.updateStress();
     }
 
     public void remove(TileEntityKinetic te) {

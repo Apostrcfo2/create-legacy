@@ -46,6 +46,10 @@ public final class BlockInit {
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.STRESS)
             .setRegistryName("stressometer").setUnlocalizedName("create.stressometer"));
 
+    public static final BlockDrill DRILL = (BlockDrill)
+            registerBlockWithItem(new BlockDrill(MapColor.STONE, SoundType.METAL)
+            .setRegistryName("drill").setUnlocalizedName("create.drill"));
+
     private static <T extends Block> T registerBlock(T block) {
         BLOCKS.add(block);
         return block;

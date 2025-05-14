@@ -18,7 +18,14 @@ public enum EnumRenderPart implements IStringSerializable {
     HALF_SHAFT_WEST,
     HALF_SHAFT_EAST,
 
-    DIAL
+    DIAL,
+
+    DRILL_HEAD_DOWN,
+    DRILL_HEAD_UP,
+    DRILL_HEAD_NORTH,
+    DRILL_HEAD_SOUTH,
+    DRILL_HEAD_WEST,
+    DRILL_HEAD_EAST,
     ;
 
     private final int id = this.ordinal();
@@ -36,6 +43,7 @@ public enum EnumRenderPart implements IStringSerializable {
 
     private static final EnumRenderPart[] SAWS = new EnumRenderPart[3];
     private static final EnumRenderPart[] HALF_SHAFTS = new EnumRenderPart[6];
+    private static final EnumRenderPart[] DRILL_HEADS = new EnumRenderPart[6];
 
     public static EnumRenderPart byID(int id) {
         return values()[id % values().length];
@@ -59,6 +67,13 @@ public enum EnumRenderPart implements IStringSerializable {
         HALF_SHAFTS[3] = HALF_SHAFT_SOUTH;
         HALF_SHAFTS[4] = HALF_SHAFT_WEST;
         HALF_SHAFTS[5] = HALF_SHAFT_EAST;
+
+        DRILL_HEADS[0] = DRILL_HEAD_DOWN;
+        DRILL_HEADS[1] = DRILL_HEAD_UP;
+        DRILL_HEADS[2] = DRILL_HEAD_NORTH;
+        DRILL_HEADS[3] = DRILL_HEAD_SOUTH;
+        DRILL_HEADS[4] = DRILL_HEAD_WEST;
+        DRILL_HEADS[5] = DRILL_HEAD_EAST;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
@@ -66,5 +81,8 @@ public enum EnumRenderPart implements IStringSerializable {
     }
     public static EnumRenderPart getHalfShaft(EnumFacing facing) {
         return HALF_SHAFTS[facing.getIndex()];
+    }
+    public static EnumRenderPart getDrillHead(EnumFacing facing) {
+        return DRILL_HEADS[facing.getIndex()];
     }
 }

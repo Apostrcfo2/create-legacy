@@ -42,6 +42,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
         this.registerTESR(TileEntityStressometer.class, "stressometer", new TESRGauge<>(BlockGauge.Type.STRESS));
+        this.registerTESR(TileEntityDrill.class, "drill", new TESRDrill<>());
     }
 
     @Override

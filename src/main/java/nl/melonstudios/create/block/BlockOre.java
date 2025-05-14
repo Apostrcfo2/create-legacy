@@ -13,6 +13,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.util.BlockProperties;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -50,8 +51,8 @@ public final class BlockOre extends Block implements IMetaName {
         this.setRegistryName("ore");
         this.setUnlocalizedName("create.ore");
 
-        this.setHardness(3.0F);
-        this.setResistance(3.0F);
+        this.setHardness(BlockProperties.ORE_HARDNESS);
+        this.setResistance(BlockProperties.ORE_RESISTANCE);
 
         this.setDefaultState(this.blockState.getBaseState()
                 .withProperty(VARIANT, Variant.COPPER));

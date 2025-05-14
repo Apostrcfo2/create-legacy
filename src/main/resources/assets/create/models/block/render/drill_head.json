@@ -1,0 +1,76 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/shaft",
+		"1": "create:block/shaft_top",
+		"2": "blocks/anvil_base",
+		"particle": "create:block/shaft"
+	},
+	"elements": [
+		{
+			"name": "shaft",
+			"from": [6, 0, 6],
+			"to": [10, 8, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 0, 6]},
+			"faces": {
+				"north": {"uv": [6, 8, 10, 16], "texture": "#0"},
+				"east": {"uv": [6, 8, 10, 16], "texture": "#0"},
+				"south": {"uv": [6, 8, 10, 16], "texture": "#0"},
+				"west": {"uv": [6, 8, 10, 16], "texture": "#0"},
+				"down": {"uv": [6, 6, 10, 10], "texture": "#1"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [4, 10, 4],
+			"to": [12, 13, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 10, 4]},
+			"faces": {
+				"north": {"uv": [4, 13, 12, 16], "texture": "#2"},
+				"east": {"uv": [4, 13, 12, 16], "texture": "#2"},
+				"south": {"uv": [4, 13, 12, 16], "texture": "#2"},
+				"west": {"uv": [4, 13, 12, 16], "texture": "#2"},
+				"up": {"uv": [4, 4, 12, 12], "texture": "#2"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [5, 13, 5],
+			"to": [11, 16, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 13, 5]},
+			"faces": {
+				"north": {"uv": [5, 10, 11, 13], "texture": "#2"},
+				"east": {"uv": [5, 10, 11, 13], "texture": "#2"},
+				"south": {"uv": [5, 10, 11, 13], "texture": "#2"},
+				"west": {"uv": [5, 10, 11, 13], "texture": "#2"},
+				"up": {"uv": [5, 5, 11, 11], "texture": "#2"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [6, 16, 6],
+			"to": [10, 19, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 16, 6]},
+			"faces": {
+				"north": {"uv": [6, 7, 10, 10], "texture": "#2"},
+				"east": {"uv": [6, 7, 10, 10], "texture": "#2"},
+				"south": {"uv": [6, 7, 10, 10], "texture": "#2"},
+				"west": {"uv": [6, 7, 10, 10], "texture": "#2"},
+				"up": {"uv": [0, 0, 4, 4], "texture": "#2"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [7, 19, 7],
+			"to": [9, 22, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 19, 7]},
+			"faces": {
+				"north": {"uv": [7, 4, 9, 7], "texture": "#2"},
+				"east": {"uv": [7, 4, 9, 7], "texture": "#2"},
+				"south": {"uv": [7, 4, 9, 7], "texture": "#2"},
+				"west": {"uv": [7, 4, 9, 7], "texture": "#2"},
+				"up": {"uv": [7, 7, 9, 9], "texture": "#2"}
+			}
+		}
+	]
+}

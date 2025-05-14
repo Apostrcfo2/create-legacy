@@ -1,0 +1,187 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"3": "create:block/shaft_top",
+		"particle": "create:block/andesite_casing_short",
+		"side": "create:block/andesite_casing_short",
+		"gearbox": "create:block/gearbox",
+		"drill": "minecraft:blocks/anvil_base"
+	},
+	"elements": [
+		{
+			"name": "outer",
+			"from": [4, 0, 0],
+			"to": [16, 16, 2],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 16], "rotation": 90, "texture": "#side"},
+				"east": {"uv": [0, 14, 16, 16], "rotation": 270, "texture": "#gearbox"},
+				"south": {"uv": [0, 4, 16, 16], "rotation": 270, "texture": "#side"},
+				"west": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#gearbox"},
+				"up": {"uv": [14, 4, 16, 16], "rotation": 270, "texture": "#side"},
+				"down": {"uv": [0, 4, 2, 16], "rotation": 270, "texture": "#side"}
+			}
+		},
+		{
+			"name": "outer",
+			"from": [4, 0, 14],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 16], "rotation": 90, "texture": "#side"},
+				"east": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#gearbox"},
+				"south": {"uv": [0, 4, 16, 16], "rotation": 270, "texture": "#side"},
+				"west": {"uv": [0, 14, 16, 16], "rotation": 270, "texture": "#gearbox"},
+				"up": {"uv": [0, 4, 2, 16], "rotation": 270, "texture": "#side"},
+				"down": {"uv": [14, 4, 16, 16], "rotation": 270, "texture": "#side"}
+			}
+		},
+		{
+			"name": "outer",
+			"from": [4, 0, 2],
+			"to": [16, 2, 14],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 2, 2, 14], "rotation": 270, "texture": "#gearbox"},
+				"west": {"uv": [0, 2, 2, 14], "rotation": 270, "texture": "#gearbox"},
+				"up": {"uv": [2, 4, 14, 16], "rotation": 270, "texture": "#side"},
+				"down": {"uv": [2, 4, 14, 16], "rotation": 270, "texture": "#side"}
+			}
+		},
+		{
+			"name": "outer",
+			"from": [4, 14, 2],
+			"to": [16, 16, 14],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [14, 2, 16, 14], "rotation": 270, "texture": "#gearbox"},
+				"west": {"uv": [14, 2, 16, 14], "rotation": 270, "texture": "#gearbox"},
+				"up": {"uv": [2, 4, 14, 16], "rotation": 270, "texture": "#side"},
+				"down": {"uv": [2, 4, 14, 16], "rotation": 270, "texture": "#side"}
+			}
+		},
+		{
+			"name": "inner",
+			"from": [6, 2, 2],
+			"to": [14, 14, 14],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [2, 2, 14, 14], "rotation": 270, "texture": "#gearbox"},
+				"west": {"uv": [2, 2, 14, 14], "rotation": 270, "texture": "#gearbox"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [14, 6, 6],
+			"to": [16, 10, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [14, 6, 6]},
+			"faces": {
+				"north": {"uv": [6, 6, 8, 10], "texture": "#3"},
+				"east": {"uv": [6, 6, 10, 10], "texture": "#3"},
+				"south": {"uv": [8, 6, 10, 10], "texture": "#3"},
+				"up": {"uv": [8, 6, 10, 10], "texture": "#3"},
+				"down": {"uv": [8, 6, 10, 10], "texture": "#3"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [3, 4, 4],
+			"to": [6, 12, 12],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 8, 8]},
+			"faces": {
+				"north": {"uv": [3, 4, 6, 12], "texture": "#drill"},
+				"south": {"uv": [10, 4, 13, 12], "texture": "#drill"},
+				"west": {"uv": [4, 4, 12, 12], "texture": "#drill"},
+				"up": {"uv": [10, 4, 13, 12], "texture": "#drill"},
+				"down": {"uv": [10, 4, 13, 12], "texture": "#drill"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [0, 5, 5],
+			"to": [3, 11, 11],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 8, 8]},
+			"faces": {
+				"north": {"uv": [5, 5, 8, 11], "texture": "#drill"},
+				"south": {"uv": [8, 5, 11, 11], "texture": "#drill"},
+				"west": {"uv": [5, 5, 11, 11], "texture": "#drill"},
+				"up": {"uv": [8, 5, 11, 11], "texture": "#drill"},
+				"down": {"uv": [8, 5, 11, 11], "texture": "#drill"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [-3, 6, 6],
+			"to": [0, 10, 10],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 8, 8]},
+			"faces": {
+				"north": {"uv": [7, 6, 10, 10], "texture": "#drill"},
+				"south": {"uv": [6, 6, 9, 10], "texture": "#drill"},
+				"west": {"uv": [6, 6, 10, 10], "texture": "#drill"},
+				"up": {"uv": [6, 6, 9, 10], "texture": "#drill"},
+				"down": {"uv": [6, 6, 9, 10], "texture": "#drill"}
+			}
+		},
+		{
+			"name": "drillpart",
+			"from": [-6, 7, 7],
+			"to": [-3, 9, 9],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 8, 8]},
+			"faces": {
+				"north": {"uv": [9, 7, 12, 9], "texture": "#drill"},
+				"south": {"uv": [4, 7, 7, 9], "texture": "#drill"},
+				"west": {"uv": [7, 7, 9, 9], "texture": "#drill"},
+				"up": {"uv": [4, 7, 7, 9], "texture": "#drill"},
+				"down": {"uv": [4, 7, 7, 9], "texture": "#drill"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, -45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 135, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 135, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, 45, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"head": {
+			"rotation": [0, -90, 0]
+		},
+		"fixed": {
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"groups": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		{
+			"name": "drill",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [6, 7, 8, 9]
+		}
+	]
+}

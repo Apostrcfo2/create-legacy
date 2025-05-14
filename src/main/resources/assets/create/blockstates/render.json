@@ -40,6 +40,33 @@
     },
     "render_part=dial": {
       "model": "create:render/dial"
+    },
+    "render_part=drill_head_up": {
+      "model": "create:render/drill_head"
+    },
+    "render_part=drill_head_down": {
+      "model": "create:render/drill_head",
+      "x": 180
+    },
+    "render_part=drill_head_north": {
+      "model": "create:render/drill_head",
+      "x": 90,
+      "y": 0
+    },
+    "render_part=drill_head_east": {
+      "model": "create:render/drill_head",
+      "x": 90,
+      "y": 90
+    },
+    "render_part=drill_head_south": {
+      "model": "create:render/drill_head",
+      "x": 90,
+      "y": 180
+    },
+    "render_part=drill_head_west": {
+      "model": "create:render/drill_head",
+      "x": 90,
+      "y": 270
     }
   }
 }
