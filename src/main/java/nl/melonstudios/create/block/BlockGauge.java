@@ -154,7 +154,7 @@ public class BlockGauge extends BlockKineticHorizontalAxisBase implements ITileE
             } else {
                 builder.formatting(TextFormatting.AQUA);
             }
-            builder.number(stress).text("/").number(capacity).text("su (").number(capacity == 0 ? 0 : (stress / capacity) * 100).text("%)");
+            builder.number(stress).text("/").number(capacity).text("su (").number(capacity == 0 ? 0 : (int)((stress / capacity) * 100)).text("%)");
             if (overstressed) {
                 builder.resetFormat();
                 builder.space();

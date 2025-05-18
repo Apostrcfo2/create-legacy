@@ -3,6 +3,8 @@ package nl.melonstudios.create.util;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.storage.MapStorage;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -76,5 +78,27 @@ public class Utils {
     public static long lfloor(double value) {
         long i = (long)value;
         return value < (double)i ? i - 1L : i;
+    }
+
+    public static Vec3d rotate(Vec3d vec, double deg, EnumFacing.Axis axis) {
+        if (deg == 0)
+            return vec;
+        if (vec == Vec3d.ZERO)
+            return vec;
+
+        float angle = (float) (deg / 180f * Math.PI);
+        double sin = Math.sin(angle);
+        double cos = Math.cos(angle);
+        double x = vec.x;
+        double y = vec.y;
+        double z = vec.z;
+
+        if (axis == EnumFacing.Axis.X)
+            return new Vec3d(x, y * cos - z * sin, z * cos + y * sin);
+        if (axis == EnumFacing.Axis.Y)
+            return new Vec3d(x * cos + z * sin, y, z * cos - x * sin);
+        if (axis == EnumFacing.Axis.Z)
+            return new Vec3d(x * cos - y * sin, y * cos + x * sin, z);
+        return vec;
     }
 }

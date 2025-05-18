@@ -1,5 +1,6 @@
 package nl.melonstudios.create.tileentity;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.kinetics.KineticNetwork;
@@ -99,5 +100,12 @@ public abstract class TileEntityKineticGeneratorBase extends TileEntityKinetic {
         this.detachKinetics();
         this.speed = speed;
         this.attachKinetics();
+    }
+
+    @Override
+    public void readPacket(NBTTagCompound nbt) {
+        super.readPacket(nbt);
+
+        this.syncNextTick();
     }
 }

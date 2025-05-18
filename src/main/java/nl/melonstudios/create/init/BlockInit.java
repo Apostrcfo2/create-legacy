@@ -38,6 +38,8 @@ public final class BlockInit {
             .setRegistryName("clutch").setUnlocalizedName("create.clutch"));
 
     public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
+    public static final BlockWaterWheel WATER_WHEEL = registerBlockWithItem(new BlockWaterWheel(MapColor.WOOD, SoundType.WOOD));
+    public static final BlockWaterWheelTemp WATER_WHEEL_TEMP = registerBlockWithItem(new BlockWaterWheelTemp(MapColor.WOOD, SoundType.WOOD));
 
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)

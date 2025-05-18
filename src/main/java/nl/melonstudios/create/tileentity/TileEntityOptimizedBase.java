@@ -3,7 +3,6 @@ package nl.melonstudios.create.tileentity;
 import com.melonstudios.melonlib.tileentity.ISyncedTE;
 import com.melonstudios.melonlib.tileentity.TileEntityCachedRenderBB;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import nl.melonstudios.create.util.interfaces.IStateFindable;
 
@@ -16,6 +15,10 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
     private boolean preventNextRemoval = false;
     public void preventNextRemoval() {
         this.preventNextRemoval = true;
+    }
+
+    protected void syncNextTick() {
+        this.syncNextTick = true;
     }
 
     @Override
@@ -80,7 +83,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
             this.requestSync();
         }
         this.tick();
-        if (this.tickCounterLazy-- <= this.tickRateLazy) {
+        if (this.tickCounterLazy-- <= 0) {
             this.tickCounterLazy = this.tickRateLazy;
             this.tickLazy();
         }
@@ -90,7 +93,9 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     public void remove() {}
 
-    public abstract void initialize();
+    public void initialize() {
+        this.tickLazy();
+    }
     /**
      * Called every tick
      * @since 1.6

@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.tileentity.*;
@@ -50,6 +51,8 @@ public class CommonProxy {
         this.registerTE(TileEntityGearshift.class, "gearshift");
         this.registerTE(TileEntityClutch.class, "clutch");
         this.registerTE(TileEntityHandCrank.class, "hand_crank");
+        this.registerTE(TileEntityWaterWheel.class, "water_wheel");
+        this.registerTE(TileEntityWaterWheelTemp.class, "water_wheel_temp");
         this.registerTE(TileEntitySpeedometer.class, "speedometer");
         this.registerTE(TileEntityStressometer.class, "stressometer");
         this.registerTE(TileEntityDrill.class, "drill");

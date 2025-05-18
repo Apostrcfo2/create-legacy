@@ -43,11 +43,13 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
 
     @Override
     public void initialize() {
+        super.initialize();
         if (this.hasNetwork() && !this.world.isRemote) {
             KineticNetwork network = this.getOrCreateNetwork();
             if (!network.initialized) network.initFromTE(this.capacity, this.stress, this.networkSize);
             network.addSilently(this, this.lastCapacityProvided, this.lastStressApplied);
         }
+        this.sync();
     }
     @Override
     public void tick() {
@@ -55,9 +57,11 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
 
         this.preventSpeedUpdate = 0;
 
-        if (this.validationCountdown-- <= 0) {
-            this.validationCountdown = 60;
-            this.validateKinetics();
+        if (!this.world.isRemote) {
+            if (this.validationCountdown-- <= 0) {
+                this.validationCountdown = 60;
+                this.validateKinetics();
+            }
         }
 
         if (this.flickerTally > 0) this.flickerTally--;
@@ -132,6 +136,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
         }
 
         this.speed = compound.getFloat("speed");
+        this.updateSpeed = compound.getBoolean("updateSpeed");
         if (compound.hasKey("source")) this.source = BlockPos.fromLong(compound.getLong("source"));
 
         if (compound.hasKey("Network", 10)) {
@@ -354,7 +359,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
 
     @Override
     public boolean canRenderBreaking() {
-        return true;
+        return false;
     }
 
     @Override

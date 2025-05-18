@@ -26,6 +26,8 @@ public class KineticNetwork {
         this.unloadedStress = stress;
         this.unloadedMembers = members;
         this.initialized = true;
+        this.updateStress();
+        this.updateCapacity();
     }
 
     public void addSilently(TileEntityKinetic te, float lastCapacity, float lastStress) {
@@ -48,6 +50,7 @@ public class KineticNetwork {
         if (this.members.containsKey(te)) return;
         if (te.isSource()) this.sources.put(te, te.calculateCapacity());
         this.members.put(te, te.calculateImpact());
+        this.updateFromNetwork(te);
         te.networkDirty = true;
     }
 
@@ -64,6 +67,7 @@ public class KineticNetwork {
         if (!this.members.containsKey(te)) return;
         if (te.isSource()) this.sources.remove(te);
         this.members.remove(te);
+        te.updateFromNetwork(0, 0, 0);
 
         if (this.members.isEmpty()) {
             KNManager.NETWORK_MAP.get(te.getWorld()).remove(this.networkID);
@@ -77,7 +81,7 @@ public class KineticNetwork {
     }
 
     public void sync() {
-        for (TileEntityKinetic te : this.members.keySet()) updateFromNetwork(te);
+        this.members.keySet().forEach(this::updateFromNetwork);
     }
     private void updateFromNetwork(TileEntityKinetic te) {
         te.updateFromNetwork(this.capacity, this.stress, this.getSize());
