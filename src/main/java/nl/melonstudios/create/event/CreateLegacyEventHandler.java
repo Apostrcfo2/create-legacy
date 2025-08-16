@@ -103,6 +103,7 @@ public class CreateLegacyEventHandler {
                                     event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(),
                                     Integer.MAX_VALUE, font
                             );
+                            GlStateManager.disableLighting();
                             GlStateManager.popMatrix();
                         }
                     }
