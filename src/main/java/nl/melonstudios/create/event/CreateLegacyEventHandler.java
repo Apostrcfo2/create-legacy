@@ -18,7 +18,6 @@ import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +28,6 @@ import nl.melonstudios.create.init.OreDictInit;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
-import nl.melonstudios.create.util.TileEntityPacketStaller;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
 
 import java.util.List;
@@ -74,15 +72,6 @@ public class CreateLegacyEventHandler {
         event.registerCapacity(BlockInit.WATER_WHEEL, 16.0F);
         event.registerCapacity(BlockInit.WATER_WHEEL_TEMP, 32.0F);
         event.registerStress(BlockInit.DRILL, 4.0F);
-    }
-
-    @SubscribeEvent
-    public static void tickServer(TickEvent.ServerTickEvent event) {
-
-    }
-    @SubscribeEvent
-    public static void tickClient(TickEvent.ClientTickEvent event) {
-        TileEntityPacketStaller.tick();
     }
 
     private static final ItemStack goggles = new ItemStack(ItemInit.GOGGLES);

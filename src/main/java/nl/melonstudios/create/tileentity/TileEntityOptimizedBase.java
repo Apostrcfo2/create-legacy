@@ -13,6 +13,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
     private boolean initialized = false;
     private boolean unloadedChunk = false;
     private boolean preventNextRemoval = false;
+    private int clientDelay = -1;
     public void preventNextRemoval() {
         this.preventNextRemoval = true;
     }
@@ -60,7 +61,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     @Override
     public void onLoad() {
-        if (this.world.isRemote) this.syncNextTick = true;
+        if (this.world.isRemote) this.requestSync();
     }
 
     @Override
@@ -70,17 +71,28 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     @Override
     public final void update() {
-        if (!this.initialized) {
-            this.initialize();
-            this.initialized = true;
+        if (!this.world.isRemote) {
+            if (!this.initialized) {
+                this.initialize();
+                this.initialized = true;
+            }
+            if (this.syncNextTick) {
+                this.syncNextTick = false;
+                this.sync();
+            }
         }
-        if (this.syncNextTick) {
-            this.syncNextTick = false;
-            this.sync();
-        }
-        if (this.requestSyncNextTick) {
-            this.requestSyncNextTick = false;
-            this.requestSync();
+        if (this.world.isRemote) {
+            if (this.requestSyncNextTick) {
+                this.requestSyncNextTick = false;
+                this.requestSync();
+            }
+            if (this.clientDelay > 0) {
+                this.clientDelay--;
+                if (this.clientDelay == 0) {
+                    this.requestSync();
+                    this.clientDelay = -1;
+                }
+            }
         }
         this.tick();
         if (this.tickCounterLazy-- <= 0) {

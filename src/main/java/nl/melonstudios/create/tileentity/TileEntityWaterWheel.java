@@ -71,7 +71,7 @@ public class TileEntityWaterWheel extends TileEntityKineticGeneratorBase {
     public void tickLazy() {
         super.tickLazy();
 
-        this.determineAndApplyFlowSource();
+        if (!this.world.isRemote) this.determineAndApplyFlowSource();
     }
 
     public void determineAndApplyFlowSource() {
@@ -95,8 +95,6 @@ public class TileEntityWaterWheel extends TileEntityKineticGeneratorBase {
             double dot = flowAtPos.dotProduct(positiveMotion);
             if (Math.abs(dot) > 0.5F) flowScore += Math.signum(dot);
         }
-
-        System.out.println("flow source client " + this.world.isRemote + " score " + flowScore);
         this.setFlowScoreAndUpdate(flowScore);
     }
 

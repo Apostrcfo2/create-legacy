@@ -98,8 +98,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
 
     compileOnly fg.deobf("mezz.jei:jei_${mc_version}:${jei_version}:api") // JEI
-    runtimeOnly fg.deobf("curse.maven:melonlib-${melonlib_version}") // MelonLib
-    compileOnly fg.deobf("curse.maven:melonlib-${melonlib_version}")
+    implementation fg.deobf("curse.maven:melonlib-${melonlib_version}") // MelonLib
     //runtimeOnly fg.deobf("curse.maven:ctm-${ctm_version}") // ConnectedTexturesMod (disabled in IDE)
 }
 
