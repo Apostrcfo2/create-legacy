@@ -39,7 +39,6 @@ public final class BlockInit {
 
     public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
     public static final BlockWaterWheel WATER_WHEEL = registerBlockWithItem(new BlockWaterWheel(MapColor.WOOD, SoundType.WOOD));
-    public static final BlockWaterWheelTemp WATER_WHEEL_TEMP = registerBlockWithItem(new BlockWaterWheelTemp(MapColor.WOOD, SoundType.WOOD));
 
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)
@@ -51,6 +50,10 @@ public final class BlockInit {
     public static final BlockDrill DRILL = (BlockDrill)
             registerBlockWithItem(new BlockDrill(MapColor.STONE, SoundType.METAL)
             .setRegistryName("drill").setUnlocalizedName("create.drill"));
+
+    public static final BlockMillstone MILLSTONE = (BlockMillstone)
+            registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
+                    .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
 
     private static <T extends Block> T registerBlock(T block) {
         BLOCKS.add(block);

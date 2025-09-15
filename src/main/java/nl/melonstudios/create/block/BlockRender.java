@@ -7,7 +7,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.util.EnumRenderPart;
+import nl.melonstudios.create.util.interfaces.IStateFindable;
 
+@SuppressWarnings("all")
 public final class BlockRender extends Block {
     public static final PropertyEnum<EnumRenderPart> RENDER_PART = PropertyEnum.create("render_part", EnumRenderPart.class);
     public BlockRender() {
@@ -24,7 +26,7 @@ public final class BlockRender extends Block {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(RENDER_PART).getID();
+        return state.getValue(RENDER_PART).getID() & 15;
     }
     @Override
     public IBlockState getStateFromMeta(int meta) {

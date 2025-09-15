@@ -1,16 +1,23 @@
 package nl.melonstudios.create.recipe;
 
-import com.melonstudios.melonlib.misc.MetaItem;
-import com.melonstudios.melonlib.predicates.StackPredicate;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.NBTTagCompound;
 import nl.melonstudios.create.init.ItemInit;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SandingRecipes {
+public class SandingRecipes implements NBTDecodableRecipeType {
     public static final SandingRecipes instance = new SandingRecipes();
+
+    @Override
+    public String getRecipeType() {
+        return "create:sanding";
+    }
+    @Override
+    public void decodeRecipe(String recipeId, NBTTagCompound nbt) {
+        this.addRecipe(new ItemStack(nbt.getCompoundTag("Input")), new ItemStack(nbt.getCompoundTag("Result")));
+    }
 
     private SandingRecipes() {
         this.addRecipe(new ItemStack(ItemInit.INGREDIENT, 3),

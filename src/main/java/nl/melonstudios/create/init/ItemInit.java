@@ -60,9 +60,11 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.GEARSHIFT);
         CreateLegacy.proxy.setItemModel(BlockInit.CLUTCH);
         CreateLegacy.proxy.setItemModel(BlockInit.HAND_CRANK);
+        CreateLegacy.proxy.setItemModel(BlockInit.WATER_WHEEL);
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.DRILL);
+        CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
     }
 
     private ItemInit() {

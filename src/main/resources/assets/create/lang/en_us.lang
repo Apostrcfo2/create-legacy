@@ -17,17 +17,19 @@ tile.create.shaft.name=Shaft
 tile.create.cogwheel_small.name=Cogwheel
 tile.create.cogwheel_large.name=Large Cogwheel
 tile.create.gearbox.name=Gearbox
-tile.create.gearbox_vertical.name=Vertical  Gearbox
+tile.create.gearbox_vertical.name=Vertical Gearbox
 
 tile.create.gearshift.name=Gearshift
 tile.create.clutch.name=Clutch
 
 tile.create.hand_crank.name=Hand Crank
+tile.create.water_wheel.name=Water Wheel
 
 tile.create.speedometer.name=Speedometer
 tile.create.stressometer.name=Stressometer
 
 tile.create.drill.name=Mechanical Drill
+tile.create.millstone.name=Millstone
 
 ## ITEMS ##
 item.create.wheat_flour.name=Wheat Flour

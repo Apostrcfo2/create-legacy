@@ -56,6 +56,7 @@ public class CommonProxy {
         this.registerTE(TileEntitySpeedometer.class, "speedometer");
         this.registerTE(TileEntityStressometer.class, "stressometer");
         this.registerTE(TileEntityDrill.class, "drill");
+        this.registerTE(TileEntityMillstone.class, "millstone");
     }
 
     public void pork() {}

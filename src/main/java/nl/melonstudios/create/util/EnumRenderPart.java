@@ -3,9 +3,11 @@ package nl.melonstudios.create.util;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Objects;
 
+@SuppressWarnings("all")
 public enum EnumRenderPart implements IStringSerializable {
     SAW_X,
     SAW_Y,
@@ -26,12 +28,20 @@ public enum EnumRenderPart implements IStringSerializable {
     DRILL_HEAD_SOUTH,
     DRILL_HEAD_WEST,
     DRILL_HEAD_EAST,
+
+    WATER_WHEEL_DOWN,
+    WATER_WHEEL_UP,
+    WATER_WHEEL_NORTH,
+    WATER_WHEEL_SOUTH,
+    WATER_WHEEL_WEST,
+    WATER_WHEEL_EAST,
     ;
 
     private final int id = this.ordinal();
     private final String name = this.toString().toLowerCase();
 
     @Override
+    @Nonnull
     public String getName() {
         return this.name;
     }
@@ -44,6 +54,7 @@ public enum EnumRenderPart implements IStringSerializable {
     private static final EnumRenderPart[] SAWS = new EnumRenderPart[3];
     private static final EnumRenderPart[] HALF_SHAFTS = new EnumRenderPart[6];
     private static final EnumRenderPart[] DRILL_HEADS = new EnumRenderPart[6];
+    private static final EnumRenderPart[] WATER_WHEELS = new EnumRenderPart[6];
 
     public static EnumRenderPart byID(int id) {
         return values()[id % values().length];
@@ -74,6 +85,13 @@ public enum EnumRenderPart implements IStringSerializable {
         DRILL_HEADS[3] = DRILL_HEAD_SOUTH;
         DRILL_HEADS[4] = DRILL_HEAD_WEST;
         DRILL_HEADS[5] = DRILL_HEAD_EAST;
+
+        WATER_WHEELS[0] = WATER_WHEEL_DOWN;
+        WATER_WHEELS[1] = WATER_WHEEL_UP;
+        WATER_WHEELS[2] = WATER_WHEEL_NORTH;
+        WATER_WHEELS[3] = WATER_WHEEL_SOUTH;
+        WATER_WHEELS[4] = WATER_WHEEL_WEST;
+        WATER_WHEELS[5] = WATER_WHEEL_EAST;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
@@ -84,5 +102,8 @@ public enum EnumRenderPart implements IStringSerializable {
     }
     public static EnumRenderPart getDrillHead(EnumFacing facing) {
         return DRILL_HEADS[facing.getIndex()];
+    }
+    public static EnumRenderPart getWaterWheel(EnumFacing facing) {
+        return WATER_WHEELS[facing.getIndex()];
     }
 }

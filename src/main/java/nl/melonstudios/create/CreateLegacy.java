@@ -1,5 +1,8 @@
 package nl.melonstudios.create;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -13,8 +16,13 @@ import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.proxy.CommonProxy;
+import nl.melonstudios.create.recipe.MillingRecipes;
+import nl.melonstudios.create.recipe.NBTDecodableRecipeType;
+import nl.melonstudios.create.recipe.SandingRecipes;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
 
 import static nl.melonstudios.create.CreateLegacy.DEPENDENCIES;
 
@@ -25,6 +33,14 @@ public class CreateLegacy {
     public static final String NAME = "Create Legacy";
     public static final String VERSION = "1.0.0";
     static final String DEPENDENCIES = "required-after:melonlib@[1.4,)" + (inIDE ? "" : ";required-after-client:ctm");
+
+    private static final HashMap<String, NBTDecodableRecipeType> DECODABLE_RECIPE_TYPE_MAP = new HashMap<>();
+    public static void addNBTDecodableRecipe(NBTDecodableRecipeType type) {
+        if (DECODABLE_RECIPE_TYPE_MAP.containsKey(type.getRecipeType())) {
+            throw new IllegalArgumentException("Duplicate recipe ID: " + type.getRecipeType());
+        }
+        DECODABLE_RECIPE_TYPE_MAP.put(type.getRecipeType(), type);
+    }
 
     private static SimpleNetworkWrapper network;
     public static SimpleNetworkWrapper getNetwork() {
@@ -51,6 +67,9 @@ public class CreateLegacy {
         GameRegistry.registerWorldGenerator(new CreateWorldGen(), 0);
 
         SoundInit.init();
+
+        addNBTDecodableRecipe(SandingRecipes.instance);
+        addNBTDecodableRecipe(MillingRecipes.instance);
     }
 
     @EventHandler
@@ -68,5 +87,20 @@ public class CreateLegacy {
 
     @EventHandler
     public void youGotMail(FMLInterModComms.IMCEvent event) {
+        for (FMLInterModComms.IMCMessage message : event.getMessages()) {
+            if (message.getMessageType() == NBTTagCompound.class) {
+                NBTTagCompound nbt = message.getNBTValue();
+
+                if (nbt.hasKey("RecipeData", 10)) {
+                    NBTTagCompound data = nbt.getCompoundTag("RecipeData");
+                    String recipeType = data.getString("type");
+                    NBTDecodableRecipeType type = DECODABLE_RECIPE_TYPE_MAP.get(recipeType);
+                    if (type != null) {
+                        String recipeId = data.getString("id");
+                        type.decodeRecipe(recipeId, data);
+                    }
+                }
+            }
+        }
     }
 }

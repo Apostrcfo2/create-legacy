@@ -67,6 +67,28 @@
       "model": "create:render/drill_head",
       "x": 90,
       "y": 270
+    },
+    "render_part=water_wheel_up": {
+      "model": "create:render/water_wheel",
+      "x": 90
+    },
+    "render_part=water_wheel_down": {
+      "model": "create:render/water_wheel",
+      "x": 90
+    },
+    "render_part=water_wheel_north": {
+      "model": "create:render/water_wheel"
+    },
+    "render_part=water_wheel_east": {
+      "model": "create:render/water_wheel",
+      "y": 90
+    },
+    "render_part=water_wheel_south": {
+      "model": "create:render/water_wheel"
+    },
+    "render_part=water_wheel_west": {
+      "model": "create:render/water_wheel",
+      "y": 90
     }
   }
 }

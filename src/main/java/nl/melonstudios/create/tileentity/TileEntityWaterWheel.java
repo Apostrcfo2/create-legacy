@@ -1,5 +1,6 @@
 package nl.melonstudios.create.tileentity;
 
+import com.melonstudios.melonlib.misc.BlockStateProperties;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -7,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
@@ -159,5 +162,10 @@ public class TileEntityWaterWheel extends TileEntityKineticGeneratorBase {
     @Override
     public float getGeneratedSpeed() {
         return (float) (MathHelper.clamp(this.flowScore, -4, 4) * 8) / this.getSize();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public EnumFacing getRenderFacing() {
+        return this.getState().getValue(BlockStateProperties.FACING);
     }
 }

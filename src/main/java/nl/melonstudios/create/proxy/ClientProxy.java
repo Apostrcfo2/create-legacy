@@ -18,6 +18,7 @@ import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tileentity.*;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -40,11 +41,12 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityGearshift.class, "gearshift", new TESRSplitShaft<>());
         this.registerTESR(TileEntityClutch.class, "clutch", new TESRSplitShaft<>());
         this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());
-        this.registerTESR(TileEntityWaterWheel.class, "water_wheel", null);
+        this.registerTESR(TileEntityWaterWheel.class, "water_wheel", new TESRWaterWheel());
         this.registerTESR(TileEntityWaterWheelTemp.class, "water_wheel_temp", null);
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
         this.registerTESR(TileEntityStressometer.class, "stressometer", new TESRGauge<>(BlockGauge.Type.STRESS));
         this.registerTESR(TileEntityDrill.class, "drill", new TESRDrill<>());
+        this.registerTESR(TileEntityMillstone.class, "millstone", null);
     }
 
     @Override
@@ -60,8 +62,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void spawnRedstoneFX(World world, double x, double y, double z, double mx, double my, double mz,
                                 float size, float r, float g, float b) {
-        ParticleRedstone particle = (ParticleRedstone) Minecraft.getMinecraft().effectRenderer
-                .spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), x, y, z, mx, my, mz);
+        ParticleRedstone particle = (ParticleRedstone) Objects.requireNonNull(Minecraft.getMinecraft().effectRenderer
+                .spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), x, y, z, mx, my, mz));
         particle.setRBGColorF(r, g, b);
         particle.multipleParticleScaleBy(size);
     }
