@@ -11,14 +11,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MillingRecipes implements NBTDecodableRecipeType {
     public static final MillingRecipes instance = new MillingRecipes();
@@ -29,7 +24,7 @@ public class MillingRecipes implements NBTDecodableRecipeType {
     }
     @Override
     public void decodeRecipe(String recipeId, NBTTagCompound nbt) {
-        Recipe recipe = new Recipe(recipeId, nbt);
+        PulverizationRecipe recipe = new PulverizationRecipe(recipeId, nbt);
         this.addRecipe(recipe);
     }
 
@@ -160,9 +155,9 @@ public class MillingRecipes implements NBTDecodableRecipeType {
         //TODO: the last few recipes (see the create wiki for reference)
     }
 
-    public final HashMap<String, Recipe> recipes = new HashMap<>();
+    public final HashMap<String, PulverizationRecipe> recipes = new HashMap<>();
 
-    public final void addRecipe(Recipe recipe) {
+    public final void addRecipe(PulverizationRecipe recipe) {
         this.recipes.put(recipe.recipeID, recipe);
     }
     @SuppressWarnings("unused")
@@ -171,51 +166,20 @@ public class MillingRecipes implements NBTDecodableRecipeType {
     }
     @SafeVarargs
     public final void addRecipe(String recipeID, StackPredicate input, Tuple<ItemStack, Float>... results) {
-        this.addRecipe(new Recipe(recipeID, input, ImmutableList.copyOf(results)));
+        this.addRecipe(new PulverizationRecipe(recipeID, input, ImmutableList.copyOf(results)));
     }
 
     public final void removeRecipe(String recipeID) {
         this.recipes.remove(recipeID);
     }
 
-    public Recipe getRecipe(String recipeID) {
+    public PulverizationRecipe getRecipe(String recipeID) {
         return this.recipes.get(recipeID);
     }
-    public Recipe getRecipeForInput(ItemStack input) {
-        for (Recipe recipe : this.recipes.values()) {
+    public PulverizationRecipe getRecipeForInput(ItemStack input) {
+        for (PulverizationRecipe recipe : this.recipes.values()) {
             if (recipe.input.test(input)) return recipe;
         }
         return null;
-    }
-
-    public static final class Recipe {
-        public final String recipeID;
-        public final StackPredicate input;
-        public final List<Tuple<ItemStack, Float>> results;
-
-        public Recipe(String recipeID, StackPredicate input, List<Tuple<ItemStack, Float>> results) {
-            this.recipeID = recipeID;
-            this.input = input;
-            this.results = results;
-        }
-
-        private Recipe(String recipeID, NBTTagCompound nbt) {
-            this.recipeID = recipeID;
-            this.input = new StackPredicateMetaItem(
-                    MetaItem.of(ForgeRegistries.ITEMS.getValue(
-                            new ResourceLocation(nbt.getString("inputID"))),
-                            nbt.getInteger("inputMeta")
-                    )
-            );
-            NBTTagList resultList = nbt.getTagList("Results", 10);
-            ArrayList<Tuple<ItemStack, Float>> results = new ArrayList<>();
-            for (int i = 0; i < resultList.tagCount(); i++) {
-                NBTTagCompound data = resultList.getCompoundTagAt(i);
-                float chance = data.hasKey("chance") ? data.getFloat("chance") : 1.0F;
-                ItemStack stack = new ItemStack(data.getCompoundTag("Item"));
-                results.add(new Tuple<>(stack, chance));
-            }
-            this.results = ImmutableList.copyOf(results);
-        }
     }
 }
