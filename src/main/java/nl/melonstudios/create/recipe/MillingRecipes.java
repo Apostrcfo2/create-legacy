@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Tuple;
+import nl.melonstudios.create.init.ItemInit;
 
 import java.util.HashMap;
 
@@ -146,13 +147,29 @@ public class MillingRecipes implements NBTDecodableRecipeType {
                 new Tuple<>(new ItemStack(Items.SUGAR, 2), 1.0F),
                 new Tuple<>(new ItemStack(Items.SUGAR, 1), 0.1F)
         );
+        this.addRecipe("create:sunflower", new StackPredicateMetaItem(MetaItem.of(Blocks.DOUBLE_PLANT, 0)),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 11), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 14), 0.25F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 11), 0.25F)
+        );
+        this.addRecipe("create:double_tallgrass", new StackPredicateMetaItem(MetaItem.of(Blocks.DOUBLE_PLANT, 2)),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS), 0.5F)
+        );
         this.addRecipe("create:terracotta", new StackPredicateItem(Item.getItemFromBlock(Blocks.HARDENED_CLAY)),
                 new Tuple<>(new ItemStack(Blocks.SAND, 1, 1), 1.0F)
+        );
+        this.addRecipe("create:wheat", new StackPredicateItem(Items.WHEAT),
+                new Tuple<>(new ItemStack(ItemInit.INGREDIENT, 1, 0), 1.0F),
+                new Tuple<>(new ItemStack(ItemInit.INGREDIENT, 2, 0), 0.25F),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS), 0.25F)
+        );
+        this.addRecipe("create:white_tulip", new StackPredicateMetaItem(MetaItem.of(Blocks.RED_FLOWER, 1)),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 10), 0.1F)
         );
         this.addRecipe("create:wool", new StackPredicateOreDict("wool"),
                 new Tuple<>(new ItemStack(Items.STRING), 1.0F)
         );
-        //TODO: the last few recipes (see the create wiki for reference)
     }
 
     public final HashMap<String, PulverizationRecipe> recipes = new HashMap<>();
