@@ -4,9 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.MetaItem;
 import com.melonstudios.melonlib.predicates.StackPredicate;
 import com.melonstudios.melonlib.predicates.StackPredicateMetaItem;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -18,11 +21,13 @@ public final class PulverizationRecipe {
     public final String recipeID;
     public final StackPredicate input;
     public final List<Tuple<ItemStack, Float>> results;
+    public final int processingTime;
 
-    public PulverizationRecipe(String recipeID, StackPredicate input, List<Tuple<ItemStack, Float>> results) {
+    public PulverizationRecipe(String recipeID, StackPredicate input, List<Tuple<ItemStack, Float>> results, int processingTime) {
         this.recipeID = recipeID;
         this.input = input;
         this.results = results;
+        this.processingTime = processingTime;
     }
 
     PulverizationRecipe(String recipeID, NBTTagCompound nbt) {
@@ -42,5 +47,16 @@ public final class PulverizationRecipe {
             results.add(new Tuple<>(stack, chance));
         }
         this.results = ImmutableList.copyOf(results);
+        this.processingTime = nbt.hasKey("processingTime") ? nbt.getInteger("processingTime") : 100;
+    }
+
+    public NonNullList<ItemStack> collectPossibleIngredients() {
+        NonNullList<ItemStack> list = NonNullList.create();
+        for (Item item : ForgeRegistries.ITEMS) {
+            if (item.getHasSubtypes()) {
+                item.getSubItems(CreativeTabs.SEARCH, list);
+            } else list.add(new ItemStack(item));
+        }
+        return list;
     }
 }

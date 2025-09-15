@@ -182,8 +182,12 @@ public class MillingRecipes implements NBTDecodableRecipeType {
         throw new IllegalArgumentException("Cannot have recipe with no results! Did you want removeRecipe() instead?");
     }
     @SafeVarargs
+    public final void addRecipe(String recipeID, StackPredicate input, int processingTime, Tuple<ItemStack, Float>... results) {
+        this.addRecipe(new PulverizationRecipe(recipeID, input, ImmutableList.copyOf(results), processingTime));
+    }
+    @SafeVarargs
     public final void addRecipe(String recipeID, StackPredicate input, Tuple<ItemStack, Float>... results) {
-        this.addRecipe(new PulverizationRecipe(recipeID, input, ImmutableList.copyOf(results)));
+        this.addRecipe(new PulverizationRecipe(recipeID, input, ImmutableList.copyOf(results), 100));
     }
 
     public final void removeRecipe(String recipeID) {

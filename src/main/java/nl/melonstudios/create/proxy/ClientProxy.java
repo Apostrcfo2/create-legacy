@@ -1,24 +1,32 @@
 package nl.melonstudios.create.proxy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSound;
+import net.minecraft.client.particle.ParticleBlockDust;
+import net.minecraft.client.particle.ParticleBreaking;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.block.BlockGauge;
+import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tileentity.*;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Random;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -66,5 +74,31 @@ public class ClientProxy extends CommonProxy {
                 .spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), x, y, z, mx, my, mz));
         particle.setRBGColorF(r, g, b);
         particle.multipleParticleScaleBy(size);
+    }
+
+    @Override
+    public void millstoneFX(TileEntityMillstone millstone) {
+        BlockPos pos = millstone.getPos();
+        Random rnd = millstone.getWorld().rand;
+        ItemStack in = millstone.input;
+        if (in.isEmpty()) return;
+        int id = Item.getIdFromItem(in.getItem());
+        int meta = in.getMetadata();
+        for (int i = 0; i < 5; i++) {
+            millstone.getWorld().playSound(Minecraft.getMinecraft().player, pos,
+                    SoundInit.block_millstone_ambient, SoundCategory.BLOCKS,
+                    0.35F, 0.8F + millstone.getWorld().rand.nextFloat() * 0.3F
+            );
+            double xOffset = rnd.nextDouble() - 0.5;
+            double zOffset = rnd.nextDouble() - 0.5;
+            Minecraft.getMinecraft().effectRenderer
+                    .spawnEffectParticle(EnumParticleTypes.ITEM_CRACK.getParticleID(),
+                            pos.getX() + xOffset + 0.5, pos.getY() + 0.5, pos.getZ() + zOffset + 0.5,
+                            xOffset * 0.2, 0.1, zOffset * 0.2, id, meta);
+            Minecraft.getMinecraft().effectRenderer
+                    .spawnEffectParticle(EnumParticleTypes.CRIT.getParticleID(),
+                            pos.getX() + rnd.nextDouble(), pos.getY() + 0.5, pos.getZ() + rnd.nextDouble(),
+                            0, 0, 0);
+        }
     }
 }

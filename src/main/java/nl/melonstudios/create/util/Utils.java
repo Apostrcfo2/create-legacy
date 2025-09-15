@@ -1,14 +1,18 @@
 package nl.melonstudios.create.util;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.storage.MapStorage;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 @SuppressWarnings("all")
 public class Utils {
@@ -100,5 +104,26 @@ public class Utils {
         if (axis == EnumFacing.Axis.Z)
             return new Vec3d(x * cos - y * sin, y * cos + x * sin, z);
         return vec;
+    }
+
+    public static List<ItemStack> rollChancedResults(List<Tuple<ItemStack, Float>> results) {
+        List<ItemStack> list = new ArrayList<>();
+        Random rnd = new Random();
+        for (int i = 0; i < results.size(); i++) {
+            Tuple<ItemStack, Float> tuple = results.get(i);
+            if (tuple.getFirst().isEmpty()) continue;
+            float chance = tuple.getSecond();
+            if (chance >= 1.0F) {
+                list.add(tuple.getFirst().copy());
+            } else {
+                ItemStack stack = tuple.getFirst().copy();
+                int size = stack.getCount();
+                stack.setCount(0);
+                for (int j = 0; j < size; j++) {
+                    if (rnd.nextFloat() < chance) stack.grow(1);
+                }
+            }
+        }
+        return list;
     }
 }

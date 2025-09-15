@@ -47,6 +47,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     @Override
     public void sync() {
+        this.markDirty();
         if (this.pos != null)
             ISyncedTE.super.sync();
         else this.syncNextTick = true;

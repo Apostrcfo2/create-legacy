@@ -102,7 +102,7 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
         TileEntityKinetic te = getKineticTE(world, pos);
         if (te != null) {
             TextBuilder builder = new TextBuilder();
-            float stressCapacity = te.calculateCapacity() * Math.abs(te.getTheoreticalSpeed());
+            float stressCapacity = te.calculateCapacity() * Math.abs(te.getGeneratedSpeed());
             float stressImpact = te.calculateImpact() * Math.abs(te.getTheoreticalSpeed());
             if (stressCapacity == 0 && stressImpact == 0) return Collections.emptyList();
             builder.translate("goggles.kinetic_stats").enter();

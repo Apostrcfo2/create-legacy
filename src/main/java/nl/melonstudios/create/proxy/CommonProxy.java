@@ -68,4 +68,7 @@ public class CommonProxy {
     public void spawnRedstoneFX(World world, double x, double y, double z, double mx, double my, double mz, float size, float r, float g, float b) {
 
     }
+    public void millstoneFX(TileEntityMillstone millstone) {
+
+    }
 }
