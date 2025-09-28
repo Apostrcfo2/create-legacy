@@ -97,7 +97,7 @@ public abstract class TileEntityBreakBlockBase extends TileEntityKinetic {
 
         float breakSpeed = this.getBreakSpeed();
         this.destroyProgress += MathHelper.clamp((int)(breakSpeed / blockHardness), 1, 10 - this.destroyProgress);
-        this.world.playSound(null, this.pos, stateToBreak.getBlock().getSoundType().getHitSound(),
+        this.world.playSound(null, this.breakingPos, stateToBreak.getBlock().getSoundType().getHitSound(),
                 SoundCategory.BLOCKS, .25F, 1.0F);
 
         if (this.destroyProgress >= 10) {

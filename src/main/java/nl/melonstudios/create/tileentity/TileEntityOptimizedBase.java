@@ -24,6 +24,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     @Override
     public void onChunkUnload() {
+        super.onChunkUnload();
         this.unloadedChunk = true;
     }
 
@@ -75,6 +76,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
         if (!this.world.isRemote) {
             if (!this.initialized) {
                 this.initialize();
+                this.markDirty();
                 this.initialized = true;
             }
             if (this.syncNextTick) {

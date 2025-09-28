@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -139,5 +140,11 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
             builder.space().text("Kinetic Stress Impact: ").formatting(TextFormatting.AQUA).number(impact).text("x RPM").enter();
         }
         if (!builder.isEmpty()) tooltip.addAll(builder.build());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends TileEntity> void withTEDo(World world, BlockPos pos, Class<T> clazz, Consumer<T> action) {
+        TileEntity te = world.getTileEntity(pos);
+        if (clazz.isInstance(te)) action.accept((T) te);
     }
 }

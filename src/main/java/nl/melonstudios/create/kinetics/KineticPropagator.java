@@ -17,6 +17,7 @@ import nl.melonstudios.create.util.interfaces.IRotate;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import static nl.melonstudios.create.util.Utils.axis_choose;
 import static nl.melonstudios.create.util.Utils.dist_manh;
@@ -181,13 +182,13 @@ public class KineticPropagator {
                 }
 
                 if (Math.abs(newSpeed) >= Math.abs(speedOfNeighbour)) {
-                    if (!te.hasNetwork() || te.networkID == neighbourTE.networkID) {
+                    if (!te.hasNetwork() || Objects.equals(te.networkID, neighbourTE.networkID)) {
                         final float epsilon = Math.abs(speedOfNeighbour) / 256.0F / 256.0F;
                         if (Math.abs(newSpeed) > Math.abs(speedOfNeighbour) + epsilon) world.destroyBlock(pos, true);
                         continue;
                     }
 
-                    if (te.hasSource() && te.source == neighbourTE.getPos()) te.removeSource();
+                    if (te.hasSource() && te.source.equals(neighbourTE.getPos())) te.removeSource();
 
                     final float lastSpeed = neighbourTE.getSpeed();
                     neighbourTE.setSource(te.getPos());
@@ -221,7 +222,7 @@ public class KineticPropagator {
             final TileEntity tileEntity = world.getTileEntity(neighbourPos);
             if (!(tileEntity instanceof TileEntityKinetic)) continue;
             final TileEntityKinetic neighbourTE = (TileEntityKinetic) tileEntity;
-            if (!neighbourTE.hasSource() || neighbourTE.source != pos) continue;
+            if (!neighbourTE.hasSource() || !neighbourTE.source.equals(pos)) continue;
 
             propagateMissingSource(neighbourTE);
         }
@@ -245,10 +246,10 @@ public class KineticPropagator {
             currentTE.sync();
 
             for (final TileEntityKinetic neighbourTE : getConnectedNeighbours(currentTE)) {
-                if (neighbourTE.getPos() == missingSource) continue;
+                if (neighbourTE.getPos().equals(missingSource)) continue;
                 if (!neighbourTE.hasSource()) continue;
 
-                if (neighbourTE.source != pos) {
+                if (!neighbourTE.source.equals(pos)) {
                     potentialNewSources.add(neighbourTE);
                     continue;
                 }

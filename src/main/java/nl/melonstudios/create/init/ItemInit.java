@@ -10,6 +10,7 @@ import nl.melonstudios.create.block.state.EnumOrestoneVariant;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.item.ItemIngredient;
 import nl.melonstudios.create.item.ItemSandpaper;
+import nl.melonstudios.create.item.ItemTreeFertilizer;
 import nl.melonstudios.create.util.ModTabs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,6 +27,9 @@ public final class ItemInit {
     public static final ItemIngredient INGREDIENT = registerItem(new ItemIngredient());
     public static final ItemGoggles GOGGLES = registerItem(new ItemGoggles());
     public static final ItemSandpaper SANDPAPER = registerItem(new ItemSandpaper());
+    public static final ItemTreeFertilizer TREE_FERTILIZER = (ItemTreeFertilizer)
+            registerItem(new ItemTreeFertilizer()
+            .setRegistryName("tree_fertilizer").setUnlocalizedName("create.tree_fertilizer"));
 
     private static <T extends Item> T registerItem(T item) {
         ITEMS.add(item);
@@ -39,6 +43,7 @@ public final class ItemInit {
         }
         CreateLegacy.proxy.setItemModel(GOGGLES);
         CreateLegacy.proxy.setItemModel(SANDPAPER);
+        CreateLegacy.proxy.setItemModel(TREE_FERTILIZER);
 
         // blocks
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");
@@ -66,6 +71,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.DRILL);
+        CreateLegacy.proxy.setItemModel(BlockInit.SAW);
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
 
         for (int i = 0; i < 7; i++) {

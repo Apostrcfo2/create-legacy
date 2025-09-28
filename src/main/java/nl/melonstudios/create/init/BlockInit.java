@@ -10,10 +10,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumFacing;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.*;
-import nl.melonstudios.create.block.actor.BlockDrill;
-import nl.melonstudios.create.block.actor.BlockGauge;
-import nl.melonstudios.create.block.actor.BlockMillstone;
-import nl.melonstudios.create.block.actor.BlockTurntable;
+import nl.melonstudios.create.block.actor.*;
 import nl.melonstudios.create.block.deco.BlockOrestone;
 import nl.melonstudios.create.block.deco.BlockOrestonePillar;
 import nl.melonstudios.create.block.generator.BlockHandCrank;
@@ -63,10 +60,13 @@ public final class BlockInit {
     public static final BlockDrill DRILL = (BlockDrill)
             registerBlockWithItem(new BlockDrill(MapColor.STONE, SoundType.METAL)
             .setRegistryName("drill").setUnlocalizedName("create.drill"));
+    public static final BlockSaw SAW = (BlockSaw)
+            registerBlockWithItem(new BlockSaw(MapColor.IRON, SoundType.METAL)
+            .setRegistryName("saw").setUnlocalizedName("create.saw"));
 
     public static final BlockMillstone MILLSTONE = (BlockMillstone)
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
-                    .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
+            .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
     //endregion
 
     //region Decorations

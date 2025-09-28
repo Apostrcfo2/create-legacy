@@ -8,6 +8,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -19,6 +20,8 @@ import nl.melonstudios.create.block.state.EnumOrestoneVariant;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.util.BlockProperties;
+
+import java.util.Random;
 
 public class BlockOrestonePillar extends Block implements IMetaName {
     public static final PropertyEnum<EnumOrestoneVariant> VARIANT = CreateStateProperties.ORESTONE_VARIANT;
@@ -64,6 +67,11 @@ public class BlockOrestonePillar extends Block implements IMetaName {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(VARIANT, EnumOrestoneVariant.byId(meta));
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return Item.getItemFromBlock(BlockInit.ORESTONE_PILLAR_Y);
     }
 
     @Override
