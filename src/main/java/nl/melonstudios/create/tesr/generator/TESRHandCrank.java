@@ -1,4 +1,4 @@
-package nl.melonstudios.create.tesr;
+package nl.melonstudios.create.tesr.generator;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -7,7 +7,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.init.BlockInit;
-import nl.melonstudios.create.tileentity.TileEntityHandCrank;
+import nl.melonstudios.create.tesr.TESRKineticBase;
+import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
 
 @SideOnly(Side.CLIENT)
 public class TESRHandCrank extends TESRKineticBase<TileEntityHandCrank> {

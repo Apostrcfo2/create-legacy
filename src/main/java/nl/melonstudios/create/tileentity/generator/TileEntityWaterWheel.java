@@ -1,4 +1,4 @@
-package nl.melonstudios.create.tileentity;
+package nl.melonstudios.create.tileentity.generator;
 
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import net.minecraft.block.BlockLiquid;
@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.tileentity.TileEntityKineticGeneratorBase;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.IRotate;
 

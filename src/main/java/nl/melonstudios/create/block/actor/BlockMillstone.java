@@ -1,24 +1,21 @@
-package nl.melonstudios.create.block;
+package nl.melonstudios.create.block.actor;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import nl.melonstudios.create.item.ItemSandpaper;
+import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.recipe.MillingRecipes;
-import nl.melonstudios.create.tileentity.TileEntityMillstone;
+import nl.melonstudios.create.tileentity.actor.TileEntityMillstone;
 import nl.melonstudios.create.util.interfaces.ICogwheel;
 
 import javax.annotation.Nullable;

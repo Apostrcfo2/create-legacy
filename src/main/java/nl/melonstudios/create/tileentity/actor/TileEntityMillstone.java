@@ -1,22 +1,16 @@
-package nl.melonstudios.create.tileentity;
+package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
-import com.melonstudios.melonlib.render.RenderMelon;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleBlockDust;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.recipe.MillingRecipes;
 import nl.melonstudios.create.recipe.PulverizationRecipe;
+import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.Utils;
 
 public class TileEntityMillstone extends TileEntityKinetic implements ISidedInventory {

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import nl.melonstudios.create.init.CommandInit;
 import nl.melonstudios.create.init.OreDictInit;
 import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
@@ -102,5 +103,10 @@ public class CreateLegacy {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        CommandInit.addCreateCommand(event);
     }
 }

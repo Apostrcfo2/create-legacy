@@ -1,4 +1,4 @@
-package nl.melonstudios.create.block;
+package nl.melonstudios.create.block.generator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -14,12 +14,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import nl.melonstudios.create.tileentity.TileEntityHandCrank;
-import nl.melonstudios.create.util.interfaces.IGoggleInfo;
+import nl.melonstudios.create.block.BlockKineticDirectionalBase;
+import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 public class BlockHandCrank extends BlockKineticDirectionalBase implements ITileEntityProvider {
     public BlockHandCrank(MapColor blockMapColorIn, SoundType soundTypeIn) {

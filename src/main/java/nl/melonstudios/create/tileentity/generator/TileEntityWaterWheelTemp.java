@@ -1,4 +1,4 @@
-package nl.melonstudios.create.tileentity;
+package nl.melonstudios.create.tileentity.generator;
 
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -6,9 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import nl.melonstudios.create.block.BlockWaterWheelTemp;
+import nl.melonstudios.create.block.generator.BlockWaterWheelTemp;
+import nl.melonstudios.create.tileentity.TileEntityKineticGeneratorBase;
 import nl.melonstudios.create.util.Utils;
 
 public class TileEntityWaterWheelTemp extends TileEntityKineticGeneratorBase {

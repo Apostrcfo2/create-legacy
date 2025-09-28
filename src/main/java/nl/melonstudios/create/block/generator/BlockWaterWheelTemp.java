@@ -1,4 +1,4 @@
-package nl.melonstudios.create.block;
+package nl.melonstudios.create.block.generator;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -10,8 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import nl.melonstudios.create.tileentity.TileEntityWaterWheel;
-import nl.melonstudios.create.tileentity.TileEntityWaterWheelTemp;
+import nl.melonstudios.create.block.BlockKineticRotatedPillarBase;
+import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
+import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
 
 import javax.annotation.Nullable;
 

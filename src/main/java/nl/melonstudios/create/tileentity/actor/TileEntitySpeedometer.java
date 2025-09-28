@@ -1,5 +1,6 @@
-package nl.melonstudios.create.tileentity;
+package nl.melonstudios.create.tileentity.actor;
 
+import nl.melonstudios.create.tileentity.TileEntityGaugeBase;
 import nl.melonstudios.create.util.Color;
 import nl.melonstudios.create.util.EnumSpeedLevel;
 import nl.melonstudios.create.util.Utils;

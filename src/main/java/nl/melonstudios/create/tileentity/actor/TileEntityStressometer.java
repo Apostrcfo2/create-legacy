@@ -1,7 +1,8 @@
-package nl.melonstudios.create.tileentity;
+package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import nl.melonstudios.create.tileentity.TileEntityGaugeBase;
 import nl.melonstudios.create.util.Color;
 
 public class TileEntityStressometer extends TileEntityGaugeBase {

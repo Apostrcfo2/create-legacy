@@ -45,7 +45,8 @@ public class ItemSandpaper extends Item {
                         SoundInit.item_sandpaper_used, SoundCategory.PLAYERS, 1.0F, 0.9F + worldIn.rand.nextFloat() * 0.2F);
                 return ActionResult.newResult(EnumActionResult.SUCCESS, paper);
             }
+            return ActionResult.newResult(EnumActionResult.PASS, paper);
         }
-        return ActionResult.newResult(EnumActionResult.PASS, paper);
+        return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
     }
 }

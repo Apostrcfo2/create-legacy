@@ -2,18 +2,21 @@ package nl.melonstudios.create.kinetics;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.world.World;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import java.util.HashMap;
 
 public class KNManager {
-    static final Reference2ObjectArrayMap<World, HashMap<Long, KineticNetwork>> NETWORK_MAP = new Reference2ObjectArrayMap<>();
+    static final HashMap<World, HashMap<Long, KineticNetwork>> NETWORK_MAP = new HashMap<>();
 
     public static void loadWorld(World world) {
         NETWORK_MAP.put(world, new HashMap<>());
+        CreateLegacy.logger.debug("Prepared kinetic space for {}", world.provider.getDimensionType().getName());
     }
     public static void unloadWorld(World world) {
         NETWORK_MAP.remove(world);
+        CreateLegacy.logger.debug("Removed kinetic space for {}", world.provider.getDimensionType().getName());
     }
 
     public static KineticNetwork getOrCreateNetworkFor(TileEntityKinetic te) {

@@ -1,4 +1,4 @@
-package nl.melonstudios.create.tileentity;
+package nl.melonstudios.create.tileentity.generator;
 
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import net.minecraft.block.Block;
@@ -6,7 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nl.melonstudios.create.block.BlockHandCrank;
+import nl.melonstudios.create.block.generator.BlockHandCrank;
+import nl.melonstudios.create.tileentity.TileEntityKineticGeneratorBase;
 
 public class TileEntityHandCrank extends TileEntityKineticGeneratorBase {
     public int inUse;

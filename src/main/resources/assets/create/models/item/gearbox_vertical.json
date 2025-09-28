@@ -2,7 +2,7 @@
 	"textures": {
 		"particle": "create:block/gearbox",
 		"gearbox": "create:block/gearbox",
-		"casing": "create:block/casing/casing_andesite",
+		"casing": "create:block/gearbox_top",
 		"shaft": "create:block/shaft",
 		"shaft_top": "create:block/shaft_top"
 	},

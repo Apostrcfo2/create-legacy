@@ -7,9 +7,17 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.EnumFacing;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.*;
-import nl.melonstudios.create.util.BlockProperties;
+import nl.melonstudios.create.block.actor.BlockDrill;
+import nl.melonstudios.create.block.actor.BlockGauge;
+import nl.melonstudios.create.block.actor.BlockMillstone;
+import nl.melonstudios.create.block.actor.BlockTurntable;
+import nl.melonstudios.create.block.deco.BlockOrestone;
+import nl.melonstudios.create.block.deco.BlockOrestonePillar;
+import nl.melonstudios.create.block.generator.BlockHandCrank;
+import nl.melonstudios.create.block.generator.BlockWaterWheel;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -23,6 +31,7 @@ public final class BlockInit {
     public static final BlockOre ORE = registerBlockWithItem(new BlockOre(), true);
     public static final BlockMetal METAL = registerBlockWithItem(BlockMetal.get(), true);
 
+    //region Kinetics
     public static final BlockCasing CASING = registerBlockWithItem(new BlockCasing(), true);
 
     public static final BlockShaft SHAFT = registerBlockWithItem(new BlockShaft(Material.ROCK, MapColor.STONE));
@@ -40,6 +49,10 @@ public final class BlockInit {
     public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
     public static final BlockWaterWheel WATER_WHEEL = registerBlockWithItem(new BlockWaterWheel(MapColor.WOOD, SoundType.WOOD));
 
+    public static final BlockTurntable TURNTABLE = (BlockTurntable)
+            registerBlockWithItem(new BlockTurntable(MapColor.WOOD, SoundType.WOOD)
+            .setRegistryName("turntable").setUnlocalizedName("create.turntable"));
+
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)
             .setRegistryName("speedometer").setUnlocalizedName("create.speedometer"));
@@ -54,6 +67,19 @@ public final class BlockInit {
     public static final BlockMillstone MILLSTONE = (BlockMillstone)
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
                     .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
+    //endregion
+
+    //region Decorations
+    public static final BlockOrestone ORESTONE = registerBlockWithItem(new BlockOrestone("stone"), true);
+    public static final BlockOrestone ORESTONE_CUT = registerBlockWithItem(new BlockOrestone("cut"), true);
+    public static final BlockOrestone ORESTONE_POLISHED = registerBlockWithItem(new BlockOrestone("polished"), true);
+    public static final BlockOrestone ORESTONE_BRICKS = registerBlockWithItem(new BlockOrestone("bricks"), true);
+    public static final BlockOrestone ORESTONE_BRICKS_FANCY = registerBlockWithItem(new BlockOrestone("bricks_fancy"), true);
+    public static final BlockOrestone ORESTONE_LAYERED = registerBlockWithItem(new BlockOrestone("layered"), true);
+    public static final BlockOrestonePillar ORESTONE_PILLAR_X = registerBlock(new BlockOrestonePillar(EnumFacing.Axis.X));
+    public static final BlockOrestonePillar ORESTONE_PILLAR_Y = registerBlockWithItem(new BlockOrestonePillar(EnumFacing.Axis.Y), true);
+    public static final BlockOrestonePillar ORESTONE_PILLAR_Z = registerBlock(new BlockOrestonePillar(EnumFacing.Axis.Z));
+    //endregion
 
     private static <T extends Block> T registerBlock(T block) {
         BLOCKS.add(block);

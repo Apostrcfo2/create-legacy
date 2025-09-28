@@ -1,4 +1,4 @@
-package nl.melonstudios.create.block;
+package nl.melonstudios.create.block.actor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -7,7 +7,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,8 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.init.DamageSourceInit;
-import nl.melonstudios.create.tileentity.TileEntityDrill;
+import nl.melonstudios.create.tileentity.actor.TileEntityDrill;
 import nl.melonstudios.create.util.BlockProperties;
 
 import javax.annotation.Nullable;

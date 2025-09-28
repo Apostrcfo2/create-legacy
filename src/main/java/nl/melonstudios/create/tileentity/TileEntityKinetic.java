@@ -86,6 +86,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
             if (srcTE == null || srcTE.speed == 0) {
                 this.removeSource();
                 this.detachKinetics();
+                this.sync();
                 return;
             }
 
@@ -93,7 +94,10 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
         }
 
         if (this.speed != 0) {
-            if (this.getGeneratedSpeed() == 0) this.speed = 0;
+            if (this.getGeneratedSpeed() == 0) {
+                this.speed = 0;
+                this.sync();
+            }
         }
     }
 
@@ -273,6 +277,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
             }
             this.detachKinetics();
         }
+        super.remove();
     }
 
     public boolean hasNetwork() {

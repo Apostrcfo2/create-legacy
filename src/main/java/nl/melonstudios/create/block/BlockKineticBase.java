@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -122,6 +124,7 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
 

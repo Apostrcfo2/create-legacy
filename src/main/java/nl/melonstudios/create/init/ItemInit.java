@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockCasing;
+import nl.melonstudios.create.block.state.EnumOrestoneVariant;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.item.ItemIngredient;
 import nl.melonstudios.create.item.ItemSandpaper;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 @MethodsReturnNonnullByDefault
 public final class ItemInit {
     public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));
-    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> ItemStack.EMPTY);
+    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> new ItemStack(BlockInit.ORESTONE));
 
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
 
@@ -61,10 +62,22 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.CLUTCH);
         CreateLegacy.proxy.setItemModel(BlockInit.HAND_CRANK);
         CreateLegacy.proxy.setItemModel(BlockInit.WATER_WHEEL);
+        CreateLegacy.proxy.setItemModel(BlockInit.TURNTABLE);
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.DRILL);
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
+
+        for (int i = 0; i < 7; i++) {
+            String type = EnumOrestoneVariant.byId(i).getName();
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE, i ,"orestone/" + type);
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE_CUT, i ,"orestone/cut/" + type);
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE_POLISHED, i, "orestone/polished/" + type);
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE_BRICKS, i ,"orestone/bricks/" + type);
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE_BRICKS_FANCY, i ,"orestone/bricks_fancy/" + type);
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE_LAYERED, i, "orestone/layered/" + type);
+            CreateLegacy.proxy.setItemModel(BlockInit.ORESTONE_PILLAR_Y, i, "orestone/pillar/" + type);
+        }
     }
 
     private ItemInit() {

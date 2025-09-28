@@ -70,6 +70,7 @@ public class CreateLegacyEventHandler {
     public static void registerStressValues(RegisterStressValuesEvent event) {
         event.registerCapacity(BlockInit.HAND_CRANK, 8.0F);
         event.registerCapacity(BlockInit.WATER_WHEEL, 16.0F);
+        event.registerStress(BlockInit.TURNTABLE, 4.0F);
         event.registerStress(BlockInit.DRILL, 4.0F);
         event.registerStress(BlockInit.MILLSTONE, 4.0F);
     }

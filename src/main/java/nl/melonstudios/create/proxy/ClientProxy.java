@@ -1,9 +1,6 @@
 package nl.melonstudios.create.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.client.particle.ParticleBlockDust;
-import net.minecraft.client.particle.ParticleBreaking;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -19,10 +16,19 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import nl.melonstudios.create.block.BlockGauge;
+import nl.melonstudios.create.block.actor.BlockGauge;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.tesr.*;
+import nl.melonstudios.create.tesr.actor.TESRDrill;
+import nl.melonstudios.create.tesr.actor.TESRGauge;
+import nl.melonstudios.create.tesr.actor.TESRTurntable;
+import nl.melonstudios.create.tesr.generator.TESRHandCrank;
+import nl.melonstudios.create.tesr.generator.TESRWaterWheel;
 import nl.melonstudios.create.tileentity.*;
+import nl.melonstudios.create.tileentity.actor.*;
+import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
+import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
+import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -51,6 +57,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());
         this.registerTESR(TileEntityWaterWheel.class, "water_wheel", new TESRWaterWheel());
         this.registerTESR(TileEntityWaterWheelTemp.class, "water_wheel_temp", null);
+        this.registerTESR(TileEntityTurntable.class, "turntable", new TESRTurntable());
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
         this.registerTESR(TileEntityStressometer.class, "stressometer", new TESRGauge<>(BlockGauge.Type.STRESS));
         this.registerTESR(TileEntityDrill.class, "drill", new TESRDrill<>());
@@ -74,6 +81,14 @@ public class ClientProxy extends CommonProxy {
                 .spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), x, y, z, mx, my, mz));
         particle.setRBGColorF(r, g, b);
         particle.multipleParticleScaleBy(size);
+    }
+
+    @Override
+    public void spawnItemFX(World world, double x, double y, double z, double mx, double my, double mz, int id, int meta) {
+        Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(
+                EnumParticleTypes.ITEM_CRACK.getParticleID(),
+                x, y, z, mx, my, mz, id, meta
+        );
     }
 
     @Override

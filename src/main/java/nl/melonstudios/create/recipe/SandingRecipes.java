@@ -20,7 +20,7 @@ public class SandingRecipes implements NBTDecodableRecipeType {
     }
 
     private SandingRecipes() {
-        this.addRecipe(new ItemStack(ItemInit.INGREDIENT, 3),
+        this.addRecipe(new ItemStack(ItemInit.INGREDIENT, 1, 3),
                 new ItemStack(ItemInit.INGREDIENT, 1, 4));
     }
 

@@ -1,11 +1,12 @@
-package nl.melonstudios.create.tesr;
+package nl.melonstudios.create.tesr.actor;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
-import nl.melonstudios.create.block.BlockDrill;
+import nl.melonstudios.create.block.actor.BlockDrill;
 import nl.melonstudios.create.block.BlockRender;
-import nl.melonstudios.create.tileentity.TileEntityDrill;
+import nl.melonstudios.create.tesr.TESRKineticBase;
+import nl.melonstudios.create.tileentity.actor.TileEntityDrill;
 import nl.melonstudios.create.util.EnumRenderPart;
 
 public class TESRDrill<T extends TileEntityDrill> extends TESRKineticBase<T> {

@@ -1,4 +1,4 @@
-package nl.melonstudios.create.block;
+package nl.melonstudios.create.block.actor;
 
 import com.melonstudios.melonlib.misc.AABB;
 import mcp.MethodsReturnNonnullByDefault;
@@ -15,9 +15,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.block.BlockKineticHorizontalAxisBase;
 import nl.melonstudios.create.tileentity.TileEntityGaugeBase;
-import nl.melonstudios.create.tileentity.TileEntitySpeedometer;
-import nl.melonstudios.create.tileentity.TileEntityStressometer;
+import nl.melonstudios.create.tileentity.actor.TileEntitySpeedometer;
+import nl.melonstudios.create.tileentity.actor.TileEntityStressometer;
 import nl.melonstudios.create.util.Color;
 import nl.melonstudios.create.util.TextBuilder;
 import org.lwjgl.util.vector.Vector3f;
