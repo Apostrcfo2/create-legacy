@@ -70,7 +70,7 @@ public final class BlockInit {
     //endregion
 
     //region Decorations
-    public static final BlockOrestone ORESTONE = registerBlockWithItem(new BlockOrestone("stone"), true);
+    public static final BlockOrestone ORESTONE = registerBlockWithItem(new BlockOrestone("natural"), true);
     public static final BlockOrestone ORESTONE_CUT = registerBlockWithItem(new BlockOrestone("cut"), true);
     public static final BlockOrestone ORESTONE_POLISHED = registerBlockWithItem(new BlockOrestone("polished"), true);
     public static final BlockOrestone ORESTONE_BRICKS = registerBlockWithItem(new BlockOrestone("bricks"), true);

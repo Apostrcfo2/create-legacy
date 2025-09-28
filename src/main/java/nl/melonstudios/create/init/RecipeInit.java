@@ -1,6 +1,7 @@
 package nl.melonstudios.create.init;
 
 import com.google.common.collect.Sets;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -29,6 +30,9 @@ public final class RecipeInit {
                 new ItemStack(ItemInit.INGREDIENT, 1, 16), 0.3F);
         FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(BlockInit.ORE, 1, 1),
                 new ItemStack(ItemInit.INGREDIENT, 1, 17), 0.3F);
+
+        FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(Blocks.SOUL_SAND, 1),
+                new ItemStack(BlockInit.ORESTONE, 1, 5), 0.05F);
     }
 
     private static final HashSet<String> METAL_BLACKLIST = Sets.newHashSet("Obsidian");

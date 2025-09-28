@@ -1,5 +1,7 @@
 
 ## BLOCKS ##
+
+## Create ##
 tile.create.ore_copper.name=Copper Ore
 tile.create.ore_zinc.name=Zinc Ore
 
@@ -34,7 +36,18 @@ tile.create.stressometer.name=Stressometer
 tile.create.drill.name=Mechanical Drill
 tile.create.millstone.name=Millstone
 
+## Create's Decorations ##
+tile.create.natural_asurine.name=Asurine
+tile.create.natural_crimsite.name=Crimsite
+tile.create.natural_limestone.name=Limestone
+tile.create.natural_ochrum.name=Ochrum
+tile.create.natural_scorchia.name=Scorchia
+tile.create.natural_scoria.name=Scoria
+tile.create.natural_veridium.name=Veridium
+
 ## ITEMS ##
+
+## Create ##
 item.create.wheat_flour.name=Wheat Flour
 item.create.dough.name=Dough
 item.create.cinder_flour.name=Cinder Flour
