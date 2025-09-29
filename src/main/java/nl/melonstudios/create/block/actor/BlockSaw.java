@@ -15,6 +15,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -65,7 +67,7 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return meta < 4 ? new TileEntitySaw() : new TileEntitySawProcessing();
+        return meta < 4 ? new TileEntitySaw() : meta > 5 ? null : new TileEntitySawProcessing();
     }
 
     @Override
@@ -93,6 +95,9 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
         if (rotation.getToEnumFacing() == EnumFacing.UP) {
             return rotation == EnumSawRotation.UP_ALONG_X ? EnumFacing.Axis.X : EnumFacing.Axis.Z;
         }
+        if (rotation.getToEnumFacing() == EnumFacing.DOWN) {
+            return rotation == EnumSawRotation.DOWN_ALONG_X ? EnumFacing.Axis.X : EnumFacing.Axis.Z;
+        }
         return rotation.getToEnumFacing().getAxis();
     }
 
@@ -103,7 +108,7 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(FACING, EnumSawRotation.byMeta(meta));
+        return this.getDefaultState().withProperty(FACING, EnumSawRotation.byMeta(meta & 7));
     }
 
     @Override
@@ -117,5 +122,53 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return BlockProperties.CASING_12PX_MAPPED[state.getValue(FACING).getToEnumFacing().getIndex()];
+    }
+
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        if (rot == Rotation.NONE) return state;
+       EnumSawRotation sawRotation = state.getValue(FACING);
+       if (sawRotation.getToEnumFacing().getAxis() == EnumFacing.Axis.Y) {
+           if (rot == Rotation.CLOCKWISE_180) return state;
+           switch (sawRotation) {
+               case UP_ALONG_X: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_Z);
+               case UP_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_X);
+               case DOWN_ALONG_X: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_Z);
+               case DOWN_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_X);
+           }
+       }
+       EnumFacing real = rot.rotate(sawRotation.getToEnumFacing());
+       switch (real) {
+           case NORTH: return state.withProperty(FACING, EnumSawRotation.NORTH);
+           case EAST: return state.withProperty(FACING, EnumSawRotation.EAST);
+           case SOUTH: return state.withProperty(FACING, EnumSawRotation.SOUTH);
+           case WEST: return state.withProperty(FACING, EnumSawRotation.WEST);
+           default: return state;
+       }
+    }
+
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+        EnumSawRotation sawRotation = state.getValue(FACING);
+        EnumFacing real = sawRotation.getToEnumFacing();
+        if (real.getAxis() == EnumFacing.Axis.Y) {
+            if (mirrorIn.mirror(real) != real) {
+                switch (sawRotation) {
+                    case UP_ALONG_X: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_X);
+                    case DOWN_ALONG_X: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_X);
+                    case UP_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_Z);
+                    case DOWN_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_Z);
+                }
+            }
+        } else {
+            EnumFacing newRot = mirrorIn.mirror(real);
+            switch (newRot) {
+                case NORTH: state.withProperty(FACING, EnumSawRotation.NORTH);
+                case EAST: state.withProperty(FACING, EnumSawRotation.EAST);
+                case SOUTH: state.withProperty(FACING, EnumSawRotation.SOUTH);
+                case WEST: state.withProperty(FACING, EnumSawRotation.WEST);
+            }
+        }
+        return state;
     }
 }

@@ -9,7 +9,9 @@ public enum EnumSawRotation implements IStringSerializable {
     SOUTH("south", 2, EnumFacing.SOUTH),
     WEST("west", 3, EnumFacing.WEST),
     UP_ALONG_X("up_along_x", 4, EnumFacing.UP),
-    UP_ALONG_Z("up_along_z", 5, EnumFacing.UP);
+    UP_ALONG_Z("up_along_z", 5, EnumFacing.UP),
+    DOWN_ALONG_X("down_along_x", 6, EnumFacing.DOWN),
+    DOWN_ALONG_Z("down_along_z", 7, EnumFacing.DOWN);
 
     private final String name;
     private final int meta;
@@ -33,7 +35,8 @@ public enum EnumSawRotation implements IStringSerializable {
 
     private static final EnumSawRotation[] META_LOOKUP = {
             NORTH, EAST, SOUTH, WEST,
-            UP_ALONG_X, UP_ALONG_Z
+            UP_ALONG_X, UP_ALONG_Z,
+            DOWN_ALONG_X, DOWN_ALONG_Z
     };
     public static EnumSawRotation byMeta(int meta) {
         return META_LOOKUP[meta];

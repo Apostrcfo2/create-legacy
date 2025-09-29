@@ -51,7 +51,7 @@ public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
         EnumFacing preferred = this.getPreferredFacing(world, pos);
         if (preferred == null || placer.isSneaking()) {
             EnumFacing look = EnumFacing.getDirectionFromEntityLiving(pos, placer);
-            return this.getDefaultState().withProperty(FACING, placer.isSneaking() ? look : look.getOpposite());
+            return this.getDefaultState().withProperty(FACING, placer.isSneaking() ? facing.getOpposite() : look);
         }
         return this.getDefaultState().withProperty(FACING, preferred.getOpposite());
     }
@@ -63,7 +63,7 @@ public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
 
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
-        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
+        return state.withProperty(FACING, mirrorIn.mirror(state.getValue(FACING)));
     }
 
     @Override

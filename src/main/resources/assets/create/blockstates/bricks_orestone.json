@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "variant=asurine": {
+      "model": "create:orestone/bricks/asurine"
+    },
+    "variant=crimsite": {
+      "model": "create:orestone/bricks/crimsite"
+    },
+    "variant=limestone": {
+      "model": "create:orestone/bricks/limestone"
+    },
+    "variant=ochrum": {
+      "model": "create:orestone/bricks/ochrum"
+    },
+    "variant=scorchia": {
+      "model": "create:orestone/bricks/scorchia"
+    },
+    "variant=scoria": {
+      "model": "create:orestone/bricks/scoria"
+    },
+    "variant=veridium": {
+      "model": "create:orestone/bricks/veridium"
+    }
+  }
+}
