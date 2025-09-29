@@ -19,9 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.block.actor.BlockGauge;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.tesr.*;
-import nl.melonstudios.create.tesr.actor.TESRDrill;
-import nl.melonstudios.create.tesr.actor.TESRGauge;
-import nl.melonstudios.create.tesr.actor.TESRTurntable;
+import nl.melonstudios.create.tesr.actor.*;
 import nl.melonstudios.create.tesr.generator.TESRHandCrank;
 import nl.melonstudios.create.tesr.generator.TESRWaterWheel;
 import nl.melonstudios.create.tileentity.*;
@@ -61,8 +59,8 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
         this.registerTESR(TileEntityStressometer.class, "stressometer", new TESRGauge<>(BlockGauge.Type.STRESS));
         this.registerTESR(TileEntityDrill.class, "drill", new TESRDrill<>());
-        this.registerTESR(TileEntitySaw.class, "saw", null);
-        this.registerTESR(TileEntitySawProcessing.class, "saw_processing", null);
+        this.registerTESR(TileEntitySaw.class, "saw", new TESRSaw());
+        this.registerTESR(TileEntitySawProcessing.class, "saw_processing", new TESRSawProcessing());
         this.registerTESR(TileEntityMillstone.class, "millstone", null);
     }
 

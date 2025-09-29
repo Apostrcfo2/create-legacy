@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "create:saw"
+    },
+    "facing=east": {
+      "model": "create:saw",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "create:saw",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "create:saw",
+      "y": 270
+    },
+    "facing=up_along_z": {
+      "model": "create:saw_processing"
+    },
+    "facing=up_along_x": {
+      "model": "create:saw_processing",
+      "y": 90
+    }
+  }
+}

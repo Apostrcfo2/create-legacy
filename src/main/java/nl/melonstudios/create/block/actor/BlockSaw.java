@@ -95,9 +95,6 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
         if (rotation.getToEnumFacing() == EnumFacing.UP) {
             return rotation == EnumSawRotation.UP_ALONG_X ? EnumFacing.Axis.X : EnumFacing.Axis.Z;
         }
-        if (rotation.getToEnumFacing() == EnumFacing.DOWN) {
-            return rotation == EnumSawRotation.DOWN_ALONG_X ? EnumFacing.Axis.X : EnumFacing.Axis.Z;
-        }
         return rotation.getToEnumFacing().getAxis();
     }
 
@@ -108,7 +105,7 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(FACING, EnumSawRotation.byMeta(meta & 7));
+        return this.getDefaultState().withProperty(FACING, EnumSawRotation.byMeta(meta % 6));
     }
 
     @Override
@@ -133,8 +130,6 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
            switch (sawRotation) {
                case UP_ALONG_X: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_Z);
                case UP_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_X);
-               case DOWN_ALONG_X: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_Z);
-               case DOWN_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_X);
            }
        }
        EnumFacing real = rot.rotate(sawRotation.getToEnumFacing());
@@ -152,14 +147,7 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
         EnumSawRotation sawRotation = state.getValue(FACING);
         EnumFacing real = sawRotation.getToEnumFacing();
         if (real.getAxis() == EnumFacing.Axis.Y) {
-            if (mirrorIn.mirror(real) != real) {
-                switch (sawRotation) {
-                    case UP_ALONG_X: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_X);
-                    case DOWN_ALONG_X: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_X);
-                    case UP_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.DOWN_ALONG_Z);
-                    case DOWN_ALONG_Z: return state.withProperty(FACING, EnumSawRotation.UP_ALONG_Z);
-                }
-            }
+            return state;
         } else {
             EnumFacing newRot = mirrorIn.mirror(real);
             switch (newRot) {

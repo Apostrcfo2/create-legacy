@@ -31,6 +31,10 @@ public class TileEntitySaw extends TileEntityBreakBlockBase {
         return Math.abs(this.getSpeed()) / 50.0F;
     }
 
+    public EnumFacing facing() {
+        return this.getState().getValue(BlockSaw.FACING).getToEnumFacing();
+    }
+
     public static void cutDownTree(World world, BlockPos pos) {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {

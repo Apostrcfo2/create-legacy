@@ -34,6 +34,7 @@ tile.create.speedometer.name=Speedometer
 tile.create.stressometer.name=Stressometer
 
 tile.create.drill.name=Mechanical Drill
+tile.create.saw.name=Mechanical Saw
 tile.create.millstone.name=Millstone
 
 ## Create's Decorations ##
@@ -81,6 +82,7 @@ item.create.crushed_zinc_ore.name=Crushed Zinc Ore
 
 item.create.goggles.name=Engineer's Goggles
 item.create.sandpaper.name=Sandpaper
+item.create.tree_fertilizer.name=Tree Fertilizer
 
 ## GOGGLE TOOLTIPS ##
 goggles.kinetic_stats=Kinetic Stats
