@@ -1,0 +1,10 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "nl.melonstudios.create.mixins",
+  "refmap": "refmap.create.json",
+  "mixins": [],
+  "client": [
+    "MixinMinecraft"
+  ],
+  "server": []
+}

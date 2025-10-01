@@ -46,6 +46,22 @@ tile.create.natural_scorchia.name=Scorchia
 tile.create.natural_scoria.name=Scoria
 tile.create.natural_veridium.name=Veridium
 
+tile.create.cut_asurine.name=Cut Asurine
+tile.create.cut_crimsite.name=Cut Crimsite
+tile.create.cut_limestone.name=Cut Limestone
+tile.create.cut_ochrum.name=Cut Ochrum
+tile.create.cut_scorchia.name=Cut Scorchia
+tile.create.cut_scoria.name=Cut Scoria
+tile.create.cut_veridium.name=Cut Veridium
+
+tile.create.polished_asurine.name=Polished Cut Asurine
+tile.create.polished_crimsite.name=Polished Cut Crimsite
+tile.create.polished_limestone.name=Polished Cut Limestone
+tile.create.polished_ochrum.name=Polished Cut Ochrum
+tile.create.polished_scorchia.name=Polished Cut Scorchia
+tile.create.polished_scoria.name=Polished Cut Scoria
+tile.create.polished_veridium.name=Polished Cut Veridium
+
 ## ITEMS ##
 
 ## Create ##

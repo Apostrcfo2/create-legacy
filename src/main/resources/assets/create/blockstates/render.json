@@ -1,15 +1,13 @@
 {
   "variants": {
     "render_part=saw_x": {
-      "model": "create:render/saw",
-      "y": 90
+      "model": "create:render/saw_x"
     },
     "render_part=saw_y": {
-      "model": "create:render/saw",
-      "x": 90
+      "model": "create:render/saw_y"
     },
     "render_part=saw_z": {
-      "model": "create:render/saw"
+      "model": "create:render/saw_z"
     },
     "render_part=half_shaft_up": {
       "model": "create:render/half_shaft"

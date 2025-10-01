@@ -1,13 +1,16 @@
 package nl.melonstudios.create.event;
 
+import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.render.RenderMelon;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -54,7 +57,8 @@ public class CreateLegacyEventHandler {
     //Other
     @SubscribeEvent
     public static void gatherExtraCollisions(GetCollisionBoxesEvent event) {
-
+        Entity entity = event.getEntity();
+        if (entity == null) return;
     }
 
     @SubscribeEvent
