@@ -51,6 +51,7 @@ public class CuttingRecipes implements NBTDecodableRecipeType {
                 }
             }
         }
+        if (candidates.isEmpty()) return null;
         return candidates.get((int) (Integer.toUnsignedLong(rotation) % candidates.size()));
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.ForgeHooksClient;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.block.actor.BlockSaw;
@@ -61,6 +62,44 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
             }
+        }
+
+        if (!te.currentlyProcessing.isEmpty()) {
+            ItemStack stack = te.currentlyProcessing;
+            EnumFacing side = te.getProcessingDirection();
+            int maxProgress = te.currentRecipe == null ? 20 : te.currentRecipe.processingTime * stack.getCount();
+            double progress = MathHelper.clampedLerp(te.lastProgress, te.progress, pt);
+            double movement = progress / maxProgress;
+
+            GlStateManager.pushMatrix();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
+            IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(stack, te.getWorld(), null);
+            GlStateManager.translate(0.5F, 0.75F, 0.5F);
+
+
+            switch (te.getProcessingDirection()) {
+                case EAST:
+                    GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+                    break;
+                case NORTH:
+                    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                    break;
+                case WEST:
+                    GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+                    break;
+            }
+            GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translate(0.0F, -0.5F+movement, 0.0F);
+            GlStateManager.scale(0.25, 0.25, 0.25);
+            this.mc.getRenderItem().renderItem(stack, model);
+
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
         }
 
         if (!this.mc.gameSettings.hideGUI) {

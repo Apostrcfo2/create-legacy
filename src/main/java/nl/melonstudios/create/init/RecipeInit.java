@@ -1,6 +1,7 @@
 package nl.melonstudios.create.init;
 
 import com.google.common.collect.Sets;
+import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -49,6 +50,37 @@ public final class RecipeInit {
                         );
                     }
                 }
+            }
+        }
+
+        int tracker = 0;
+        for (ItemStack stack : OreDictionary.getOres("stoneAndesite")) {
+            for (ItemStack result : OreDictionary.getOres("stoneAndesitePolished")) {
+                CuttingRecipes.instance.addRecipe("create:andesite_cutting" + (tracker++),
+                        stack.copy(),
+                        result.copy(),
+                        300
+                );
+            }
+        }
+        tracker = 0;
+        for (ItemStack stack : OreDictionary.getOres("stoneDiorite")) {
+            for (ItemStack result : OreDictionary.getOres("stoneDioritePolished")) {
+                CuttingRecipes.instance.addRecipe("create:diorite_cutting" + (tracker++),
+                        stack.copy(),
+                        result.copy(),
+                        300
+                );
+            }
+        }
+        tracker = 0;
+        for (ItemStack stack : OreDictionary.getOres("stoneGranite")) {
+            for (ItemStack result : OreDictionary.getOres("stoneGranitePolished")) {
+                CuttingRecipes.instance.addRecipe("create:granite_cutting" + (tracker++),
+                        stack.copy(),
+                        result.copy(),
+                        300
+                );
             }
         }
     }
