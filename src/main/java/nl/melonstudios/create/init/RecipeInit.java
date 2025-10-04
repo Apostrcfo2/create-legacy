@@ -3,9 +3,12 @@ package nl.melonstudios.create.init;
 import com.google.common.collect.Sets;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
+import nl.melonstudios.create.recipe.CuttingRecipes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +36,33 @@ public final class RecipeInit {
 
         FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(Blocks.SOUL_SAND, 1),
                 new ItemStack(BlockInit.ORESTONE, 1, 5), 0.05F);
+
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                for (int k = 0; k < 7; k++) {
+                    if (j != k) {
+                        CuttingRecipes.instance.addRecipe(
+                                "create:orestone_" + i + "_as_" + j + "_to_" + k,
+                                new ItemStack(getOrestone(j), 1, i),
+                                new ItemStack(getOrestone(k), 1, i),
+                                300
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    private static Item getOrestone(int id) {
+        switch (id) {
+            case 1: return Item.getItemFromBlock(BlockInit.ORESTONE_CUT);
+            case 2: return Item.getItemFromBlock(BlockInit.ORESTONE_POLISHED);
+            case 3: return Item.getItemFromBlock(BlockInit.ORESTONE_BRICKS);
+            case 4: return Item.getItemFromBlock(BlockInit.ORESTONE_BRICKS_FANCY);
+            case 5: return Item.getItemFromBlock(BlockInit.ORESTONE_LAYERED);
+            case 6: return Item.getItemFromBlock(BlockInit.ORESTONE_PILLAR_Y);
+            default:return Item.getItemFromBlock(BlockInit.ORESTONE);
+        }
     }
 
     private static final HashSet<String> METAL_BLACKLIST = Sets.newHashSet("Obsidian");

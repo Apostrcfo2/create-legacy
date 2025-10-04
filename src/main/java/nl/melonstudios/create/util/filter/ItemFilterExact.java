@@ -2,6 +2,7 @@ package nl.melonstudios.create.util.filter;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemFilterExact implements IItemFilter {
     private final ItemStack example;
@@ -12,7 +13,7 @@ public class ItemFilterExact implements IItemFilter {
 
     @Override
     public boolean matches(ItemStack stack) {
-        return this.example.isItemEqualIgnoreDurability(stack);
+        return OreDictionary.itemMatches(this.example, stack, false);
     }
 
     @Override

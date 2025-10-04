@@ -17,6 +17,7 @@ import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.proxy.CommonProxy;
+import nl.melonstudios.create.recipe.CuttingRecipes;
 import nl.melonstudios.create.recipe.MillingRecipes;
 import nl.melonstudios.create.recipe.NBTDecodableRecipeType;
 import nl.melonstudios.create.recipe.SandingRecipes;
@@ -71,6 +72,7 @@ public class CreateLegacy {
 
         addNBTDecodableRecipe(SandingRecipes.instance);
         addNBTDecodableRecipe(MillingRecipes.instance);
+        addNBTDecodableRecipe(CuttingRecipes.instance);
     }
 
     @EventHandler

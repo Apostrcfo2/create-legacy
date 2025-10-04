@@ -49,14 +49,4 @@ public final class PulverizationRecipe {
         this.results = ImmutableList.copyOf(results);
         this.processingTime = nbt.hasKey("processingTime") ? nbt.getInteger("processingTime") : 100;
     }
-
-    public NonNullList<ItemStack> collectPossibleIngredients() {
-        NonNullList<ItemStack> list = NonNullList.create();
-        for (Item item : ForgeRegistries.ITEMS) {
-            if (item.getHasSubtypes()) {
-                item.getSubItems(CreativeTabs.SEARCH, list);
-            } else list.add(new ItemStack(item));
-        }
-        return list;
-    }
 }

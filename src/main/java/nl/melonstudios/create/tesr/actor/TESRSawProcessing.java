@@ -27,12 +27,6 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
         this.spinModel(te, pt, axis, this.mc.getBlockRendererDispatcher().getModelForState(saw), saw, 4.0F);
         GlStateManager.popMatrix();
 
-        if (!this.mc.gameSettings.hideGUI) {
-            GlStateManager.pushMatrix();
-            SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);
-            GlStateManager.popMatrix();
-        }
-
         if (te.recipeFilter != null) {
             ItemStack filter = te.recipeFilter.getRenderItem();
             if (!filter.isEmpty()) {
@@ -67,6 +61,12 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
             }
+        }
+
+        if (!this.mc.gameSettings.hideGUI) {
+            GlStateManager.pushMatrix();
+            SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);
+            GlStateManager.popMatrix();
         }
     }
 }
