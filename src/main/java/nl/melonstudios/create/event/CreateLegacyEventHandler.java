@@ -1,6 +1,5 @@
 package nl.melonstudios.create.event;
 
-import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.render.RenderMelon;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -30,6 +29,8 @@ import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.init.OreDictInit;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.kinetics.KNManager;
+import nl.melonstudios.create.extensions.IExtensionWorld;
+import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
 
@@ -57,8 +58,12 @@ public class CreateLegacyEventHandler {
     //Other
     @SubscribeEvent
     public static void gatherExtraCollisions(GetCollisionBoxesEvent event) {
-        Entity entity = event.getEntity();
-        if (entity == null) return;
+        AxisAlignedBB aabb = event.getAabb();
+        if (aabb == null) return;
+        List<AxisAlignedBB> collisions = event.getCollisionBoxesList();
+        for (ITileEntityWithContraption contraption : ((IExtensionWorld)event.getWorld()).create$getContraptionTileEntities()) {
+            contraption.collectCollisions(aabb, collisions);
+        }
     }
 
     @SubscribeEvent
@@ -129,6 +134,9 @@ public class CreateLegacyEventHandler {
                 font.drawStringWithShadow("CREATE LEGACY DEBUG INTERFACE", 2, 2, -1);
                 font.drawStringWithShadow("TESRKinetics rendered: " + PerFrameDebugInfo.kineticTileEntitiesRendered,
                         2, 12, -1);
+                font.drawStringWithShadow("Total contraption TEs in client world: " +
+                                ((IExtensionWorld)mc.world).    create$getContraptionTileEntities().size(),
+                        2, 22, -1);
                 PerFrameDebugInfo.reset();
             }
         }

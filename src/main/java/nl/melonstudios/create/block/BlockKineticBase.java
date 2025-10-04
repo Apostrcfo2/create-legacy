@@ -28,6 +28,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -146,5 +148,13 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
     public static <T extends TileEntity> void withTEDo(World world, BlockPos pos, Class<T> clazz, Consumer<T> action) {
         TileEntity te = world.getTileEntity(pos);
         if (clazz.isInstance(te)) action.accept((T) te);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <T extends TileEntity, R> R withTEDo(World world, BlockPos pos, Class<T> clazz, Function<T, R> action) {
+        TileEntity te = world.getTileEntity(pos);
+        if (clazz.isInstance(te)) return action.apply((T) te);
+        return null;
     }
 }

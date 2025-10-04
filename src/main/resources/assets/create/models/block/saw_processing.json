@@ -5,7 +5,7 @@
 		"particle": "create:block/andesite_casing_short",
 		"casing": "create:block/andesite_casing_short",
 		"gearbox": "create:block/gearbox",
-		"saw_front": "create:block/saw_front",
+		"saw_front": "create:block/saw_processing_front",
 		"casing_fancy": "create:block/gearbox_top"
 	},
 	"elements": [

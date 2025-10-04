@@ -85,6 +85,10 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
             }
         }
         if (this.world.isRemote) {
+            if (!this.initialized) {
+                this.initializeClient();
+                this.initialized = true;
+            }
             if (this.requestSyncNextTick) {
                 this.requestSyncNextTick = false;
                 this.requestSync();
@@ -110,6 +114,9 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     public void initialize() {
         this.tickLazy();
+    }
+    public void initializeClient() {
+
     }
     /**
      * Called every tick
