@@ -62,6 +62,38 @@ tile.create.polished_scorchia.name=Polished Cut Scorchia
 tile.create.polished_scoria.name=Polished Cut Scoria
 tile.create.polished_veridium.name=Polished Cut Veridium
 
+tile.create.bricks_asurine.name=Cut Asurine Bricks
+tile.create.bricks_crimsite.name=Cut Crimsite Bricks
+tile.create.bricks_limestone.name=Cut Limestone Bricks
+tile.create.bricks_ochrum.name=Cut Ochrum Bricks
+tile.create.bricks_scorchia.name=Cut Scorchia Bricks
+tile.create.bricks_scoria.name=Cut Scoria Bricks
+tile.create.bricks_veridium.name=Cut Veridium Bricks
+
+tile.create.bricks_fancy_asurine.name=Fancy Cut Asurine Bricks
+tile.create.bricks_fancy_crimsite.name=Fancy Cut Crimsite Bricks
+tile.create.bricks_fancy_limestone.name=Fancy Cut Limestone Bricks
+tile.create.bricks_fancy_ochrum.name=Fancy Cut Ochrum Bricks
+tile.create.bricks_fancy_scorchia.name=Fancy Cut Scorchia Bricks
+tile.create.bricks_fancy_scoria.name=Fancy Cut Scoria Bricks
+tile.create.bricks_fancy_veridium.name=Fancy Cut Veridium Bricks
+
+tile.create.layered_asurine.name=Layered Cut Asurine
+tile.create.layered_crimsite.name=Layered Cut Crimsite
+tile.create.layered_limestone.name=Layered Cut Limestone
+tile.create.layered_ochrum.name=Layered Cut Ochrum
+tile.create.layered_scorchia.name=Layered Cut Scorchia
+tile.create.layered_scoria.name=Layered Cut Scoria
+tile.create.layered_veridium.name=Layered Cut Veridium
+
+tile.create.pillar_asurine.name=Cut Asurine Pillar
+tile.create.pillar_crimsite.name=Cut Crimsite Pillar
+tile.create.pillar_limestone.name=Cut Limestone Pillar
+tile.create.pillar_ochrum.name=Cut Ochrum Pillar
+tile.create.pillar_scorchia.name=Cut Scorchia Pillar
+tile.create.pillar_scoria.name=Cut Scoria Pillar
+tile.create.pillar_veridium.name=Cut Veridium Pillar
+
 ## ITEMS ##
 
 ## Create ##
