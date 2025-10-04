@@ -28,6 +28,7 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
         this.spinModel(te, pt, axis, this.mc.getBlockRendererDispatcher().getModelForState(saw), saw, 4.0F);
         GlStateManager.popMatrix();
 
+        //Filter rendering
         if (te.recipeFilter != null) {
             ItemStack filter = te.recipeFilter.getRenderItem();
             if (!filter.isEmpty()) {
@@ -64,10 +65,10 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
             }
         }
 
+        //Rendering the item currently being cut
         if (!te.currentlyProcessing.isEmpty()) {
             ItemStack stack = te.currentlyProcessing;
-            EnumFacing side = te.getProcessingDirection();
-            int maxProgress = te.currentRecipe == null ? 20 : te.currentRecipe.processingTime * stack.getCount();
+            int maxProgress = te.currentRecipe == null ? te.getProgressTick() * 20 : te.currentRecipe.processingTime * stack.getCount();
             double progress = MathHelper.clampedLerp(te.lastProgress, te.progress, pt);
             double movement = progress / maxProgress;
 
@@ -102,6 +103,7 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
             GlStateManager.popMatrix();
         }
 
+        //Render hovered sub interaction box
         if (!this.mc.gameSettings.hideGUI) {
             GlStateManager.pushMatrix();
             SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);

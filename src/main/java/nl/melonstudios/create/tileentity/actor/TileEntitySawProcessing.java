@@ -92,7 +92,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
                     this.progress = 0;
                 }
             } else {
-                if (this.progress >= 20) {
+                if (this.progress >= this.getProgressTick() * 20) {
                     this.pushResult(this.currentlyProcessing.copy());
                     this.currentlyProcessing = ItemStack.EMPTY;
                     this.currentRecipe = null;
@@ -102,16 +102,16 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         }
     }
 
-    private int getProgressTick() {
-        return Math.max(1, MathHelper.floor(Math.abs(this.getSpeed()) / 16.0F));
+    public int getProgressTick() {
+        return Math.max(1, MathHelper.floor(Math.abs(this.getSpeed())  * 0.125F));
     }
     private void pushResult(ItemStack stack) {
         if (this.world.isRemote) return;
         EnumFacing side = this.getProcessingDirection();
         EntityItem entity = new EntityItem(this.world,
-                this.pos.getX() + 0.5 + side.getFrontOffsetX(),
-                this.pos.getY() + 1.0F,
-                this.pos.getZ() + 0.5 + side.getFrontOffsetZ(),
+                this.pos.getX() + 0.5 + side.getFrontOffsetX() * 0.65,
+                this.pos.getY() + 0.75F,
+                this.pos.getZ() + 0.5 + side.getFrontOffsetZ() * 0.65,
                 stack
         );
         entity.motionX = entity.motionZ = 0;
@@ -121,7 +121,8 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
     public EnumFacing getProcessingDirection() {
         boolean x = this.getBlockMetadata() == 4;
-        return EnumFacing.NORTH;
+        if (x) return this.getSpeed() > 0.0F ? EnumFacing.NORTH : EnumFacing.SOUTH;
+        else return this.getSpeed() > 0.0F ? EnumFacing.EAST : EnumFacing.WEST;
     }
 
     @Override

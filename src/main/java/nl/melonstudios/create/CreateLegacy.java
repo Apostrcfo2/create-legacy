@@ -25,6 +25,7 @@ import nl.melonstudios.create.worldgen.CreateWorldGen;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import static nl.melonstudios.create.CreateLegacy.DEPENDENCIES;
 
@@ -60,6 +61,7 @@ public class CreateLegacy {
     public static CommonProxy proxy;
 
     public static Logger logger;
+    public static final Random rand = new Random();
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);

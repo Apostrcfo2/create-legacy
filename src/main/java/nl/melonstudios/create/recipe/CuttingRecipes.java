@@ -3,6 +3,7 @@ package nl.melonstudios.create.recipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.util.filter.IItemFilter;
 
 import javax.annotation.Nullable;
@@ -52,6 +53,6 @@ public class CuttingRecipes implements NBTDecodableRecipeType {
             }
         }
         if (candidates.isEmpty()) return null;
-        return candidates.get((int) (Integer.toUnsignedLong(rotation) % candidates.size()));
+        return candidates.get(CreateLegacy.rand.nextInt(candidates.size()));
     }
 }
