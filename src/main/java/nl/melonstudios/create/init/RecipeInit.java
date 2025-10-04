@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.CuttingRecipes;
+import nl.melonstudios.create.recipe.jei.CuttingRecipe;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,6 +54,7 @@ public final class RecipeInit {
             }
         }
 
+        //region Vanilla stones cutting
         int tracker = 0;
         for (ItemStack stack : OreDictionary.getOres("stoneAndesite")) {
             for (ItemStack result : OreDictionary.getOres("stoneAndesitePolished")) {
@@ -83,6 +85,318 @@ public final class RecipeInit {
                 );
             }
         }
+        //endregion
+
+        //region Log cutting
+        CuttingRecipes.instance.addRecipe("create:efficient_oak",
+                new ItemStack(Blocks.LOG, 1, 0),
+                new ItemStack(Blocks.PLANKS, 6, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:efficient_spruce",
+                new ItemStack(Blocks.LOG, 1, 1),
+                new ItemStack(Blocks.PLANKS, 6, 1),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:efficient_birch",
+                new ItemStack(Blocks.LOG, 1, 2),
+                new ItemStack(Blocks.PLANKS, 6, 2),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:efficient_jungle",
+                new ItemStack(Blocks.LOG, 1, 3),
+                new ItemStack(Blocks.PLANKS, 6, 3),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:efficient_acacia",
+                new ItemStack(Blocks.LOG2, 1, 0),
+                new ItemStack(Blocks.PLANKS, 6, 4),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:efficient_dark_oak",
+                new ItemStack(Blocks.LOG2, 1, 1),
+                new ItemStack(Blocks.PLANKS, 6, 5),
+                200
+        );
+        //endregion
+
+        //region Plank cutting
+        CuttingRecipes.instance.addRecipe("create:oak_slab",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.WOODEN_SLAB, 2, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_stairs",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.OAK_STAIRS, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_fence",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.OAK_FENCE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_fence_gate",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.OAK_FENCE_GATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_door",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.OAK_DOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_trapdoor",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_boat",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Items.BOAT, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_pressure_plate",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.WOODEN_PRESSURE_PLATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_button",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Blocks.WOODEN_BUTTON, 1, 0),
+                200
+        );
+
+        CuttingRecipes.instance.addRecipe("create:spruce_slab",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.WOODEN_SLAB, 2, 1),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_stairs",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.SPRUCE_STAIRS, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_fence",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.SPRUCE_FENCE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_fence_gate",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.SPRUCE_FENCE_GATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_door",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.SPRUCE_DOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_trapdoor",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_boat",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Items.SPRUCE_BOAT, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_pressure_plate",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.WOODEN_PRESSURE_PLATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_button",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Blocks.WOODEN_BUTTON, 1, 0),
+                200
+        );
+
+        CuttingRecipes.instance.addRecipe("create:birch_slab",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.WOODEN_SLAB, 2, 2),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_stairs",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.BIRCH_STAIRS, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_fence",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.BIRCH_FENCE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_fence_gate",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.BIRCH_FENCE_GATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_door",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.BIRCH_DOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_trapdoor",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_boat",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Items.BIRCH_BOAT, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_pressure_plate",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.WOODEN_PRESSURE_PLATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_button",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Blocks.WOODEN_BUTTON, 1, 0),
+                200
+        );
+
+        CuttingRecipes.instance.addRecipe("create:jungle_slab",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.WOODEN_SLAB, 2, 3),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_stairs",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.JUNGLE_STAIRS, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_fence",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.JUNGLE_FENCE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_fence_gate",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.JUNGLE_FENCE_GATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_door",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.JUNGLE_DOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_trapdoor",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_boat",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Items.JUNGLE_BOAT, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_pressure_plate",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.WOODEN_PRESSURE_PLATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_button",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Blocks.WOODEN_BUTTON, 1, 0),
+                200
+        );
+
+        CuttingRecipes.instance.addRecipe("create:acacia_slab",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.WOODEN_SLAB, 2, 4),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_stairs",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.ACACIA_STAIRS, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_fence",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.ACACIA_FENCE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_fence_gate",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.ACACIA_FENCE_GATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_door",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.ACACIA_DOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_trapdoor",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_boat",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Items.ACACIA_BOAT, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_pressure_plate",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.WOODEN_PRESSURE_PLATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_button",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Blocks.WOODEN_BUTTON, 1, 0),
+                200
+        );
+
+        CuttingRecipes.instance.addRecipe("create:dark_oak_slab",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.WOODEN_SLAB, 2, 5),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_stairs",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.DARK_OAK_STAIRS, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_fence",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.DARK_OAK_FENCE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_fence_gate",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.DARK_OAK_FENCE_GATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_door",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.DARK_OAK_DOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_trapdoor",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_boat",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Items.DARK_OAK_BOAT, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_pressure_plate",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.WOODEN_PRESSURE_PLATE, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_button",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Blocks.WOODEN_BUTTON, 1, 0),
+                200
+        );
+        //endregion
     }
 
     private static Item getOrestone(int id) {
