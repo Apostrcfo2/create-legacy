@@ -39,6 +39,7 @@ public class RecipeMaker {
             SawingRecipe example = recipes.remove(0);
             ItemStack next = example.input;
             List<ItemStack> out = new ArrayList<>();
+            out.add(example.result.copy());
             for (SawingRecipe recipe : recipes) {
                 if (OreDictionary.itemMatches(next, recipe.input, false)) {
                     bin.add(recipe);

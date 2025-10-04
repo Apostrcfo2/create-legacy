@@ -5,7 +5,7 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CuttingRecipe implements IRecipeWrapper {
@@ -20,6 +20,6 @@ public class CuttingRecipe implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients iIngredients) {
         iIngredients.setInput(VanillaTypes.ITEM, this.input);
-        iIngredients.setOutputs(VanillaTypes.ITEM, this.results);
+        iIngredients.setOutputLists(VanillaTypes.ITEM, Collections.singletonList(this.results));
     }
 }

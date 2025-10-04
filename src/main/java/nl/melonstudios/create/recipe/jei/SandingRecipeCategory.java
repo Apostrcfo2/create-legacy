@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class SandingRecipeCategory implements IRecipeCategory<SandingRecipe> {
     private static final ResourceLocation TEXTURES =
-            new ResourceLocation("create", "textures/gui/sandpaper_jei.png");
+            new ResourceLocation("create", "textures/gui/jei/sandpaper.png");
 
     protected static final int input = 0;
     protected static final int output = 1;
@@ -47,6 +47,6 @@ public class SandingRecipeCategory implements IRecipeCategory<SandingRecipe> {
     }
 
     public SandingRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(TEXTURES, 0, 0, 64, 32);
+        this.background = helper.drawableBuilder(TEXTURES, 0, 0, 64, 32).setTextureSize(64, 32).build();
     }
 }
