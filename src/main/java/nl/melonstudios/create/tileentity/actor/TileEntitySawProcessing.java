@@ -3,11 +3,9 @@ package nl.melonstudios.create.tileentity.actor;
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
@@ -20,6 +18,7 @@ import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,7 +91,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
                     this.progress = 0;
                 }
             } else {
-                if (this.progress >= this.getProgressTick() * 20) {
+                if (this.progress >= this.getProgressTick() * 10) {
                     this.pushResult(this.currentlyProcessing.copy());
                     this.currentlyProcessing = ItemStack.EMPTY;
                     this.currentRecipe = null;
@@ -141,7 +140,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
 
     public void handleSteppedOn(EntityItem entityItem) {
-        if (this.currentlyProcessing.isEmpty()) {
+        if (this.currentlyProcessing.isEmpty() && !entityItem.isDead && !entityItem.getItem().isEmpty()) {
             this.setCurrentlyProcessing(entityItem.getItem().copy());
             entityItem.setDead();
         }
@@ -179,6 +178,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
 
     @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         NBTTagCompound nbt = super.writeToNBT(compound);
 

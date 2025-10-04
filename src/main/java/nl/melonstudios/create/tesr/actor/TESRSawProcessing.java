@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.ForgeHooksClient;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.block.actor.BlockSaw;
 import nl.melonstudios.create.block.state.EnumSawRotation;
@@ -68,7 +67,7 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
         //Rendering the item currently being cut
         if (!te.currentlyProcessing.isEmpty()) {
             ItemStack stack = te.currentlyProcessing;
-            int maxProgress = te.currentRecipe == null ? te.getProgressTick() * 20 : te.currentRecipe.processingTime * stack.getCount();
+            int maxProgress = te.currentRecipe == null ? te.getProgressTick() * 10 : te.currentRecipe.processingTime * stack.getCount();
             double progress = MathHelper.clampedLerp(te.lastProgress, te.progress, pt);
             double movement = progress / maxProgress;
 
