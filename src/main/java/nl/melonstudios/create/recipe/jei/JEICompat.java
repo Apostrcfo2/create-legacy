@@ -6,6 +6,7 @@ import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.item.ItemStack;
+import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,6 +21,7 @@ public final class JEICompat implements IModPlugin {
         final IGuiHelper gui = helpers.getGuiHelper();
 
         registry.addRecipeCategories(new SandingRecipeCategory(gui));
+        registry.addRecipeCategories(new CuttingRecipeCategory(gui));
     }
 
     @Override
@@ -31,5 +33,8 @@ public final class JEICompat implements IModPlugin {
 
         registry.addRecipes(RecipeMaker.getSandingRecipes(jeiHelpers), "create.sanding");
         registry.addRecipeCatalyst(new ItemStack(ItemInit.SANDPAPER), "create.sanding");
+
+        registry.addRecipes(RecipeMaker.getCuttingRecipes(jeiHelpers), "create.cutting");
+        registry.addRecipeCatalyst(new ItemStack(BlockInit.SAW), "create.cutting");
     }
 }

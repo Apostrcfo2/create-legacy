@@ -5,18 +5,21 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
-public class SandingRecipe implements IRecipeWrapper {
-    public final ItemStack input;
-    public final ItemStack result;
+import java.util.Arrays;
+import java.util.List;
 
-    public SandingRecipe(ItemStack input, ItemStack result) {
+public class CuttingRecipe implements IRecipeWrapper {
+    public final ItemStack input;
+    public final List<ItemStack> results;
+
+    public CuttingRecipe(ItemStack input, List<ItemStack> results) {
         this.input = input;
-        this.result = result;
+        this.results = results;
     }
 
     @Override
     public void getIngredients(IIngredients iIngredients) {
         iIngredients.setInput(VanillaTypes.ITEM, this.input);
-        iIngredients.setOutput(VanillaTypes.ITEM, this.result);
+        iIngredients.setOutputs(VanillaTypes.ITEM, this.results);
     }
 }
