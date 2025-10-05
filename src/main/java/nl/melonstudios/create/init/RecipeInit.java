@@ -437,6 +437,11 @@ public final class RecipeInit {
         //region Wooden tools cutting
         tracker = 0;
         for (ItemStack stack : OreDictionary.getOres("plankWood")) {
+            CuttingRecipes.instance.addRecipe("create:sticks" + tracker,
+                    stack.copy(),
+                    new ItemStack(Items.STICK, 3),
+                    200
+            );
             CuttingRecipes.instance.addRecipe("create:wooden_sword" + tracker,
                     stack.copy(),
                     new ItemStack(Items.WOODEN_SWORD),
