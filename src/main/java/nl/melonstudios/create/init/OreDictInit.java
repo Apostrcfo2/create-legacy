@@ -3,6 +3,7 @@ package nl.melonstudios.create.init;
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import com.melonstudios.melonlib.misc.MetaBlock;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 
 public final class OreDictInit {
     public static void init() {
+        //region Create wrench pickups
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CASING, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SHAFT, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.COG_SMALL, true);
@@ -26,6 +28,43 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAW, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, true);
+        //endregion
+
+        //region Vanilla wrench pickups
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DISPENSER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.NOTEBLOCK, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.STICKY_PISTON, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON_EXTENSION, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON_HEAD, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.LEVER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.STONE_PRESSURE_PLATE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.WOODEN_PRESSURE_PLATE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.REDSTONE_TORCH, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.UNLIT_REDSTONE_TORCH, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.STONE_BUTTON, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.REDSTONE_LAMP, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.LIT_REDSTONE_LAMP, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.TRIPWIRE_HOOK, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.WOODEN_BUTTON, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DAYLIGHT_DETECTOR, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DAYLIGHT_DETECTOR_INVERTED, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.HOPPER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DROPPER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.OBSERVER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.REDSTONE_WIRE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.POWERED_REPEATER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.UNPOWERED_REPEATER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.POWERED_COMPARATOR, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.UNPOWERED_COMPARATOR, true);
+
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.GOLDEN_RAIL, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DETECTOR_RAIL, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.RAIL, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.ACTIVATOR_RAIL, true);
+        //endregion
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
         registerOreBlockItem("oreZinc", BlockInit.ORE, 1);
