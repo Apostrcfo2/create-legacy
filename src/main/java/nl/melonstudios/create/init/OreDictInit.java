@@ -32,9 +32,9 @@ public final class OreDictInit {
 
         //region Vanilla wrench pickups
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.DISPENSER, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.NOTEBLOCK, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.STICKY_PISTON, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.NOTEBLOCK, false);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON, 6);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.STICKY_PISTON, 6);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON_EXTENSION, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON_HEAD, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.LEVER, true);
