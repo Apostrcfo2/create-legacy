@@ -4,6 +4,7 @@
   "refmap": "refmap.create.json",
   "mixins": [
     "MixinInventoryPlayer",
+    "MixinTileEntityHopper",
     "MixinWorld"
   ],
   "client": [
