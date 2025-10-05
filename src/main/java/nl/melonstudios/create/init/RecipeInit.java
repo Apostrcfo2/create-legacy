@@ -433,6 +433,37 @@ public final class RecipeInit {
                 new ItemStack(BlockInit.SHAFT, 6),
                 300
         );
+
+        //region Wooden tools cutting
+        tracker = 0;
+        for (ItemStack stack : OreDictionary.getOres("plankWood")) {
+            CuttingRecipes.instance.addRecipe("create:wooden_sword" + tracker,
+                    stack.copy(),
+                    new ItemStack(Items.WOODEN_SWORD),
+                    400
+            );
+            CuttingRecipes.instance.addRecipe("create:wooden_shovel" + tracker,
+                    stack.copy(),
+                    new ItemStack(Items.WOODEN_SHOVEL),
+                    400
+            );
+            CuttingRecipes.instance.addRecipe("create:wooden_pickaxe" + tracker,
+                    stack.copy(),
+                    new ItemStack(Items.WOODEN_PICKAXE),
+                    400
+            );
+            CuttingRecipes.instance.addRecipe("create:wooden_axe" + tracker,
+                    stack.copy(),
+                    new ItemStack(Items.WOODEN_AXE),
+                    400
+            );
+            CuttingRecipes.instance.addRecipe("create:wooden_hoe" + tracker,
+                    stack.copy(),
+                    new ItemStack(Items.WOODEN_HOE),
+                    400
+            );
+        }
+        //endregion
     }
 
     private static Item getOrestone(int id) {

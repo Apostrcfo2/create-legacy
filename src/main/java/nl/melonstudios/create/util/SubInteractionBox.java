@@ -128,6 +128,16 @@ public final class SubInteractionBox {
         boolean interact(@Nullable EntityPlayer player, boolean sneaking, ItemStack held);
     }
 
+    @FunctionalInterface
+    public interface ScrollInteraction extends Interaction {
+        @Override
+        default boolean interact(@Nullable EntityPlayer player, boolean sneaking, ItemStack held) {
+            return false;
+        }
+
+        boolean scroll(boolean sneaking, ItemStack held, int direction);
+    }
+
     public static boolean handleInteraction(World world, BlockPos pos, @Nullable EntityPlayer player, boolean adjust,
                                             boolean sneaking, ItemStack held, float hitX, float hitY, float hitZ) {
         TileEntity te = world.getTileEntity(pos);
