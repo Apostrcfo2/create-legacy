@@ -39,7 +39,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
 
     public float lastCapacityProvided, lastStressApplied;
 
-    public boolean wasMoved;
+    public boolean wasMoved = false;
 
     @Override
     public void initialize() {
@@ -279,7 +279,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
         super.remove();
     }
 
-    public boolean hasNetwork() {
+    public final boolean hasNetwork() {
         return this.networkID != null;
     }
 

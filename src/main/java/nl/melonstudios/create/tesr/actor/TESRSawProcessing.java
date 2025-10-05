@@ -102,6 +102,40 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
             GlStateManager.popMatrix();
         }
 
+        if (!te.outputQueue.isEmpty()) {
+            ItemStack stack = te.outputQueue;
+
+            GlStateManager.pushMatrix();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
+            IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(stack, te.getWorld(), null);
+            GlStateManager.translate(0.5F, 0.75F, 0.5F);
+
+
+            switch (te.getProcessingDirection()) {
+                case EAST:
+                    GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+                    break;
+                case NORTH:
+                    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                    break;
+                case WEST:
+                    GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+                    break;
+            }
+            GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translate(0.0F, 0.5F, 0.0F);
+            GlStateManager.scale(0.25, 0.25, 0.25);
+            this.mc.getRenderItem().renderItem(stack, model);
+
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
+        }
+
         //Render hovered sub interaction box
         if (!this.mc.gameSettings.hideGUI) {
             GlStateManager.pushMatrix();

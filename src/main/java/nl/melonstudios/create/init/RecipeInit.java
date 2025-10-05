@@ -143,12 +143,17 @@ public final class RecipeInit {
         );
         CuttingRecipes.instance.addRecipe("create:oak_door",
                 new ItemStack(Blocks.PLANKS, 1, 0),
-                new ItemStack(Blocks.OAK_DOOR, 1, 0),
+                new ItemStack(Items.OAK_DOOR, 1, 0),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:oak_trapdoor",
                 new ItemStack(Blocks.PLANKS, 1, 0),
                 new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:oak_sign",
+                new ItemStack(Blocks.PLANKS, 1, 0),
+                new ItemStack(Items.SIGN, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:oak_boat",
@@ -189,12 +194,17 @@ public final class RecipeInit {
         );
         CuttingRecipes.instance.addRecipe("create:spruce_door",
                 new ItemStack(Blocks.PLANKS, 1, 1),
-                new ItemStack(Blocks.SPRUCE_DOOR, 1, 0),
+                new ItemStack(Items.SPRUCE_DOOR, 1, 0),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:spruce_trapdoor",
                 new ItemStack(Blocks.PLANKS, 1, 1),
                 new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:spruce_sign",
+                new ItemStack(Blocks.PLANKS, 1, 1),
+                new ItemStack(Items.SIGN, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:spruce_boat",
@@ -235,12 +245,17 @@ public final class RecipeInit {
         );
         CuttingRecipes.instance.addRecipe("create:birch_door",
                 new ItemStack(Blocks.PLANKS, 1, 2),
-                new ItemStack(Blocks.BIRCH_DOOR, 1, 0),
+                new ItemStack(Items.BIRCH_DOOR, 1, 0),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:birch_trapdoor",
                 new ItemStack(Blocks.PLANKS, 1, 2),
                 new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:birch_sign",
+                new ItemStack(Blocks.PLANKS, 1, 2),
+                new ItemStack(Items.SIGN, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:birch_boat",
@@ -281,12 +296,17 @@ public final class RecipeInit {
         );
         CuttingRecipes.instance.addRecipe("create:jungle_door",
                 new ItemStack(Blocks.PLANKS, 1, 3),
-                new ItemStack(Blocks.JUNGLE_DOOR, 1, 0),
+                new ItemStack(Items.JUNGLE_DOOR, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:jungle_trapdoor",
                 new ItemStack(Blocks.PLANKS, 1, 3),
                 new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:jungle_sign",
+                new ItemStack(Blocks.PLANKS, 1, 3),
+                new ItemStack(Items.SIGN, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:jungle_boat",
@@ -327,12 +347,17 @@ public final class RecipeInit {
         );
         CuttingRecipes.instance.addRecipe("create:acacia_door",
                 new ItemStack(Blocks.PLANKS, 1, 4),
-                new ItemStack(Blocks.ACACIA_DOOR, 1, 0),
+                new ItemStack(Items.ACACIA_DOOR, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:acacia_trapdoor",
                 new ItemStack(Blocks.PLANKS, 1, 4),
                 new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:acacia_sign",
+                new ItemStack(Blocks.PLANKS, 1, 4),
+                new ItemStack(Items.SIGN, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:acacia_boat",
@@ -373,12 +398,17 @@ public final class RecipeInit {
         );
         CuttingRecipes.instance.addRecipe("create:dark_oak_door",
                 new ItemStack(Blocks.PLANKS, 1, 5),
-                new ItemStack(Blocks.DARK_OAK_DOOR, 1, 0),
+                new ItemStack(Items.DARK_OAK_DOOR, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:dark_oak_trapdoor",
                 new ItemStack(Blocks.PLANKS, 1, 5),
                 new ItemStack(Blocks.TRAPDOOR, 1, 0),
+                200
+        );
+        CuttingRecipes.instance.addRecipe("create:dark_oak_sign",
+                new ItemStack(Blocks.PLANKS, 1, 5),
+                new ItemStack(Items.SIGN, 1),
                 200
         );
         CuttingRecipes.instance.addRecipe("create:dark_oak_boat",
@@ -397,6 +427,12 @@ public final class RecipeInit {
                 200
         );
         //endregion
+
+        CuttingRecipes.instance.addRecipe("create:efficient_shaft",
+                new ItemStack(ItemInit.INGREDIENT, 1, 15),
+                new ItemStack(BlockInit.SHAFT, 6),
+                300
+        );
     }
 
     private static Item getOrestone(int id) {

@@ -1,30 +1,38 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.recipe.CuttingRecipes;
 import nl.melonstudios.create.recipe.SawingRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
+import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class TileEntitySawProcessing extends TileEntityKinetic implements ITileEntityWithSubInteractions {
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class TileEntitySawProcessing extends TileEntityKinetic implements ITileEntityWithSubInteractions, ITopOpenInventory, ISidedInventoryDebloated {
     public static void addSubInteractionsAlongX(TileEntitySawProcessing te) {
         te.subInteractionBoxes.add(SubInteractionBox.Helper.createDefaultAt(0.25F, 0.75F, 0.5F, te::setFilter));
         te.subInteractionBoxes.add(SubInteractionBox.Helper.createDefaultAt(0.75F, 0.75F, 0.5F, te::setFilter));
@@ -42,6 +50,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     public SawingRecipe currentRecipe;
     public int progress;
     public int lastProgress;
+    public ItemStack outputQueue = ItemStack.EMPTY;
 
     @Override
     public void initialize() {
@@ -86,37 +95,52 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
                     this.currentlyProcessing = ItemStack.EMPTY;
                     ItemStack result = this.currentRecipe.result.copy();
                     result.setCount(size * result.getCount());
-                    this.pushResult(result);
+                    this.outputQueue = result;
                     this.currentRecipe = null;
                     this.progress = 0;
                 }
             } else {
                 if (this.progress >= this.getProgressTick() * 10) {
-                    this.pushResult(this.currentlyProcessing.copy());
+                    this.outputQueue = this.currentlyProcessing.copy();
                     this.currentlyProcessing = ItemStack.EMPTY;
                     this.currentRecipe = null;
                     this.progress = 0;
                 }
             }
         }
+        if (!this.outputQueue.isEmpty()) {
+            this.pushResult();
+        }
     }
 
     public int getProgressTick() {
         return Math.max(1, MathHelper.floor(Math.abs(this.getSpeed())  * 0.125F));
     }
-    private void pushResult(ItemStack stack) {
+    private void pushResult() {
         if (this.world.isRemote) return;
         EnumFacing side = this.getProcessingDirection();
-        EntityItem entity = new EntityItem(this.world,
-                this.pos.getX() + 0.5 + side.getFrontOffsetX() * 0.65,
-                this.pos.getY() + 0.75F,
-                this.pos.getZ() + 0.5 + side.getFrontOffsetZ() * 0.65,
-                stack
-        );
-        entity.motionX = entity.motionZ = 0;
-        entity.motionY = 0.05;
-        entity.setDefaultPickupDelay();
-        this.world.spawnEntity(entity);
+        BlockPos drop = this.pos.offset(side);
+        if (this.world.getBlockState(drop).getBlock().isReplaceable(this.world, drop)) {
+            EntityItem entity = new EntityItem(this.world,
+                    this.pos.getX() + 0.5 + side.getFrontOffsetX() * 0.65,
+                    this.pos.getY() + 0.75F,
+                    this.pos.getZ() + 0.5 + side.getFrontOffsetZ() * 0.65,
+                    this.outputQueue.copy()
+            );
+            entity.motionX = side.getFrontOffsetX() * 0.1;
+            entity.motionZ = side.getFrontOffsetZ() * 0.1;
+            entity.motionY = 0.05;
+            entity.setDefaultPickupDelay();
+            this.world.spawnEntity(entity);
+            this.outputQueue = ItemStack.EMPTY;
+            this.sync();
+        } else {
+            TileEntity te = this.world.getTileEntity(drop);
+            if (te instanceof ITopOpenInventory) {
+                this.outputQueue = ((ITopOpenInventory)te).tryInsertItem(this.outputQueue);
+                this.sync();
+            }
+        }
     }
     public EnumFacing getProcessingDirection() {
         boolean x = this.getBlockMetadata() == 4;
@@ -140,9 +164,11 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
 
     public void handleSteppedOn(EntityItem entityItem) {
-        if (this.currentlyProcessing.isEmpty() && !entityItem.isDead && !entityItem.getItem().isEmpty()) {
-            this.setCurrentlyProcessing(entityItem.getItem().copy());
-            entityItem.setDead();
+        if (this.currentlyProcessing.isEmpty() && this.outputQueue.isEmpty() && !entityItem.isDead && !entityItem.getItem().isEmpty()) {
+            ItemStack over = this.tryInsertItem(entityItem.getItem());
+            if (over.isEmpty()) {
+                entityItem.setDead();
+            } else entityItem.setItem(over);
         }
     }
     public void setCurrentlyProcessing(ItemStack stack) {
@@ -186,6 +212,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         if (!this.currentlyProcessing.isEmpty()) nbt.setTag("CurrentlyProcessing", this.currentlyProcessing.writeToNBT(new NBTTagCompound()));
         if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipe.recipeID);
         nbt.setInteger("progress", this.progress);
+        if (!this.outputQueue.isEmpty()) nbt.setTag("OutputQueue", this.outputQueue.writeToNBT(new NBTTagCompound()));
 
         return nbt;
     }
@@ -197,6 +224,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         if (!this.currentlyProcessing.isEmpty()) nbt.setTag("CurrentlyProcessing", this.currentlyProcessing.writeToNBT(new NBTTagCompound()));
         if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipe.recipeID);
         if (this.progress != 0) nbt.setInteger("progress", this.progress);
+        if (!this.outputQueue.isEmpty()) nbt.setTag("OutputQueue", this.outputQueue.writeToNBT(new NBTTagCompound()));
 
         return nbt;
     }
@@ -215,6 +243,9 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
             this.currentRecipe = CuttingRecipes.instance.getRecipe(nbt.getString("currentRecipe"));
         } else this.currentRecipe = null;
         this.progress = nbt.getInteger("progress");
+        if (nbt.hasKey("OutputQueue", 10)) {
+            this.outputQueue = new ItemStack(nbt.getCompoundTag("OutputQueue"));
+        } else this.outputQueue = ItemStack.EMPTY;
     }
     @Override
     public void readPacket(NBTTagCompound nbt) {
@@ -230,12 +261,105 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
             this.currentRecipe = CuttingRecipes.instance.getRecipe(nbt.getString("currentRecipe"));
         } else this.currentRecipe = null;
         this.progress = nbt.getInteger("progress");
+        if (nbt.hasKey("OutputQueue", 10)) {
+            this.outputQueue = new ItemStack(nbt.getCompoundTag("OutputQueue"));
+        } else this.outputQueue = ItemStack.EMPTY;
     }
 
     @Override
     public void destroy() {
         super.destroy();
 
-        StackUtil.dropItemsAt(this.world, this.pos, this.currentlyProcessing.copy());
+        StackUtil.dropItemsAt(this.world, this.pos, this.currentlyProcessing.copy(), this.outputQueue.copy());
+    }
+
+    @Override
+    public ItemStack tryInsertItem(ItemStack stack) {
+        if (!this.outputQueue.isEmpty() || !this.currentlyProcessing.isEmpty()) return stack;
+        ItemStack copy = stack.copy();
+        copy.setCount(1);
+        this.setCurrentlyProcessing(copy);
+        ItemStack ret = stack.copy();
+        ret.shrink(1);
+        return ret.isEmpty() ? ItemStack.EMPTY : ret;
+    }
+
+    private static final int[] SLOTS = {0,1};
+    private static final int[] NONE = {};
+    @Override
+    public int[] getSlotsForFace(EnumFacing side) {
+        return side == EnumFacing.UP ? NONE : SLOTS;
+    }
+
+    @Override
+    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+        return direction != EnumFacing.UP && index == 0 && (this.currentlyProcessing.isEmpty() && this.outputQueue.isEmpty());
+    }
+
+    @Override
+    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+        return direction != EnumFacing.UP && index == 1 && !this.outputQueue.isEmpty();
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 2;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return (this.currentlyProcessing.isEmpty() && this.outputQueue.isEmpty());
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        return index == 0 ? this.currentlyProcessing : this.outputQueue;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int count) {
+        if (index == 0 || this.outputQueue.isEmpty()) return ItemStack.EMPTY;
+        ItemStack stack = this.outputQueue.splitStack(count);
+        this.sync();
+        return stack;
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        if (index == 0 || this.outputQueue.isEmpty()) return ItemStack.EMPTY;
+        ItemStack stack = this.outputQueue.copy();
+        this.outputQueue = ItemStack.EMPTY;
+        this.sync();
+        return stack;
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        if (index == 0) {
+            this.setCurrentlyProcessing(stack.copy());
+        }
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return index == 0;
+    }
+
+    @Override
+    public void clear() {
+        this.currentlyProcessing = ItemStack.EMPTY;
+        this.outputQueue = ItemStack.EMPTY;
+        this.progress = 0;
+        this.sync();
+    }
+
+    @Override
+    public String getName() {
+        return "Mechanical Saw (Processing)";
     }
 }
