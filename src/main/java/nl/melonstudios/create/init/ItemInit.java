@@ -7,10 +7,7 @@ import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockCasing;
 import nl.melonstudios.create.block.state.EnumOrestoneVariant;
-import nl.melonstudios.create.item.ItemGoggles;
-import nl.melonstudios.create.item.ItemIngredient;
-import nl.melonstudios.create.item.ItemSandpaper;
-import nl.melonstudios.create.item.ItemTreeFertilizer;
+import nl.melonstudios.create.item.*;
 import nl.melonstudios.create.util.ModTabs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,6 +21,9 @@ public final class ItemInit {
 
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
 
+    public static final ItemWrench WRENCH = (ItemWrench)
+            registerItem(new ItemWrench()
+            .setRegistryName("wrench").setUnlocalizedName("create.wrench"));
     public static final ItemIngredient INGREDIENT = registerItem(new ItemIngredient());
     public static final ItemGoggles GOGGLES = registerItem(new ItemGoggles());
     public static final ItemSandpaper SANDPAPER = registerItem(new ItemSandpaper());
@@ -38,6 +38,7 @@ public final class ItemInit {
 
     public static void setItemModels() {
         // items
+        CreateLegacy.proxy.setItemModel(WRENCH);
         for (int i = 0; i < ItemIngredient.NAME_LOOKUP.length; i++) {
             CreateLegacy.proxy.setItemModel(INGREDIENT, i, "ingredient/" + ItemIngredient.NAME_LOOKUP[i]);
         }

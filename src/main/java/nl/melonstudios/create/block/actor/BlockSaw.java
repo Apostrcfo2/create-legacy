@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -20,6 +21,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.CreateLegacy;
@@ -32,9 +34,12 @@ import nl.melonstudios.create.tileentity.actor.TileEntitySaw;
 import nl.melonstudios.create.tileentity.actor.TileEntitySawProcessing;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.SubInteractionBox;
+import nl.melonstudios.create.util.TextBuilder;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 @ParametersAreNonnullByDefault
@@ -168,5 +173,47 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
         if (hand != EnumHand.MAIN_HAND) return false;
         return SubInteractionBox.handleInteraction(worldIn, pos, playerIn, false,
                 playerIn.isSneaking(), playerIn.getHeldItem(hand), hitX, hitY, hitZ);
+    }
+
+    @Override
+    public List<String> getGoggleInfo(World world, BlockPos pos, IBlockState state) {
+        List<String> list = super.getGoggleInfo(world, pos, state);
+        if (list.equals(Collections.emptyList())) return list;
+        withTEDo(world, pos, TileEntitySawProcessing.class, (te) -> {
+            if (!te.currentlyProcessing.isEmpty()) {
+                TextBuilder builder = new TextBuilder();
+                builder.enter().formatting(TextFormatting.GRAY).translate("goggles.info.currently_processing")
+                        .text(": ").enter().space().space()
+                        .formatting(TextFormatting.AQUA).text(te.currentlyProcessing.getDisplayName())
+                        .enter();
+                list.addAll(builder.build());
+            }
+            if (!te.outputQueue.isEmpty()) {
+                TextBuilder builder = new TextBuilder();
+                builder.enter().formatting(TextFormatting.RED).translate("goggles.info.clogging")
+                        .enter();
+                list.addAll(builder.build());
+            }
+        });
+        return list;
+    }
+
+    @Override
+    public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
+        EnumSawRotation sawRotation = state.getValue(FACING);
+        if (sawRotation.getToEnumFacing() == EnumFacing.UP) {
+            world.setBlockState(pos, state.withProperty(FACING,
+                    sawRotation == EnumSawRotation.UP_ALONG_X ? EnumSawRotation.UP_ALONG_Z : EnumSawRotation.UP_ALONG_X)
+            );
+            return true;
+        }
+        if (EnumFacing.Axis.Y.apply(side)) {
+            world.setBlockState(pos, state.withProperty(FACING,
+                    EnumSawRotation.fromEnumFacingHorizontal(sawRotation.getToEnumFacing().rotateY())));
+            return true;
+        }
+        world.setBlockState(pos, state.withProperty(FACING,
+                EnumSawRotation.fromEnumFacingHorizontal(side)));
+        return true;
     }
 }

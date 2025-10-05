@@ -21,7 +21,7 @@ public class TextBuilder {
             this.finishedLines.add(this.currentlyBuilding);
             this.currentlyBuilding = "";
         }
-        return ImmutableList.copyOf(this.finishedLines);
+        return new ArrayList<>(this.finishedLines);
     }
 
     public TextBuilder enter() {

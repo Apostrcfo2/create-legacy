@@ -75,12 +75,14 @@ public class BlockMillstone extends BlockKineticBase implements ITileEntityProvi
                         switchToMain = false;
                         playerIn.inventory.addItemStackToInventory(stack);
                         millstone.output[i] = ItemStack.EMPTY;
+                        millstone.sync();
                     }
                 }
                 if (switchToMain) {
                     if (millstone.input.isEmpty()) return false;
                     playerIn.inventory.addItemStackToInventory(millstone.input);
                     millstone.input = ItemStack.EMPTY;
+                    millstone.sync();
                 }
                 return true;
             }

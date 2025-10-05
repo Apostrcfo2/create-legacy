@@ -75,4 +75,14 @@ public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.VALUES[meta % 6]);
     }
+
+    protected boolean disabledWrenchRotation = false;
+    @Override
+    public boolean onWrenched(World world, BlockPos pos, IBlockState state,
+                              EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (this.disabledWrenchRotation || state.getValue(FACING).getAxis().apply(side)) return false;
+        EnumFacing rotated = state.getValue(FACING).rotateAround(side.getAxis());
+        world.setBlockState(pos, state.withProperty(FACING, rotated));
+        return true;
+    }
 }

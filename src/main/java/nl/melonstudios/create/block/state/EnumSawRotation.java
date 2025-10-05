@@ -51,4 +51,14 @@ public enum EnumSawRotation implements IStringSerializable {
             default:   return UP_ALONG_X;
         }
     }
+    public static EnumSawRotation fromEnumFacingHorizontal(EnumFacing facing) {
+        if (facing.getAxis() == EnumFacing.Axis.Y) throw new IllegalArgumentException("no");
+        switch (facing) {
+            case NORTH:return NORTH;
+            case EAST: return EAST;
+            case SOUTH:return SOUTH;
+            case WEST: return WEST;
+            default:   throw new IllegalStateException("? Huh how ?");
+        }
+    }
 }

@@ -135,7 +135,7 @@ public final class SubInteractionBox {
             return false;
         }
 
-        boolean scroll(boolean sneaking, ItemStack held, int direction);
+        boolean scroll(EntityPlayer player, boolean sneaking, ItemStack held, int direction);
     }
 
     public static boolean handleInteraction(World world, BlockPos pos, @Nullable EntityPlayer player, boolean adjust,

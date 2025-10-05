@@ -97,6 +97,8 @@ tile.create.pillar_veridium.name=Cut Veridium Pillar
 ## ITEMS ##
 
 ## Create ##
+item.create.wrench.name=Wrench
+
 item.create.wheat_flour.name=Wheat Flour
 item.create.dough.name=Dough
 item.create.cinder_flour.name=Cinder Flour
@@ -136,6 +138,8 @@ item.create.tree_fertilizer.name=Tree Fertilizer
 goggles.kinetic_stats=Kinetic Stats
 goggles.kinetic_capacity=Stress Capacity
 goggles.kinetic_impact=Stress Impact
+goggles.info.currently_processing=Currently Processing
+goggles.info.clogging=An Item is clogging the output of this Machine
 
 ## TABS ##
 itemGroup.create=Create

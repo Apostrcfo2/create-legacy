@@ -42,7 +42,7 @@ public class MixinInventoryPlayer {
                 for (SubInteractionBox box : boxes) {
                     if (box.isInside(hitX, hitY, hitZ) && box.getInteraction() instanceof SubInteractionBox.ScrollInteraction) {
                         SubInteractionBox.ScrollInteraction interaction = (SubInteractionBox.ScrollInteraction) box.getInteraction();
-                        if (interaction.interact(this.player, this.player.isSneaking(), this.player.getHeldItem(EnumHand.MAIN_HAND))) {
+                        if (interaction.scroll(this.player, this.player.isSneaking(), this.player.getHeldItem(EnumHand.MAIN_HAND), direction)) {
                             ci.cancel();
                         }
                         break start;

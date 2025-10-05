@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.recipe.CuttingRecipes;
 import nl.melonstudios.create.recipe.SawingRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -108,7 +109,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
                 }
             }
         }
-        if (!this.outputQueue.isEmpty()) {
+        if (!this.outputQueue.isEmpty() && this.getSpeed() != 0.0F) {
             this.pushResult();
         }
     }

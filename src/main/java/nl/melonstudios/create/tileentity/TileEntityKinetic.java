@@ -47,8 +47,8 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
             KineticNetwork network = this.getOrCreateNetwork();
             if (!network.initialized) network.initFromTE(this.capacity, this.stress, this.networkSize);
             network.addSilently(this, this.lastCapacityProvided, this.lastStressApplied);
-            this.sync();
         }
+        this.sync();
         super.initialize();
     }
     @Override

@@ -167,4 +167,10 @@ public class BlockGauge extends BlockKineticHorizontalAxisBase implements ITileE
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
+        world.setBlockState(pos, state.cycleProperty(HORIZONTAL_AXIS), 3);
+        return true;
+    }
 }

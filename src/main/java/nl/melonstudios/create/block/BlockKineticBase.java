@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.BlockStressValues;
+import nl.melonstudios.create.kinetics.contraption.IWrenchable;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.util.BlockProperties;
@@ -33,7 +35,7 @@ import java.util.function.Supplier;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class BlockKineticBase extends Block implements IRotate, IGoggleInfo {
+public abstract class BlockKineticBase extends Block implements IRotate, IGoggleInfo, IWrenchable {
     public BlockKineticBase(Material blockMaterialIn, MapColor blockMapColorIn) {
         super(blockMaterialIn, blockMapColorIn);
 
@@ -156,5 +158,10 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
         TileEntity te = world.getTileEntity(pos);
         if (clazz.isInstance(te)) return action.apply((T) te);
         return null;
+    }
+
+    @Override
+    public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return false;
     }
 }

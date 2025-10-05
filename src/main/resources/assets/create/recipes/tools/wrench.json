@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "O#",
+    "I "
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "plateGold"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "O": {
+      "item": "create:cogwheel_small"
+    }
+  },
+  "result": {
+    "item": "create:wrench"
+  }
+}

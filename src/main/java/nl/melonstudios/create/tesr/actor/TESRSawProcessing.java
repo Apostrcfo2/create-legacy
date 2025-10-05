@@ -69,7 +69,7 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
             ItemStack stack = te.currentlyProcessing;
             int maxProgress = te.currentRecipe == null ? te.getProgressTick() * 10 : te.currentRecipe.processingTime * stack.getCount();
             double progress = MathHelper.clampedLerp(te.lastProgress, te.progress, pt);
-            double movement = progress / maxProgress;
+            double movement = te.getSpeed() != 0.0F ? progress / maxProgress : 0.5;
 
             GlStateManager.pushMatrix();
             GlStateManager.enableRescaleNormal();
@@ -127,7 +127,7 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
                     break;
             }
             GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.translate(0.0F, 0.5F, 0.0F);
+            if (te.getSpeed() != 0.0F) GlStateManager.translate(0.0F, 0.5F, 0.0F);
             GlStateManager.scale(0.25, 0.25, 0.25);
             this.mc.getRenderItem().renderItem(stack, model);
 
