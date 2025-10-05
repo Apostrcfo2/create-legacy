@@ -31,7 +31,7 @@ public final class OreDictInit {
         //endregion
 
         //region Vanilla wrench pickups
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DISPENSER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DISPENSER, 6);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.NOTEBLOCK, false);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.PISTON, 6);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.STICKY_PISTON, 6);
@@ -49,8 +49,12 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.DAYLIGHT_DETECTOR, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.DAYLIGHT_DETECTOR_INVERTED, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.HOPPER, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DROPPER, true);
+        for (int i = 0; i < 6; i++) {
+            if (i == 1) continue;
+            BlockDictionary.registerOre("create:wrenchPickup", MetaBlock.of(Blocks.HOPPER, i));
+            BlockDictionary.registerOre("create:wrenchPickup", MetaBlock.of(Blocks.HOPPER, i | 8));
+        }
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DROPPER, 6);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.OBSERVER, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.REDSTONE_WIRE, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.POWERED_REPEATER, true);
@@ -58,10 +62,10 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.POWERED_COMPARATOR, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.UNPOWERED_COMPARATOR, true);
 
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.GOLDEN_RAIL, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DETECTOR_RAIL, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.GOLDEN_RAIL, 6);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.DETECTOR_RAIL, 6);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.RAIL, true);
-        BlockDictionary.registerOre("create:wrenchPickup", Blocks.ACTIVATOR_RAIL, true);
+        BlockDictionary.registerOre("create:wrenchPickup", Blocks.ACTIVATOR_RAIL, 6);
         //endregion
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
