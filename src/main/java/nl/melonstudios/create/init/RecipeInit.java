@@ -19,16 +19,16 @@ import java.util.List;
 public final class RecipeInit {
     public static void init() {
         for (ItemStack ore : OreDictionary.getOres("crushedIron")) {
-            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(Items.IRON_INGOT), 0.1F);
+            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(Items.IRON_INGOT), 0.3F);
         }
         for (ItemStack ore : OreDictionary.getOres("crushedGold")) {
-            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(Items.GOLD_INGOT), 0.1F);
+            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(Items.GOLD_INGOT), 0.3F);
         }
         for (ItemStack ore : OreDictionary.getOres("crushedCopper")) {
-            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(ItemInit.INGREDIENT, 1, 16), 0.1F);
+            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(ItemInit.INGREDIENT, 1, 16), 0.3F);
         }
         for (ItemStack ore : OreDictionary.getOres("crushedZinc")) {
-            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(ItemInit.INGREDIENT, 1, 17), 0.1F);
+            FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(ItemInit.INGREDIENT, 1, 17), 0.3F);
         }
 
         FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(BlockInit.ORE, 1, 0),
