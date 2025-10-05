@@ -462,6 +462,29 @@ public final class RecipeInit {
                     new ItemStack(Items.WOODEN_HOE),
                     400
             );
+            tracker++;
+        }
+        //endregion
+
+        //region Stonecutting real
+        tracker = 0;
+        for (ItemStack stack : OreDictionary.getOres("stone")) {
+            CuttingRecipes.instance.addRecipe("create:stone_slab" + tracker,
+                    stack.copy(),
+                    new ItemStack(Blocks.STONE_SLAB, 2, 1),
+                    300
+            );
+            CuttingRecipes.instance.addRecipe("create:stone_bricks" + tracker,
+                    stack.copy(),
+                    new ItemStack(Blocks.STONEBRICK, 1, 0),
+                    300
+            );
+            CuttingRecipes.instance.addRecipe("create:chiseled_stone_bricks" + tracker,
+                    stack.copy(),
+                    new ItemStack(Blocks.STONEBRICK, 1, 3),
+                    300
+            );
+            tracker++;
         }
         //endregion
     }
