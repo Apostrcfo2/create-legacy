@@ -3,8 +3,8 @@ package nl.melonstudios.create.mixins;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.extensions.IExtensionWorld;
+import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mixin(World.class)
 public class MixinWorld implements IExtensionWorld {

@@ -6,10 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
-import org.spongepowered.asm.mixin.Implements;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 import javax.annotation.Nullable;
 

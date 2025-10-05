@@ -1,6 +1,5 @@
 package nl.melonstudios.create.util;
 
-import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.Localizer;
 import net.minecraft.util.text.TextFormatting;
 

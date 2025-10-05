@@ -20,8 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
-import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.EnumRenderPart;
+import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;

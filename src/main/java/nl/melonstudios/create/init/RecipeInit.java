@@ -1,16 +1,13 @@
 package nl.melonstudios.create.init;
 
 import com.google.common.collect.Sets;
-import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.CuttingRecipes;
-import nl.melonstudios.create.recipe.jei.CuttingRecipe;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -2,7 +2,8 @@ package nl.melonstudios.create.block.actor;
 
 import com.melonstudios.melonlib.misc.AABB;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.*;
+import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;

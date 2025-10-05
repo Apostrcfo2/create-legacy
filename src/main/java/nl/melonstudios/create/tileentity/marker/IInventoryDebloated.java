@@ -3,8 +3,6 @@ package nl.melonstudios.create.tileentity.marker;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

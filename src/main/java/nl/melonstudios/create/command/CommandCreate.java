@@ -1,9 +1,7 @@
 package nl.melonstudios.create.command;
 
-import com.google.common.collect.Lists;
 import net.minecraft.command.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -15,7 +13,6 @@ import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

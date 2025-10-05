@@ -7,7 +7,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.util.EnumRenderPart;
-import nl.melonstudios.create.util.interfaces.IStateFindable;
 
 @SuppressWarnings("all")
 public final class BlockRender extends Block {

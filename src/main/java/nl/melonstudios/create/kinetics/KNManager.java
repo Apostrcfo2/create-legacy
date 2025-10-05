@@ -1,6 +1,5 @@
 package nl.melonstudios.create.kinetics;
 
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import net.minecraft.world.World;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;

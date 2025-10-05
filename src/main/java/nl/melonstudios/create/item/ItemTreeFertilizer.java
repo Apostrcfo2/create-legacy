@@ -1,8 +1,6 @@
 package nl.melonstudios.create.item;
 
-import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import net.minecraft.block.BlockSapling;
-import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

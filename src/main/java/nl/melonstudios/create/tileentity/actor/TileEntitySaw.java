@@ -5,7 +5,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import nl.melonstudios.create.block.actor.BlockDrill;
 import nl.melonstudios.create.block.actor.BlockSaw;
 import nl.melonstudios.create.tileentity.TileEntityBreakBlockBase;
 

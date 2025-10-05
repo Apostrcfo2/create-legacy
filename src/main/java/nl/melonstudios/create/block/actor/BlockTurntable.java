@@ -1,7 +1,6 @@
 package nl.melonstudios.create.block.actor;
 
 import com.melonstudios.melonlib.misc.Localizer;
-import net.minecraft.block.BlockSlab;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;

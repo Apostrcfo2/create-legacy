@@ -4,7 +4,6 @@ import com.google.common.hash.Hashing;
 import com.melonstudios.melonlib.math.ITuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.Style;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nonnull;
