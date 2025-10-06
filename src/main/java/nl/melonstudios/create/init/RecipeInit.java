@@ -473,7 +473,7 @@ public final class RecipeInit {
         for (ItemStack stack : OreDictionary.getOres("stone")) {
             CuttingRecipes.instance.addRecipe("create:stone_slab" + tracker,
                     stack.copy(),
-                    new ItemStack(Blocks.STONE_SLAB, 2, 1),
+                    new ItemStack(Blocks.STONE_SLAB, 2, 0),
                     300
             );
             CuttingRecipes.instance.addRecipe("create:stone_bricks" + tracker,

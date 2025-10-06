@@ -16,8 +16,6 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
     public float randomizedItemRotation;
     public TileEntityDepot() {
         this.setTickRateLazy(10);
-
-        this.additionalItems[2] = new ItemStack(Items.FLINT, 43);
     }
 
     public ItemStack mainItem = ItemStack.EMPTY;

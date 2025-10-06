@@ -35,9 +35,16 @@ public class TESRDepot extends TileEntitySpecialRenderer<TileEntityDepot> {
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         if (!te.mainItem.isEmpty()) {
             GlStateManager.pushMatrix();
-            IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(te.mainItem, te.getWorld(), null);
-            if (model instanceof BakedItemModel && !this.upright(te.mainItem)) this.renderFlatItem(model, te.mainItem);
-            else this.renderCubeItem(model, te.mainItem);
+            ItemStack stack = te.mainItem;
+            IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(stack, te.getWorld(), null);
+            if (model instanceof BakedItemModel) {
+                if (this.upright(stack)) {
+                    this.renderUprightItem(model, stack);
+                } else {
+                    this.renderFlatItem(model, stack);
+                }
+            }
+            else this.renderCubeItem(model, stack);
             GlStateManager.popMatrix();
         }
         for (int i = 0; i < 8; i++) {
@@ -109,7 +116,7 @@ public class TESRDepot extends TileEntitySpecialRenderer<TileEntityDepot> {
             GlStateManager.translate(
                     rand.nextFloat() * 0.5F - 0.25F,
                     rand.nextFloat() * 0.5F - 0.25F,
-                    rand.nextFloat() * 0.5F - 0.25F
+                    rand.nextFloat() * 0.2F - 0.1F
             );
             this.mc.getRenderItem().renderItem(stack, model);
             GlStateManager.popMatrix();

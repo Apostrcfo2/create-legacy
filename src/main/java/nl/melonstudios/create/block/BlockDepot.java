@@ -16,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.init.ItemInit;
@@ -104,8 +105,19 @@ public class BlockDepot extends Block implements ITileEntityProvider, IGoggleInf
     @Override
     public List<String> getGoggleInfo(World world, BlockPos pos, IBlockState state) {
         List<String> list = BlockKineticBase.withTEDo(world, pos, TileEntityDepot.class, (te) -> {
+            if (te.isEmpty()) return null;
             TextBuilder builder = new TextBuilder();
-
+            builder.translate("goggles.inventory_contents").enter();
+            if (!te.mainItem.isEmpty()) {
+                builder.space().space().formatting(TextFormatting.GRAY).text(te.mainItem.getCount() + "x ")
+                        .formatting(TextFormatting.AQUA).text(te.mainItem.getDisplayName()).enter();
+            }
+            for (int i = 0; i < 8; i++) {
+                if (!te.additionalItems[i].isEmpty()) {
+                    builder.space().space().formatting(TextFormatting.GRAY).text(te.additionalItems[i].getCount() + "x ")
+                            .formatting(TextFormatting.AQUA).text(te.additionalItems[i].getDisplayName()).enter();
+                }
+            }
             return builder.build();
         });
         return list != null ? list : Collections.emptyList();

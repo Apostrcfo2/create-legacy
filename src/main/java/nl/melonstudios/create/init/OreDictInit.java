@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.HashSet;
@@ -81,6 +82,12 @@ public final class OreDictInit {
         OreDictionary.registerOre("create:uprightOnBelt", Items.BEETROOT_SOUP);
         OreDictionary.registerOre("create:uprightOnBelt", Items.RABBIT_STEW);
         OreDictionary.registerOre("create:uprightOnBelt", Items.MUSHROOM_STEW);
+
+        OreDictionary.registerOre("create:uprightOnBelt", Items.BUCKET);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.WATER_BUCKET);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.LAVA_BUCKET);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.MILK_BUCKET);
+        OreDictionary.registerOre("create:uprightOnBelt", ForgeModContainer.getInstance().universalBucket);
         //endregion
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);

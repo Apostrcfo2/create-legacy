@@ -37,6 +37,8 @@ tile.create.drill.name=Mechanical Drill
 tile.create.saw.name=Mechanical Saw
 tile.create.millstone.name=Millstone
 
+tile.create.depot.name=Depot
+
 ## Create's Decorations ##
 tile.create.natural_asurine.name=Asurine
 tile.create.natural_crimsite.name=Crimsite
@@ -140,6 +142,7 @@ goggles.kinetic_capacity=Stress Capacity
 goggles.kinetic_impact=Stress Impact
 goggles.info.currently_processing=Currently Processing
 goggles.info.clogging=An Item is clogging the output of this Machine
+goggles.inventory_contents=Inventory Contents
 
 ## TABS ##
 itemGroup.create=Create
