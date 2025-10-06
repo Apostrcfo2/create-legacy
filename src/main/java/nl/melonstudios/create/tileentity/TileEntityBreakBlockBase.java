@@ -15,9 +15,7 @@ public abstract class TileEntityBreakBlockBase extends TileEntityKinetic {
     protected int breakerId = -NEXT_BREAKER_ID.incrementAndGet();
     protected BlockPos breakingPos;
 
-    public TileEntityBreakBlockBase() {
-
-    }
+    public TileEntityBreakBlockBase() {}
 
     @Override
     public void onSpeedChanged(float lastSpeed) {

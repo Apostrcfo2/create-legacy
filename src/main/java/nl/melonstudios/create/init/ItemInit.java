@@ -74,6 +74,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.DRILL);
         CreateLegacy.proxy.setItemModel(BlockInit.SAW);
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
+        CreateLegacy.proxy.setItemModel(BlockInit.DEPOT);
 
         for (int i = 0; i < 7; i++) {
             String type = EnumOrestoneVariant.byId(i).getName();

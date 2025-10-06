@@ -44,6 +44,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
 
     public TileEntitySawProcessing() {
         super();
+        this.setTickRateLazy(10);
     }
 
     public ItemStack currentlyProcessing = ItemStack.EMPTY;

@@ -67,6 +67,10 @@ public final class BlockInit {
     public static final BlockMillstone MILLSTONE = (BlockMillstone)
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
             .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
+
+    public static final BlockDepot DEPOT = (BlockDepot)
+            registerBlockWithItem(new BlockDepot()
+            .setRegistryName("depot").setUnlocalizedName("create.depot"));
     //endregion
 
     //region Decorations

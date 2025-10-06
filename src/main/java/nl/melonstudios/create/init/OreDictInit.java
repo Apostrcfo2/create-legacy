@@ -4,6 +4,7 @@ import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import com.melonstudios.melonlib.misc.MetaBlock;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -27,7 +28,8 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.STRESSOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAW, true);
-        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPOT, false);
         //endregion
 
         //region Vanilla wrench pickups
@@ -66,6 +68,19 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.DETECTOR_RAIL, 6);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.RAIL, true);
         BlockDictionary.registerOre("create:wrenchPickup", Blocks.ACTIVATOR_RAIL, 6);
+        //endregion
+
+        //region Upright on belt
+        OreDictionary.registerOre("create:uprightOnBelt", Items.GLASS_BOTTLE);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.POTIONITEM);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.SPLASH_POTION);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.LINGERING_POTION);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.EXPERIENCE_BOTTLE);
+
+        OreDictionary.registerOre("create:uprightOnBelt", Items.BOWL);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.BEETROOT_SOUP);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.RABBIT_STEW);
+        OreDictionary.registerOre("create:uprightOnBelt", Items.MUSHROOM_STEW);
         //endregion
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
