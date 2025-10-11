@@ -3,6 +3,7 @@ package nl.melonstudios.create.proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
@@ -14,9 +15,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.block.actor.BlockGauge;
+import nl.melonstudios.create.entity.EntityGlue;
+import nl.melonstudios.create.entity.RenderGlue;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tesr.actor.*;
@@ -63,6 +67,11 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntitySawProcessing.class, "saw_processing", new TESRSawProcessing());
         this.registerTESR(TileEntityMillstone.class, "millstone", null);
         this.registerTESR(TileEntityDepot.class, "depot", new TESRDepot());
+    }
+
+    @Override
+    public void registerEntityRenderers() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityGlue.class, RenderGlue::new);
     }
 
     @Override

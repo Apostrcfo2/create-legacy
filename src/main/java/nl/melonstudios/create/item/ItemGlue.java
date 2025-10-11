@@ -12,11 +12,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -31,28 +33,24 @@ public class ItemGlue extends Item {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player) {
-        World world = player.world;
-        RayTraceResult result = player.rayTrace(6.0F, 1.0F);
-        if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK && pos.equals(result.getBlockPos())) {
-            GluedSurface surface = new GluedSurface(pos, result.sideHit);
-            if (((IExtensionWorld)world).create$removeGluedSurface(surface)) {
-                player.playSound(SoundEvents.BLOCK_SLIME_BREAK, 1.0F, 0.5F);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         GluedSurface surface = new GluedSurface(pos, facing);
-        if (((IExtensionWorld)worldIn).create$addGluedSurface(surface)) {
-            player.playSound(SoundEvents.BLOCK_SLIME_PLACE, 1.0F, 1.0F);
-            if (!player.isCreative()) {
-                player.getHeldItem(hand).damageItem(1, player);
+        List<EntityGlue> entity = worldIn.getEntities(EntityGlue.class, (glue) -> surface.equals(glue.getSurface()));
+        if (player.isSneaking()) {
+            if (!entity.isEmpty()) {
+                player.playSound(SoundEvents.BLOCK_SLIME_BREAK, 1.0F, 0.5F);
+                entity.forEach(worldIn::removeEntity);
+                return EnumActionResult.SUCCESS;
             }
-            return EnumActionResult.SUCCESS;
+        } else {
+            if (entity.isEmpty()) {
+                player.playSound(SoundEvents.BLOCK_SLIME_PLACE, 1.0F, 1.0F);
+                if (!player.isCreative()) {
+                    player.getHeldItem(hand).damageItem(1, player);
+                }
+                worldIn.spawnEntity(new EntityGlue(worldIn, surface));
+                return EnumActionResult.SUCCESS;
+            }
         }
         return EnumActionResult.FAIL;
     }

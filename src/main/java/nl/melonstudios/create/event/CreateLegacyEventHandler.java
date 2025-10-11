@@ -21,8 +21,12 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
@@ -52,6 +56,13 @@ public class CreateLegacyEventHandler {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(ItemInit.ITEMS.toArray(new Item[0]));
         OreDictInit.init();
+    }
+    @SubscribeEvent
+    public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
+        event.getRegistry().register(EntityEntryBuilder.create().entity(EntityGlue.class)
+                .factory(EntityGlue::new).id("create:glue", 0).name("create.glue")
+                .tracker(64, 10, false).build());
+        CreateLegacy.proxy.registerEntityRenderers();
     }
 
     //Other
