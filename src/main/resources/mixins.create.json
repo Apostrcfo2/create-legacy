@@ -3,6 +3,8 @@
   "package": "nl.melonstudios.create.mixins",
   "refmap": "refmap.create.json",
   "mixins": [
+    "MixinBlock",
+    "MixinIBlockState",
     "MixinInventoryPlayer",
     "MixinTileEntityHopper",
     "MixinWorld"

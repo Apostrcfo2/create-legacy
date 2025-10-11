@@ -30,6 +30,9 @@ public final class ItemInit {
     public static final ItemTreeFertilizer TREE_FERTILIZER = (ItemTreeFertilizer)
             registerItem(new ItemTreeFertilizer()
             .setRegistryName("tree_fertilizer").setUnlocalizedName("create.tree_fertilizer"));
+    public static final ItemGlue SUPER_GLUE = (ItemGlue)
+            registerItem(new ItemGlue(256)
+            .setRegistryName("superglue").setUnlocalizedName("create.superglue"));
 
     private static <T extends Item> T registerItem(T item) {
         ITEMS.add(item);
@@ -45,6 +48,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(GOGGLES);
         CreateLegacy.proxy.setItemModel(SANDPAPER);
         CreateLegacy.proxy.setItemModel(TREE_FERTILIZER);
+        CreateLegacy.proxy.setItemModel(SUPER_GLUE);
 
         // blocks
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");

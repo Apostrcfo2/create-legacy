@@ -87,6 +87,33 @@
     "render_part=water_wheel_west": {
       "model": "create:render/water_wheel",
       "y": 90
+    },
+    "render_part=bearing_plate_up": {
+      "model": "create:render/bearing_plate"
+    },
+    "render_part=bearing_plate_down": {
+      "model": "create:render/bearing_plate",
+      "x": 180
+    },
+    "render_part=bearing_plate_north": {
+      "model": "create:render/bearing_plate",
+      "x": 90,
+      "y": 0
+    },
+    "render_part=bearing_plate_east": {
+      "model": "create:render/bearing_plate",
+      "x": 90,
+      "y": 90
+    },
+    "render_part=bearing_plate_south": {
+      "model": "create:render/bearing_plate",
+      "x": 90,
+      "y": 180
+    },
+    "render_part=bearing_plate_west": {
+      "model": "create:render/bearing_plate",
+      "x": 90,
+      "y": 270
     }
   }
 }

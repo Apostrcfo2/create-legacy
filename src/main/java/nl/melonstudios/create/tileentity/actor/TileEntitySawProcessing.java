@@ -4,6 +4,7 @@ import com.melonstudios.melonlib.misc.StackUtil;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -23,7 +24,6 @@ import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -196,8 +196,10 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         this.sync();
         if (player != null) {
             if (held.isEmpty()) {
+                player.playSound(SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, 1.0F, 1.0F);
                 player.sendStatusMessage(new TextComponentString("Cleared recipe filter"), true);
             } else {
+                player.playSound(SoundEvents.ENTITY_ITEMFRAME_ADD_ITEM, 1.0F, 1.0F);
                 player.sendStatusMessage(new TextComponentString("Set recipe filter to " + copy.getDisplayName()), true);
             }
         }
@@ -205,7 +207,6 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
 
     @Override
-    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         NBTTagCompound nbt = super.writeToNBT(compound);
 

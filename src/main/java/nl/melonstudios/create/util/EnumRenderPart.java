@@ -35,6 +35,13 @@ public enum EnumRenderPart implements IStringSerializable {
     WATER_WHEEL_SOUTH,
     WATER_WHEEL_WEST,
     WATER_WHEEL_EAST,
+
+    BEARING_PLATE_DOWN,
+    BEARING_PLATE_UP,
+    BEARING_PLATE_NORTH,
+    BEARING_PLATE_SOUTH,
+    BEARING_PLATE_WEST,
+    BEARING_PLATE_EAST,
     ;
 
     private final int id = this.ordinal();
@@ -55,6 +62,7 @@ public enum EnumRenderPart implements IStringSerializable {
     private static final EnumRenderPart[] HALF_SHAFTS = new EnumRenderPart[6];
     private static final EnumRenderPart[] DRILL_HEADS = new EnumRenderPart[6];
     private static final EnumRenderPart[] WATER_WHEELS = new EnumRenderPart[6];
+    private static final EnumRenderPart[] BEARING_PLATES = new EnumRenderPart[6];
 
     public static EnumRenderPart byID(int id) {
         return values()[id % values().length];
@@ -92,6 +100,13 @@ public enum EnumRenderPart implements IStringSerializable {
         WATER_WHEELS[3] = WATER_WHEEL_SOUTH;
         WATER_WHEELS[4] = WATER_WHEEL_WEST;
         WATER_WHEELS[5] = WATER_WHEEL_EAST;
+
+        BEARING_PLATES[0] = BEARING_PLATE_DOWN;
+        BEARING_PLATES[1] = BEARING_PLATE_UP;
+        BEARING_PLATES[2] = BEARING_PLATE_NORTH;
+        BEARING_PLATES[3] = BEARING_PLATE_SOUTH;
+        BEARING_PLATES[4] = BEARING_PLATE_WEST;
+        BEARING_PLATES[5] = BEARING_PLATE_EAST;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
@@ -105,5 +120,8 @@ public enum EnumRenderPart implements IStringSerializable {
     }
     public static EnumRenderPart getWaterWheel(EnumFacing facing) {
         return WATER_WHEELS[facing.getIndex()];
+    }
+    public static EnumRenderPart getBearingPlate(EnumFacing facing) {
+        return BEARING_PLATES[facing.getIndex()];
     }
 }
