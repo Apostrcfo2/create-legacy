@@ -28,7 +28,8 @@ public class RenderGlue extends Render<EntityGlue> {
 
     @Override
     public boolean shouldRender(EntityGlue livingEntity, ICamera camera, double camX, double camY, double camZ) {
-        return (Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof ItemGlue || this.renderOutlines)
+        return (Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof ItemGlue
+                || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() instanceof ItemGlue)
                 && super.shouldRender(livingEntity, camera, camX, camY, camZ);
     }
 
@@ -36,6 +37,7 @@ public class RenderGlue extends Render<EntityGlue> {
     public void doRender(EntityGlue entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
+        GlStateManager.disableLighting();
         GlStateManager.translate(x-0.5, y, z-0.5);
         this.bindEntityTexture(entity);
         Tessellator tessellator = Tessellator.getInstance();
@@ -77,6 +79,7 @@ public class RenderGlue extends Render<EntityGlue> {
                 break;
         }
         tessellator.draw();
+        GlStateManager.enableLighting();
         GlStateManager.enableCull();
         GlStateManager.popMatrix();
     }

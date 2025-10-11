@@ -1,7 +1,9 @@
 package nl.melonstudios.create.item;
 
+import com.melonstudios.melonlib.misc.Localizer;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -17,6 +19,7 @@ import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
@@ -53,5 +56,11 @@ public class ItemGlue extends Item {
             }
         }
         return EnumActionResult.FAIL;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(Localizer.translate("item.create.superglue.desc1"));
+        tooltip.add(Localizer.translate("item.create.superglue.desc2"));
     }
 }

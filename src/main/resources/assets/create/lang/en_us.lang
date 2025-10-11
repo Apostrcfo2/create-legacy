@@ -135,6 +135,9 @@ item.create.crushed_zinc_ore.name=Crushed Zinc Ore
 item.create.goggles.name=Engineer's Goggles
 item.create.sandpaper.name=Sandpaper
 item.create.tree_fertilizer.name=Tree Fertilizer
+item.create.superglue.name=Super Glue
+item.create.superglue.desc1=R-Click to apply Glue to surface
+item.create.superglue.desc2=Shift-R-Click to remove Glue from surface
 
 ## GOGGLE TOOLTIPS ##
 goggles.kinetic_stats=Kinetic Stats
