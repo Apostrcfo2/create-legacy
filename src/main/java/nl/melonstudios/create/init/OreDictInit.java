@@ -25,6 +25,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.HAND_CRANK, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.WATER_WHEEL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.TURNTABLE, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BEARING, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SPEEDOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.STRESSOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);

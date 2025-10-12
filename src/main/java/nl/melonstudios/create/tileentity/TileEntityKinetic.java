@@ -42,6 +42,11 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
     public boolean wasMoved = false;
 
     @Override
+    public void updateContainingBlockInfo() {
+        if (!this.wasMoved) super.updateContainingBlockInfo();
+    }
+
+    @Override
     public void initialize() {
         if (this.hasNetwork() && !this.world.isRemote) {
             KineticNetwork network = this.getOrCreateNetwork();

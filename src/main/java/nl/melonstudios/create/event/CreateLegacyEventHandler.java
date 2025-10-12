@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.BlockInit;
@@ -62,6 +63,9 @@ public class CreateLegacyEventHandler {
         event.getRegistry().register(EntityEntryBuilder.create().entity(EntityGlue.class)
                 .factory(EntityGlue::new).id("create:glue", 0).name("create.glue")
                 .tracker(64, 10, false).build());
+        event.getRegistry().register(EntityEntryBuilder.create().entity(EntityContraptionBearing.class)
+                .factory(EntityContraptionBearing::new).id("create:contraption_bearing", 1).name("create.contraption")
+                .tracker(256, 10, false).build());
         CreateLegacy.proxy.registerEntityRenderers();
     }
 
@@ -90,6 +94,7 @@ public class CreateLegacyEventHandler {
         event.registerCapacity(BlockInit.HAND_CRANK, 8.0F);
         event.registerCapacity(BlockInit.WATER_WHEEL, 16.0F);
         event.registerStress(BlockInit.TURNTABLE, 4.0F);
+        event.registerStress(BlockInit.BEARING, 4.0F);
         event.registerStress(BlockInit.DRILL, 4.0F);
         event.registerStress(BlockInit.SAW, 4.0F);
         event.registerStress(BlockInit.MILLSTONE, 4.0F);

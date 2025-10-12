@@ -10,6 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class BlockEncasedShaftBase extends BlockKineticRotatedPillarBase {
     public BlockEncasedShaftBase(MapColor mapColor, SoundType soundType) {
@@ -39,5 +41,11 @@ public abstract class BlockEncasedShaftBase extends BlockKineticRotatedPillarBas
     @Override
     public EnumFacing.Axis getRotationAxis(IBlockState state) {
         return state.getValue(AXIS);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public float getAmbientOcclusionLightValue(IBlockState state) {
+        return 0.2F;
     }
 }

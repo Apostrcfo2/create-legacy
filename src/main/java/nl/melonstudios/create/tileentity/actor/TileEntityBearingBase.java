@@ -3,27 +3,53 @@ package nl.melonstudios.create.tileentity.actor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
-import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
+import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import java.util.List;
 
-public abstract class TileEntityBearingBase extends TileEntityKinetic implements ITileEntityWithContraption, IContraptionHolder {
+public abstract class TileEntityBearingBase extends TileEntityKinetic implements ITileEntityWithContraption {
     public boolean tryAssemble() {
+        if (this.isAssembled()) {
+            return this.disassemble();
+        } else if (this.getSpeed() != 0.0F) {
+            return this.assemble();
+        }
         return false;
     }
-    public int getXOffset() {
-        return 0;
+
+    protected boolean disassemble() {
+        List<EntityContraptionBearing> bearings = this.world.getEntities(
+                EntityContraptionBearing.class,
+                (e) -> e.bearing.getPos().equals(this.pos)
+        );
+        for (EntityContraptionBearing bearing : bearings) {
+            bearing.setDead();
+            this.world.removeEntity(bearing);
+        }
+        this.preventNextRemoval();
+        this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, false));
+        this.validate();
+        this.world.setTileEntity(this.pos, this);
+        this.angle = 0.0F;
+        this.sync();
+        return true;
     }
-    public int getYOffset() {
-        return 0;
-    }
-    public int getZOffset() {
-        return 0;
+    protected boolean assemble() {
+        EntityContraptionBearing bearing = new EntityContraptionBearing(this, null, this.pos);
+        if (bearing.contraption == null) return false;
+        if (bearing.contraption.tileEntities.containsValue(this)) return false; //Prevent bearing picking up itself
+        if (bearing.contraption.blocks.containsKey(this.pos)) return false; //Ditto
+        if (!this.world.isRemote) this.world.spawnEntity(bearing);
+        this.preventNextRemoval();
+        this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, true));
+        this.validate();
+        this.world.setTileEntity(this.pos, this);
+        this.angle = 0.0F;
+        this.sync();
+        return true;
     }
 
     public EnumFacing getFacing() {
@@ -37,17 +63,28 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         return false;
     }
 
+    public float angleOld = 0.0F;
     public float angle = 0.0F;
     @Override
     public void tick() {
+        this.angleOld = this.angle;
         super.tick();
 
         if (this.isAssembled() && !this.overstressed) {
             if (this.useGeneratedSpeedForContraption()) {
-                this.angle += this.getGeneratedSpeed();
+                this.angle += this.getGeneratedSpeed() * 0.3F;
             } else {
-                this.angle += this.getSpeed();
+                this.angle += this.getSpeed() * 0.3F;
             }
+
+            if (this.angleOld >= 360.0F && this.angle >= 360.0F) {
+                this.angleOld %= 360.0F;
+                this.angle %= 360.0F;
+            } else if (this.angleOld <= 360.0F && this.angle <= 360.0F) {
+                this.angleOld %= 360.0F;
+                this.angle %= 360.0F;
+            }
+            this.markDirty();
         }
     }
 
@@ -81,16 +118,6 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         super.readPacket(nbt);
 
         this.angle = nbt.getFloat("angle");
-    }
-
-    @Override
-    public int getCombinedLight(BlockPos contraptionPos, int min) {
-        return this.world.getCombinedLight(contraptionPos, min);
-    }
-
-    @Override
-    public Biome getBiome() {
-        return this.world.getBiome(this.pos);
     }
 
     @Override

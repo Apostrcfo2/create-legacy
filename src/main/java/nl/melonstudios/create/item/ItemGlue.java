@@ -2,6 +2,7 @@ package nl.melonstudios.create.item;
 
 import com.melonstudios.melonlib.misc.Localizer;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +38,8 @@ public class ItemGlue extends Item {
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState state = worldIn.getBlockState(pos);
+        if (state.getBlock().isReplaceable(worldIn, pos)) return EnumActionResult.PASS;
         GluedSurface surface = new GluedSurface(pos, facing);
         List<EntityGlue> entity = worldIn.getEntities(EntityGlue.class, (glue) -> surface.equals(glue.getSurface()));
         if (player.isSneaking()) {

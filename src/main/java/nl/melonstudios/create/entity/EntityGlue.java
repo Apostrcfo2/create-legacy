@@ -2,6 +2,7 @@ package nl.melonstudios.create.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,6 +43,11 @@ public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
         if (this.world.getTotalWorldTime() % 10 == 0) {
             this.validateGlueness();
         }
+    }
+
+    @Override
+    public void move(MoverType type, double x, double y, double z) {
+
     }
 
     private void validateGlueness() {

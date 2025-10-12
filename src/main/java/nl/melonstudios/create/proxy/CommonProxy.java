@@ -57,6 +57,7 @@ public class CommonProxy {
         this.registerTE(TileEntityWaterWheel.class, "water_wheel");
         this.registerTE(TileEntityWaterWheelTemp.class, "water_wheel_temp");
         this.registerTE(TileEntityTurntable.class, "turntable");
+        this.registerTE(TileEntityBearing.class, "bearing");
         this.registerTE(TileEntitySpeedometer.class, "speedometer");
         this.registerTE(TileEntityStressometer.class, "stressometer");
         this.registerTE(TileEntityDrill.class, "drill");

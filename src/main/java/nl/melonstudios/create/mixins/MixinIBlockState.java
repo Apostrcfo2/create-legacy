@@ -23,7 +23,7 @@ public abstract class MixinIBlockState implements IExtensionIBlockState {
     }
 
     @Override
-    public void create$addStickyLocations(World world, BlockPos pos, EnumFacing side, List<BlockPos> positions) {
-        ((IExtensionBlock)this.getBlock()).create$addStickyLocations(world, pos, (IBlockState)this, side, positions);
+    public void create$addStickyLocations(World world, BlockPos pos, List<BlockPos> positions) {
+        ((IExtensionBlock)this.getBlock()).create$addStickyLocations(world, pos, (IBlockState)this, positions);
     }
 }

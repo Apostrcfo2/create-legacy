@@ -19,7 +19,9 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.block.actor.BlockGauge;
+import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
+import nl.melonstudios.create.entity.RenderContraptionBearing;
 import nl.melonstudios.create.entity.RenderGlue;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.tesr.*;
@@ -60,6 +62,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityWaterWheel.class, "water_wheel", new TESRWaterWheel());
         this.registerTESR(TileEntityWaterWheelTemp.class, "water_wheel_temp", null);
         this.registerTESR(TileEntityTurntable.class, "turntable", new TESRTurntable());
+        this.registerTESR(TileEntityBearing.class, "bearing", new TESRBearing<>());
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
         this.registerTESR(TileEntityStressometer.class, "stressometer", new TESRGauge<>(BlockGauge.Type.STRESS));
         this.registerTESR(TileEntityDrill.class, "drill", new TESRDrill<>());
@@ -72,6 +75,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerEntityRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(EntityGlue.class, RenderGlue::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityContraptionBearing.class, RenderContraptionBearing::new);
     }
 
     @Override

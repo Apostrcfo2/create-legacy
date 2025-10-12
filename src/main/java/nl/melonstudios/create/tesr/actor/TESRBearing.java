@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
@@ -24,7 +25,7 @@ public class TESRBearing<T extends TileEntityBearingBase> extends TESRKineticBas
                 GlStateManager.pushMatrix();
                 IBlockState state = BlockRender.byEnum(EnumRenderPart.getBearingPlate(facing));
                 IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(state);
-                this.rotateModel(45.0F, facing.getAxis(), model, state, 1.0F);
+                this.rotateModel((float)MathHelper.clampedLerp(te.angleOld, te.angle, pt), facing.getAxis(), model, state, 1.0F);
                 GlStateManager.popMatrix();
             }
         }

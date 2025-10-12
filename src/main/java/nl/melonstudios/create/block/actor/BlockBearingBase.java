@@ -1,5 +1,6 @@
 package nl.melonstudios.create.block.actor;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -15,7 +16,7 @@ import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 
-public class BlockBearingBase extends BlockKineticDirectionalBase {
+public abstract class BlockBearingBase extends BlockKineticDirectionalBase implements ITileEntityProvider {
     public static final PropertyBool ASSEMBLED = CreateStateProperties.ASSEMBLED;
 
     public BlockBearingBase() {

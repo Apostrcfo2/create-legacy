@@ -15,6 +15,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.tileentity.TileEntityGearbox;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
@@ -85,5 +87,11 @@ public class BlockGearbox extends BlockKineticRotatedPillarBase implements ITile
     @Override
     public int damageDropped(IBlockState state) {
         return state.getValue(AXIS) == EnumFacing.Axis.Y ? 0 : 1;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public float getAmbientOcclusionLightValue(IBlockState state) {
+        return 0.2F;
     }
 }

@@ -9,12 +9,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.WorldServer;
+import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.kinetics.contraption.StickinessPropagator;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CommandCreate extends CommandBase {
     @Override
@@ -56,13 +61,36 @@ public class CommandCreate extends CommandBase {
                 }
                 sender.sendMessage(new TextComponentString("Tried fixing " + teCounter + " kinetic tile entities in dimension " + dimension));
             }
+        } else if ("testGlue".equals(type)) {
+            BlockPos pos = parseBlockPos(sender, args, 1, true);
+            Set<BlockPos> positions = new HashSet<>();
+            Set<EntityGlue> glues = new HashSet<>();
+            AtomicBoolean failed = new AtomicBoolean(false);
+            StickinessPropagator.propagateStickiness(sender.getEntityWorld(), pos, 4096, positions, glues, failed);
+            if (failed.get()) {
+                sender.sendMessage(new TextComponentString("Glued area too large or has unmovable blocks"));
+            } else {
+                sender.sendMessage(new TextComponentString("Connected blocks: " + positions.size()));
+                sender.sendMessage(new TextComponentString("Connected glue entities: " + glues.size()));
+            }
         } else throw new WrongUsageException("Invalid command argument '" + type + "'!");
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "goggles", "tryFixKinetics");
+            return getListOfStringsMatchingLastWord(args, "goggles", "tryFixKinetics", "testGlue");
+        }
+        if (args.length == 2) {
+            if ("testGlue".equals(args[0])) {
+                if (targetPos == null) {
+                    return getListOfStringsMatchingLastWord(args, "~ ~ ~");
+                } else {
+                    return getListOfStringsMatchingLastWord(args,
+                            String.format("%s %s %s", targetPos.getX(), targetPos.getY(), targetPos.getZ())
+                    );
+                }
+            }
         }
         return Collections.emptyList();
     }

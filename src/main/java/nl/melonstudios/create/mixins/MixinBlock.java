@@ -22,9 +22,11 @@ public abstract class MixinBlock implements IExtensionBlock {
     }
 
     @Override
-    public void create$addStickyLocations(World world, BlockPos pos, IBlockState state, EnumFacing side, List<BlockPos> positions) {
-        if (this.create$isSideSticky(state, side)) {
-            positions.add(pos.offset(side));
+    public void create$addStickyLocations(World world, BlockPos pos, IBlockState state, List<BlockPos> positions) {
+        for (EnumFacing side : EnumFacing.VALUES) {
+            if (this.create$isSideSticky(state, side)) {
+                positions.add(pos.offset(side));
+            }
         }
     }
 }

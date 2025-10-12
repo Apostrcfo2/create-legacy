@@ -49,6 +49,9 @@ public final class BlockInit {
     public static final BlockTurntable TURNTABLE = (BlockTurntable)
             registerBlockWithItem(new BlockTurntable(MapColor.WOOD, SoundType.WOOD)
             .setRegistryName("turntable").setUnlocalizedName("create.turntable"));
+    public static final BlockBearing BEARING = (BlockBearing)
+            registerBlockWithItem(new BlockBearing()
+            .setRegistryName("bearing").setUnlocalizedName("create.bearing"));
 
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)

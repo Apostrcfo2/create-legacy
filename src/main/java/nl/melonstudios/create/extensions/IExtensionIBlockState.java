@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IExtensionIBlockState {
     boolean create$isSideSticky(EnumFacing side);
-    void create$addStickyLocations(World world, BlockPos pos, EnumFacing side, List<BlockPos> positions);
+    void create$addStickyLocations(World world, BlockPos pos, List<BlockPos> positions);
 }

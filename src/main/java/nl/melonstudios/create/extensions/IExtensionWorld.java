@@ -7,9 +7,4 @@ import java.util.Set;
 
 public interface IExtensionWorld {
     Set<ITileEntityWithContraption> create$getContraptionTileEntities();
-    Set<GluedSurface> create$getGluedSurfaces();
-
-    boolean create$isSurfaceGlued(GluedSurface surface);
-    boolean create$addGluedSurface(GluedSurface surface);
-    boolean create$removeGluedSurface(GluedSurface surface);
 }
