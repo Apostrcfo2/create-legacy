@@ -17,7 +17,7 @@ import nl.melonstudios.create.kinetics.contraption.GluedSurface;
 
 public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
     private GluedSurface surface;
-    private boolean wasCovered = false;
+    public boolean wasCovered = false;
 
     public EntityGlue(World worldIn) {
         super(worldIn);

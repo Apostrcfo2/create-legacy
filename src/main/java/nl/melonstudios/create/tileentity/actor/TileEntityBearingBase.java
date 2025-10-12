@@ -77,10 +77,10 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
                 this.angle += this.getSpeed() * 0.3F;
             }
 
-            if (this.angleOld >= 360.0F && this.angle >= 360.0F) {
+            if (this.angleOld > 360.0F && this.angle > 360.0F) {
                 this.angleOld %= 360.0F;
                 this.angle %= 360.0F;
-            } else if (this.angleOld <= 360.0F && this.angle <= 360.0F) {
+            } else if (this.angleOld < -360.0F && this.angle < -360.0F) {
                 this.angleOld %= 360.0F;
                 this.angle %= 360.0F;
             }

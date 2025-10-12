@@ -14,6 +14,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
+import nl.melonstudios.create.kinetics.contraption.GluedSurface;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
@@ -92,7 +93,7 @@ public class EntityContraptionBearing extends Entity implements IContraptionHold
     }
     @Override
     public int getCombinedLight(BlockPos contraptionPos, int min) {
-        return this.world.getCombinedLight(this.getPosition().add(contraptionPos), min);
+        return this.world.getCombinedLight(this.getPosition(), min);
     }
     @Override
     public Biome getBiome() {
@@ -107,7 +108,6 @@ public class EntityContraptionBearing extends Entity implements IContraptionHold
             BlockPos self = this.getPosition();
             for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
                 BlockPos pos = self.add(entry.getKey());
-                //this.world.destroyBlock(pos, true);
                 this.world.setBlockState(pos, entry.getValue());
                 TileEntity te = this.contraption.tileEntities.get(entry.getKey());
                 if (te != null) {
@@ -118,6 +118,12 @@ public class EntityContraptionBearing extends Entity implements IContraptionHold
                     }
                     this.world.setTileEntity(pos, te);
                 }
+            }
+            for (GluedSurface surface : this.contraption.gluedSurfaces) {
+                BlockPos pos = self.add(surface.pos);
+                EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, surface.side));
+                entityGlue.wasCovered = true;
+                this.world.spawnEntity(entityGlue);
             }
         } else {
             ContraptionRendering.contraptionFinalized(this.contraption);

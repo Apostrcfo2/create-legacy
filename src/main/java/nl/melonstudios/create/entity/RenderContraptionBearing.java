@@ -35,7 +35,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
         return true;
     }
 
-    @Override
+    @Override //horrible code, but it is rendering so it should be horrible yes
     public void doRender(EntityContraptionBearing entity, double x, double y, double z, float entityYaw, float partialTicks) {
         if (entity.bearing == null) return;
         GlStateManager.pushMatrix();
@@ -51,7 +51,15 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
         this.bindEntityTexture(entity);
         GlStateManager.translate(-0.5, -0.5, -0.5);
         for (BlockRenderLayer layer : BlockRenderLayer.values()) {
+            if (layer == BlockRenderLayer.TRANSLUCENT) {
+                GlStateManager.enableAlpha();
+                GlStateManager.enableBlend();
+            }
             GlStateManager.callList(ContraptionRendering.getList(entity.contraption) + layer.ordinal());
+            if (layer == BlockRenderLayer.TRANSLUCENT) {
+                GlStateManager.disableAlpha();
+                GlStateManager.disableBlend();
+            }
         }
         GlStateManager.enableLighting();
 
@@ -69,6 +77,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
                 GlStateManager.popMatrix();
             }
         }
+
         GlStateManager.popMatrix();
     }
 

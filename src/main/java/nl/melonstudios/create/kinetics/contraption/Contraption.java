@@ -44,6 +44,7 @@ public class Contraption implements IBlockAccess {
     public void loadNBT(NBTTagCompound nbt) {
         this.blocks.clear();
         this.tileEntities.clear();
+        this.gluedSurfaces.clear();
 
         NBTTagList blockList = nbt.getTagList("Blocks", 10);
         for (int i = 0; i < blockList.tagCount(); i++) {
@@ -54,6 +55,7 @@ public class Contraption implements IBlockAccess {
 
             this.blocks.put(pos, state);
         }
+
         NBTTagList tileEntityList = nbt.getTagList("TileEntities", 10);
         for (int i = 0; i < tileEntityList.tagCount(); i++) {
             NBTTagCompound compound = tileEntityList.getCompoundTagAt(i);
@@ -62,6 +64,16 @@ public class Contraption implements IBlockAccess {
             if (te != null) {
                 this.tileEntities.put(te.getPos(), te);
             }
+        }
+
+        NBTTagList gluedSurfacesList = nbt.getTagList("GluedSurfaces", 10);
+        for (int i = 0; i < gluedSurfacesList.tagCount(); i++) {
+            NBTTagCompound compound = gluedSurfacesList.getCompoundTagAt(i);
+
+            BlockPos pos = NBTUtil.getPosFromTag(compound.getCompoundTag("Pos"));
+            EnumFacing side = EnumFacing.VALUES[compound.getByte("side")];
+
+            this.gluedSurfaces.add(new GluedSurface(pos, side));
         }
 
         this.setTileEntityBlockData();
@@ -85,12 +97,24 @@ public class Contraption implements IBlockAccess {
         }
         nbt.setTag("TileEntities", tileEntityList);
 
+        NBTTagList gluedSurfacesList = new NBTTagList();
+        for (GluedSurface surface : this.gluedSurfaces) {
+            NBTTagCompound compound = new NBTTagCompound();
+
+            compound.setTag("Pos", NBTUtil.createPosTag(surface.pos));
+            compound.setByte("side", (byte)surface.side.getIndex());
+
+            gluedSurfacesList.appendTag(compound);
+        }
+        nbt.setTag("GluedSurfaces", gluedSurfacesList);
+
         return nbt;
     }
 
     public final IContraptionHolder holder;
     public final HashMap<BlockPos, IBlockState> blocks = new HashMap<>();
     public final HashMap<BlockPos, TileEntity> tileEntities = new HashMap<>();
+    public final HashSet<GluedSurface> gluedSurfaces = new HashSet<>();
     public final HashSet<TileEntity> blacklistedForRendering = new HashSet<>();
 
     @Nullable
@@ -167,6 +191,11 @@ public class Contraption implements IBlockAccess {
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);
         }
         contraption.setTileEntityBlockData();
+        for (EntityGlue entityGlue : glues) {
+            GluedSurface surface = entityGlue.getSurface();
+            contraption.gluedSurfaces.add(new GluedSurface(surface.pos.subtract(pos), surface.side));
+        }
+        glues.forEach(world::removeEntity);
 
         return contraption;
     }

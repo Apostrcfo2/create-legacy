@@ -29,6 +29,7 @@ tile.create.water_wheel.name=Water Wheel
 
 tile.create.turntable.name=Turntable
 tile.create.turntable.desc=Side effects may include motion sickness and/or dizziness.
+tile.create.bearing.name=Mechanical Bearing
 
 tile.create.speedometer.name=Speedometer
 tile.create.stressometer.name=Stressometer
