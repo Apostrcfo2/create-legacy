@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "C",
+    "I"
+  ],
+  "key": {
+    "#": {
+      "item": "create:turntable"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "stone"
+    },
+    "I": {
+      "item": "create:shaft"
+    }
+  },
+  "result": {
+    "item": "create:bearing"
+  }
+}
