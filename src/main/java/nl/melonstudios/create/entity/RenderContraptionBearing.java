@@ -50,17 +50,34 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
         );
         this.bindEntityTexture(entity);
         GlStateManager.translate(-0.5, -0.5, -0.5);
-        for (BlockRenderLayer layer : BlockRenderLayer.values()) {
-            if (layer == BlockRenderLayer.TRANSLUCENT) {
-                GlStateManager.enableAlpha();
-                GlStateManager.enableBlend();
-            }
-            GlStateManager.callList(ContraptionRendering.getList(entity.contraption) + layer.ordinal());
-            if (layer == BlockRenderLayer.TRANSLUCENT) {
-                GlStateManager.disableAlpha();
-                GlStateManager.disableBlend();
-            }
-        }
+        //for (BlockRenderLayer layer : BlockRenderLayer.values()) {
+        //    GlStateManager.callList(ContraptionRendering.getList(entity.contraption) + layer.ordinal());
+        //}
+        GlStateManager.enableColorMaterial();
+        GlStateManager.enableFog();
+        GlStateManager.colorMaterial(1028, 4608);
+        GlStateManager.shadeModel(7425);
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableAlpha();
+        GlStateManager.enableBlend();
+        GlStateManager.callList(ContraptionRendering.getList(entity.contraption));
+        GlStateManager.enableAlpha();
+        GlStateManager.callList(ContraptionRendering.getList(entity.contraption)+1);
+        GlStateManager.callList(ContraptionRendering.getList(entity.contraption)+2);
+        GlStateManager.shadeModel(7424);
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableColorMaterial();
+        GlStateManager.enableFog();
+        GlStateManager.colorMaterial(1028, 4608);
+        GlStateManager.depthMask(false);
+        GlStateManager.shadeModel(7425);
+        GlStateManager.callList(ContraptionRendering.getList(entity.contraption)+3);
+        GlStateManager.shadeModel(7424);
+        GlStateManager.depthMask(true);
+        GlStateManager.disableBlend();
+        GlStateManager.disableFog();
+        RenderHelper.enableStandardItemLighting();
+        //GlStateManager.disableColorMaterial();
         GlStateManager.enableLighting();
 
         for (TileEntity te : entity.contraption.tileEntities.values()) {
@@ -78,7 +95,11 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
             }
         }
 
+        GlStateManager.disableLighting();
         GlStateManager.popMatrix();
+        GlStateManager.shadeModel(7425);
+        GlStateManager.enableLighting();
+        RenderHelper.disableStandardItemLighting();
     }
 
     @Nullable

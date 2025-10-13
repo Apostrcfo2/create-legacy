@@ -41,6 +41,8 @@ public class RenderGlue extends Render<EntityGlue> {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.translate(x-0.5, y, z-0.5);
         this.bindEntityTexture(entity);
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(7, DefaultVertexFormats.POSITION_TEX);
