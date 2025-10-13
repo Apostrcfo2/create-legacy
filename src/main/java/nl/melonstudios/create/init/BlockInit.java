@@ -13,6 +13,7 @@ import nl.melonstudios.create.block.*;
 import nl.melonstudios.create.block.actor.*;
 import nl.melonstudios.create.block.deco.BlockOrestone;
 import nl.melonstudios.create.block.deco.BlockOrestonePillar;
+import nl.melonstudios.create.block.generator.BlockBearingWindmill;
 import nl.melonstudios.create.block.generator.BlockHandCrank;
 import nl.melonstudios.create.block.generator.BlockWaterWheel;
 
@@ -52,6 +53,9 @@ public final class BlockInit {
     public static final BlockBearing BEARING = (BlockBearing)
             registerBlockWithItem(new BlockBearing()
             .setRegistryName("bearing").setUnlocalizedName("create.bearing"));
+    public static final BlockBearingWindmill BEARING_WINDMILL = (BlockBearingWindmill)
+            registerBlockWithItem(new BlockBearingWindmill()
+                    .setRegistryName("bearing_windmill").setUnlocalizedName("create.bearing_windmill"));
 
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)

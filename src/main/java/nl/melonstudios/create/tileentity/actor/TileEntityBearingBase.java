@@ -2,12 +2,15 @@ package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
+import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class TileEntityBearingBase extends TileEntityKinetic implements ITileEntityWithContraption {
@@ -18,6 +21,20 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
             return this.assemble();
         }
         return false;
+    }
+
+    public boolean isFlipped() {
+        return false;
+    }
+
+    @Nullable
+    protected final EntityContraptionBearing getAttachedContraption() {
+        List<EntityContraptionBearing> bearings = this.world.getEntities(
+                EntityContraptionBearing.class,
+                (e) -> e.bearing == this
+        );
+        if (bearings.isEmpty()) return null;
+        return bearings.get(0);
     }
 
     protected boolean disassemble() {
@@ -35,6 +52,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.world.setTileEntity(this.pos, this);
         this.angle = 0.0F;
         this.sync();
+        this.world.playSound(null, this.pos, SoundInit.contraption_disassemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
         return true;
     }
     protected boolean assemble() {
@@ -49,6 +67,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.world.setTileEntity(this.pos, this);
         this.angle = 0.0F;
         this.sync();
+        this.world.playSound(null, this.pos, SoundInit.contraption_assemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        this.world.playSound(null, this.pos, SoundInit.contraption_assemble_compound, SoundCategory.BLOCKS, 0.25F, 1.1F);
         return true;
     }
 

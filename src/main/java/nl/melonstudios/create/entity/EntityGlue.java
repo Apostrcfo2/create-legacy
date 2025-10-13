@@ -54,6 +54,9 @@ public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
         BlockPos otherPos = this.surface.pos.offset(this.surface.side);
         if (this.world.getBlockState(this.surface.pos).getBlock().isReplaceable(this.world, this.surface.pos)) {
             if (this.world.getBlockState(otherPos).getBlock().isReplaceable(this.world, otherPos)) {
+                if (this.world.isRemote) {
+                    this.spawnTheSlimes();
+                }
                 this.setDead();
                 return;
             }
@@ -120,16 +123,7 @@ public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
         return Math.max(this.world.getCombinedLight(this.surface.pos, 0), this.world.getCombinedLight(otherPos, 0));
     }
 
-    @Override
-    public void setDead() {
-        super.setDead();
-
-        if (this.world.isRemote) {
-            this.spawnTheSlimes();
-        }
-    }
-
-    private void spawnTheSlimes() {
+    public void spawnTheSlimes() {
         int slimeID = Item.getIdFromItem(Items.SLIME_BALL);
         switch (this.surface.side.getAxis()) {
             case X:

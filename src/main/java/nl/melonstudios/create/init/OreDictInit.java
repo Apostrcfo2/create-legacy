@@ -26,6 +26,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.WATER_WHEEL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.TURNTABLE, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BEARING, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BEARING_WINDMILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SPEEDOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.STRESSOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);
@@ -89,6 +90,10 @@ public final class OreDictInit {
         OreDictionary.registerOre("create:uprightOnBelt", Items.LAVA_BUCKET);
         OreDictionary.registerOre("create:uprightOnBelt", Items.MILK_BUCKET);
         OreDictionary.registerOre("create:uprightOnBelt", ForgeModContainer.getInstance().universalBucket);
+        //endregion
+
+        //region Windmill sails
+        BlockDictionary.registerOre("create:sail", Blocks.WOOL, true);
         //endregion
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);

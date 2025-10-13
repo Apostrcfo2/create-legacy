@@ -42,6 +42,9 @@ public enum EnumRenderPart implements IStringSerializable {
     BEARING_PLATE_SOUTH,
     BEARING_PLATE_WEST,
     BEARING_PLATE_EAST,
+
+    CLOCKWISE_ROTATION_INDICATOR,
+    COUNTERCLOCKWISE_ROTATION_INDICATOR,
     ;
 
     private final int id = this.ordinal();

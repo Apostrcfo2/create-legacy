@@ -1,8 +1,8 @@
 {
 	"textures": {
-		"particle": "create:block/bearing_side",
+		"particle": "create:block/bearing_windmill_side",
 		"head": "create:block/piston/head_sticky",
-		"side": "create:block/bearing_side",
+		"side": "create:block/bearing_windmill_side",
 		"gearbox": "create:block/gearbox"
 	},
 	"elements": [

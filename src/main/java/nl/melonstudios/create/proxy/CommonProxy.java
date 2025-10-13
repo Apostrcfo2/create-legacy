@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.tileentity.*;
 import nl.melonstudios.create.tileentity.actor.*;
+import nl.melonstudios.create.tileentity.generator.TileEntityBearingWindmill;
 import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
 import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
 import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
@@ -58,6 +59,7 @@ public class CommonProxy {
         this.registerTE(TileEntityWaterWheelTemp.class, "water_wheel_temp");
         this.registerTE(TileEntityTurntable.class, "turntable");
         this.registerTE(TileEntityBearing.class, "bearing");
+        this.registerTE(TileEntityBearingWindmill.class, "bearing_windmill");
         this.registerTE(TileEntitySpeedometer.class, "speedometer");
         this.registerTE(TileEntityStressometer.class, "stressometer");
         this.registerTE(TileEntityDrill.class, "drill");

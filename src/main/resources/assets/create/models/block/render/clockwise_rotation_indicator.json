@@ -1,0 +1,18 @@
+{
+	"textures": {
+		"particle": "create:block/clockwise_rotation_indicator",
+		"indicator": "create:block/clockwise_rotation_indicator"
+	},
+	"elements": [
+		{
+			"from": [-0.25, -0.25, -0.25],
+			"to": [16.25, 16.25, 16.25],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#indicator"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#indicator"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#indicator"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#indicator"}
+			}
+		}
+	]
+}

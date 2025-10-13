@@ -114,6 +114,12 @@
       "model": "create:render/bearing_plate",
       "x": 90,
       "y": 270
+    },
+    "render_part=clockwise_rotation_indicator": {
+      "model": "create:render/clockwise_rotation_indicator"
+    },
+    "render_part=counterclockwise_rotation_indicator": {
+      "model": "create:render/counterclockwise_rotation_indicator"
     }
   }
 }

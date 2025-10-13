@@ -45,6 +45,9 @@ public class ItemGlue extends Item {
         if (player.isSneaking()) {
             if (!entity.isEmpty()) {
                 player.playSound(SoundEvents.BLOCK_SLIME_BREAK, 1.0F, 0.5F);
+                if (worldIn.isRemote) {
+                    entity.forEach(EntityGlue::spawnTheSlimes);
+                }
                 entity.forEach(worldIn::removeEntity);
                 return EnumActionResult.SUCCESS;
             }

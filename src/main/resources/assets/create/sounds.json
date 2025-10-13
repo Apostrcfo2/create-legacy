@@ -84,5 +84,31 @@
         "name": "minecraft:step/stone6"
       }
     ]
+  },
+  "contraption.assemble": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.wooden_trapdoor.open"
+      }
+    ],
+    "subtitle": "create.subtitle.contraption_assemble"
+  },
+  "contraption.assemble.compound": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.chest.open"
+      }
+    ]
+  },
+  "contraption.disassemble": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.iron_trapdoor.close"
+      }
+    ],
+    "subtitle": "create.subtitle.contraption_disassemble"
   }
 }

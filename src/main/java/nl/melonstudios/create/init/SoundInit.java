@@ -11,6 +11,9 @@ public final class SoundInit {
     public static SoundEvent item_wrench_used_rotate;
     public static SoundEvent item_wrench_used_dismantle;
     public static SoundEvent block_millstone_ambient;
+    public static SoundEvent contraption_assemble;
+    public static SoundEvent contraption_assemble_compound;
+    public static SoundEvent contraption_disassemble;
     public static void init() {
         item_sandpaper_used = registerSound("item.sandpaper.used");
         block_cog_ambient = registerSound("block.cog.ambient");
@@ -18,6 +21,9 @@ public final class SoundInit {
         item_wrench_used_rotate = registerSound("item.wrench.used.rotate");
         item_wrench_used_dismantle = registerSound("item.wrench.used.dismantle");
         block_millstone_ambient = registerSound("block.millstone.ambient");
+        contraption_assemble = registerSound("contraption.assemble");
+        contraption_assemble_compound = registerSound("contraption.assemble.compound");
+        contraption_disassemble = registerSound("contraption.disassemble");
     }
 
     private static SoundEvent registerSound(String registry) {

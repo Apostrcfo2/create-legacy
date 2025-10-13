@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
@@ -15,6 +17,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@SideOnly(Side.CLIENT)
 public class TESRBearing<T extends TileEntityBearingBase> extends TESRKineticBase<T> {
     @Override
     protected void render(T te, float pt, float alpha) {
