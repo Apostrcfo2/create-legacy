@@ -11,7 +11,10 @@
     "MixinWorld"
   ],
   "client": [
-    "MixinMinecraft"
+    "MixinChunkRenderContainer",
+    "MixinMinecraft",
+    "MixinRenderList",
+    "MixinVboRenderList"
   ],
   "server": []
 }

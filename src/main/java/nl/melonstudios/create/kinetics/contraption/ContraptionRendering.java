@@ -10,8 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ContraptionRendering {
     private static final HashMap<Contraption, Integer> RENDER_LISTS = new HashMap<>();
@@ -54,5 +53,27 @@ public class ContraptionRendering {
         tessellator.draw();
         GlStateManager.glEndList();
         return list;
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static final HashSet<RenderContraption> renderContraptions = new HashSet<>();
+    @SideOnly(Side.CLIENT)
+    public static Collection<RenderContraption> getRenderContraptions() {
+        return renderContraptions;
+    }
+    @SideOnly(Side.CLIENT)
+    public static void clearRenderContraptions() {
+        renderContraptions.clear();
+    }
+    @SideOnly(Side.CLIENT)
+    public static void addRenderContraption(RenderContraption renderContraption) {
+        renderContraptions.add(renderContraption);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    @SideOnly(Side.CLIENT)
+    public static float pt() {
+        return mc.isGamePaused() ? 1.0F : mc.getRenderPartialTicks();
     }
 }

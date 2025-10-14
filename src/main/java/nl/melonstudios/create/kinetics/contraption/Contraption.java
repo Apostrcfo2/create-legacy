@@ -13,6 +13,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -199,4 +201,7 @@ public class Contraption implements IBlockAccess {
 
         return contraption;
     }
+
+    @SideOnly(Side.CLIENT)
+    public RenderContraption renderContraption = null;
 }
