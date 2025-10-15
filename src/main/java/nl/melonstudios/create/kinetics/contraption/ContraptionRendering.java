@@ -13,7 +13,7 @@ import nl.melonstudios.create.CreateLegacy;
 import java.util.*;
 
 public class ContraptionRendering {
-    private static final HashMap<Contraption, Integer> RENDER_LISTS = new HashMap<>();
+    private static final HashMap<Contraption, int[]> RENDER_LISTS = new HashMap<>();
     public static void contraptionFinalized(Contraption contraption) {
         if (RENDER_LISTS.containsKey(contraption)) {
             deleteList(RENDER_LISTS.get(contraption));
@@ -22,36 +22,77 @@ public class ContraptionRendering {
     }
 
     @SideOnly(Side.CLIENT)
-    private static void deleteList(int list) {
+    private static void deleteList(int[] list) {
         CreateLegacy.logger.debug("Deleting contraption display list (#{})", list);
-        GLAllocation.deleteDisplayLists(list, BlockRenderLayer.values().length);
+        GLAllocation.deleteDisplayLists(list[0], BlockRenderLayer.values().length);
+        GLAllocation.deleteDisplayLists(list[1], BlockRenderLayer.values().length);
+        GLAllocation.deleteDisplayLists(list[2], BlockRenderLayer.values().length);
+        GLAllocation.deleteDisplayLists(list[3], BlockRenderLayer.values().length);
     }
 
-    public static int getList(Contraption contraption) {
+    public static int[] getList(Contraption contraption) {
         if (RENDER_LISTS.containsKey(contraption)) {
             return RENDER_LISTS.get(contraption);
         } else {
-            int list = createList(contraption);
+            int[] list = createList(contraption);
             RENDER_LISTS.put(contraption, list);
             return list;
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private static int createList(Contraption contraption) {
+    private static int[] createList(Contraption contraption) {
         Minecraft mc = Minecraft.getMinecraft();
         BlockRendererDispatcher rendererDispatcher = mc.getBlockRendererDispatcher();
-        int list = GLAllocation.generateDisplayLists(BlockRenderLayer.values().length);
-        CreateLegacy.logger.debug("Creating new contraption display list (#{})", list);
-        GlStateManager.glNewList(list, 4864);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
+
+        int solid = GLAllocation.generateDisplayLists(1);
+        GlStateManager.glNewList(solid, 4864);
         builder.begin(7, DefaultVertexFormats.BLOCK);
         for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
-            rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.SOLID)) {
+                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            }
         }
         tessellator.draw();
         GlStateManager.glEndList();
+
+        int cutout_mipped = GLAllocation.generateDisplayLists(1);
+        GlStateManager.glNewList(cutout_mipped, 4864);
+        builder.begin(7, DefaultVertexFormats.BLOCK);
+        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.CUTOUT_MIPPED)) {
+                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            }
+        }
+        tessellator.draw();
+        GlStateManager.glEndList();
+
+        int cutout = GLAllocation.generateDisplayLists(1);
+        GlStateManager.glNewList(cutout, 4864);
+        builder.begin(7, DefaultVertexFormats.BLOCK);
+        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.CUTOUT)) {
+                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            }
+        }
+        tessellator.draw();
+        GlStateManager.glEndList();
+
+        int translucent = GLAllocation.generateDisplayLists(1);
+        GlStateManager.glNewList(translucent, 4864);
+        builder.begin(7, DefaultVertexFormats.BLOCK);
+        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.TRANSLUCENT)) {
+                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            }
+        }
+        tessellator.draw();
+        GlStateManager.glEndList();
+
+        int[] list = new int[]{solid, cutout_mipped, cutout, translucent};
+        CreateLegacy.logger.debug("Creating contraption display list (#{})", list);
         return list;
     }
 

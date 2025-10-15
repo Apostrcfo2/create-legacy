@@ -18,7 +18,7 @@ public class MixinVboRenderList {
         for (RenderContraption contraption : ContraptionRendering.getRenderContraptions()) {
             GlStateManager.pushMatrix();
             ((IExtensionChunkRenderContainer)this).create$preRenderContraption(contraption);
-            GlStateManager.callList(ContraptionRendering.getList(contraption.contraption) + layer.ordinal());
+            GlStateManager.callList(ContraptionRendering.getList(contraption.contraption)[layer.ordinal()]);
             GlStateManager.popMatrix();
         }
         if (layer == BlockRenderLayer.CUTOUT) {

@@ -19,8 +19,7 @@ public class MixinRenderList {
         for (RenderContraption contraption : ContraptionRendering.getRenderContraptions()) {
             GlStateManager.pushMatrix();
             ((IExtensionChunkRenderContainer)this).create$preRenderContraption(contraption);
-            GlStateManager.callList(ContraptionRendering.getList(contraption.contraption) + layer.ordinal());
-            CreateLegacy.logger.debug("layer {} contraption", layer);
+            GlStateManager.callList(ContraptionRendering.getList(contraption.contraption)[layer.ordinal()]);
             GlStateManager.popMatrix();
         }
         if (layer == BlockRenderLayer.CUTOUT) {
