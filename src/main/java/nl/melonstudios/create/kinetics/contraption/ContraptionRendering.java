@@ -15,9 +15,9 @@ import java.util.*;
 public class ContraptionRendering {
     private static final HashMap<Contraption, int[]> RENDER_LISTS = new HashMap<>();
     public static void contraptionFinalized(Contraption contraption) {
-        if (RENDER_LISTS.containsKey(contraption)) {
-            deleteList(RENDER_LISTS.get(contraption));
-            RENDER_LISTS.remove(contraption);
+        int[] list = RENDER_LISTS.remove(contraption);
+        if (list != null) {
+            deleteList(list);
         }
     }
 

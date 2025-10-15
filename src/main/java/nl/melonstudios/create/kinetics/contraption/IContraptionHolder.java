@@ -8,4 +8,5 @@ public interface IContraptionHolder {
     World getWorld();
     int getCombinedLight(BlockPos contraptionPos, int min);
     Biome getBiome();
+    Contraption attachedContraption();
 }

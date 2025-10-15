@@ -4,6 +4,7 @@
   "refmap": "refmap.create.json",
   "mixins": [
     "MixinBlock",
+    "MixinContraptionInteraction",
     "MixinIBlockState",
     "MixinInventoryPlayer",
     "MixinTileEntity",

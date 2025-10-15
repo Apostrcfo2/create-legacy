@@ -170,7 +170,7 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
         boolean flag = super.assemble();
         this.flipped = oldFlipped; //Hatelijk wangedrag van de computer
         this.doNotUpdateFlipped = true;
-        this.sync();
+        this.syncNextTick();
         return flag;
     }
 
@@ -182,7 +182,7 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
         boolean flag = super.disassemble();
         this.flipped = oldFlipped; //Hatelijk wangedrag van de computer
         this.doNotUpdateFlipped = true;
-        this.sync();
+        this.syncNextTick();
         return flag;
     }
 

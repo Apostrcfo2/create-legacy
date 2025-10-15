@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
@@ -24,11 +25,22 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-public class EntityContraptionBearing extends Entity implements IContraptionHolder, IEntityAdditionalSpawnData {
+public class EntityContraptionBearing extends EntityContraptionBase implements IContraptionHolder, IEntityAdditionalSpawnData {
     public EntityContraptionBearing(World worldIn) {
         super(worldIn);
 
         this.setSize(1.0F, 1.0F);
+    }
+
+    @Override
+    protected RotationPossibility getRotationPossibility() {
+        if (this.bearing == null) return RotationPossibility.ALL;
+        switch (this.bearing.getFacing().getAxis()) {
+            case X: return RotationPossibility.X;
+            case Y: return RotationPossibility.Y;
+            case Z: return RotationPossibility.Z;
+            default:return RotationPossibility.ALL;
+        }
     }
 
     public EntityContraptionBearing(TileEntityBearingBase bearing, @Nullable Contraption contraption, @Nullable BlockPos exclude) {
@@ -49,12 +61,18 @@ public class EntityContraptionBearing extends Entity implements IContraptionHold
     public Contraption contraption;
 
     @Override
+    public Contraption attachedContraption() {
+        return this.contraption;
+    }
+
+    @Override
     public void onUpdate() {
         this.setFire(0);
         if (this.bearing == null) {
             TileEntity te = this.world.getTileEntity(this.bearingPos);
             if (te instanceof TileEntityBearingBase) {
                 this.bearing = (TileEntityBearingBase) te;
+                this.resetBB();
             } else {
                 this.setDead();
                 return;
@@ -62,16 +80,6 @@ public class EntityContraptionBearing extends Entity implements IContraptionHold
         }
 
         if (this.bearing.isInvalid()) this.setDead();
-    }
-
-    @Override
-    public void move(MoverType type, double x, double y, double z) {
-
-    }
-
-    @Override
-    protected void entityInit() {
-
     }
 
     @Override
@@ -85,6 +93,8 @@ public class EntityContraptionBearing extends Entity implements IContraptionHold
     protected void writeEntityToNBT(NBTTagCompound compound) {
         compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
         compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearing.getPos()));
+
+        CreateLegacy.logger.debug(" saved ! ");
     }
 
     @Override
