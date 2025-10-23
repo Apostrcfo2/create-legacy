@@ -270,4 +270,14 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
         }
         this.sync();
     }
+
+    @Override
+    public double getItemHeight() {
+        return 0.875;
+    }
+
+    @Override
+    public boolean isWool() {
+        return false;
+    }
 }

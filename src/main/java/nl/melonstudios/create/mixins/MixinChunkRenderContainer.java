@@ -18,7 +18,9 @@ public class MixinChunkRenderContainer implements IExtensionChunkRenderContainer
 
     @Override
     public void create$preRenderContraption(RenderContraption renderContraption) {
-        GlStateManager.translate(-this.viewEntityX, -this.viewEntityY, -this.viewEntityZ);
-        renderContraption.preRenderLogic.run();
+        if (renderContraption.preRenderPredicate.getAsBoolean()) {
+            GlStateManager.translate(-this.viewEntityX, -this.viewEntityY, -this.viewEntityZ);
+            renderContraption.preRenderLogic.run();
+        }
     }
 }

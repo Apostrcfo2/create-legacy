@@ -175,7 +175,7 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
     }
 
     @Override
-    protected boolean disassemble() {
+    public boolean disassemble() {
         boolean oldFlipped = this.flipped;
         this.generatedSpeed = null;
         this.reactivateSource = true;

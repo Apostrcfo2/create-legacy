@@ -8,7 +8,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import nl.melonstudios.create.entity.EntityContraptionBase;
+import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.StickinessPropagator;
@@ -73,13 +76,20 @@ public class CommandCreate extends CommandBase {
                 sender.sendMessage(new TextComponentString("Connected blocks: " + positions.size()));
                 sender.sendMessage(new TextComponentString("Connected glue entities: " + glues.size()));
             }
+        } else if ("listContraptions".equals(type)) {
+            World world = sender.getEntityWorld();
+            List<EntityContraptionBase> contraptionBases = world.getEntities(EntityContraptionBearing.class, Entity::isEntityAlive);
+            sender.sendMessage(new TextComponentString("Loaded contraptions in this world:"));
+            for (EntityContraptionBase con : contraptionBases) {
+                sender.sendMessage(new TextComponentString("> " + con.getClass().getSimpleName() + " at " + con.getPositionVector()));
+            }
         } else throw new WrongUsageException("Invalid command argument '" + type + "'!");
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "goggles", "tryFixKinetics", "testGlue");
+            return getListOfStringsMatchingLastWord(args, "goggles", "tryFixKinetics", "testGlue", "listContraptions");
         }
         if (args.length == 2) {
             if ("testGlue".equals(args[0])) {

@@ -14,6 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -26,6 +28,7 @@ import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.interfaces.ISail;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
@@ -189,5 +192,15 @@ public class BlockSail extends BlockColored implements IExtensionBlock, ISail {
     @Override
     public EnumFacing getFacing(IBlockState state) {
         return this.facing;
+    }
+
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        return byFacing(rot.rotate(this.facing)).getDefaultState().withProperty(COLOR, state.getValue(COLOR));
+    }
+
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+        return byFacing(mirrorIn.mirror(this.facing)).getDefaultState().withProperty(COLOR, state.getValue(COLOR));
     }
 }

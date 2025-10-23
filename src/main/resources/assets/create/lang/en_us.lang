@@ -31,10 +31,12 @@ tile.create.turntable.name=Turntable
 tile.create.turntable.desc=Side effects may include motion sickness and/or dizziness.
 tile.create.bearing.name=Mechanical Bearing
 tile.create.bearing_windmill.name=Windmill Bearing
+tile.create.sail.name=Windmill Sail
 
 tile.create.speedometer.name=Speedometer
 tile.create.stressometer.name=Stressometer
 
+tile.create.press.name=Mechanical Press
 tile.create.drill.name=Mechanical Drill
 tile.create.saw.name=Mechanical Saw
 tile.create.millstone.name=Millstone

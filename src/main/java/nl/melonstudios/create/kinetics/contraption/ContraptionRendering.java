@@ -24,10 +24,10 @@ public class ContraptionRendering {
     @SideOnly(Side.CLIENT)
     private static void deleteList(int[] list) {
         CreateLegacy.logger.debug("Deleting contraption display list (#{})", list);
-        GLAllocation.deleteDisplayLists(list[0], BlockRenderLayer.values().length);
-        GLAllocation.deleteDisplayLists(list[1], BlockRenderLayer.values().length);
-        GLAllocation.deleteDisplayLists(list[2], BlockRenderLayer.values().length);
-        GLAllocation.deleteDisplayLists(list[3], BlockRenderLayer.values().length);
+        GLAllocation.deleteDisplayLists(list[0], 1);
+        GLAllocation.deleteDisplayLists(list[1], 1);
+        GLAllocation.deleteDisplayLists(list[2], 1);
+        GLAllocation.deleteDisplayLists(list[3], 1);
     }
 
     public static int[] getList(Contraption contraption) {
@@ -41,7 +41,11 @@ public class ContraptionRendering {
     }
 
     @SideOnly(Side.CLIENT)
+    private static boolean listLock = false;
+    @SideOnly(Side.CLIENT)
     private static int[] createList(Contraption contraption) {
+        if (listLock) throw new IllegalStateException("Two contraption lists are being made at the same time! Not allowed.");
+        listLock = true;
         Minecraft mc = Minecraft.getMinecraft();
         BlockRendererDispatcher rendererDispatcher = mc.getBlockRendererDispatcher();
         Tessellator tessellator = Tessellator.getInstance();
@@ -93,6 +97,7 @@ public class ContraptionRendering {
 
         int[] list = new int[]{solid, cutout_mipped, cutout, translucent};
         CreateLegacy.logger.debug("Creating contraption display list (#{})", list);
+        listLock = false;
         return list;
     }
 

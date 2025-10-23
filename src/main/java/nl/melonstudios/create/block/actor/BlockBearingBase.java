@@ -1,5 +1,6 @@
 package nl.melonstudios.create.block.actor;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -16,6 +17,10 @@ import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class BlockBearingBase extends BlockKineticDirectionalBase implements ITileEntityProvider {
     public static final PropertyBool ASSEMBLED = CreateStateProperties.ASSEMBLED;
 
@@ -61,6 +66,15 @@ public abstract class BlockBearingBase extends BlockKineticDirectionalBase imple
         ItemStack held = playerIn.getHeldItem(hand);
         if (held.isEmpty()) {
             return Boolean.TRUE.equals(withTEDo(worldIn, pos, TileEntityBearingBase.class, TileEntityBearingBase::tryAssemble));
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (super.onWrenched(world, pos, state, side, hitX, hitY, hitZ)) {
+            withTEDo(world, pos, TileEntityBearingBase.class, TileEntityBearingBase::disassemble);
+            return true;
         }
         return false;
     }

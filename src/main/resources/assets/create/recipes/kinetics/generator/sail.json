@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#S",
+    "SA"
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "wool"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    },
+    "A": {
+      "item": "create:ingredient",
+      "data": 15
+    }
+  },
+  "result": {
+    "item": "create:sail",
+    "count": 2
+  }
+}

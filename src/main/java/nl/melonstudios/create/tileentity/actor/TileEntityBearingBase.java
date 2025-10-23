@@ -37,14 +37,15 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         return bearings.get(0);
     }
 
-    protected boolean disassemble() {
+    public boolean disassemble() {
+        if (this.assemblyChanged) return false;
+        this.assemblyChanged = true;
         List<EntityContraptionBearing> bearings = this.world.getEntities(
                 EntityContraptionBearing.class,
                 (e) -> e.bearing.getPos().equals(this.pos)
         );
         for (EntityContraptionBearing bearing : bearings) {
-            bearing.setDead();
-            this.world.removeEntity(bearing);
+            this.world.removeEntityDangerously(bearing);
         }
         this.preventNextRemoval();
         this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, false));
@@ -56,6 +57,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         return true;
     }
     protected boolean assemble() {
+        if (this.assemblyChanged) return false;
+        this.assemblyChanged = true;
         EntityContraptionBearing bearing = new EntityContraptionBearing(this, null, this.pos);
         if (bearing.contraption == null) return false;
         if (bearing.contraption.tileEntities.containsValue(this)) return false; //Prevent bearing picking up itself
@@ -83,10 +86,12 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         return false;
     }
 
+    public boolean assemblyChanged = false;
     public float angleOld = 0.0F;
     public float angle = 0.0F;
     @Override
     public void tick() {
+        this.assemblyChanged = false;
         this.angleOld = this.angle;
         super.tick();
 

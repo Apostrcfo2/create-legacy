@@ -69,6 +69,10 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     public void onUpdate() {
         this.setFire(0);
         if (this.bearing == null) {
+            if (this.bearingPos == null) {
+                this.setDead();
+                return;
+            }
             TileEntity te = this.world.getTileEntity(this.bearingPos);
             if (te instanceof TileEntityBearingBase) {
                 this.bearing = (TileEntityBearingBase) te;
@@ -79,7 +83,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             }
         }
 
-        if (this.bearing.isInvalid()) this.setDead();
+        if (this.bearing.isInvalid()) this.bearing = null;
     }
 
     @Override
@@ -93,8 +97,6 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     protected void writeEntityToNBT(NBTTagCompound compound) {
         compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
         compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearing.getPos()));
-
-        CreateLegacy.logger.debug(" saved ! ");
     }
 
     @Override
@@ -157,12 +159,5 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         } catch (IOException e) {
             throw new RuntimeException("Failed to read contraption spawn data", e);
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        ContraptionRendering.contraptionFinalized(this.contraption);
-
-        super.finalize();
     }
 }

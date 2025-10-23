@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 public interface IDepot {
     ItemStack getPresentedItem();
     void decreasePresentedAndAddOutput(ItemStack output);
+    double getItemHeight();
+    boolean isWool();
 
     @Nullable
     static IDepot get(World world, BlockPos pos) {

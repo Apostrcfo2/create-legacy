@@ -55,6 +55,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
 
         if (entity.contraption.renderContraption == null) {
             entity.contraption.renderContraption = new RenderContraption(
+                    () -> entity.bearing != null,
                     () -> {
                         GlStateManager.translate(entity.posX, entity.posY+0.5, entity.posZ);
                         EnumFacing facing$0 = entity.bearing.getFacing();
