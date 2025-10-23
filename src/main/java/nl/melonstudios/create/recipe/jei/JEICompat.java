@@ -20,6 +20,7 @@ public final class JEICompat implements IModPlugin {
         final IJeiHelpers helpers = registry.getJeiHelpers();
         final IGuiHelper gui = helpers.getGuiHelper();
 
+        registry.addRecipeCategories(new PressingRecipeCategory(gui));
         registry.addRecipeCategories(new SandingRecipeCategory(gui));
         registry.addRecipeCategories(new CuttingRecipeCategory(gui));
     }
@@ -30,6 +31,8 @@ public final class JEICompat implements IModPlugin {
         final IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
         IRecipeTransferRegistry recipeTransfer = registry.getRecipeTransferRegistry();
+
+        registry.addRecipes(RecipeMaker.getPressingRecipes(jeiHelpers), "create.pressing");
 
         registry.addRecipes(RecipeMaker.getSandingRecipes(jeiHelpers), "create.sanding");
         registry.addRecipeCatalyst(new ItemStack(ItemInit.SANDPAPER), "create.sanding");

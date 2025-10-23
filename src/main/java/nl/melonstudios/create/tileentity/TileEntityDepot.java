@@ -7,12 +7,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 
 import java.util.List;
 
-public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedInventoryDebloated, ITopOpenInventory {
+public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedInventoryDebloated, ITopOpenInventory, IDepot {
     public float randomizedItemRotation;
     public TileEntityDepot() {
         this.setTickRateLazy(10);
@@ -224,5 +225,49 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
 
         StackUtil.dropItemsAt(this.world, this.pos, this.mainItem);
         StackUtil.dropItemsAt(this.world, this.pos, this.additionalItems);
+    }
+
+    @Override
+    public ItemStack getPresentedItem() {
+        return this.mainItem;
+    }
+
+    @Override
+    public void decreasePresentedAndAddOutput(ItemStack output) {
+        this.mainItem.shrink(1);
+        if (this.mainItem.isEmpty()) {
+            this.mainItem = output;
+        } else {
+            for (int i = 0; i < 8; i++) {
+                if (this.additionalItems[i].isEmpty()) {
+                    this.additionalItems[i] = output;
+                    output = null;
+                    break;
+                } else {
+                    if (this.additionalItems[i].getCount() < this.additionalItems[i].getMaxStackSize()) {
+                        int size = Math.min(this.additionalItems[i].getMaxStackSize() - this.additionalItems[i].getCount(), output.getCount());
+                        if (ItemStack.areItemsEqual(this.additionalItems[i], output) &&
+                                ItemStack.areItemStackTagsEqual(this.additionalItems[i], output)) {
+                            this.additionalItems[i].grow(size);
+                            output.shrink(size);
+                            if (output.isEmpty()) {
+                                output = null;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (output != null && !this.world.isRemote) {
+                StackUtil.spawnItemDefaultVelocity(
+                        this.world,
+                        this.pos.getX() + 0.5,
+                        this.pos.getY() + 1.0,
+                        this.pos.getZ() + 0.5,
+                        output
+                );
+            }
+        }
+        this.sync();
     }
 }

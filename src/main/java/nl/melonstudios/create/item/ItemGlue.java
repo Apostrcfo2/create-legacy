@@ -19,6 +19,7 @@ import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
+import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ItemGlue extends Item {
+public class ItemGlue extends Item implements IBypassBlockUse {
     public ItemGlue(int durability) {
         this.canRepair = false;
         this.setHasSubtypes(false);

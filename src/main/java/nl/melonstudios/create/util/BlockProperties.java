@@ -39,4 +39,15 @@ public class BlockProperties {
             CASING_12PX_WEST,
             CASING_12PX_EAST
     };
+
+    public static final AxisAlignedBB CASING_14PX_DOWN = AABB.create(0, 2, 0, 16, 16, 16);
+
+    public static final AxisAlignedBB SAIL_X = AABB.create(6, 0, 0, 10, 16, 16);
+    public static final AxisAlignedBB SAIL_Y = AABB.create(0, 6, 0, 16, 10, 16);
+    public static final AxisAlignedBB SAIL_Z = AABB.create(0, 0, 6, 16, 16, 10);
+    public static final AxisAlignedBB[] SAIL_MAPPED = {
+            SAIL_Y, SAIL_Y,
+            SAIL_Z, SAIL_Z,
+            SAIL_X, SAIL_X
+    };
 }

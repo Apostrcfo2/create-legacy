@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.registries.GameData;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.*;
 import nl.melonstudios.create.block.actor.*;
@@ -15,7 +16,9 @@ import nl.melonstudios.create.block.deco.BlockOrestone;
 import nl.melonstudios.create.block.deco.BlockOrestonePillar;
 import nl.melonstudios.create.block.generator.BlockBearingWindmill;
 import nl.melonstudios.create.block.generator.BlockHandCrank;
+import nl.melonstudios.create.block.generator.BlockSail;
 import nl.melonstudios.create.block.generator.BlockWaterWheel;
+import nl.melonstudios.create.item.ItemBlockSail;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -57,12 +60,34 @@ public final class BlockInit {
             registerBlockWithItem(new BlockBearingWindmill()
                     .setRegistryName("bearing_windmill").setUnlocalizedName("create.bearing_windmill"));
 
+    public static final BlockSail SAIL_DOWN = registerBlock(new BlockSail(EnumFacing.DOWN));
+    public static final BlockSail SAIL_UP = registerBlock(new BlockSail(EnumFacing.UP));
+    public static final BlockSail SAIL_NORTH = registerBlock(new BlockSail(EnumFacing.NORTH));
+    public static final BlockSail SAIL_SOUTH = registerBlock(new BlockSail(EnumFacing.SOUTH));
+    public static final BlockSail SAIL_WEST = registerBlock(new BlockSail(EnumFacing.WEST));
+    public static final BlockSail SAIL_EAST = registerBlock(new BlockSail(EnumFacing.EAST));
+    //there is probably a better way to do this... oh well I'm not rewriting it all again
+    public static final ItemBlockSail SAIL_ITEM = new ItemBlockSail(SAIL_DOWN);
+    static {
+        ItemInit.ITEMS.add(SAIL_ITEM);
+        GameData.getBlockItemMap().forcePut(SAIL_DOWN, SAIL_ITEM);
+        GameData.getBlockItemMap().forcePut(SAIL_UP, SAIL_ITEM);
+        GameData.getBlockItemMap().forcePut(SAIL_NORTH, SAIL_ITEM);
+        GameData.getBlockItemMap().forcePut(SAIL_SOUTH, SAIL_ITEM);
+        GameData.getBlockItemMap().forcePut(SAIL_WEST, SAIL_ITEM);
+        GameData.getBlockItemMap().forcePut(SAIL_EAST, SAIL_ITEM);
+    }
+
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)
             .setRegistryName("speedometer").setUnlocalizedName("create.speedometer"));
     public static final BlockGauge STRESSOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.STRESS)
             .setRegistryName("stressometer").setUnlocalizedName("create.stressometer"));
+
+    public static final BlockPress PRESS = (BlockPress)
+            registerBlockWithItem(new BlockPress(MapColor.WOOD, SoundType.METAL)
+            .setRegistryName("press").setUnlocalizedName("create.press"));
 
     public static final BlockDrill DRILL = (BlockDrill)
             registerBlockWithItem(new BlockDrill(MapColor.STONE, SoundType.METAL)

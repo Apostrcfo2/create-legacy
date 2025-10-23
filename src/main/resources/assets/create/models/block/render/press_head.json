@@ -1,0 +1,94 @@
+{
+	"textures": {
+		"head": "create:block/mechanical_press_head",
+		"pole": "create:block/mechanical_press_pole",
+		"particle": "create:block/mechanical_press_head"
+	},
+	"elements": [
+		{
+			"name": "head",
+			"from": [3, 0, 3],
+			"to": [13, 4, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 0, 3]},
+			"faces": {
+				"north": {"uv": [1, 0, 11, 4], "texture": "#head"},
+				"east": {"uv": [1, 0, 11, 4], "texture": "#head"},
+				"south": {"uv": [1, 0, 11, 4], "texture": "#head"},
+				"west": {"uv": [1, 0, 11, 4], "texture": "#head"},
+				"up": {"uv": [1, 5, 11, 15], "texture": "#head"},
+				"down": {"uv": [1, 5, 11, 15], "texture": "#head"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [5, 4, 5],
+			"to": [11, 20, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 4, 5]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 16], "texture": "#pole"},
+				"east": {"uv": [5, 0, 6, 16], "texture": "#pole"},
+				"south": {"uv": [0, 0, 6, 16], "texture": "#pole"},
+				"west": {"uv": [0, 0, 1, 16], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [6, 4, 6],
+			"to": [10, 20, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 4, 5]},
+			"faces": {
+				"east": {"uv": [1, 0, 5, 16], "texture": "#pole"},
+				"west": {"uv": [1, 0, 5, 16], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [5, 4, 10],
+			"to": [11, 20, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 4, 5]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 16], "texture": "#pole"},
+				"east": {"uv": [0, 0, 1, 16], "texture": "#pole"},
+				"south": {"uv": [0, 0, 6, 16], "texture": "#pole"},
+				"west": {"uv": [5, 0, 6, 16], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [5, 20, 5],
+			"to": [11, 27, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 20, 5]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 7], "texture": "#pole"},
+				"east": {"uv": [5, 0, 6, 7], "texture": "#pole"},
+				"south": {"uv": [0, 0, 6, 7], "texture": "#pole"},
+				"west": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"up": {"uv": [10, 0, 16, 1], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [6, 20, 6],
+			"to": [10, 27, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 20, 5]},
+			"faces": {
+				"east": {"uv": [1, 0, 5, 7], "texture": "#pole"},
+				"west": {"uv": [1, 0, 5, 7], "texture": "#pole"},
+				"up": {"uv": [11, 1, 15, 5], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "shaft",
+			"from": [5, 20, 10],
+			"to": [11, 27, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 20, 5]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 7], "texture": "#pole"},
+				"east": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"south": {"uv": [0, 0, 6, 7], "texture": "#pole"},
+				"west": {"uv": [5, 0, 6, 7], "texture": "#pole"},
+				"up": {"uv": [10, 5, 16, 6], "texture": "#pole"}
+			}
+		}
+	]
+}

@@ -120,6 +120,13 @@
     },
     "render_part=counterclockwise_rotation_indicator": {
       "model": "create:render/counterclockwise_rotation_indicator"
+    },
+    "render_part=press_x": {
+      "model": "create:render/press_head",
+      "y": 90
+    },
+    "render_part=press_z": {
+      "model": "create:render/press_head"
     }
   }
 }

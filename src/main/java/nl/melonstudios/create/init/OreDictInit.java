@@ -29,6 +29,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BEARING_WINDMILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SPEEDOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.STRESSOMETER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.PRESS, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAW, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
@@ -94,7 +95,15 @@ public final class OreDictInit {
 
         //region Windmill sails
         BlockDictionary.registerOre("create:sail", Blocks.WOOL, true);
+        BlockDictionary.registerOre("create:sail", BlockInit.SAIL_DOWN, true);
+        BlockDictionary.registerOre("create:sail", BlockInit.SAIL_UP, true);
+        BlockDictionary.registerOre("create:sail", BlockInit.SAIL_NORTH, true);
+        BlockDictionary.registerOre("create:sail", BlockInit.SAIL_SOUTH, true);
+        BlockDictionary.registerOre("create:sail", BlockInit.SAIL_WEST, true);
+        BlockDictionary.registerOre("create:sail", BlockInit.SAIL_EAST, true);
         //endregion
+
+        BlockDictionary.registerOre("create:bypassGlue", BlockInit.DEPOT, false);
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
         registerOreBlockItem("oreZinc", BlockInit.ORE, 1);

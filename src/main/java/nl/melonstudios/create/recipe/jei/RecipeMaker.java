@@ -4,15 +4,26 @@ import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import nl.melonstudios.create.recipe.CuttingRecipes;
-import nl.melonstudios.create.recipe.SandingRecipes;
-import nl.melonstudios.create.recipe.SawingRecipe;
+import nl.melonstudios.create.recipe.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class RecipeMaker {
+    public static List<PressingRecipe> getPressingRecipes(IJeiHelpers helpers) {
+        PressingRecipes instance = PressingRecipes.instance;
+
+        List<FlatteningRecipe> recipes = new ArrayList<>(instance.recipes.values());
+        List<PressingRecipe> recipeList = new ArrayList<>(recipes.size());
+
+        for (FlatteningRecipe recipe : recipes) {
+            recipeList.add(new PressingRecipe(recipe.input, recipe.result));
+        }
+
+        return recipeList;
+    }
+
     public static List<SandingRecipe> getSandingRecipes(IJeiHelpers helpers) {
         IStackHelper stackHelper = helpers.getStackHelper();
         SandingRecipes instance = SandingRecipes.instance;

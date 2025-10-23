@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.CuttingRecipes;
+import nl.melonstudios.create.recipe.PressingRecipes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public final class RecipeInit {
     public static void init() {
+        int tracker;
         for (ItemStack ore : OreDictionary.getOres("crushedIron")) {
             FurnaceRecipes.instance().addSmeltingRecipe(ore.copy(), new ItemStack(Items.IRON_INGOT), 0.3F);
         }
@@ -36,6 +38,29 @@ public final class RecipeInit {
         FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(Blocks.SOUL_SAND, 1),
                 new ItemStack(BlockInit.ORESTONE, 1, 5), 0.05F);
 
+        //region mechanical press
+        PressingRecipes.instance.addRecipe("create:grass", new ItemStack(Blocks.GRASS), new ItemStack(Blocks.GRASS_PATH));
+        PressingRecipes.instance.addRecipe("create:sugarcane", new ItemStack(Items.REEDS), new ItemStack(Items.PAPER));
+        PressingRecipes.instance.addRecipe("create:pulp",
+                new ItemStack(ItemInit.INGREDIENT, 1, 12),
+                new ItemStack(ItemInit.INGREDIENT, 1, 13)
+        );
+        List<String> ingotPlateTuples = findIngotPlateTuples();
+        for (String metal : ingotPlateTuples) {
+            tracker = 0;
+            String ingot = "ingot" + metal;
+            String plate = "plate" + metal;
+            ItemStack result = OreDictionary.getOres(plate).get(0).copy();
+            for (ItemStack stack : OreDictionary.getOres(ingot)) {
+                PressingRecipes.instance.addRecipe(
+                        "create:oredict" + metal + tracker,
+                        stack.copy(),
+                        result
+                );
+            }
+        }
+        //endregion
+
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
                 for (int k = 0; k < 7; k++) {
@@ -52,7 +77,7 @@ public final class RecipeInit {
         }
 
         //region Vanilla stones cutting
-        int tracker = 0;
+        tracker = 0;
         for (ItemStack stack : OreDictionary.getOres("stoneAndesite")) {
             for (ItemStack result : OreDictionary.getOres("stoneAndesitePolished")) {
                 CuttingRecipes.instance.addRecipe("create:andesite_cutting" + (tracker++),
@@ -511,12 +536,16 @@ public final class RecipeInit {
 
         for (String s : OreDictionary.getOreNames()) {
             if (s.startsWith("ingot") && s.length() > 5) {
-                ingots.add(s.substring(5));
+                if (!OreDictionary.getOres(s).isEmpty()) {
+                    ingots.add(s.substring(5));
+                }
             }
         }
         for (String s : OreDictionary.getOreNames()) {
             if (s.startsWith("plate") && s.length() > 5) {
-                plates.add(s.substring(5));
+                if (!OreDictionary.getOres(s).isEmpty()) {
+                    plates.add(s.substring(5));
+                }
             }
         }
 

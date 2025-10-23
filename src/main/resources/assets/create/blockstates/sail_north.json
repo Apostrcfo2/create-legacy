@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "color=white": {
+      "model": "create:sail_white"
+    },
+    "color=orange": {
+      "model": "create:sail_orange"
+    },
+    "color=magenta": {
+      "model": "create:sail_magenta"
+    },
+    "color=light_blue": {
+      "model": "create:sail_light_blue"
+    },
+    "color=yellow": {
+      "model": "create:sail_yellow"
+    },
+    "color=lime": {
+      "model": "create:sail_lime"
+    },
+    "color=pink": {
+      "model": "create:sail_pink"
+    },
+    "color=gray": {
+      "model": "create:sail_gray"
+    },
+    "color=silver": {
+      "model": "create:sail_silver"
+    },
+    "color=cyan": {
+      "model": "create:sail_cyan"
+    },
+    "color=purple": {
+      "model": "create:sail_purple"
+    },
+    "color=blue": {
+      "model": "create:sail_blue"
+    },
+    "color=brown": {
+      "model": "create:sail_brown"
+    },
+    "color=green": {
+      "model": "create:sail_green"
+    },
+    "color=red": {
+      "model": "create:sail_red"
+    },
+    "color=black": {
+      "model": "create:sail_black"
+    }
+  }
+}

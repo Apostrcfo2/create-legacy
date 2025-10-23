@@ -45,6 +45,9 @@ public enum EnumRenderPart implements IStringSerializable {
 
     CLOCKWISE_ROTATION_INDICATOR,
     COUNTERCLOCKWISE_ROTATION_INDICATOR,
+
+    PRESS_X,
+    PRESS_Z,
     ;
 
     private final int id = this.ordinal();

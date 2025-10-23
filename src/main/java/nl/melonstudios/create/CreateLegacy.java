@@ -14,10 +14,7 @@ import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.proxy.CommonProxy;
-import nl.melonstudios.create.recipe.CuttingRecipes;
-import nl.melonstudios.create.recipe.MillingRecipes;
-import nl.melonstudios.create.recipe.NBTDecodableRecipeType;
-import nl.melonstudios.create.recipe.SandingRecipes;
+import nl.melonstudios.create.recipe.*;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +28,7 @@ public class CreateLegacy {
     private static final boolean inIDE = true;
     public static final String MODID = "create";
     public static final String NAME = "Create Legacy";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "25w43b";
     static final String DEPENDENCIES = "required-after:melonlib@[1.4,)" + (inIDE ? "" : ";required-after-client:ctm");
 
     private static final HashMap<String, NBTDecodableRecipeType> DECODABLE_RECIPE_TYPE_MAP = new HashMap<>();
@@ -69,6 +66,7 @@ public class CreateLegacy {
 
         SoundInit.init();
 
+        addNBTDecodableRecipe(PressingRecipes.instance);
         addNBTDecodableRecipe(SandingRecipes.instance);
         addNBTDecodableRecipe(MillingRecipes.instance);
         addNBTDecodableRecipe(CuttingRecipes.instance);

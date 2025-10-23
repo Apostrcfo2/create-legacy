@@ -1,5 +1,6 @@
 package nl.melonstudios.create.event;
 
+import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import com.melonstudios.melonlib.render.RenderMelon;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -15,10 +16,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -36,6 +39,7 @@ import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
+import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
 
 import java.util.List;
@@ -81,6 +85,19 @@ public class CreateLegacyEventHandler {
     }
 
     @SubscribeEvent
+    public static void glueBypassBlockUse(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getUseBlock() == Event.Result.DENY) return;
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof IBypassBlockUse) {
+            if (((IBypassBlockUse)stack.getItem()).bypass(stack)) {
+                if (!BlockDictionary.isBlockTagged(event.getWorld().getBlockState(event.getPos()), "create:bypassGlue")) {
+                    event.setUseBlock(Event.Result.DENY);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load event) {
         KNManager.loadWorld(event.getWorld());
     }
@@ -96,6 +113,7 @@ public class CreateLegacyEventHandler {
         event.registerCapacity(BlockInit.BEARING_WINDMILL, 512.0F);
         event.registerStress(BlockInit.TURNTABLE, 4.0F);
         event.registerStress(BlockInit.BEARING, 4.0F);
+        event.registerStress(BlockInit.PRESS, 8.0F);
         event.registerStress(BlockInit.DRILL, 4.0F);
         event.registerStress(BlockInit.SAW, 4.0F);
         event.registerStress(BlockInit.MILLSTONE, 4.0F);

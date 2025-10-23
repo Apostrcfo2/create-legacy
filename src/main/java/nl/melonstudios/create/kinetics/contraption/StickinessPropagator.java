@@ -1,6 +1,9 @@
 package nl.melonstudios.create.kinetics.contraption;
 
+import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.EnumPushReaction;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +29,7 @@ public class StickinessPropagator {
             return;
         }
         IBlockState state = world.getBlockState(pos);
+        if (state.getMaterial().isLiquid() || state.getBlock() instanceof BlockLiquid) return;
         if (state.getMobilityFlag() == EnumPushReaction.BLOCK) {
             positions.clear();
             failed.set(true);
@@ -41,15 +45,25 @@ public class StickinessPropagator {
                     positions, glues, failed
             );
         }
+        boolean sticksToSelf = BlockDictionary.isBlockTagged(state, "create:sticksToSelf");
         for (EnumFacing side : EnumFacing.VALUES) {
             GluedSurface surface = new GluedSurface(pos, side);
             List<EntityGlue> glue = world.getEntities(EntityGlue.class, (e) -> surface.equals(e.getSurface()));
+            BlockPos off = pos.offset(side);
             if (!glue.isEmpty()) {
                 glues.addAll(glue);
                 propagateStickiness(
-                        world, pos.offset(side), maximum,
+                        world, off, maximum,
                         positions, glues, failed
                 );
+            } else if (sticksToSelf) {
+                IBlockState hi = world.getBlockState(off);
+                if (state == hi) {
+                    propagateStickiness(
+                            world, off, maximum,
+                            positions, glues, failed
+                    );
+                }
             }
         }
     }

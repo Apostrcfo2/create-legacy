@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/sail_white",
+  "textures": {
+    "sail": "create:block/sail_silver"
+  }
+}
