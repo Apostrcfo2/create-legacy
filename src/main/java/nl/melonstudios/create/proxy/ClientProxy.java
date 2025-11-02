@@ -74,6 +74,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntitySawProcessing.class, "saw_processing", new TESRSawProcessing());
         this.registerTESR(TileEntityMillstone.class, "millstone", null);
         this.registerTESR(TileEntityDepot.class, "depot", new TESRDepot());
+        this.registerTESR(TileEntityChute.class, "chute", new TESRChute());
     }
 
     @Override

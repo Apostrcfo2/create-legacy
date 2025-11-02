@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "variant=normal": {
+      "model": "create:chute"
+    },
+    "variant=window": {
+      "model": "create:chute_window"
+    },
+    "variant=fat": {
+      "model": "create:chute_fat"
+    }
+  }
+}

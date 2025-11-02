@@ -34,6 +34,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAW, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPOT, false);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CHUTE, 3);
         //endregion
 
         //region Vanilla wrench pickups
