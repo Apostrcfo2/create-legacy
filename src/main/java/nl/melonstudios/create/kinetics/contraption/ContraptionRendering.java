@@ -41,64 +41,63 @@ public class ContraptionRendering {
     }
 
     @SideOnly(Side.CLIENT)
-    private static boolean listLock = false;
+    private static final Object listLock = new Object();
     @SideOnly(Side.CLIENT)
     private static int[] createList(Contraption contraption) {
-        if (listLock) throw new IllegalStateException("Two contraption lists are being made at the same time! Not allowed.");
-        listLock = true;
-        Minecraft mc = Minecraft.getMinecraft();
-        BlockRendererDispatcher rendererDispatcher = mc.getBlockRendererDispatcher();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
+        synchronized (listLock) {
+            Minecraft mc = Minecraft.getMinecraft();
+            BlockRendererDispatcher rendererDispatcher = mc.getBlockRendererDispatcher();
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder builder = tessellator.getBuffer();
 
-        int solid = GLAllocation.generateDisplayLists(1);
-        GlStateManager.glNewList(solid, 4864);
-        builder.begin(7, DefaultVertexFormats.BLOCK);
-        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
-            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.SOLID)) {
-                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            int solid = GLAllocation.generateDisplayLists(1);
+            GlStateManager.glNewList(solid, 4864);
+            builder.begin(7, DefaultVertexFormats.BLOCK);
+            for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+                if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.SOLID)) {
+                    rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+                }
             }
-        }
-        tessellator.draw();
-        GlStateManager.glEndList();
+            tessellator.draw();
+            GlStateManager.glEndList();
 
-        int cutout_mipped = GLAllocation.generateDisplayLists(1);
-        GlStateManager.glNewList(cutout_mipped, 4864);
-        builder.begin(7, DefaultVertexFormats.BLOCK);
-        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
-            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.CUTOUT_MIPPED)) {
-                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            int cutout_mipped = GLAllocation.generateDisplayLists(1);
+            GlStateManager.glNewList(cutout_mipped, 4864);
+            builder.begin(7, DefaultVertexFormats.BLOCK);
+            for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+                if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.CUTOUT_MIPPED)) {
+                    rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+                }
             }
-        }
-        tessellator.draw();
-        GlStateManager.glEndList();
+            tessellator.draw();
+            GlStateManager.glEndList();
 
-        int cutout = GLAllocation.generateDisplayLists(1);
-        GlStateManager.glNewList(cutout, 4864);
-        builder.begin(7, DefaultVertexFormats.BLOCK);
-        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
-            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.CUTOUT)) {
-                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            int cutout = GLAllocation.generateDisplayLists(1);
+            GlStateManager.glNewList(cutout, 4864);
+            builder.begin(7, DefaultVertexFormats.BLOCK);
+            for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+                if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.CUTOUT)) {
+                    rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+                }
             }
-        }
-        tessellator.draw();
-        GlStateManager.glEndList();
+            tessellator.draw();
+            GlStateManager.glEndList();
 
-        int translucent = GLAllocation.generateDisplayLists(1);
-        GlStateManager.glNewList(translucent, 4864);
-        builder.begin(7, DefaultVertexFormats.BLOCK);
-        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
-            if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.TRANSLUCENT)) {
-                rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+            int translucent = GLAllocation.generateDisplayLists(1);
+            GlStateManager.glNewList(translucent, 4864);
+            builder.begin(7, DefaultVertexFormats.BLOCK);
+            for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+                if (entry.getValue().getBlock().canRenderInLayer(entry.getValue(), BlockRenderLayer.TRANSLUCENT)) {
+                    rendererDispatcher.renderBlock(entry.getValue(), entry.getKey(), contraption, builder);
+                }
             }
-        }
-        tessellator.draw();
-        GlStateManager.glEndList();
+            tessellator.draw();
+            GlStateManager.glEndList();
 
-        int[] list = new int[]{solid, cutout_mipped, cutout, translucent};
-        CreateLegacy.logger.debug("Creating contraption display list (#{})", list);
-        listLock = false;
-        return list;
+            int[] list = new int[]{solid, cutout_mipped, cutout, translucent};
+            CreateLegacy.logger.debug("Creating contraption display list (#{})", list);
+            return list;
+        }
     }
 
     @SideOnly(Side.CLIENT)

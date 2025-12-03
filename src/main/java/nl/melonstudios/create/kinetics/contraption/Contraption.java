@@ -33,6 +33,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @MethodsReturnNonnullByDefault
 public class Contraption implements IBlockAccess {
     private static final IBlockState AIR = Blocks.AIR.getDefaultState();
+    private static final boolean FORCE_FULL_BRIGHT = true;
+    private static final int FULL_BRIGHT = 0xFF00FF0;
 
     public Contraption(IContraptionHolder holder) {
         this.holder = holder;
@@ -129,7 +131,7 @@ public class Contraption implements IBlockAccess {
 
     @Override
     public int getCombinedLight(BlockPos pos, int lightValue) {
-        return this.holder.getCombinedLight(pos, lightValue);
+        return FORCE_FULL_BRIGHT ? FULL_BRIGHT : this.holder.getCombinedLight(pos, lightValue);
     }
 
     @Override
