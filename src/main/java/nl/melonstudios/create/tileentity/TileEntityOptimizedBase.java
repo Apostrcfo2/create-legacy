@@ -8,6 +8,7 @@ import nl.melonstudios.create.util.interfaces.IStateFindable;
 
 public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB implements ISyncedTE, ITickable, IStateFindable {
     private int tickRateLazy, tickCounterLazy;
+    private boolean requestedSynchronization = false;
     private boolean syncNextTick = false;
     private boolean requestSyncNextTick = false;
     private boolean initialized = false;
@@ -50,7 +51,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
     public void sync() {
         this.markDirty();
         if (this.pos != null)
-            ISyncedTE.super.sync();
+            this.requestedSynchronization = true;
         else this.syncNextTick = true;
     }
 
@@ -105,6 +106,10 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
         if (this.tickCounterLazy-- <= 0) {
             this.tickCounterLazy = this.tickRateLazy;
             this.tickLazy();
+        }
+        if (!this.world.isRemote && this.requestedSynchronization) {
+            this.requestedSynchronization = false;
+            ISyncedTE.super.sync();
         }
     }
 
