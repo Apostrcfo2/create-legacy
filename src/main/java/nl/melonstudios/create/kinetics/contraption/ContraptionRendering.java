@@ -45,6 +45,7 @@ public class ContraptionRendering {
     @SideOnly(Side.CLIENT)
     private static int[] createList(Contraption contraption) {
         synchronized (listLock) {
+            contraption.isRendering = true;
             Minecraft mc = Minecraft.getMinecraft();
             BlockRendererDispatcher rendererDispatcher = mc.getBlockRendererDispatcher();
             Tessellator tessellator = Tessellator.getInstance();
@@ -93,6 +94,7 @@ public class ContraptionRendering {
             }
             tessellator.draw();
             GlStateManager.glEndList();
+            contraption.isRendering = false;
 
             int[] list = new int[]{solid, cutout_mipped, cutout, translucent};
             CreateLegacy.logger.debug("Creating contraption display list (#{})", list);

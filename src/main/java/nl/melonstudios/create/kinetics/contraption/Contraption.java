@@ -1,5 +1,7 @@
 package nl.melonstudios.create.kinetics.contraption;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -9,17 +11,16 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nl.melonstudios.create.entity.EntityContraptionBase;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -33,8 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @MethodsReturnNonnullByDefault
 public class Contraption implements IBlockAccess {
     private static final IBlockState AIR = Blocks.AIR.getDefaultState();
-    private static final boolean FORCE_FULL_BRIGHT = true;
-    private static final int FULL_BRIGHT = 0xFF00FF0;
+    private static final int FULL_BRIGHT = 0xFF00000;
 
     public Contraption(IContraptionHolder holder) {
         this.holder = holder;
@@ -83,6 +83,8 @@ public class Contraption implements IBlockAccess {
         }
 
         this.setTileEntityBlockData();
+
+        this.compileLight();
     }
 
     public NBTTagCompound saveNBT(NBTTagCompound nbt) {
@@ -117,11 +119,13 @@ public class Contraption implements IBlockAccess {
         return nbt;
     }
 
+    public boolean isRendering = false;
     public final IContraptionHolder holder;
     public final HashMap<BlockPos, IBlockState> blocks = new HashMap<>();
     public final HashMap<BlockPos, TileEntity> tileEntities = new HashMap<>();
     public final HashSet<GluedSurface> gluedSurfaces = new HashSet<>();
     public final HashSet<TileEntity> blacklistedForRendering = new HashSet<>();
+    public final Object2IntOpenHashMap<BlockPos> lightSources = new Object2IntOpenHashMap<>();
 
     @Nullable
     @Override
@@ -131,7 +135,23 @@ public class Contraption implements IBlockAccess {
 
     @Override
     public int getCombinedLight(BlockPos pos, int lightValue) {
-        return FORCE_FULL_BRIGHT ? FULL_BRIGHT : this.holder.getCombinedLight(pos, lightValue);
+        int block = this.getBlockLightAt(pos, lightValue);
+        return this.isRendering ? (FULL_BRIGHT | (block << 4)) : this.holder.getCombinedLight(pos, block);
+    }
+
+    private void compileLight() {
+        for (Map.Entry<BlockPos, IBlockState> entry : this.blocks.entrySet()) {
+            int light = entry.getValue().getLightValue(this, entry.getKey());
+            if (light > 0) {
+                this.lightSources.put(entry.getKey(), light);
+            }
+        }
+    }
+    private int getBlockLightAt(BlockPos pos, int light) {
+        for (Object2IntMap.Entry<BlockPos> entry : this.lightSources.object2IntEntrySet()) {
+            light = Math.max(light, entry.getIntValue() - Utils.dist_manh(pos, entry.getKey()));
+        }
+        return light;
     }
 
     @Override
@@ -203,6 +223,7 @@ public class Contraption implements IBlockAccess {
         }
         glues.forEach(world::removeEntity);
 
+        contraption.compileLight();
         return contraption;
     }
 
