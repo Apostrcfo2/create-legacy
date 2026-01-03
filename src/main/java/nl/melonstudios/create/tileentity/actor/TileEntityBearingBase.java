@@ -26,6 +26,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     public boolean isFlipped() {
         return false;
     }
+    protected boolean mightAssemble = false;
+    protected boolean mightDisassemble = false;
 
     @Nullable
     protected final EntityContraptionBearing getAttachedContraption() {
@@ -94,6 +96,15 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.assemblyChanged = false;
         this.angleOld = this.angle;
         super.tick();
+
+        if (this.mightAssemble && this.getSpeed() != 0.0F && !this.isAssembled()) {
+            this.assemble();
+        }
+        if (this.mightDisassemble && this.getSpeed() == 0.0F && this.isAssembled()) {
+            this.disassemble();
+        }
+
+        this.mightAssemble = this.mightDisassemble = false;
 
         if (this.isAssembled() && !this.overstressed) {
             if (this.useGeneratedSpeedForContraption()) {

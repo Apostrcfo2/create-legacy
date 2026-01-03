@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.tileentity.marker.IAssemblyBehavior;
 import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
@@ -209,8 +210,8 @@ public class Contraption implements IBlockAccess {
                 te.validate();
                 contraption.tileEntities.put(adjusted, te);
 
-                if (te instanceof TileEntityKinetic) {
-                    ((TileEntityKinetic)te).wasMoved = true;
+                if (te instanceof IAssemblyBehavior) {
+                    ((IAssemblyBehavior)te).onAssembly();
                 }
             }
 

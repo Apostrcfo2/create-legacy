@@ -14,6 +14,7 @@ import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.KineticNetwork;
 import nl.melonstudios.create.kinetics.KineticPropagator;
 import nl.melonstudios.create.tesr.TESRKineticBase;
+import nl.melonstudios.create.tileentity.marker.IAssemblyBehavior;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.ICogwheel;
 import nl.melonstudios.create.util.interfaces.IRotate;
@@ -21,7 +22,7 @@ import nl.melonstudios.create.util.interfaces.IRotate;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 
-public class TileEntityKinetic extends TileEntityOptimizedBase {
+public class TileEntityKinetic extends TileEntityOptimizedBase implements IAssemblyBehavior {
     public @Nullable Long networkID = null;
     public @Nullable BlockPos source = null;
     public boolean networkDirty;
@@ -385,5 +386,10 @@ public class TileEntityKinetic extends TileEntityOptimizedBase {
     }
     public static float convertToAngular(float speed) {
         return speed * 3 / 10.0F;
+    }
+
+    @Override
+    public void onAssembly() {
+        this.wasMoved = true;
     }
 }

@@ -1,6 +1,7 @@
 package nl.melonstudios.create.entity;
 
 import io.netty.buffer.ByteBuf;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -21,10 +22,13 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class EntityContraptionBearing extends EntityContraptionBase implements IContraptionHolder, IEntityAdditionalSpawnData {
     public EntityContraptionBearing(World worldIn) {
         super(worldIn);

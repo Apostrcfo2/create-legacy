@@ -15,13 +15,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
+import nl.melonstudios.create.extensions.IExtensionBlock;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class BlockBearingBase extends BlockKineticDirectionalBase implements ITileEntityProvider {
+public abstract class BlockBearingBase extends BlockKineticDirectionalBase implements ITileEntityProvider, IExtensionBlock {
     public static final PropertyBool ASSEMBLED = CreateStateProperties.ASSEMBLED;
 
     public BlockBearingBase() {
@@ -77,5 +79,10 @@ public abstract class BlockBearingBase extends BlockKineticDirectionalBase imple
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean create$isSideSticky(IBlockState state, EnumFacing side) {
+        return state.getValue(FACING) == side;
     }
 }

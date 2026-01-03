@@ -1,20 +1,28 @@
 package nl.melonstudios.create.entity;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public abstract class EntityContraptionBase extends Entity implements IContraptionHolder {
     public EntityContraptionBase(World worldIn) {
         super(worldIn);
     }
 
-    private static final double rotationBoxAdjustment = 1.5;
+    private static final double HALF_SQRT_2 = 0.5 * MathHelper.SQRT_2;
+    private static final double ROTATION_BOX_ADJUSTMENT = ((1-HALF_SQRT_2) / HALF_SQRT_2) + 1;
     public enum RotationPossibility {
         NONE, X, Y, Z, ALL
     }
@@ -42,25 +50,25 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
             RotationPossibility possibility = this.getRotationPossibility();
 
-            double adjust = rotationBoxAdjustment;
+            double adjust = ROTATION_BOX_ADJUSTMENT;
             if (possibility == RotationPossibility.NONE) {
                 maxX++;
                 maxY++;
                 maxZ++;
             } else if (possibility == RotationPossibility.X) {
                 maxX++;
-                maxY = Math.max(maxY , maxZ) + adjust;
+                maxY = Math.max(maxY , maxZ) * adjust;
                 maxZ = maxY;
             } else if (possibility == RotationPossibility.Y) {
-                maxX = Math.max(maxX, maxZ) + adjust;
+                maxX = Math.max(maxX, maxZ) * adjust;
                 maxY++;
                 maxZ = maxX;
             } else if (possibility == RotationPossibility.Z) {
-                maxX = Math.max(maxX, maxY) + adjust;
+                maxX = Math.max(maxX, maxY) * adjust;
                 maxY = maxX;
                 maxZ++;
             } else if (possibility == RotationPossibility.ALL) {
-                maxX = Math.max(maxX, Math.max(maxY, maxZ)) + adjust;
+                maxX = Math.max(maxX, Math.max(maxY, maxZ)) * adjust;
                 maxY = maxX;
                 maxZ = maxY;
             }
@@ -75,6 +83,11 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
                     this.posZ + maxZ
             );
         }
+    }
+
+    @Override
+    public float getEyeHeight() {
+        return 0.0F;
     }
 
     @Override
@@ -94,6 +107,7 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
     }
 
+    @Nullable
     public abstract Contraption attachedContraption();
 
     @Override

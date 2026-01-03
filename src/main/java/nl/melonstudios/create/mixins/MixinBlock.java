@@ -16,6 +16,7 @@ public abstract class MixinBlock implements IExtensionBlock {
     @Shadow
     public abstract boolean isStickyBlock(IBlockState state);
 
+    /*
     @Override
     public boolean create$isSideSticky(IBlockState state, EnumFacing side) {
         return this.isStickyBlock(state);
@@ -29,4 +30,5 @@ public abstract class MixinBlock implements IExtensionBlock {
             }
         }
     }
+    */
 }

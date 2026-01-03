@@ -7,9 +7,9 @@ public class TileEntityBearing extends TileEntityBearingBase {
 
         if (!this.world.isRemote) {
             if (lastSpeed != 0.0F && this.getSpeed() == 0.0F && this.isAssembled()) {
-                this.disassemble();
+                this.mightDisassemble = true;
             } else if (lastSpeed == 0.0F && this.getSpeed() != 0.0F && !this.isAssembled()) {
-                this.assemble();
+                this.mightAssemble = true;
             }
         }
     }
