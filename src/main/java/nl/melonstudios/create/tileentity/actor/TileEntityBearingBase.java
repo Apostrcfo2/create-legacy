@@ -1,5 +1,6 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -11,8 +12,11 @@ import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class TileEntityBearingBase extends TileEntityKinetic implements ITileEntityWithContraption {
     public boolean tryAssemble() {
         if (this.isAssembled()) {

@@ -43,7 +43,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
         if (entity.bearing == null) return;
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.translate(x, y+0.5, z);
+        GlStateManager.translate(x, y, z);
         EnumFacing facing = entity.bearing.getFacing();
         GlStateManager.rotate((float)MathHelper.clampedLerp(entity.bearing.angleOld, entity.bearing.angle, partialTicks),
             Math.abs(facing.getFrontOffsetX()),
@@ -57,7 +57,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
             entity.contraption.renderContraption = new RenderContraption(
                     () -> entity.bearing != null,
                     () -> {
-                        GlStateManager.translate(entity.posX, entity.posY+0.5, entity.posZ);
+                        GlStateManager.translate(entity.posX, entity.posY, entity.posZ);
                         EnumFacing facing$0 = entity.bearing.getFacing();
                         GlStateManager.rotate((float)MathHelper.clampedLerp(entity.bearing.angleOld, entity.bearing.angle,
                                             ContraptionRendering.pt()),

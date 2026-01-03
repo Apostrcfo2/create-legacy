@@ -76,10 +76,10 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
             this.contraptionBB = new AxisAlignedBB(
                     this.posX - maxX,
-                    this.posY + 0.5 - maxY,
+                    this.posY - maxY,
                     this.posZ - maxZ,
                     this.posX + maxX,
-                    this.posY + 0.5 + maxY,
+                    this.posY + maxY,
                     this.posZ + maxZ
             );
         }
@@ -88,6 +88,11 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     @Override
     public float getEyeHeight() {
         return 0.0F;
+    }
+
+    @Override
+    public BlockPos getPosition() {
+        return new BlockPos(this.posX, this.posY, this.posZ);
     }
 
     @Override

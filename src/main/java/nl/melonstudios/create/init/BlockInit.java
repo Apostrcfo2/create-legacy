@@ -60,6 +60,10 @@ public final class BlockInit {
             registerBlockWithItem(new BlockBearingWindmill()
                     .setRegistryName("bearing_windmill").setUnlocalizedName("create.bearing_windmill"));
 
+    public static final BlockRadialChassis RADIAL_CHASSIS = (BlockRadialChassis)
+            registerBlockWithItem(new BlockRadialChassis()
+                    .setRegistryName("radial_chassis").setUnlocalizedName("create.radial_chassis"));
+
     public static final BlockSail SAIL_DOWN = registerBlock(new BlockSail(EnumFacing.DOWN));
     public static final BlockSail SAIL_UP = registerBlock(new BlockSail(EnumFacing.UP));
     public static final BlockSail SAIL_NORTH = registerBlock(new BlockSail(EnumFacing.NORTH));

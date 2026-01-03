@@ -27,6 +27,13 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.TURNTABLE, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BEARING, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BEARING_WINDMILL, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.RADIAL_CHASSIS, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAIL_DOWN, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAIL_UP, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAIL_NORTH, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAIL_SOUTH, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAIL_WEST, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAIL_EAST, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SPEEDOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.STRESSOMETER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.PRESS, true);
@@ -104,6 +111,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:sail", BlockInit.SAIL_EAST, true);
         //endregion
 
+        BlockDictionary.registerOre("create:sticksToSelf", BlockInit.RADIAL_CHASSIS, false);
         BlockDictionary.registerOre("create:bypassGlue", BlockInit.DEPOT, false);
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);

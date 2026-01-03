@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
@@ -86,10 +87,10 @@ public class Utils {
     public static Vec3d rotate(Vec3d vec, double deg, EnumFacing.Axis axis) {
         if (deg == 0)
             return vec;
-        if (vec == Vec3d.ZERO)
+        if (Vec3d.ZERO.equals(vec))
             return vec;
 
-        float angle = (float) (deg / 180f * Math.PI);
+        double angle = Math.toRadians(deg);
         double sin = Math.sin(angle);
         double cos = Math.cos(angle);
         double x = vec.x;

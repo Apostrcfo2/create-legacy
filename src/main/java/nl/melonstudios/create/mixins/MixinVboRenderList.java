@@ -1,5 +1,6 @@
 package nl.melonstudios.create.mixins;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.VboRenderList;
 import net.minecraft.util.BlockRenderLayer;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinVboRenderList {
     @Inject(method = "renderChunkLayer", at = @At("HEAD"))
     public void renderChunkLayer(BlockRenderLayer layer, CallbackInfo ci) {
+        Minecraft.getMinecraft().mcProfiler.startSection("contraptions");
         for (RenderContraption contraption : ContraptionRendering.getRenderContraptions()) {
             GlStateManager.pushMatrix();
             ((IExtensionChunkRenderContainer)this).create$preRenderContraption(contraption);
@@ -24,5 +26,6 @@ public class MixinVboRenderList {
         if (layer == BlockRenderLayer.CUTOUT) {
             ContraptionRendering.clearRenderContraptions();
         }
+        Minecraft.getMinecraft().mcProfiler.endSection();
     }
 }

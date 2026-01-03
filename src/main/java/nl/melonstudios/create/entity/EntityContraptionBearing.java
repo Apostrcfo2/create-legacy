@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -20,6 +22,7 @@ import nl.melonstudios.create.kinetics.contraption.GluedSurface;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
+import nl.melonstudios.create.util.BlockRotationHelper;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -51,7 +54,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this(bearing.getWorld());
 
         BlockPos pos = bearing.getPos().offset(bearing.getFacing());
-        this.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        this.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
         this.bearing = bearing;
         this.contraption = contraption;
@@ -122,9 +125,11 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
 
         if (!this.world.isRemote) {
             BlockPos self = this.getPosition();
+            Rotation rotation = BlockRotationHelper.getRotationForAngle(this.bearing.angle);
+            EnumFacing.Axis axis = this.bearing.getFacing().getAxis();
             for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
-                BlockPos pos = self.add(entry.getKey());
-                this.world.setBlockState(pos, entry.getValue());
+                BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, entry.getKey()); //self.add(entry.getKey());
+                this.world.setBlockState(pos, BlockRotationHelper.rotate(entry.getValue(), axis, rotation));
                 TileEntity te = this.contraption.tileEntities.get(entry.getKey());
                 if (te != null) {
                     te.setPos(pos);
@@ -136,8 +141,8 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 }
             }
             for (GluedSurface surface : this.contraption.gluedSurfaces) {
-                BlockPos pos = self.add(surface.pos);
-                EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, surface.side));
+                BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, surface.pos); // self.add(surface.pos);
+                EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, BlockRotationHelper.rotate(surface.side, axis, rotation)));
                 entityGlue.wasCovered = true;
                 this.world.spawnEntity(entityGlue);
             }

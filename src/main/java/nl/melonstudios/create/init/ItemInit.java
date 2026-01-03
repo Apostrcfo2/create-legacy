@@ -75,6 +75,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.TURNTABLE);
         CreateLegacy.proxy.setItemModel(BlockInit.BEARING);
         CreateLegacy.proxy.setItemModel(BlockInit.BEARING_WINDMILL);
+        CreateLegacy.proxy.setItemModel(BlockInit.RADIAL_CHASSIS);
         CreateLegacy.proxy.setItemModel(BlockInit.SAIL_ITEM);
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);

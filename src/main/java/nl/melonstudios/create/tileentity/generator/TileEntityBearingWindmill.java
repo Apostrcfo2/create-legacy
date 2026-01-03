@@ -1,6 +1,7 @@
 package nl.melonstudios.create.tileentity.generator;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,10 +21,13 @@ import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.SubInteractionBox;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class TileEntityBearingWindmill extends TileEntityBearingBase implements ITileEntityWithSubInteractions {
     public boolean reactivateSource;
     private Float generatedSpeed = null;

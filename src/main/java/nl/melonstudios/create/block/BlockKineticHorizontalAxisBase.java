@@ -45,7 +45,7 @@ public abstract class BlockKineticHorizontalAxisBase extends BlockKineticBase {
     @Nullable
     public static EnumFacing.Axis getPreferredHorizontalAxis(World world, BlockPos pos) {
         EnumFacing preferredSide = null;
-        for (EnumFacing side : EnumFacing.VALUES) {
+        for (EnumFacing side : EnumFacing.HORIZONTALS) {
             IBlockState state = world.getBlockState(pos.offset(side));
             if (state.getBlock() instanceof IRotate) {
                 if (((IRotate)state.getBlock()).hasShaftTowards(world, pos.offset(side), state, side.getOpposite())) {
