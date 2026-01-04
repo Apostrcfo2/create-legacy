@@ -1,15 +1,15 @@
 {
   "variants": {
     "axis=x": {
-      "model": "create:radial_chassis",
+      "model": "create:chassis_radial",
       "x": 90,
       "y": 90
     },
     "axis=y": {
-      "model": "create:radial_chassis"
+      "model": "create:chassis_radial"
     },
     "axis=z": {
-      "model": "create:radial_chassis",
+      "model": "create:chassis_radial",
       "x": 90
     }
   }

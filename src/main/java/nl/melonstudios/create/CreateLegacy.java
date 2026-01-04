@@ -28,7 +28,7 @@ public class CreateLegacy {
     private static final boolean inIDE = true;
     public static final String MODID = "create";
     public static final String NAME = "Create Legacy";
-    public static final String VERSION = "25w43b";
+    public static final String VERSION = "26w01a";
     static final String DEPENDENCIES = "required-after:melonlib@[1.4,)" + (inIDE ? "" : ";required-after-client:ctm");
 
     private static final HashMap<String, NBTDecodableRecipeType> DECODABLE_RECIPE_TYPE_MAP = new HashMap<>();

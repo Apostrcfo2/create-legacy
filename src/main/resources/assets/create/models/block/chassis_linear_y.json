@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/chassis_linear_end",
+    "down": "create:block/chassis_linear_end",
+    "north": "create:block/chassis_linear_side",
+    "east": "create:block/chassis_linear_side",
+    "south": "create:block/chassis_linear_side",
+    "west": "create:block/chassis_linear_side",
+    "particle": "create:block/chassis_linear_side"
+  }
+}

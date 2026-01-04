@@ -25,6 +25,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.extensions.IExtensionBlock;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.kinetics.contraption.IWrenchable;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.interfaces.ISail;
 
@@ -36,7 +37,7 @@ import java.util.Random;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings("deprecation")
-public class BlockSail extends BlockColored implements IExtensionBlock, ISail {
+public class BlockSail extends BlockColored implements IExtensionBlock, ISail, IWrenchable {
     public static final PropertyEnum<EnumDyeColor> COLOR = BlockColored.COLOR;
     private static final String[] dyes = {
             "dyeBlack",
@@ -96,7 +97,11 @@ public class BlockSail extends BlockColored implements IExtensionBlock, ISail {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(
+            World worldIn, BlockPos pos, IBlockState state,
+            EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
+            float hitX, float hitY, float hitZ
+    ) {
         if (playerIn.isSneaking()) return false;
         ItemStack stack = playerIn.getHeldItem(hand);
         for (int i = 0; i < 16; i++) {
@@ -124,7 +129,11 @@ public class BlockSail extends BlockColored implements IExtensionBlock, ISail {
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public IBlockState getStateForPlacement(
+            World world, BlockPos pos, EnumFacing facing,
+            float hitX, float hitY, float hitZ,
+            int meta, EntityLivingBase placer, EnumHand hand
+    ) {
         if (placer.isSneaking()) {
             return byFacing(facing).getDefaultState();
         }
@@ -195,6 +204,11 @@ public class BlockSail extends BlockColored implements IExtensionBlock, ISail {
     }
 
     @Override
+    public IBlockState withFacing(IBlockState state, EnumFacing facing) {
+        return byFacing(facing).getDefaultState().withProperty(COLOR, state.getValue(COLOR));
+    }
+
+    @Override
     public IBlockState withRotation(IBlockState state, Rotation rot) {
         return byFacing(rot.rotate(this.facing)).getDefaultState().withProperty(COLOR, state.getValue(COLOR));
     }
@@ -202,5 +216,13 @@ public class BlockSail extends BlockColored implements IExtensionBlock, ISail {
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
         return byFacing(mirrorIn.mirror(this.facing)).getDefaultState().withProperty(COLOR, state.getValue(COLOR));
+    }
+
+    @Override
+    public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
+        EnumFacing myFacing = this.getFacing(state);
+        if (side.getAxis() == myFacing.getAxis()) return false;
+        world.setBlockState(pos, byFacing(myFacing.rotateAround(side.getAxis())).getDefaultState().withProperty(COLOR, state.getValue(COLOR)));
+        return true;
     }
 }

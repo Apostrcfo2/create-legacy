@@ -61,11 +61,15 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         if (this.contraption == null) {
             this.contraption = Contraption.assemble(this, pos, exclude);
         }
+        this.cachedAxis = this.bearing.getFacing().getAxis();
+        this.cachedAngle = this.bearing.angle;
     }
 
     public BlockPos bearingPos;
     public TileEntityBearingBase bearing;
     public Contraption contraption;
+    public float cachedAngle;
+    public EnumFacing.Axis cachedAxis;
 
     @Override
     public Contraption attachedContraption() {
@@ -83,6 +87,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             TileEntity te = this.world.getTileEntity(this.bearingPos);
             if (te instanceof TileEntityBearingBase) {
                 this.bearing = (TileEntityBearingBase) te;
+                this.cachedAxis = ((TileEntityBearingBase) te).getFacing().getAxis();
                 this.resetBB();
             } else {
                 this.setDead();
@@ -125,8 +130,8 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
 
         if (!this.world.isRemote) {
             BlockPos self = this.getPosition();
-            Rotation rotation = BlockRotationHelper.getRotationForAngle(this.bearing.angle);
-            EnumFacing.Axis axis = this.bearing.getFacing().getAxis();
+            Rotation rotation = BlockRotationHelper.getRotationForAngle(this.bearing != null ? this.bearing.angle : this.cachedAngle);
+            EnumFacing.Axis axis = this.bearing != null ? this.bearing.getFacing().getAxis() : this.cachedAxis;
             for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
                 BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, entry.getKey()); //self.add(entry.getKey());
                 this.world.setBlockState(pos, BlockRotationHelper.rotate(entry.getValue(), axis, rotation));

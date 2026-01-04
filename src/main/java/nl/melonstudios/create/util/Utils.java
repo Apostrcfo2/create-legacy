@@ -49,6 +49,21 @@ public class Utils {
         }
     }
 
+    public static final List<EnumFacing> ALONG_X =
+            ImmutableList.of(EnumFacing.WEST, EnumFacing.EAST);
+    public static final List<EnumFacing> ALONG_Y =
+            ImmutableList.of(EnumFacing.DOWN, EnumFacing.UP);
+    public static final List<EnumFacing> ALONG_Z =
+            ImmutableList.of(EnumFacing.NORTH, EnumFacing.SOUTH);
+    public static List<EnumFacing> getAlong(EnumFacing.Axis axis) {
+        switch (axis) {
+            case X: return ALONG_X;
+            case Y: return ALONG_Y;
+            case Z: return ALONG_Z;
+            default:return Collections.emptyList();
+        }
+    }
+
     public static int lerpInt(float delta, int start, int end) {
         return start + floor(delta * (float)(end - start));
     }

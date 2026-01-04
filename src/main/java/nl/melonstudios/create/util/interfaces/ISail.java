@@ -5,4 +5,5 @@ import net.minecraft.util.EnumFacing;
 
 public interface ISail {
     EnumFacing getFacing(IBlockState state);
+    IBlockState withFacing(IBlockState state, EnumFacing facing);
 }

@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "axis=x,secondary=false": {
+      "model": "create:chassis_linear_x"
+    },
+    "axis=y,secondary=false": {
+      "model": "create:chassis_linear_y"
+    },
+    "axis=z,secondary=false": {
+      "model": "create:chassis_linear_z"
+    },
+    "axis=x,secondary=true": {
+      "model": "create:chassis_linear_secondary_x"
+    },
+    "axis=y,secondary=true": {
+      "model": "create:chassis_linear_secondary_y"
+    },
+    "axis=z,secondary=true": {
+      "model": "create:chassis_linear_secondary_z"
+    }
+  }
+}

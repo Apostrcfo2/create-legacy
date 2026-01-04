@@ -1,9 +1,16 @@
 package nl.melonstudios.create.util;
 
+import com.melonstudios.melonlib.misc.BlockStateProperties;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import nl.melonstudios.create.util.interfaces.ISail;
+
+import java.util.Collection;
 
 public class BlockRotationHelper {
     private BlockRotationHelper() {
@@ -64,6 +71,35 @@ public class BlockRotationHelper {
         if (rotation == Rotation.NONE) return state; //easy way out
         if (axis == EnumFacing.Axis.Y) {
             return state.withRotation(rotation); //built in functioning
+        }
+        Collection<IProperty<?>> props = state.getPropertyKeys();
+        if (props.contains(BlockStateProperties.FACING)) {
+            EnumFacing facing = state.getValue(BlockStateProperties.FACING);
+            return state.withProperty(BlockStateProperties.FACING, rotate(facing, axis, rotation));
+        }
+        if (props.contains(BlockStateProperties.AXIS)) {
+            EnumFacing.Axis axis1 = state.getValue(BlockStateProperties.AXIS);
+            if (axis1 == axis || rotation == Rotation.CLOCKWISE_180) return state;
+            return state.withProperty(BlockStateProperties.AXIS,
+                    EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis1).rotateAround(axis)
+                            .getAxis());
+        }
+        if (state.getBlock() instanceof ISail) {
+            ISail sail = (ISail) state.getBlock();
+            return sail.withFacing(state, rotate(sail.getFacing(state), axis, rotation));
+        }
+        if (props.contains(BlockLog.LOG_AXIS)) {
+            if (rotation == Rotation.CLOCKWISE_180) return state;
+            BlockLog.EnumAxis axis1 = state.getValue(BlockLog.LOG_AXIS);
+            if (axis1 == BlockLog.EnumAxis.fromFacingAxis(axis)) return state;
+            EnumFacing.Axis axis2 = EnumFacing.Axis.byName(axis1.getName());
+            if (axis2 == null) return state;
+            return state.withProperty(BlockLog.LOG_AXIS,
+                    BlockLog.EnumAxis.fromFacingAxis(EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis2).rotateAround(axis)
+                            .getAxis()));
+        }
+        if (rotation == Rotation.CLOCKWISE_180) {
+            return state.withMirror(axis == EnumFacing.Axis.X ? Mirror.LEFT_RIGHT : Mirror.FRONT_BACK);
         }
         return state;
     }

@@ -124,6 +124,10 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
                 this.angleOld %= 360.0F;
                 this.angle %= 360.0F;
             }
+            EntityContraptionBearing entity = this.getAttachedContraption();
+            if (entity != null) {
+                entity.cachedAngle = this.angle;
+            }
             this.markDirty();
         }
     }
