@@ -59,6 +59,7 @@ public class TileEntityKinetic extends TileEntityOptimizedBase implements IAssem
     }
     @Override
     public void tick() {
+        if (this.isVirtual()) return;
         if (!this.world.isRemote && this.updateSpeed) this.attachKinetics();
 
         this.preventSpeedUpdate = 0;
@@ -391,5 +392,6 @@ public class TileEntityKinetic extends TileEntityOptimizedBase implements IAssem
     @Override
     public void onAssembly() {
         this.wasMoved = true;
+        this.detachKinetics();
     }
 }

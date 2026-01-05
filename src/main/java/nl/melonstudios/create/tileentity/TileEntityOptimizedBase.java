@@ -5,8 +5,9 @@ import com.melonstudios.melonlib.tileentity.TileEntityCachedRenderBB;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ITickable;
 import nl.melonstudios.create.util.interfaces.IStateFindable;
+import nl.melonstudios.ponder.IVirtualizable;
 
-public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB implements ISyncedTE, ITickable, IStateFindable {
+public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB implements ISyncedTE, ITickable, IStateFindable, IVirtualizable {
     private int tickRateLazy, tickCounterLazy;
     private boolean requestedSynchronization = false;
     private boolean syncNextTick = false;
@@ -49,6 +50,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     @Override
     public void sync() {
+        if (this.isVirtual()) return;
         this.markDirty();
         if (this.pos != null)
             this.requestedSynchronization = true;
@@ -57,6 +59,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
 
     @Override
     public void requestSync() {
+        if (this.isVirtual()) return;
         if (this.pos != null)
             ISyncedTE.super.requestSync();
         else this.requestSyncNextTick = true;
@@ -107,7 +110,7 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
             this.tickCounterLazy = this.tickRateLazy;
             this.tickLazy();
         }
-        if (!this.world.isRemote && this.requestedSynchronization) {
+        if (!this.world.isRemote && this.requestedSynchronization && !this.isVirtual()) {
             this.requestedSynchronization = false;
             ISyncedTE.super.sync();
         }
@@ -139,5 +142,15 @@ public abstract class TileEntityOptimizedBase extends TileEntityCachedRenderBB i
     @Override
     public IBlockState getState() {
         return this.getBlockType().getStateFromMeta(this.getBlockMetadata());
+    }
+
+    private boolean virtualized = false;
+    @Override
+    public void markAsVirtual() {
+        this.virtualized = true;
+    }
+    @Override
+    public boolean isVirtual() {
+        return this.virtualized;
     }
 }

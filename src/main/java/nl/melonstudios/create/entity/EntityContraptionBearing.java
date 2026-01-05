@@ -139,10 +139,11 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 if (te != null) {
                     te.setPos(pos);
                     te.validate();
-                    if (te instanceof TileEntityKinetic) {
-                        ((TileEntityKinetic)te).wasMoved = true;
-                    }
                     this.world.setTileEntity(pos, te);
+                    if (te instanceof TileEntityKinetic) {
+                        TileEntityKinetic kinetic = (TileEntityKinetic)te;
+                        kinetic.attachKinetics();
+                    }
                 }
             }
             for (GluedSurface surface : this.contraption.gluedSurfaces) {

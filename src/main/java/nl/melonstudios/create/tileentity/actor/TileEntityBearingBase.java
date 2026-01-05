@@ -43,6 +43,13 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         return bearings.get(0);
     }
 
+    @Override
+    public void onAssembly() {
+        super.onAssembly();
+
+        if (this.isAssembled()) this.disassemble();
+    }
+
     public boolean disassemble() {
         if (this.assemblyChanged) return false;
         this.assemblyChanged = true;

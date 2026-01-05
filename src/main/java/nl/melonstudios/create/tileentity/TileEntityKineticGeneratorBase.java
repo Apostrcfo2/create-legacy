@@ -32,7 +32,7 @@ public abstract class TileEntityKineticGeneratorBase extends TileEntityKinetic {
     @Override
     public void tick() {
         super.tick();
-        if (this.reactivateSource) {
+        if (this.reactivateSource && !this.isVirtual()) {
             this.updateGeneratedRotation();
             this.reactivateSource = false;
         }

@@ -205,14 +205,13 @@ public class Contraption implements IBlockAccess {
             contraption.blocks.put(adjusted, state);
             if (te != null) {
                 te.validate();
+                if (te instanceof IAssemblyBehavior) {
+                    ((IAssemblyBehavior)te).onAssembly();
+                }
                 world.removeTileEntity(blockPos);
                 te.setPos(adjusted);
                 te.validate();
                 contraption.tileEntities.put(adjusted, te);
-
-                if (te instanceof IAssemblyBehavior) {
-                    ((IAssemblyBehavior)te).onAssembly();
-                }
             }
 
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);
