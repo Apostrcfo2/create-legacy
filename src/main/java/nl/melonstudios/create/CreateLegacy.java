@@ -74,7 +74,7 @@ public class CreateLegacy {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-
+        CreateLegacy.proxy.initiatePonders();
     }
 
     @EventHandler

@@ -1,6 +1,7 @@
 package nl.melonstudios.create.event;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import com.melonstudios.melonlib.misc.Localizer;
 import com.melonstudios.melonlib.render.RenderMelon;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -41,6 +43,7 @@ import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
+import nl.melonstudios.ponder.PonderRegistry;
 
 import java.util.List;
 
@@ -157,8 +160,8 @@ public class CreateLegacyEventHandler {
         }
     }
 
-    @SubscribeEvent
     @SideOnly(Side.CLIENT)
+    @SubscribeEvent
     public static void renderDebugGoggleOverlay(RenderGameOverlayEvent.Post event) {
         if (PerFrameDebugInfo.renderAgain) {
             PerFrameDebugInfo.renderAgain = false;
@@ -176,8 +179,16 @@ public class CreateLegacyEventHandler {
         }
     }
 
-    @SubscribeEvent
     @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void addTooltips(ItemTooltipEvent event) {
+        if (PonderRegistry.hasPonder(event.getItemStack())) {
+            event.getToolTip().add(Localizer.translate("tooltip.create.pressForPonder"));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
     public static void postFrame(TickEvent.RenderTickEvent event) {
         if (event.phase == TickEvent.Phase.END) PerFrameDebugInfo.renderAgain = true;
     }

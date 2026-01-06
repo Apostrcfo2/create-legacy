@@ -33,6 +33,7 @@ public final class ItemInit {
     public static final ItemGlue SUPER_GLUE = (ItemGlue)
             registerItem(new ItemGlue(256)
             .setRegistryName("superglue").setUnlocalizedName("create.superglue"));
+    public static final ItemSceneWand SCENE_WAND = registerItem(new ItemSceneWand());
 
     private static <T extends Item> T registerItem(T item) {
         ITEMS.add(item);
@@ -49,6 +50,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(SANDPAPER);
         CreateLegacy.proxy.setItemModel(TREE_FERTILIZER);
         CreateLegacy.proxy.setItemModel(SUPER_GLUE);
+        CreateLegacy.proxy.setItemModel(SCENE_WAND);
 
         // blocks
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");

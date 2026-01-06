@@ -5,6 +5,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
 public class PonderPlan {
@@ -20,5 +21,11 @@ public class PonderPlan {
             time = Math.max(time, key);
         }
         this.lastPlanTimestamp = time;
+    }
+
+    public static PonderPlan withBuilder(Consumer<PonderPlanBuilder> builder) {
+        PonderPlanBuilder ponderPlanBuilder = new PonderPlanBuilder();
+        builder.accept(ponderPlanBuilder);
+        return ponderPlanBuilder.build();
     }
 }

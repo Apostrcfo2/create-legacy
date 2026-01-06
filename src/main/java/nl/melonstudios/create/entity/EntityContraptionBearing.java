@@ -159,7 +159,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
 
     @Override
     public void writeSpawnData(ByteBuf buffer) {
-        buffer.writeLong(this.bearing.getPos().toLong());
+        buffer.writeLong(this.bearingPos.toLong());
 
         new PacketBuffer(buffer).writeCompoundTag(this.contraption.saveNBT(new NBTTagCompound()));
     }

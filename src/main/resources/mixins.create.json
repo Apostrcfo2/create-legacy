@@ -13,6 +13,7 @@
   ],
   "client": [
     "MixinChunkRenderContainer",
+    "MixinGuiContainer",
     "MixinMinecraft",
     "MixinRenderList",
     "MixinVboRenderList"

@@ -91,4 +91,6 @@ public class CommonProxy {
     public void millstoneFX(TileEntityMillstone millstone) {
 
     }
+
+    public void initiatePonders() {}
 }

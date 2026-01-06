@@ -163,3 +163,6 @@ itemGroup.create.decorations=Create's Decorations
 ## CONFIG ##
 Create Common Config.tooltip=Create's common configurations
 Create Client Config.tooltip=Create's client configurations
+
+## TOOLTIPS ##
+tooltip.create.pressForPonder=Press [W] for ponder

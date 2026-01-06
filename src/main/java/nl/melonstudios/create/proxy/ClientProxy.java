@@ -35,6 +35,7 @@ import nl.melonstudios.create.tileentity.generator.TileEntityBearingWindmill;
 import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
 import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
 import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
+import nl.melonstudios.ponder.PonderRegistry;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -135,5 +136,10 @@ public class ClientProxy extends CommonProxy {
                             pos.getX() + rnd.nextDouble(), pos.getY() + 0.5, pos.getZ() + rnd.nextDouble(),
                             0, 0, 0);
         }
+    }
+
+    @Override
+    public void initiatePonders() {
+        PonderRegistry.bootstrap();
     }
 }

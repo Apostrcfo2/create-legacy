@@ -2,28 +2,32 @@ package nl.melonstudios.ponder.world;
 
 import com.google.common.base.Predicate;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Biomes;
+import net.minecraft.init.Blocks;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.SaveHandlerMP;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.ponder.PonderContainer;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.plan.PonderPlan;
 import nl.melonstudios.ponder.scene.PonderScene;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 @ParametersAreNonnullByDefault
@@ -36,13 +40,23 @@ public class WorldPonder extends World {
     ), "PonderWorld");
     public static final WorldProvider WORLD_PROVIDER = new WorldProviderPonder();
 
+    public final PonderContainer container;
+    public final Map<String, PonderScene> scenes = new HashMap<>();
     public PonderScene scene;
     public final PonderPlan plan;
     private long time = -1L;
-    public WorldPonder(PonderScene scene, PonderPlan plan, Profiler profilerIn) {
+    public float scaleOld = 1.0F;
+    public float scale = 1.0F;
+    public float yawOld = 45.0F;
+    public float yaw = 45.0F;
+    public float pitchOld = 0.0F;
+    public float pitch = 30.0F;
+    public int offsetX = 0, offsetY = 0, offsetZ = 0;
+    public String title = "null";
+    public WorldPonder(PonderContainer container, Profiler profilerIn) {
         super(SAVE_HANDLER, WORLD_INFO, WORLD_PROVIDER, profilerIn, true);
-        this.scene = scene;
-        this.plan = plan;
+        this.container = container;
+        this.plan = container.plan;
     }
 
     public void initialize() {
@@ -75,6 +89,9 @@ public class WorldPonder extends World {
 
     @Override
     public void tick() {
+        this.scaleOld = this.scale;
+        this.yawOld = this.yaw;
+        this.pitchOld = this.pitch;
         boolean updateMesh = false;
         for (IPonderAction action : this.plan.timePlan.getOrDefault(this.time, Collections.emptyList())) {
             action.accept(this);
@@ -86,8 +103,54 @@ public class WorldPonder extends World {
         for (Entity tick : this.scene.renderOnlyEntityList) {
             tick.onUpdate();
         }
+        if (updateMesh) {
+            RenderWorldPonder.update(this);
+        }
         this.time = Math.incrementExact(this.time);
     }
+
+    // region Block interaction
+
+    @Override
+    public boolean setBlockState(BlockPos pos, IBlockState state) {
+        return this.scene.blocks.put(pos, state) != state;
+    }
+    @Override
+    public boolean setBlockState(BlockPos pos, IBlockState newState, int flags) {
+        return this.scene.blocks.put(pos, newState) != newState;
+    }
+    @Override
+    public boolean setBlockToAir(BlockPos pos) {
+        return this.scene.blocks.remove(pos) != null;
+    }
+    @Override
+    public IBlockState getBlockState(BlockPos pos) {
+        return this.scene.blocks.getOrDefault(pos, Blocks.AIR.getDefaultState());
+    }
+
+    @Nullable
+    @Override
+    public TileEntity getTileEntity(BlockPos pos) {
+        TileEntity te = this.scene.tileEntities.get(pos);
+        if (te == null) return this.scene.nonTickingTileEntities.get(pos);
+        return te;
+    }
+    @Override
+    public void setTileEntity(BlockPos pos, @Nullable TileEntity tileEntityIn) {
+        this.scene.nonTickingTileEntities.remove(pos);
+        if (tileEntityIn != null) {
+            this.scene.tileEntities.put(pos.toImmutable(), tileEntityIn);
+        } else {
+            this.scene.tileEntities.remove(pos);
+        }
+    }
+    @Override
+    public void removeTileEntity(BlockPos pos) {
+        this.scene.nonTickingTileEntities.remove(pos);
+        this.scene.tileEntities.remove(pos);
+    }
+
+    // endregion
 
     // region Light modified to max at all times
     @Override
@@ -204,5 +267,31 @@ public class WorldPonder extends World {
     public <T extends Entity> List<T> getPlayers(Class<? extends T> playerType, Predicate<? super T> filter) {
         return Collections.emptyList();
     }
+
+    @Override
+    public void removeEntity(Entity entityIn) {
+        this.scene.entityList.remove(entityIn);
+    }
+
+    @Override
+    public void removeEntityDangerously(Entity entityIn) {
+        this.scene.entityList.remove(entityIn);
+    }
+
+    @Override
+    public void onEntityRemoved(Entity entityIn) {
+
+    }
     // endregion
+
+
+    @Override
+    public Biome getBiome(BlockPos pos) {
+        return Biomes.PLAINS;
+    }
+
+    @Override
+    public Biome getBiomeForCoordsBody(BlockPos pos) {
+        return Biomes.PLAINS;
+    }
 }
