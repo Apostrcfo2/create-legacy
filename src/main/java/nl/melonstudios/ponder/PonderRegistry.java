@@ -1,17 +1,22 @@
 package nl.melonstudios.ponder;
 
 import com.melonstudios.melonlib.misc.MetaItem;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.tileentity.TileEntityDepot;
 import nl.melonstudios.ponder.plan.PonderPlan;
 import nl.melonstudios.ponder.plan.PonderPlanBuilder;
 import nl.melonstudios.ponder.plan.action.ActionSetScene;
 import nl.melonstudios.ponder.scene.IPonderSceneProvider;
+import nl.melonstudios.ponder.world.EnumEntityPonder;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -48,6 +53,23 @@ public final class PonderRegistry {
 
                         builder.pause(20);
                         builder.setSubject("yummers");
+                        BlockPos depot = new BlockPos(0, 1, 0);
+                        builder.setBlock(depot, BlockInit.DEPOT.getDefaultState());
+                        builder.setTileEntity(depot, TileEntityDepot::new, false);
+                        builder.modifyTileEntity(depot, TileEntityDepot.class, (te) -> {
+                            te.mainItem = new ItemStack(ItemInit.SUPER_GLUE);
+                        });
+
+                        builder.pause(20);
+                        builder.setSubject("creeper aw man");
+                        builder.pause(1);
+                        builder.addEntity(EnumEntityPonder.NON_TICKING_RENDER_ONLY, (world) -> {
+                            EntityCreeper creeper = new EntityCreeper(world);
+                            creeper.posX = 1.5;
+                            creeper.posZ = 0.5;
+                            creeper.posY = 1;
+                            return creeper;
+                        });
                     })).addSceneProvider("main", IPonderSceneProvider.of(test))
             );
         } catch (IOException e) {

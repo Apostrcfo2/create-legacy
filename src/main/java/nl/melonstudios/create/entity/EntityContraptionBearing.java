@@ -57,6 +57,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
         this.bearing = bearing;
+        this.bearingPos = bearing.getPos();
         this.contraption = contraption;
         if (this.contraption == null) {
             this.contraption = Contraption.assemble(this, pos, exclude);

@@ -49,7 +49,7 @@ public class WorldPonder extends World {
     public float scale = 1.0F;
     public float yawOld = 45.0F;
     public float yaw = 45.0F;
-    public float pitchOld = 0.0F;
+    public float pitchOld = 30.0F;
     public float pitch = 30.0F;
     public int offsetX = 0, offsetY = 0, offsetZ = 0;
     public String title = "null";
