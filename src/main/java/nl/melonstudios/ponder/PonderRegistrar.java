@@ -1,9 +1,10 @@
 package nl.melonstudios.ponder;
 
-import com.melonstudios.melonlib.misc.MetaItem;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import nl.melonstudios.create.CreateLegacy;
 
 import java.io.BufferedInputStream;
@@ -17,11 +18,11 @@ public class PonderRegistrar {
 
     }
 
-    public void register(MetaItem item, PonderContainer container) {
-        PonderRegistry.registerPonder(item, container);
+    public void register(Block block, PonderContainer container) {
+        this.register(Item.getItemFromBlock(block), container);
     }
     public void register(Item item, PonderContainer container) {
-        this.register(MetaItem.of(item, 0), container);
+        PonderRegistry.registerPonder(ForgeRegistries.ITEMS.getKey(item), container);
     }
     public NBTTagCompound getClassNBT(String path) throws IOException {
         try (

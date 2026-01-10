@@ -25,7 +25,7 @@ public class PonderInit {
     public static void register(PonderRegistrar registrar) {
         try {
             IPonderSceneProvider test = IPonderSceneProvider.of(registrar.getClassNBT("assets/create/ponders/test.nbt"));
-            registrar.register(MetaItem.of(ItemInit.WRENCH, 0),
+            registrar.register(ItemInit.WRENCH,
                     new PonderContainer(PonderPlan.withBuilder("create.test", (builder) -> {
                         builder.setInitialScene("main");
                         builder.setInitialSubject("Testing!");
@@ -58,7 +58,7 @@ public class PonderInit {
                     = IPonderSceneProvider.of(registrar.getClassNBT("create", "mechanical_bearing"));
             IPonderSceneProvider mechanicalBearingWithContraption
                     = IPonderSceneProvider.of(registrar.getClassNBT("create", "mechanical_bearing_with_contraption"));
-            registrar.register(MetaItem.of(ItemInit.SUPER_GLUE, 0),
+            registrar.register(BlockInit.BEARING,
                     new PonderContainer(CreatePonderPlanBuilder.builder("create.mechanical_bearing", (builder) -> {
                         builder.setInitialScene("mechanical_bearing");
                         builder.setInitialSubject("create.mechanical_bearing");

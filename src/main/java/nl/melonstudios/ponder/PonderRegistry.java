@@ -2,13 +2,16 @@ package nl.melonstudios.ponder;
 
 import com.melonstudios.melonlib.misc.MetaItem;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
@@ -30,18 +33,18 @@ import java.util.Objects;
 
 public final class PonderRegistry {
     private static final PonderRegistrar REGISTRAR = new PonderRegistrar();
-    private static final Map<MetaItem, PonderContainer> PONDERS = new HashMap<>();
+    private static final Map<ResourceLocation, PonderContainer> PONDERS = new HashMap<>();
 
 
-    static void registerPonder(MetaItem item, PonderContainer container) {
+    static void registerPonder(ResourceLocation item, PonderContainer container) {
         PONDERS.put(item, container);
     }
 
     public static PonderContainer getPonder(ItemStack item) {
-        return PONDERS.get(MetaItem.of(item));
+        return PONDERS.get(ForgeRegistries.ITEMS.getKey(item.getItem()));
     }
     public static boolean hasPonder(ItemStack item) {
-        return PONDERS.containsKey(MetaItem.of(item));
+        return PONDERS.containsKey(ForgeRegistries.ITEMS.getKey(item.getItem()));
     }
 
     public static void bootstrap() {
