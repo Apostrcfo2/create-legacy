@@ -29,9 +29,9 @@ public class RenderGlue extends Render<EntityGlue> {
 
     @Override
     public boolean shouldRender(EntityGlue livingEntity, ICamera camera, double camX, double camY, double camZ) {
-        return (Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof ItemGlue
+        return livingEntity.world instanceof WorldPonder || ((Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof ItemGlue
                 || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() instanceof ItemGlue)
-                && super.shouldRender(livingEntity, camera, camX, camY, camZ);
+                && super.shouldRender(livingEntity, camera, camX, camY, camZ));
     }
 
     @Override
