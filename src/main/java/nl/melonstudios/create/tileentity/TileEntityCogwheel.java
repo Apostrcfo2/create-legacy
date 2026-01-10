@@ -16,7 +16,7 @@ import java.util.LinkedList;
 
 public class TileEntityCogwheel extends TileEntityKinetic {
     public boolean isLarge() {
-        return ((ICogwheel)this.blockType).isLargeCog();
+        return ((ICogwheel)this.getBlockType()).isLargeCog();
     }
 
     @SideOnly(Side.CLIENT)

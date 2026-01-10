@@ -24,6 +24,7 @@ import nl.melonstudios.ponder.PonderContainer;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.plan.PonderPlan;
 import nl.melonstudios.ponder.scene.PonderScene;
+import nl.melonstudios.ponder.scene.PonderTooltip;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -53,6 +54,7 @@ public class WorldPonder extends World {
     public float pitch = 30.0F;
     public int offsetX = 0, offsetY = 0, offsetZ = 0;
     public String title = "null";
+    public final List<PonderTooltip> displayedTooltips = new ArrayList<>();
     public WorldPonder(PonderContainer container, Profiler profilerIn) {
         super(SAVE_HANDLER, WORLD_INFO, WORLD_PROVIDER, profilerIn, true);
         this.container = container;
@@ -107,6 +109,7 @@ public class WorldPonder extends World {
             RenderWorldPonder.update(this);
         }
         this.time = Math.incrementExact(this.time);
+        this.displayedTooltips.removeIf(tooltip -> tooltip.expiresAt < this.time);
     }
 
     // region Block interaction

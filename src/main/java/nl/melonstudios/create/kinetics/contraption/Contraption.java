@@ -5,6 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
@@ -30,6 +32,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -52,6 +55,7 @@ public class Contraption implements IBlockAccess {
         this.blocks.clear();
         this.tileEntities.clear();
         this.gluedSurfaces.clear();
+        this.actors.clear();
 
         NBTTagList blockList = nbt.getTagList("Blocks", 10);
         for (int i = 0; i < blockList.tagCount(); i++) {
@@ -70,6 +74,12 @@ public class Contraption implements IBlockAccess {
             TileEntity te = TileEntity.create(this.holder.getWorld(), compound);
             if (te != null) {
                 this.tileEntities.put(te.getPos(), te);
+                if (te instanceof IContraptionActor) {
+                    IContraptionActor actor = (IContraptionActor) te;
+                    te.setWorld(this.holder.getWorld());
+                    this.actors.add(new ActorContext(te.getPos(), actor));
+                    actor.setOnContraption(true);
+                }
             }
         }
 
@@ -127,6 +137,7 @@ public class Contraption implements IBlockAccess {
     public final HashSet<GluedSurface> gluedSurfaces = new HashSet<>();
     public final HashSet<TileEntity> blacklistedForRendering = new HashSet<>();
     public final Object2IntOpenHashMap<BlockPos> lightSources = new Object2IntOpenHashMap<>();
+    public final HashSet<ActorContext> actors = new HashSet<>();
 
     @Nullable
     @Override
@@ -212,6 +223,12 @@ public class Contraption implements IBlockAccess {
                 te.setPos(adjusted);
                 te.validate();
                 contraption.tileEntities.put(adjusted, te);
+                if (te instanceof IContraptionActor) {
+                    IContraptionActor actor = (IContraptionActor) te;
+                    contraption.actors.add(new ActorContext(adjusted, actor));
+                    te.setWorld(world);
+                    actor.setOnContraption(true);
+                }
             }
 
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);

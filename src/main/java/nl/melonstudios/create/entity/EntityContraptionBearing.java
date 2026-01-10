@@ -16,13 +16,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.kinetics.contraption.Contraption;
-import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
-import nl.melonstudios.create.kinetics.contraption.GluedSurface;
-import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
+import nl.melonstudios.create.kinetics.contraption.*;
+import nl.melonstudios.create.kinetics.contraption.accessor.CAccessorBearing;
+import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.util.BlockRotationHelper;
+import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -33,10 +33,13 @@ import java.util.Objects;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class EntityContraptionBearing extends EntityContraptionBase implements IContraptionHolder, IEntityAdditionalSpawnData {
+    public final IContraptionAccessor contraptionAccessor;
     public EntityContraptionBearing(World worldIn) {
         super(worldIn);
 
         this.setSize(1.0F, 1.0F);
+
+        this.contraptionAccessor = new CAccessorBearing(this);
     }
 
     @Override
@@ -97,6 +100,30 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         }
 
         if (this.bearing.isInvalid()) this.bearing = null;
+
+        if (!this.contraption.actors.isEmpty()) {
+            Vector3f vec = new Vector3f();
+            Vector3f movement = new Vector3f();
+            for (ActorContext context : this.contraption.actors) {
+                vec.set(context.worldPos);
+                BlockRotationHelper.rotateNormal(context.pos, this.cachedAxis, this.cachedAngle, context.worldPos);
+                context.worldPos.translate(0.5F, 0.5F, 0.5F);
+                int oldX = context.actorWorldPos.getX();
+                int oldY = context.actorWorldPos.getY();
+                int oldZ = context.actorWorldPos.getZ();
+                context.actorWorldPos.setPos(context.worldPos.x, context.worldPos.y, context.worldPos.z);
+                movement.set(context.worldPos);
+                Vector3f.sub(movement, vec, movement);
+                context.actor.contraptionTick(
+                        this.contraptionAccessor, this.world,
+                        context.worldPos, context.actorWorldPos,
+                        oldX != context.actorWorldPos.getX() ||
+                                oldY != context.actorWorldPos.getY() ||
+                                oldZ != context.actorWorldPos.getZ(),
+                        movement
+                );
+            }
+        }
     }
 
     @Override
@@ -145,6 +172,9 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                         TileEntityKinetic kinetic = (TileEntityKinetic)te;
                         kinetic.attachKinetics();
                     }
+                    if (te instanceof IContraptionActor) {
+                        ((IContraptionActor)te).setOnContraption(false);
+                    }
                 }
             }
             for (GluedSurface surface : this.contraption.gluedSurfaces) {
@@ -174,6 +204,12 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             this.contraption.loadNBT(Objects.requireNonNull(new PacketBuffer(additionalData).readCompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException("Failed to read contraption spawn data", e);
+        }
+    }
+
+    public void pauseContraption() {
+        if (this.bearing != null) {
+            this.bearing.pauseContraption();
         }
     }
 }

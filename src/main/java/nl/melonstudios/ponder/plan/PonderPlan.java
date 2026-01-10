@@ -23,8 +23,8 @@ public class PonderPlan {
         this.lastPlanTimestamp = time;
     }
 
-    public static PonderPlan withBuilder(Consumer<PonderPlanBuilder> builder) {
-        PonderPlanBuilder ponderPlanBuilder = new PonderPlanBuilder();
+    public static PonderPlan withBuilder(String name, Consumer<PonderPlanBuilder> builder) {
+        PonderPlanBuilder ponderPlanBuilder = new PonderPlanBuilder(name);
         builder.accept(ponderPlanBuilder);
         return ponderPlanBuilder.build();
     }

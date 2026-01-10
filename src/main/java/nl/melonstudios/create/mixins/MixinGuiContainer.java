@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.ponder.PonderContainer;
 import nl.melonstudios.ponder.PonderRegistry;
 import nl.melonstudios.ponder.scene.GuiPonder;

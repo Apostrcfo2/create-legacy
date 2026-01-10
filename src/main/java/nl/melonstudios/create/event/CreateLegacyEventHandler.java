@@ -37,13 +37,16 @@ import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.init.OreDictInit;
+import nl.melonstudios.create.init.PonderInit;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
+import nl.melonstudios.ponder.PonderRegistrar;
 import nl.melonstudios.ponder.PonderRegistry;
+import nl.melonstudios.ponder.event.RegisterPondersEvent;
 
 import java.util.List;
 
@@ -74,6 +77,10 @@ public class CreateLegacyEventHandler {
                 .factory(EntityContraptionBearing::new).id("create:contraption_bearing", 1).name("create.contraption")
                 .tracker(256, 10, false).build());
         CreateLegacy.proxy.registerEntityRenderers();
+    }
+    @SubscribeEvent
+    public static void registerPonders(RegisterPondersEvent event) {
+        PonderInit.register(event.getRegistrar());
     }
 
     //Other
@@ -176,14 +183,6 @@ public class CreateLegacyEventHandler {
                         2, 22, -1);
                 PerFrameDebugInfo.reset();
             }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public static void addTooltips(ItemTooltipEvent event) {
-        if (PonderRegistry.hasPonder(event.getItemStack())) {
-            event.getToolTip().add(Localizer.translate("tooltip.create.pressForPonder"));
         }
     }
 

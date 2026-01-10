@@ -2,6 +2,7 @@ package nl.melonstudios.ponder.plan.action;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import nl.melonstudios.ponder.IVirtualizable;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.world.WorldPonder;
 
@@ -21,6 +22,9 @@ public class ActionSetTileEntity implements IPonderAction {
     @Override
     public void accept(WorldPonder ponder) {
         TileEntity te = this.teSupplier.get();
+        if (te instanceof IVirtualizable) {
+            ((IVirtualizable)te).markAsVirtual();
+        }
         te.setWorld(ponder);
         te.setPos(this.pos);
         if (this.shouldTick) {

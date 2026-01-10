@@ -164,5 +164,12 @@ itemGroup.create.decorations=Create's Decorations
 Create Common Config.tooltip=Create's common configurations
 Create Client Config.tooltip=Create's client configurations
 
-## TOOLTIPS ##
-tooltip.create.pressForPonder=Press [W] for ponder
+## PONDERS ##
+# Test
+tooltip.ponder.create.test.0=the creeper is danger
+
+title.ponder.create.mechanical_bearing=Using the Mechanical Bearing
+tooltip.ponder.create.mechanical_bearing.0=The bearing can be used to rotate Contraptions
+tooltip.ponder.create.mechanical_bearing.1=Build something on the plateau...
+tooltip.ponder.create.mechanical_bearing.2=...and properly glue it
+tooltip.ponder.create.mechanical_bearing.3=Then assemble it, and the contraption will move

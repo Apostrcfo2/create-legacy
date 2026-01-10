@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.init.SoundInit;
@@ -32,6 +33,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
     protected boolean mightAssemble = false;
     protected boolean mightDisassemble = false;
+    protected boolean isPausedThisTick = false;
 
     @Nullable
     protected final EntityContraptionBearing getAttachedContraption() {
@@ -118,25 +120,28 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.mightAssemble = this.mightDisassemble = false;
 
         if (this.isAssembled() && !this.overstressed) {
-            if (this.useGeneratedSpeedForContraption()) {
-                this.angle += this.getGeneratedSpeed() * 0.3F;
-            } else {
-                this.angle += this.getSpeed() * 0.3F;
-            }
+            if (!this.isPausedThisTick) {
+                if (this.useGeneratedSpeedForContraption()) {
+                    this.angle += this.getGeneratedSpeed() * 0.3F;
+                } else {
+                    this.angle += this.getSpeed() * 0.3F;
+                }
 
-            if (this.angleOld > 360.0F && this.angle > 360.0F) {
-                this.angleOld %= 360.0F;
-                this.angle %= 360.0F;
-            } else if (this.angleOld < -360.0F && this.angle < -360.0F) {
-                this.angleOld %= 360.0F;
-                this.angle %= 360.0F;
-            }
-            EntityContraptionBearing entity = this.getAttachedContraption();
-            if (entity != null) {
-                entity.cachedAngle = this.angle;
+                if (this.angleOld > 360.0F && this.angle > 360.0F) {
+                    this.angleOld %= 360.0F;
+                    this.angle %= 360.0F;
+                } else if (this.angleOld < -360.0F && this.angle < -360.0F) {
+                    this.angleOld %= 360.0F;
+                    this.angle %= 360.0F;
+                }
+                EntityContraptionBearing entity = this.getAttachedContraption();
+                if (entity != null) {
+                    entity.cachedAngle = this.angle;
+                }
             }
             this.markDirty();
         }
+        this.isPausedThisTick = false;
     }
 
     @Override
@@ -174,5 +179,9 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     @Override
     public void collectCollisions(AxisAlignedBB aabb, List<AxisAlignedBB> collisions) {
 
+    }
+
+    public void pauseContraption() {
+        this.isPausedThisTick = true;
     }
 }

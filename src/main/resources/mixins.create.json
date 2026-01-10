@@ -14,7 +14,9 @@
   "client": [
     "MixinChunkRenderContainer",
     "MixinGuiContainer",
+    "MixinGuiPonder",
     "MixinMinecraft",
+    "MixinPonderScene",
     "MixinRenderList",
     "MixinVboRenderList"
   ],

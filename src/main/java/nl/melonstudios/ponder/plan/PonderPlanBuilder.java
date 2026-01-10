@@ -18,10 +18,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PonderPlanBuilder {
+    private final String name;
     private boolean setInitialScene = false;
     private long currentTime = 0L;
+    private int currentTooltipID = 0;
     private final List<IPonderAction> initialization = new ArrayList<>();
     private final Long2ObjectMap<List<IPonderAction>> actions = new Long2ObjectArrayMap<>();
+
+    public PonderPlanBuilder(String name) {
+        this.name = name;
+    }
+
     public void pause(long ticks) {
         this.currentTime += ticks;
     }
@@ -43,10 +50,10 @@ public class PonderPlanBuilder {
         this.setInitialScene = true;
     }
     public void setSubject(String subject) {
-        this.addAction(new ActionSetSubject(subject));
+        this.addAction(new ActionSetSubject("title.ponder." + subject));
     }
     public void setInitialSubject(String subject) {
-        this.addInitAction(new ActionSetSubject(subject));
+        this.addInitAction(new ActionSetSubject("title.ponder." + subject));
     }
     public void setOffset(int x, int y, int z) {
         this.addAction(new ActionSetOffset(x, y, z));
@@ -74,6 +81,9 @@ public class PonderPlanBuilder {
     }
     public void removeTileEntity(BlockPos pos) {
         this.addAction(new ActionRemoveTileEntity(pos));
+    }
+    public void addTooltip(int ticks, float x, float y, float z, String ignored, Object... format) {
+        this.addAction(new ActionAddTooltip(x, y, z, this.currentTime + ticks, "tooltip.ponder." + this.name + "." + this.currentTooltipID++, format));
     }
 
     public void addInitAction(IPonderAction action) {
