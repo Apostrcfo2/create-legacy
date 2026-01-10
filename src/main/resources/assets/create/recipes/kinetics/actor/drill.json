@@ -7,12 +7,12 @@
   ],
   "key": {
     "#": {
-      "type": "forge:ore_dict",
-      "ore": "ingotIron"
-    },
-    "A": {
       "item": "create:ingredient",
       "data": 15
+    },
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
     },
     "b": {
       "item": "create:casing",
