@@ -123,10 +123,6 @@ public class GuiPonder extends GuiScreen {
                         resolution.getScaledWidth(), resolution.getScaledHeight(),
                         100, this.fontRenderer
                 );
-                CreateLegacy.logger.debug("tooltip {} {} (adjusted: {} {})",
-                        this.vec.x, this.vec.y,
-                        adjustedX, adjustedY
-                );
             }
         }
     }
