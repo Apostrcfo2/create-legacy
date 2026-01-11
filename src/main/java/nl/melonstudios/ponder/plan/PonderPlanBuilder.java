@@ -7,6 +7,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.plan.action.*;
 import nl.melonstudios.ponder.world.EnumEntityPonder;
 import nl.melonstudios.ponder.world.WorldPonder;
@@ -17,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SideOnly(Side.CLIENT)
 public class PonderPlanBuilder {
     private final String name;
     private boolean setInitialScene = false;

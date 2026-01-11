@@ -1,9 +1,12 @@
 package nl.melonstudios.ponder.plan.action;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.world.WorldPonder;
 
+@SideOnly(Side.CLIENT)
 public class ActionRemoveTileEntity implements IPonderAction {
     private final BlockPos pos;
 

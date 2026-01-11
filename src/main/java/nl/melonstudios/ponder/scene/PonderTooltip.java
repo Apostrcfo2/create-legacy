@@ -1,5 +1,9 @@
 package nl.melonstudios.ponder.scene;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public class PonderTooltip {
     public final float x, y, z;
     public final String text;

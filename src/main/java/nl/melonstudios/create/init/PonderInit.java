@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
 import nl.melonstudios.create.ponder.CreatePonderPlanBuilder;
@@ -21,6 +23,7 @@ import nl.melonstudios.ponder.world.EnumEntityPonder;
 
 import java.io.IOException;
 
+@SideOnly(Side.CLIENT)
 public class PonderInit {
     public static void register(PonderRegistrar registrar) {
         try {

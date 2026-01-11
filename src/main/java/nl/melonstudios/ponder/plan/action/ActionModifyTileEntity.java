@@ -2,11 +2,14 @@ package nl.melonstudios.ponder.plan.action;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.world.WorldPonder;
 
 import java.util.function.Consumer;
 
+@SideOnly(Side.CLIENT)
 @SuppressWarnings("unchecked")
 public class ActionModifyTileEntity<T extends TileEntity> implements IPonderAction {
     private final BlockPos pos;

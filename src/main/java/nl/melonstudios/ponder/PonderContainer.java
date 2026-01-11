@@ -1,11 +1,14 @@
 package nl.melonstudios.ponder;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.plan.PonderPlan;
 import nl.melonstudios.ponder.scene.IPonderSceneProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@SideOnly(Side.CLIENT)
 public final class PonderContainer {
     public final Map<String, IPonderSceneProvider> sceneProviders = new HashMap<>();
     public final PonderPlan plan;

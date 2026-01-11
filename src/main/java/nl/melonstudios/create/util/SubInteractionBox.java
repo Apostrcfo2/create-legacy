@@ -111,7 +111,7 @@ public final class SubInteractionBox {
     @SideOnly(Side.CLIENT)
     public static <T extends TileEntity & ITileEntityWithSubInteractions> boolean renderPotentialInteractionBoxes(RayTraceResult cameraPointer, T te) {
         boolean status = false;
-        if (te.getPos().equals(cameraPointer.getBlockPos())) {
+        if (Objects.equals(te.getPos(), cameraPointer.getBlockPos())) {
             float hitX = (float) (cameraPointer.hitVec.x - cameraPointer.getBlockPos().getX());
             float hitY = (float) (cameraPointer.hitVec.y - cameraPointer.getBlockPos().getY());
             float hitZ = (float) (cameraPointer.hitVec.z - cameraPointer.getBlockPos().getZ());

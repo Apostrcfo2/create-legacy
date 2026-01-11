@@ -78,6 +78,8 @@ public class CreateLegacyEventHandler {
                 .tracker(256, 10, false).build());
         CreateLegacy.proxy.registerEntityRenderers();
     }
+
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void registerPonders(RegisterPondersEvent event) {
         PonderInit.register(event.getRegistrar());

@@ -1,10 +1,13 @@
 package nl.melonstudios.ponder.plan.action;
 
 import com.melonstudios.melonlib.misc.Localizer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.scene.PonderTooltip;
 import nl.melonstudios.ponder.world.WorldPonder;
 
+@SideOnly(Side.CLIENT)
 public class ActionAddTooltip implements IPonderAction {
     private final float x, y, z;
     private final String unlocalizedText;

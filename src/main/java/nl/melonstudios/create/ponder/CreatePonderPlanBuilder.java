@@ -1,6 +1,8 @@
 package nl.melonstudios.create.ponder;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
@@ -14,6 +16,7 @@ import nl.melonstudios.ponder.world.EnumEntityPonder;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+@SideOnly(Side.CLIENT)
 public class CreatePonderPlanBuilder extends PonderPlanBuilder {
     public CreatePonderPlanBuilder(String name) {
         super(name);

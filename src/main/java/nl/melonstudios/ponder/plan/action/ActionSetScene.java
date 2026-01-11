@@ -4,6 +4,8 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.IVirtualizable;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.scene.PonderScene;
@@ -11,6 +13,7 @@ import nl.melonstudios.ponder.world.WorldPonder;
 
 import java.util.Map;
 
+@SideOnly(Side.CLIENT)
 public class ActionSetScene implements IPonderAction {
     private final String key;
 

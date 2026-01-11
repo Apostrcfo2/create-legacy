@@ -4,10 +4,13 @@ import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 import nl.melonstudios.ponder.world.WorldPonder;
 
+@SideOnly(Side.CLIENT)
 public class PonderContraptionHolder implements IContraptionHolder {
     private final WorldPonder world;
 

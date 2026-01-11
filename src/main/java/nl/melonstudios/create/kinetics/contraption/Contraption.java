@@ -244,6 +244,5 @@ public class Contraption implements IBlockAccess {
         return contraption;
     }
 
-    @SideOnly(Side.CLIENT)
     public RenderContraption renderContraption = null;
 }

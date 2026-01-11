@@ -2,12 +2,15 @@ package nl.melonstudios.ponder.plan.action;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.IVirtualizable;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.world.WorldPonder;
 
 import java.util.function.Supplier;
 
+@SideOnly(Side.CLIENT)
 public class ActionSetTileEntity implements IPonderAction {
     private final BlockPos pos;
     private final Supplier<TileEntity> teSupplier;

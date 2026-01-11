@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-@SideOnly(Side.CLIENT)
 public class RenderContraption {
     public final BooleanSupplier preRenderPredicate;
     public final Runnable preRenderLogic;

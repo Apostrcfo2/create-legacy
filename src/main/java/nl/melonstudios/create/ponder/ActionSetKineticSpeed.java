@@ -1,12 +1,15 @@
 package nl.melonstudios.create.ponder;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.world.WorldPonder;
 
+@SideOnly(Side.CLIENT)
 public class ActionSetKineticSpeed implements IPonderAction {
     private final BlockPos pos;
     private final float speed;

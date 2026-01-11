@@ -1,6 +1,8 @@
 package nl.melonstudios.ponder.plan.action;
 
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.ponder.IVirtualizable;
 import nl.melonstudios.ponder.plan.IPonderAction;
 import nl.melonstudios.ponder.world.EnumEntityPonder;
@@ -8,6 +10,7 @@ import nl.melonstudios.ponder.world.WorldPonder;
 
 import java.util.function.Function;
 
+@SideOnly(Side.CLIENT)
 public class ActionAddEntity implements IPonderAction {
     private final Function<WorldPonder, Entity> sup;
     private final EnumEntityPonder type;
