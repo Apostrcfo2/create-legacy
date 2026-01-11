@@ -134,7 +134,7 @@ public class BlockRotationHelper {
             case Y:
                 x = vec.getX();
                 z = vec.getZ();
-                store.set(x*MathHelper.cos(angle)-z*MathHelper.sin(angle), vec.getY(), x*MathHelper.sin(angle)+z*MathHelper.cos(angle));
+                store.set(x*MathHelper.cos(-angle)-z*MathHelper.sin(-angle), vec.getY(), x*MathHelper.sin(-angle)+z*MathHelper.cos(-angle));
                 break;
             case Z:
                 x = vec.getX();
@@ -162,7 +162,7 @@ public class BlockRotationHelper {
             case Y:
                 x = vec.getX();
                 z = vec.getZ();
-                store.set(x*MathHelper.cos(angle)-z*MathHelper.sin(angle), vec.getY(), x*MathHelper.sin(angle)+z*MathHelper.cos(angle));
+                store.set(x*MathHelper.cos(-angle)-z*MathHelper.sin(-angle), vec.getY(), x*MathHelper.sin(-angle)+z*MathHelper.cos(-angle));
                 break;
             case Z:
                 x = vec.getX();

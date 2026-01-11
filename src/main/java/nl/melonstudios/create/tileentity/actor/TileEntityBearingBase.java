@@ -33,6 +33,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
     protected boolean mightAssemble = false;
     protected boolean mightDisassemble = false;
+    protected boolean pausedLastTick = false;
     protected boolean isPausedThisTick = false;
 
     @Nullable
@@ -141,6 +142,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
             }
             this.markDirty();
         }
+        if (this.pausedLastTick != this.isPausedThisTick) this.sync();
+        this.pausedLastTick = this.isPausedThisTick;
         this.isPausedThisTick = false;
     }
 
