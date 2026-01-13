@@ -44,12 +44,12 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
 
     @Override
     public boolean hasShaftTowards(World world, BlockPos pos, IBlockState state, EnumFacing side) {
-        return false;
+        return getRotationAxis(state) == side.getAxis();
     }
 
     @Override
     public EnumFacing.Axis getRotationAxis(IBlockState state) {
-        return state.getValue(FACING).getAxis();
+        return getShaftAxis(state.getValue(FACING), state.getValue(ROTATED));
     }
 
     @Override
@@ -95,5 +95,9 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
             }));
         }
         return false;
+    }
+
+    public static EnumFacing.Axis getShaftAxis(EnumFacing facing, boolean rotated) {
+        return EnumFacing.Axis.X;
     }
 }

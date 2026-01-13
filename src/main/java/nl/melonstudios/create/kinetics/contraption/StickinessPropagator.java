@@ -1,9 +1,9 @@
 package nl.melonstudios.create.kinetics.contraption;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.EnumPushReaction;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -36,6 +36,7 @@ public class StickinessPropagator {
             return;
         }
         if (state.getBlock().isAir(state, world, pos)) return;
+        if (state.getBlock() instanceof BlockBush && !positions.contains(pos.down())) return;
         positions.add(pos);
         List<BlockPos> list = new ArrayList<>();
         ((IExtensionBlock)state.getBlock()).create$addStickyLocations(world, pos, state, list);
