@@ -11,16 +11,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.entity.EntityGlue;
+import nl.melonstudios.create.event.RegisterContraptionInventoriesEvent;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
+import nl.melonstudios.create.tileentity.TileEntityDepot;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IAssemblyBehavior;
 import nl.melonstudios.create.util.Utils;
@@ -94,6 +98,7 @@ public class Contraption implements IBlockAccess {
         }
 
         this.setTileEntityBlockData();
+        this.inventory.reindex(this);
 
         this.compileLight();
     }
@@ -138,6 +143,7 @@ public class Contraption implements IBlockAccess {
     public final HashSet<TileEntity> blacklistedForRendering = new HashSet<>();
     public final Object2IntOpenHashMap<BlockPos> lightSources = new Object2IntOpenHashMap<>();
     public final HashSet<ActorContext> actors = new HashSet<>();
+    public final ContraptionInventory inventory = new ContraptionInventory();
 
     @Nullable
     @Override
@@ -240,9 +246,23 @@ public class Contraption implements IBlockAccess {
         }
         glues.forEach(world::removeEntity);
 
+        contraption.inventory.reindex(contraption);
         contraption.compileLight();
         return contraption;
     }
 
     public RenderContraption renderContraption = null;
+
+    private static final Set<Class<? extends IInventory>> VALID_INVENTORY_CLASSES = new HashSet<>();
+    public static void registerValidInventoryClasses() {
+        if (!VALID_INVENTORY_CLASSES.isEmpty()) throw new IllegalStateException("Already registered valid inventory classes");
+        VALID_INVENTORY_CLASSES.add(TileEntityChest.class);
+        VALID_INVENTORY_CLASSES.add(TileEntityDepot.class);
+        RegisterContraptionInventoriesEvent event = new RegisterContraptionInventoriesEvent();
+        MinecraftForge.EVENT_BUS.post(event);
+        event.load(VALID_INVENTORY_CLASSES);
+    }
+    public static boolean isValidInventory(IInventory inventory) {
+        return VALID_INVENTORY_CLASSES.contains(inventory.getClass());
+    }
 }

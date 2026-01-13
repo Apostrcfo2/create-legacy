@@ -8,7 +8,8 @@ public class ItemFilterExact implements IItemFilter {
     private final ItemStack example;
 
     public ItemFilterExact(ItemStack example) {
-        this.example = example;
+        this.example = example.copy();
+        this.example.setCount(1);
     }
 
     @Override

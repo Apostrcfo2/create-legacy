@@ -1,20 +1,25 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.actor.BlockDrill;
 import nl.melonstudios.create.block.actor.BlockSaw;
+import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityBreakBlockBase;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TileEntitySaw extends TileEntityBreakBlockBase implements IContraptionActor {
     @Override
@@ -55,6 +60,27 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
 
         for (BlockPos log : logs) {
             world.destroyBlock(log, true);
+        }
+    }
+    public static void cutDownTree(World world, BlockPos pos, NonNullList<ItemStack> drops) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+            mutable.setPos(pos).move(facing);
+            IBlockState state = world.getBlockState(mutable);
+            if (BlockDictionary.isBlockTagged(state, "logWood")) {
+                state.getBlock().getDrops(drops, world, mutable, state, 0);
+                world.destroyBlock(pos, false);
+                return;
+            }
+        }
+        ArrayList<BlockPos> logs = new ArrayList<>();
+        logs.add(pos);
+        spreadBranch(world, pos, logs, mutable);
+
+        for (BlockPos log : logs) {
+            IBlockState state = world.getBlockState(log);
+            state.getBlock().getDrops(drops, world, log, state, 0);
+            world.destroyBlock(log, false);
         }
     }
 
@@ -130,8 +156,22 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
 
         if (this.destroyProgress >= 10) {
             if (!world.isRemote) {
-                cutDownTree(world, this.breakingPos);
-                //world.destroyBlock(this.breakingPos, true);
+                ContraptionInventory inventory = contraption.getInventory();
+                if (inventory.hasNoInventories()) {
+                    cutDownTree(world, this.breakingPos);
+                } else {
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    cutDownTree(world, this.breakingPos, drops);
+                    List<ItemStack> leftovers = new ArrayList<>();
+                    ItemStack leftover;
+                    for (ItemStack stack : drops) {
+                        leftover = inventory.insertItem(stack);
+                        if (!leftover.isEmpty()) leftovers.add(leftover.copy());
+                    }
+                    if (!leftovers.isEmpty()) {
+                        StackUtil.dropItemsAt(world, this.breakingPos, leftovers.toArray(new ItemStack[0]));
+                    }
+                }
             }
             this.destroyProgress = 0;
             this.ticksUntilNextProgress = -1;

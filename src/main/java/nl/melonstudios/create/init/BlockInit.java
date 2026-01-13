@@ -102,6 +102,9 @@ public final class BlockInit {
     public static final BlockSaw SAW = (BlockSaw)
             registerBlockWithItem(new BlockSaw(MapColor.IRON, SoundType.METAL)
             .setRegistryName("saw").setUnlocalizedName("create.saw"));
+    public static final BlockDeployer DEPLOYER = (BlockDeployer)
+            registerBlockWithItem(new BlockDeployer(MapColor.STONE, SoundType.WOOD)
+            .setRegistryName("deployer").setUnlocalizedName("create.deployer"));
 
     public static final BlockMillstone MILLSTONE = (BlockMillstone)
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)

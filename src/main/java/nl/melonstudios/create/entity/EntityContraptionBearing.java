@@ -175,6 +175,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                     if (te instanceof IContraptionActor) {
                         ((IContraptionActor)te).setOnContraption(false);
                     }
+                    te.markDirty();
                 }
             }
             for (GluedSurface surface : this.contraption.gluedSurfaces) {

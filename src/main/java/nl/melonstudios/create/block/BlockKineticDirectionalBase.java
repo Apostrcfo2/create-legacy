@@ -1,6 +1,7 @@
 package nl.melonstudios.create.block;
 
 import com.melonstudios.melonlib.misc.BlockStateProperties;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -15,6 +16,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
     public static final PropertyDirection FACING = BlockStateProperties.FACING;
 
@@ -27,6 +33,7 @@ public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
         return new BlockStateContainer(this, FACING);
     }
 
+    @Nullable
     public EnumFacing getPreferredFacing(World world, BlockPos pos) {
         EnumFacing preferredSide = null;
         for (EnumFacing side : EnumFacing.VALUES) {
@@ -73,7 +80,7 @@ public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.VALUES[meta % 6]);
+        return this.getDefaultState().withProperty(FACING, EnumFacing.VALUES[(meta & 7) % 6]);
     }
 
     protected boolean disabledWrenchRotation = false;

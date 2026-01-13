@@ -13,6 +13,7 @@ import nl.melonstudios.create.init.OreDictInit;
 import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.BlockStressValues;
+import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.proxy.CommonProxy;
 import nl.melonstudios.create.recipe.*;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
@@ -83,6 +84,7 @@ public class CreateLegacy {
         OreDictInit.scanMetalTypes();
         RecipeInit.init();
         BlockStressValues.initialize();
+        Contraption.registerValidInventoryClasses();
     }
 
     @EventHandler

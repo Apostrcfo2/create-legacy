@@ -86,6 +86,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.PRESS);
         CreateLegacy.proxy.setItemModel(BlockInit.DRILL);
         CreateLegacy.proxy.setItemModel(BlockInit.SAW);
+        CreateLegacy.proxy.setItemModel(BlockInit.DEPLOYER);
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
         CreateLegacy.proxy.setItemModel(BlockInit.DEPOT);
         CreateLegacy.proxy.setItemModel(BlockInit.CHUTE);

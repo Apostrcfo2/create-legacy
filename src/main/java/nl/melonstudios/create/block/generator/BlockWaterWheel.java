@@ -1,5 +1,6 @@
 package nl.melonstudios.create.block.generator;
 
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -16,8 +17,11 @@ import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class BlockWaterWheel extends BlockKineticDirectionalBase implements ITileEntityProvider {
     public BlockWaterWheel(MapColor color, SoundType soundType) {
         super(Material.ROCK, color);

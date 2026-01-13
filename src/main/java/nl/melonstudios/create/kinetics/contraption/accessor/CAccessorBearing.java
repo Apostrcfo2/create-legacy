@@ -3,6 +3,7 @@ package nl.melonstudios.create.kinetics.contraption.accessor;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
+import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.util.BlockRotationHelper;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -45,5 +46,10 @@ public class CAccessorBearing implements IContraptionAccessor {
     @Override
     public void pauseContraption() {
         this.entity.pauseContraption();
+    }
+
+    @Override
+    public ContraptionInventory getInventory() {
+        return this.entity.contraption != null ? this.entity.contraption.inventory : ContraptionInventory.empty();
     }
 }

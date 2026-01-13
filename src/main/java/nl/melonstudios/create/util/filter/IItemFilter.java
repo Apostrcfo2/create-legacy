@@ -9,6 +9,7 @@ public interface IItemFilter {
     ItemStack getRenderItem();
 
     static IItemFilter deserialize(NBTTagCompound nbt) {
+        if (!nbt.hasKey("type")) return null;
         byte type = nbt.getByte("type");
         if (type == 0) {
             return new ItemFilterExact(new ItemStack(nbt.getCompoundTag("ExampleItem")));

@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
+import nl.melonstudios.ponder.IVirtualizable;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -110,6 +111,7 @@ public final class SubInteractionBox {
 
     @SideOnly(Side.CLIENT)
     public static <T extends TileEntity & ITileEntityWithSubInteractions> boolean renderPotentialInteractionBoxes(RayTraceResult cameraPointer, T te) {
+        if (te instanceof IVirtualizable && ((IVirtualizable)te).isVirtual()) return false;
         boolean status = false;
         if (Objects.equals(te.getPos(), cameraPointer.getBlockPos())) {
             float hitX = (float) (cameraPointer.hitVec.x - cameraPointer.getBlockPos().getX());

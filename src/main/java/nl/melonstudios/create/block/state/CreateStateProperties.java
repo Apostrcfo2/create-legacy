@@ -10,4 +10,5 @@ public class CreateStateProperties {
     public static final PropertyEnum<EnumSawRotation> SAW_ROTATION = PropertyEnum.create("facing", EnumSawRotation.class);
 
     public static final PropertyBool ASSEMBLED = PropertyBool.create("assembled");
+    public static final PropertyBool ROTATED = PropertyBool.create("rotated");
 }
