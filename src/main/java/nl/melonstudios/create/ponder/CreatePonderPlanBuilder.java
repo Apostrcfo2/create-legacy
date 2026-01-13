@@ -6,7 +6,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.GluedSurface;
-import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.ponder.plan.PonderPlan;
 import nl.melonstudios.ponder.plan.PonderPlanBuilder;

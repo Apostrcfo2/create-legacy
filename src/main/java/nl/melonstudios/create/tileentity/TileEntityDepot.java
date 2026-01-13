@@ -2,7 +2,6 @@ package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

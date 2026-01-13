@@ -10,7 +10,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import nl.melonstudios.create.block.actor.BlockDrill;
 import nl.melonstudios.create.block.actor.BlockSaw;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;

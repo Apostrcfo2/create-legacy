@@ -1,6 +1,5 @@
 package nl.melonstudios.create.mixins;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.BlockRenderLayer;
 import nl.melonstudios.create.extensions.IExtensionPonderScene;

@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderList;
 import net.minecraft.util.BlockRenderLayer;
-import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.extensions.IExtensionChunkRenderContainer;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.RenderContraption;

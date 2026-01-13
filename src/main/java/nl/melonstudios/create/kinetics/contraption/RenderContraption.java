@@ -1,10 +1,6 @@
 package nl.melonstudios.create.kinetics.contraption;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class RenderContraption {
     public final BooleanSupplier preRenderPredicate;

@@ -1,10 +1,7 @@
 package nl.melonstudios.create.init;
 
-import com.melonstudios.melonlib.misc.MetaItem;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
