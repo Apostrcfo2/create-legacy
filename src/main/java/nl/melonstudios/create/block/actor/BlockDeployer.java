@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -59,6 +60,15 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return super.getStateFromMeta(meta).withProperty(ROTATED, (meta & 0b1000) != 0);
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        if (placer.isSneaking()) {
+            return this.getDefaultState().withProperty(FACING, facing.getOpposite());
+        }
+        EnumFacing side = EnumFacing.getDirectionFromEntityLiving(pos, placer);
+        return this.getDefaultState().withProperty(FACING, side);
     }
 
     @Nullable

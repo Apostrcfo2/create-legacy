@@ -1,5 +1,6 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.misc.StackUtil;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.SoundType;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -56,7 +58,8 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     @Override
     public void setPos(BlockPos posIn) {
         super.setPos(posIn);
-        this.player.setPosition(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5);
+        if (this.player != null)
+            this.player.setPosition(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5);
     }
 
     private final Vector3f itemUsePosOld = new Vector3f();
@@ -86,6 +89,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                             this.pos.getZ() + 0.5F + facing.getFrontOffsetZ() * 2
                     );
                     BlockPos use = pos(this.itemUsePos);
+                    this.player.setPosition(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5);
                     if (!this.heldItem.isEmpty()) {
                         if (this.heldItem.getItem() instanceof ItemBlock) {
                             IBlockState pre = world.getBlockState(use);
@@ -372,6 +376,11 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     public void destroy() {
         super.destroy();
         StackUtil.dropItemsAt(this.world, this.pos, this.heldItem, this.cloggedItem);
+    }
+
+    @Override
+    protected AxisAlignedBB createRenderBoundingBox() {
+        return AABB.wrap(this.pos, 1);
     }
 
     private final List<SubInteractionBox> interactionsX = new ArrayList<>();

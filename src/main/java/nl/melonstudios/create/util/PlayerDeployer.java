@@ -4,9 +4,11 @@ import com.mojang.authlib.GameProfile;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import nl.melonstudios.create.block.actor.BlockDeployer;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -52,5 +54,11 @@ public class PlayerDeployer extends EntityPlayer {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public EnumFacing getHorizontalFacing() {
+        EnumFacing facing = this.deployer.getState().getValue(BlockDeployer.FACING);
+        return facing.getAxis() == EnumFacing.Axis.Y ? EnumFacing.NORTH : facing;
     }
 }
