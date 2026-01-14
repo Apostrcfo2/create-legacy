@@ -144,6 +144,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         this.progressOld = this.progress;
         this.progress += (int) Math.abs(this.speed);
         if (this.progress > 2000) this.progress = 0;
+        if (world.isRemote) return;
 
         this.player.setPosition(position.x, position.y, position.z);
         ContraptionInventory inventory = contraption.getInventory();

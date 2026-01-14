@@ -67,7 +67,8 @@ public class TileEntityKinetic extends TileEntityOptimizedBase implements IAssem
 
         if (this.validationCountdown-- <= 0) {
             this.validationCountdown = 60;
-            this.validateKinetics();
+            if (!this.world.isRemote)
+                this.validateKinetics();
         }
 
         if (this.flickerTally > 0) this.flickerTally--;
