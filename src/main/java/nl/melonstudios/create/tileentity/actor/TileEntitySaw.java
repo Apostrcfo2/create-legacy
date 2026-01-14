@@ -56,6 +56,13 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
         ArrayList<BlockPos> logs = new ArrayList<>();
         logs.add(pos);
         spreadBranch(world, pos, logs, mutable);
+        if (!logs.isEmpty()) {
+            ArrayList<BlockPos> logsCopy = new ArrayList<>(logs);
+            BlockPos.MutableBlockPos m2 = new BlockPos.MutableBlockPos();
+            for (BlockPos log : logsCopy) {
+                spreadLeaves(world, log, logs, mutable, m2);
+            }
+        }
 
         for (BlockPos log : logs) {
             world.destroyBlock(log, true);
@@ -75,6 +82,13 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
         ArrayList<BlockPos> logs = new ArrayList<>();
         logs.add(pos);
         spreadBranch(world, pos, logs, mutable);
+        if (!logs.isEmpty()) {
+            ArrayList<BlockPos> logsCopy = new ArrayList<>(logs);
+            BlockPos.MutableBlockPos m2 = new BlockPos.MutableBlockPos();
+            for (BlockPos log : logsCopy) {
+                spreadLeaves(world, log, logs, mutable, m2);
+            }
+        }
 
         for (BlockPos log : logs) {
             IBlockState state = world.getBlockState(log);
@@ -95,6 +109,28 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
                             list.add(to);
                             spreadBranch(world, to, list, mutable);
                         }
+                    }
+                }
+            }
+        }
+    }
+    private static void spreadLeaves(World world, BlockPos pos, ArrayList<BlockPos> list,
+                                     BlockPos.MutableBlockPos mutable, BlockPos.MutableBlockPos m2) {
+        for (int x = -3; x <= 3; x++) {
+            for (int y = -3; y <= 3; y++) {
+                zLoop:
+                for (int z = -3; z <= 3; z++) {
+                    mutable.setPos(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
+                    IBlockState state = world.getBlockState(mutable);
+                    if (BlockDictionary.isBlockTagged(state, "treeLeaves")) {
+                        for (EnumFacing side : EnumFacing.VALUES) {
+                            m2.setPos(mutable);
+                            m2.move(side);
+                            if (BlockDictionary.isBlockTagged(world.getBlockState(m2), "logWood") && !list.contains(m2)) {
+                                continue zLoop;
+                            }
+                        }
+                        list.add(mutable.toImmutable());
                     }
                 }
             }

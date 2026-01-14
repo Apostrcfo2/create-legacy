@@ -104,6 +104,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                                     SoundType st = placed.getBlock().getSoundType(placed, world, use, null);
                                     world.playSound(null, use, st.getPlaceSound(), SoundCategory.BLOCKS,
                                             (1.0F + st.getVolume()) * 0.5F, 0.9F + world.rand.nextFloat() * 0.2F);
+                                    this.heldItem.shrink(1);
                                 }
                             }
                         } else {

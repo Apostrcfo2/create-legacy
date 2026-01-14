@@ -1,9 +1,7 @@
 {
-	"format_version": "1.9.0",
-	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "create:block/andesite_casing_short",
-		"side": "create:block/andesite_casing_short",
+		"particle": "create:block/casing/casing_andesite",
+		"side": "create:block/andesite_casing_short_menu",
 		"gearbox": "create:block/gearbox",
 		"casing": "create:block/square_hole"
 	},

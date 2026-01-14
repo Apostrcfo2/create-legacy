@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A",
+    "#",
+    "H"
+  ],
+  "key": {
+    "#": {
+      "item": "create:casing",
+      "data": 0
+    },
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "electronTube"
+    },
+    "H": {
+      "item": "create:ingredient",
+      "data": 9
+    }
+  },
+  "result": {
+    "item": "create:deployer"
+  }
+}

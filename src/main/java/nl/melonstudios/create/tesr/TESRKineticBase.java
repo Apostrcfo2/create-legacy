@@ -64,6 +64,10 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         PerFrameDebugInfo.kineticTileEntitiesRendered++;
     }
 
+    protected void rebindTex() {
+        this.bindTexture(porkchop ? PORK : TextureMap.LOCATION_BLOCKS_TEXTURE);
+    }
+
     protected abstract void render(T te, float pt, float alpha);
 
     protected final void spinShaft(TileEntityKinetic te, float pt, EnumFacing.Axis axis) {

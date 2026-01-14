@@ -19,6 +19,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
+import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.SubInteractionBox;
@@ -80,7 +81,14 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
     @Override
     public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!super.onWrenched(world, pos, state, side, hitX, hitY, hitZ)) {
+            TileEntity te = world.getTileEntity(pos);
+            if (te instanceof TileEntityOptimizedBase) ((TileEntityOptimizedBase)te).preventNextRemoval();
             world.setBlockState(pos, state.cycleProperty(ROTATED));
+            if (te != null) {
+                te.validate();
+                te.updateContainingBlockInfo();
+                world.setTileEntity(pos, te);
+            }
         }
         return true;
     }
@@ -131,6 +139,9 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
     public static EnumFacing.Axis getShaftAxis(EnumFacing facing, boolean rotated) {
         return STATE_TO_AXIS_LOOKUP[facing.getIndex()*2 + (rotated ? 1 : 0)];
     }
+    public static EnumFacing.Axis getFilterAxis(EnumFacing facing, boolean rotated) {
+        return STATE_TO_AXIS_LOOKUP[facing.getIndex()*2 + (rotated ? 0 : 1)];
+    }
 
     private static final EnumFacing.Axis[] STATE_TO_AXIS_LOOKUP = new EnumFacing.Axis[12];
     static {
@@ -146,8 +157,5 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
         STATE_TO_AXIS_LOOKUP[9] = EnumFacing.Axis.Y;
         STATE_TO_AXIS_LOOKUP[10] = EnumFacing.Axis.Z;
         STATE_TO_AXIS_LOOKUP[11] = EnumFacing.Axis.Y;
-        for (int i = 0; i < 12; i++) {
-            if (STATE_TO_AXIS_LOOKUP[i] == null) STATE_TO_AXIS_LOOKUP[i] = EnumFacing.Axis.X;
-        }
     }
 }

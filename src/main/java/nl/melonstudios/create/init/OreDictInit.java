@@ -40,6 +40,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.PRESS, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAW, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPLOYER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPOT, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CHUTE, 3);
@@ -152,6 +153,14 @@ public final class OreDictInit {
         registerOre("crushedGold", ItemInit.INGREDIENT, 27);
         registerOre("crushedCopper", ItemInit.INGREDIENT, 28);
         registerOre("crushedZinc", ItemInit.INGREDIENT, 29);
+
+        //QUICK MELONLIB FIX (REMOVE LATER)
+        BlockDictionary.registerOre("treeLeaves", Blocks.LEAVES, true);
+        for (int i = 0; i < 2; i++) {
+            BlockDictionary.registerOre("treeLeaves", MetaBlock.of(Blocks.LEAVES2, i));
+            BlockDictionary.registerOre("treeLeaves", MetaBlock.of(Blocks.LEAVES2, i | 4));
+            BlockDictionary.registerOre("treeLeaves", MetaBlock.of(Blocks.LEAVES2, i | 8));
+        }
     }
 
     private static void registerOre(String ore, Item item, int meta) {

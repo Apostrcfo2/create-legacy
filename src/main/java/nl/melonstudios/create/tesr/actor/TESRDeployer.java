@@ -26,6 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
     @Override
     protected void render(TileEntityDeployer te, float pt, float alpha) {
+        boolean shouldRebind = false;
         GlStateManager.pushMatrix();
         SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);
         GlStateManager.popMatrix();
@@ -40,6 +41,7 @@ public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
         this.spinShaft(te, pt, BlockDeployer.getShaftAxis(facing, rotated));
 
         if (!te.heldItem.isEmpty()) {
+            shouldRebind = true;
             ItemStack stack = te.heldItem;
             GlStateManager.pushMatrix();
             GlStateManager.enableRescaleNormal();
@@ -55,7 +57,7 @@ public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
             } else if (facing == EnumFacing.DOWN) {
                 GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
             } else {
-                GlStateManager.rotate(facing.getHorizontalAngle(), 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(-facing.getHorizontalAngle(), 0.0F, 1.0F, 0.0F);
             }
 
 
@@ -70,6 +72,45 @@ public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
         }
+        if (te.filter != null) {
+            ItemStack filter = te.filter.getRenderItem();
+            if (!filter.isEmpty()) {
+                if (shouldRebind) this.rebindTex();
+                shouldRebind = true;
+                EnumFacing.Axis axis = BlockDeployer.getFilterAxis(facing, rotated);
+                GlStateManager.enableRescaleNormal();
+                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
+                GlStateManager.enableBlend();
+
+                IBakedModel itemModel = this.mc.getRenderItem()
+                        .getItemModelWithOverrides(filter, te.getWorld(), null);
+
+                for (EnumFacing side : EnumFacing.VALUES) {
+                    if (axis.apply(side)) {
+                        GlStateManager.pushMatrix();
+
+                        GlStateManager.translate(0.5F, 0.5F, 0.5F);
+                        if (side == EnumFacing.UP) {
+                            GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+                        } else if (side == EnumFacing.DOWN) {
+                            GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+                        } else {
+                            GlStateManager.rotate(-side.getHorizontalAngle(), 0.0F, 1.0F, 0.0F);
+                        }
+
+                        GlStateManager.translate(0.0F, 0.0F, 0.5F);
+                        if (!(itemModel instanceof BakedItemModel)) GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                        GlStateManager.scale(0.25F, 0.25F, 0.25F);
+                        this.mc.getRenderItem().renderItem(filter, itemModel);
+
+                        GlStateManager.popMatrix();
+                    }
+                }
+
+                GlStateManager.disableRescaleNormal();
+                GlStateManager.disableBlend();
+            }
+        }
 
         GlStateManager.translate(
                 adjustedProgress*facing.getFrontOffsetX(),
@@ -78,6 +119,7 @@ public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
         );
         IBlockState hand = BlockRender.byEnum(EnumRenderPart.getDeployer(facing, te.skipRenderItem || te.heldItem.isEmpty()));
         IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(hand);
+        if (shouldRebind) this.rebindTex();
         this.renderBakedModel(1.0F, model, hand);
     }
 }
