@@ -1,6 +1,5 @@
 package nl.melonstudios.create.block;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -26,14 +25,12 @@ import nl.melonstudios.create.util.interfaces.IGoggleInfo;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@SuppressWarnings("deprecation")
 public abstract class BlockKineticBase extends Block implements IRotate, IGoggleInfo, IWrenchable {
     public BlockKineticBase(Material blockMaterialIn, MapColor blockMapColorIn) {
         super(blockMaterialIn, blockMapColorIn);

@@ -1,6 +1,5 @@
 package nl.melonstudios.create.block.actor;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -13,18 +12,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
+import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.SubInteractionBox;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@SuppressWarnings("deprecation")
 public class BlockDeployer extends BlockKineticDirectionalBase implements ITileEntityProvider {
     public static final PropertyBool ROTATED = CreateStateProperties.ROTATED;
     public BlockDeployer(MapColor color, SoundType sound) {
@@ -80,10 +80,26 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
         if (hand != EnumHand.MAIN_HAND) return false;
         if (SubInteractionBox.handleInteraction(worldIn, pos, playerIn, false,
                 playerIn.isSneaking(), playerIn.getHeldItem(hand), hitX, hitY, hitZ)) return true;
+        if (playerIn.isSneaking()) return false;
         EnumFacing blockFacing = state.getValue(FACING);
         if (facing == blockFacing) {
             return Boolean.TRUE.equals(withTEDo(worldIn, pos, TileEntityDeployer.class, (te) -> {
-                return true;
+                ItemStack inHand = playerIn.getHeldItemMainhand();
+                if (!te.heldItem.isEmpty()) {
+                    ItemStack transfer = te.removeStackFromSlot(0);
+                    playerIn.addItemStackToInventory(transfer);
+                    if (!inHand.isEmpty()) {
+                        te.setInventorySlotContents(0, inHand.copy());
+                        playerIn.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+                    }
+                    return true;
+                }
+                if (!inHand.isEmpty()) {
+                    playerIn.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+                    te.setInventorySlotContents(0, inHand.copy());
+                    return true;
+                }
+                return false;
             }));
         } else if (playerIn.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
             return Boolean.TRUE.equals(withTEDo(worldIn, pos, TileEntityDeployer.class, (te) -> {
@@ -97,7 +113,31 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
         return false;
     }
 
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return BlockProperties.CASING_12PX_MAPPED[state.getValue(FACING).getIndex()];
+    }
+
     public static EnumFacing.Axis getShaftAxis(EnumFacing facing, boolean rotated) {
-        return EnumFacing.Axis.X;
+        return STATE_TO_AXIS_LOOKUP[facing.getIndex()*2 + (rotated ? 1 : 0)];
+    }
+
+    private static final EnumFacing.Axis[] STATE_TO_AXIS_LOOKUP = new EnumFacing.Axis[12];
+    static {
+        STATE_TO_AXIS_LOOKUP[0] = EnumFacing.Axis.X;
+        STATE_TO_AXIS_LOOKUP[1] = EnumFacing.Axis.Z;
+        STATE_TO_AXIS_LOOKUP[2] = EnumFacing.Axis.X;
+        STATE_TO_AXIS_LOOKUP[3] = EnumFacing.Axis.Z;
+        STATE_TO_AXIS_LOOKUP[4] = EnumFacing.Axis.X;
+        STATE_TO_AXIS_LOOKUP[5] = EnumFacing.Axis.Y;
+        STATE_TO_AXIS_LOOKUP[6] = EnumFacing.Axis.X;
+        STATE_TO_AXIS_LOOKUP[7] = EnumFacing.Axis.Y;
+        STATE_TO_AXIS_LOOKUP[8] = EnumFacing.Axis.Z;
+        STATE_TO_AXIS_LOOKUP[9] = EnumFacing.Axis.Y;
+        STATE_TO_AXIS_LOOKUP[10] = EnumFacing.Axis.Z;
+        STATE_TO_AXIS_LOOKUP[11] = EnumFacing.Axis.Y;
+        for (int i = 0; i < 12; i++) {
+            if (STATE_TO_AXIS_LOOKUP[i] == null) STATE_TO_AXIS_LOOKUP[i] = EnumFacing.Axis.X;
+        }
     }
 }

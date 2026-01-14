@@ -127,6 +127,58 @@
     },
     "render_part=press_z": {
       "model": "create:render/press_head"
+    },
+    "render_part=deployer_down": {
+      "model": "create:render/deployer",
+      "x": 180
+    },
+    "render_part=deployer_up": {
+      "model": "create:render/deployer"
+    },
+    "render_part=deployer_north": {
+      "model": "create:render/deployer",
+      "x": 90
+    },
+    "render_part=deployer_south": {
+      "model": "create:render/deployer",
+      "x": 90,
+      "y": 180
+    },
+    "render_part=deployer_west": {
+      "model": "create:render/deployer",
+      "x": 90,
+      "y": 270
+    },
+    "render_part=deployer_east": {
+      "model": "create:render/deployer",
+      "x": 90,
+      "y": 90
+    },
+    "render_part=deployer_holding_down": {
+      "model": "create:render/deployer_holding",
+      "x": 180
+    },
+    "render_part=deployer_holding_up": {
+      "model": "create:render/deployer_holding"
+    },
+    "render_part=deployer_holding_north": {
+      "model": "create:render/deployer_holding",
+      "x": 90
+    },
+    "render_part=deployer_holding_south": {
+      "model": "create:render/deployer_holding",
+      "x": 90,
+      "y": 180
+    },
+    "render_part=deployer_holding_west": {
+      "model": "create:render/deployer_holding",
+      "x": 90,
+      "y": 270
+    },
+    "render_part=deployer_holding_east": {
+      "model": "create:render/deployer_holding",
+      "x": 90,
+      "y": 90
     }
   }
 }

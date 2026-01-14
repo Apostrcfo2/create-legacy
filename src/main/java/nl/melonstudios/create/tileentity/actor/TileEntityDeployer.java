@@ -2,15 +2,21 @@ package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import nl.melonstudios.create.block.BlockClutch;
+import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.block.actor.BlockDeployer;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
@@ -18,6 +24,7 @@ import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
+import nl.melonstudios.create.util.BlockRotationHelper;
 import nl.melonstudios.create.util.PlayerDeployer;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.Utils;
@@ -57,6 +64,9 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     private static BlockPos pos(Vector3f vec) {
         return new BlockPos(vec.x, vec.y, vec.z);
     }
+    private boolean checkForRedstone() {
+        return !this.world.isBlockPowered(this.pos) && this.world.isBlockIndirectlyGettingPowered(this.pos) == 0;
+    }
 
     public int progressOld = 0;
     public int progress = 0;
@@ -66,19 +76,38 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
 
         this.progressOld = this.progress;
         if (this.speed != 0.0F) {
-            if (this.progress != 0 || this.cloggedItem.isEmpty()) {
+            if (this.progress != 0 || (this.cloggedItem.isEmpty() && this.checkForRedstone())) {
                 this.progress += (int) Math.abs(this.speed);
                 if (this.progressOld < 1000 && this.progress >= 1000) {
                     EnumFacing facing = this.getState().getValue(BlockDeployer.FACING);
                     this.itemUsePos.set(
                             this.pos.getX() + 0.5F + facing.getFrontOffsetX() * 2,
-                            this.pos.getY() + 0.5F + facing.getFrontOffsetX() * 2,
-                            this.pos.getZ() + 0.5F + facing.getFrontOffsetX() * 2
+                            this.pos.getY() + 0.5F + facing.getFrontOffsetY() * 2,
+                            this.pos.getZ() + 0.5F + facing.getFrontOffsetZ() * 2
                     );
                     BlockPos use = pos(this.itemUsePos);
                     if (!this.heldItem.isEmpty()) {
-                        this.heldItem.onItemUse(this.player, world, use, EnumHand.MAIN_HAND, facing.getOpposite(),
-                                this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z);
+                        if (this.heldItem.getItem() instanceof ItemBlock) {
+                            IBlockState pre = world.getBlockState(use);
+                            if (pre.getBlock().isReplaceable(world, use)) {
+                                ItemBlock ib = (ItemBlock) this.heldItem.getItem();
+                                IBlockState placed = ib.getBlock().getStateForPlacement(world, use, facing.getOpposite(),
+                                        this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, this.heldItem.getMetadata(),
+                                        this.player, EnumHand.MAIN_HAND);
+                                if (placed.getBlock().canPlaceBlockAt(world, use)) {
+                                    ib.placeBlockAt(this.heldItem, this.player, world, use, facing.getOpposite(),
+                                            this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, placed);
+                                    SoundType st = placed.getBlock().getSoundType(placed, world, use, null);
+                                    world.playSound(null, use, st.getPlaceSound(), SoundCategory.BLOCKS,
+                                            (1.0F + st.getVolume()) * 0.5F, 0.9F + world.rand.nextFloat() * 0.2F);
+                                }
+                            }
+                        } else {
+                            this.heldItem.onItemUse(this.player, world, use,
+                                    EnumHand.MAIN_HAND, facing.getOpposite(),
+                                    this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z
+                            );
+                        }
                     } else {
                         IBlockState state = this.world.getBlockState(use);
                         state.getBlock().onBlockActivated(
@@ -96,15 +125,21 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         }
     }
 
+    public boolean skipRenderItem = false;
     @Override
     public void setOnContraption(boolean onContraption) {
         this.speed = onContraption ? 64.0F : 0.0F;
         this.progress = 0;
+        this.skipRenderItem = onContraption;
     }
 
     @Override
     public void contraptionTick(IContraptionAccessor contraption, World world,
                                 Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+        this.progressOld = this.progress;
+        this.progress += (int) Math.abs(this.speed);
+        if (this.progress > 2000) this.progress = 0;
+
         this.player.setPosition(position.x, position.y, position.z);
         ContraptionInventory inventory = contraption.getInventory();
 
@@ -116,31 +151,64 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
             if (this.heldItem.isEmpty()) {
                 this.heldItem = inventory.retrieveItem(this.filter);
             }
+            Vector3f facingVec = new Vector3f();
+            contraption.getNormal(facing, facingVec);
+            facingVec.normalise();
+            final EnumFacing vecFacing = getFacingFromVector3f(facingVec);
             if (!this.heldItem.isEmpty()) {
                 if (this.heldItem.getItem() instanceof ItemBlock) {
                     IBlockState pre = world.getBlockState(use);
                     if (pre.getBlock().isReplaceable(world, use)) {
                         ItemBlock ib = (ItemBlock) this.heldItem.getItem();
-                        IBlockState placed = ib.getBlock().getStateForPlacement(world, use, facing.getOpposite(),
+                        IBlockState placed = ib.getBlock().getStateForPlacement(world, use, vecFacing.getOpposite(),
                                 this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, this.heldItem.getMetadata(),
                                 this.player, EnumHand.MAIN_HAND);
                         if (placed.getBlock().canPlaceBlockAt(world, use)) {
-                            ib.placeBlockAt(this.heldItem, this.player, world, use, facing.getOpposite(),
-                                    this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, placed);
+                            if (ib.placeBlockAt(this.heldItem, this.player, world, use, vecFacing.getOpposite(),
+                                    this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, placed)) {
+                                SoundType st = placed.getBlock().getSoundType(placed, world, use, null);
+                                world.playSound(null, use, st.getPlaceSound(), SoundCategory.BLOCKS,
+                                        (1.0F + st.getVolume()) * 0.5F, 0.9F + world.rand.nextFloat() * 0.2F);
+                                this.heldItem.shrink(1);
+                            }
                         }
                     }
                 } else {
                     this.heldItem.onItemUse(this.player, world, use,
-                            EnumHand.MAIN_HAND, EnumFacing.DOWN,
+                            EnumHand.MAIN_HAND, vecFacing.getOpposite(),
                             this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z
                     );
                 }
+            } else {
+                IBlockState state = world.getBlockState(use);
+                state.getBlock().onBlockActivated(world, use, state, this.player, EnumHand.MAIN_HAND, vecFacing.getOpposite(),
+                        this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z);
             }
         }
 
         if (!this.cloggedItem.isEmpty()) {
             this.cloggedItem = inventory.insertItem(this.cloggedItem);
         }
+    }
+
+    private static EnumFacing getFacingFromVector3f(Vector3f facingVec) {
+        EnumFacing vecFacing;
+        if (facingVec.x == 1.0F) {
+            vecFacing = EnumFacing.EAST;
+        } else if (facingVec.x == -1.0F) {
+            vecFacing = EnumFacing.WEST;
+        } else if (facingVec.z == 1.0F) {
+            vecFacing = EnumFacing.SOUTH;
+        } else if (facingVec.z == -1.0F) {
+            vecFacing = EnumFacing.NORTH;
+        } else if (facingVec.y == 1.0F) {
+            vecFacing = EnumFacing.UP;
+        } else if (facingVec.y == -1.0F) {
+            vecFacing = EnumFacing.DOWN;
+        } else {
+            throw new IllegalStateException("Fix it pls " + facingVec);
+        }
+        return vecFacing;
     }
 
     @Override
@@ -188,7 +256,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         if (!this.cloggedItem.isEmpty()) {
             nbt.setTag("Clogged", this.cloggedItem.writeToNBT(new NBTTagCompound()));
         }
-        nbt.setInteger("progress", this.progress);
+        if (this.progress != 0) nbt.setInteger("progress", this.progress);
 
         return nbt;
     }
@@ -201,10 +269,10 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
             this.filter = IItemFilter.deserialize(nbt.getCompoundTag("Filter"));
         } else this.filter = null;
         if (nbt.hasKey("Held", 10)) {
-            this.heldItem = new ItemStack(nbt.getCompoundTag("HeldItem"));
+            this.heldItem = new ItemStack(nbt.getCompoundTag("Held"));
         } else this.heldItem = ItemStack.EMPTY;
         if (nbt.hasKey("Clogged", 10)) {
-            this.cloggedItem = new ItemStack(nbt.getCompoundTag("CloggedItem"));
+            this.cloggedItem = new ItemStack(nbt.getCompoundTag("Clogged"));
         } else this.cloggedItem = ItemStack.EMPTY;
         this.progress = nbt.getInteger("progress");
     }
@@ -311,7 +379,10 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     private final List<SubInteractionBox> interactionsZ = new ArrayList<>();
     @Override
     public Collection<SubInteractionBox> getSubInteractionBoxes() {
-        return Utils.axis_choose(EnumFacing.Axis.X, this.interactionsX, this.interactionsY, this.interactionsZ);
+        IBlockState state = this.getState();
+        EnumFacing facing = state.getValue(BlockDeployer.FACING);
+        boolean rotated = state.getValue(BlockDeployer.ROTATED);
+        return Utils.axis_choose(facing.rotateAround(BlockDeployer.getShaftAxis(facing, rotated)).getAxis(), this.interactionsX, this.interactionsY, this.interactionsZ);
     }
 
     private void createInteractions() {
@@ -333,6 +404,15 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         @Override
         public boolean interact(@Nullable EntityPlayer player, boolean sneaking, ItemStack held) {
             this.te.setFilter(held);
+            if (player != null) {
+                if (held.isEmpty()) {
+                    player.playSound(SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, 1.0F, 1.0F);
+                    player.sendStatusMessage(new TextComponentString("Cleared item filter"), true);
+                } else {
+                    player.playSound(SoundEvents.ENTITY_ITEMFRAME_ADD_ITEM, 1.0F, 1.0F);
+                    player.sendStatusMessage(new TextComponentString("Set item filter to " + held.getDisplayName()), true);
+                }
+            }
             return true;
         }
     }

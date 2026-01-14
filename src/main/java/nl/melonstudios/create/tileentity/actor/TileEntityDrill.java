@@ -1,12 +1,15 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.actor.BlockDrill;
+import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityBreakBlockBase;
@@ -76,7 +79,14 @@ public class TileEntityDrill extends TileEntityBreakBlockBase implements IContra
 
         if (this.destroyProgress >= 10) {
             if (!world.isRemote) {
-                world.destroyBlock(this.breakingPos, true);
+                ContraptionInventory inventory = contraption.getInventory();
+                if (inventory.hasNoInventories()) {
+                    world.destroyBlock(this.breakingPos, true);
+                } else {
+                    IBlockState state = world.getBlockState(this.breakingPos);
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    state.getBlock().getDrops(drops, world, this.breakingPos, state, 0);
+                }
             }
             this.destroyProgress = 0;
             this.ticksUntilNextProgress = -1;

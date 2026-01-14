@@ -48,6 +48,20 @@ public enum EnumRenderPart implements IStringSerializable {
 
     PRESS_X,
     PRESS_Z,
+
+    DEPLOYER_DOWN,
+    DEPLOYER_UP,
+    DEPLOYER_NORTH,
+    DEPLOYER_SOUTH,
+    DEPLOYER_WEST,
+    DEPLOYER_EAST,
+
+    DEPLOYER_HOLDING_DOWN,
+    DEPLOYER_HOLDING_UP,
+    DEPLOYER_HOLDING_NORTH,
+    DEPLOYER_HOLDING_SOUTH,
+    DEPLOYER_HOLDING_WEST,
+    DEPLOYER_HOLDING_EAST,
     ;
 
     private final int id = this.ordinal();
@@ -69,6 +83,8 @@ public enum EnumRenderPart implements IStringSerializable {
     private static final EnumRenderPart[] DRILL_HEADS = new EnumRenderPart[6];
     private static final EnumRenderPart[] WATER_WHEELS = new EnumRenderPart[6];
     private static final EnumRenderPart[] BEARING_PLATES = new EnumRenderPart[6];
+    private static final EnumRenderPart[] DEPLOYERS = new EnumRenderPart[6];
+    private static final EnumRenderPart[] DEPLOYER_HOLDINGS = new EnumRenderPart[6];
 
     public static EnumRenderPart byID(int id) {
         return values()[id % values().length];
@@ -113,6 +129,20 @@ public enum EnumRenderPart implements IStringSerializable {
         BEARING_PLATES[3] = BEARING_PLATE_SOUTH;
         BEARING_PLATES[4] = BEARING_PLATE_WEST;
         BEARING_PLATES[5] = BEARING_PLATE_EAST;
+
+        DEPLOYERS[0] = DEPLOYER_DOWN;
+        DEPLOYERS[1] = DEPLOYER_UP;
+        DEPLOYERS[2] = DEPLOYER_NORTH;
+        DEPLOYERS[3] = DEPLOYER_SOUTH;
+        DEPLOYERS[4] = DEPLOYER_WEST;
+        DEPLOYERS[5] = DEPLOYER_EAST;
+
+        DEPLOYER_HOLDINGS[0] = DEPLOYER_HOLDING_DOWN;
+        DEPLOYER_HOLDINGS[1] = DEPLOYER_HOLDING_UP;
+        DEPLOYER_HOLDINGS[2] = DEPLOYER_HOLDING_NORTH;
+        DEPLOYER_HOLDINGS[3] = DEPLOYER_HOLDING_SOUTH;
+        DEPLOYER_HOLDINGS[4] = DEPLOYER_HOLDING_WEST;
+        DEPLOYER_HOLDINGS[5] = DEPLOYER_HOLDING_EAST;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
@@ -129,5 +159,8 @@ public enum EnumRenderPart implements IStringSerializable {
     }
     public static EnumRenderPart getBearingPlate(EnumFacing facing) {
         return BEARING_PLATES[facing.getIndex()];
+    }
+    public static EnumRenderPart getDeployer(EnumFacing facing, boolean itemEmpty) {
+        return itemEmpty ? DEPLOYERS[facing.getIndex()] : DEPLOYER_HOLDINGS[facing.getIndex()];
     }
 }
