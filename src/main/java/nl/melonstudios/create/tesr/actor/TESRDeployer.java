@@ -40,7 +40,7 @@ public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
         boolean rotated = state.getValue(BlockDeployer.ROTATED);
         this.spinShaft(te, pt, BlockDeployer.getShaftAxis(facing, rotated));
 
-        if (!te.heldItem.isEmpty()) {
+        if (!te.heldItem.isEmpty() && !te.skipRenderItem) {
             shouldRebind = true;
             ItemStack stack = te.heldItem;
             GlStateManager.pushMatrix();

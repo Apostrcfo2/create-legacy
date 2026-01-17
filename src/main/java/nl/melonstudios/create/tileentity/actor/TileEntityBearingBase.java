@@ -139,6 +139,10 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
                     entity.cachedAngle = this.angle;
                 }
             }
+            if (!this.world.isRemote && (this.world.getTotalWorldTime() & 63) == 0) {
+                //Synchronize every so often to make sure it is equal at all times
+                this.sync();
+            }
             this.markDirty();
         }
         if (this.pausedLastTick != this.isPausedThisTick) this.sync();

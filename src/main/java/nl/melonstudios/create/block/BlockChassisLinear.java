@@ -2,9 +2,7 @@ package nl.melonstudios.create.block;
 
 import com.melonstudios.melonlib.item.IMetaName;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockRotatedPillar;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -110,7 +108,6 @@ public class BlockChassisLinear extends BlockRotatedPillar implements IExtension
             glues[side.getIndex()] = !world.getEntities(EntityGlue.class, (glue) -> surface.equals(glue.getSurface())).isEmpty();
         }
 
-        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         optimization:
         {
             for (boolean glue : glues) {
@@ -120,12 +117,15 @@ public class BlockChassisLinear extends BlockRotatedPillar implements IExtension
         }
 
         int dist = this.getConnectionDistance(world, pos);
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos mutableOld = new BlockPos.MutableBlockPos();
 
         if (glues[sides.get(0).getIndex()]) {
             mutable.setPos(pos);
             for (int i = 0; i < dist; i++) {
+                mutableOld.setPos(mutable);
                 mutable.move(sides.get(0));
-                if (validPropagation(world, pos)) {
+                if (validPropagation(world, mutableOld, mutable)) {
                     if (!positions.contains(mutable)) positions.add(mutable.toImmutable());
                 } else break;
             }
@@ -134,8 +134,9 @@ public class BlockChassisLinear extends BlockRotatedPillar implements IExtension
         if (glues[sides.get(1).getIndex()]) {
             mutable.setPos(pos);
             for (int i = 0; i < dist; i++) {
+                mutableOld.setPos(mutable);
                 mutable.move(sides.get(1));
-                if (validPropagation(world, pos)) {
+                if (validPropagation(world, mutableOld, mutable)) {
                     if (!positions.contains(mutable)) positions.add(mutable.toImmutable());
                 } else break;
             }
@@ -144,6 +145,14 @@ public class BlockChassisLinear extends BlockRotatedPillar implements IExtension
 
     private static boolean validPropagation(World world, BlockPos pos) {
         return !world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+    }
+    private static boolean validPropagation(World world, BlockPos from, BlockPos to) {
+        IBlockState state = world.getBlockState(to);
+        if (state.getBlock().isReplaceable(world, to)) return false;
+        if (state.getBlock() instanceof BlockBush) {
+            return from.getX() == to.getX() && from.getZ() == to.getZ() && from.getY() == to.getY() - 1;
+        }
+        return true;
     }
 
     private int getConnectionDistance(World world, BlockPos pos) {

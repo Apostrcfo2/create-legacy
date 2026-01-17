@@ -2,6 +2,7 @@ package nl.melonstudios.create.block;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -82,7 +83,7 @@ public class BlockChassisRadial extends BlockRotatedPillar implements IExtension
             for (EnumFacing side : sides) {
                 if (glues[side.getIndex()]) {
                     mutable.setPos(pos).move(side);
-                    if (validPropagation(world, mutable)) {
+                    if (validPropagation(world, pos, mutable)) {
                         BlockPos next = mutable.toImmutable();
                         wheel.add(next);
                         this.propagate(world, wheel, pos, next, mutable, dist * dist + 1, sides);
@@ -113,7 +114,7 @@ public class BlockChassisRadial extends BlockRotatedPillar implements IExtension
     ) {
         for (EnumFacing side : sides) {
             mutable.setPos(src).move(side);
-            if (validPropagation(world, mutable) && middle.distanceSq(mutable) < maxDist) {
+            if (validPropagation(world, src, mutable) && middle.distanceSq(mutable) < maxDist) {
                 if (!positions.contains(mutable)) {
                     BlockPos next = mutable.toImmutable();
                     positions.add(next);
@@ -125,6 +126,14 @@ public class BlockChassisRadial extends BlockRotatedPillar implements IExtension
 
     private static boolean validPropagation(World world, BlockPos pos) {
         return !world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+    }
+    private static boolean validPropagation(World world, BlockPos from, BlockPos to) {
+        IBlockState state = world.getBlockState(to);
+        if (state.getBlock().isReplaceable(world, to)) return false;
+        if (state.getBlock() instanceof BlockBush) {
+            return from.getX() == to.getX() && from.getZ() == to.getZ() && from.getY() == to.getY() - 1;
+        }
+        return true;
     }
 
     private int getConnectionDistance(World world, BlockPos pos) {
