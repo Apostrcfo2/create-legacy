@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#A#",
+    "#A#",
+    " b "
+  ],
+  "key": {
+    "#": {
+      "item": "create:ingredient",
+      "data": 15
+    },
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "plateIron"
+    },
+    "b": {
+      "item": "create:casing",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "create:auto_farm",
+    "data": 1
+  }
+}
