@@ -1,6 +1,7 @@
 package nl.melonstudios.create.block.actor;
 
 import com.melonstudios.melonlib.item.IMetaName;
+import com.melonstudios.melonlib.misc.AABB;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -14,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -164,5 +166,25 @@ public class BlockAutoFarm extends BlockHorizontal implements ITileEntityProvide
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
         return state.withProperty(FACING, mirrorIn.mirror(state.getValue(FACING)));
+    }
+
+    private static final AxisAlignedBB[] PLOUGH_AABB = {
+            AABB.create(0.0, 0.0, 0.0, 16.0, 12.0, 15.0),
+            AABB.create(1.0, 0.0, 0.0, 16.0, 12.0, 16.0),
+            AABB.create(0.0, 0.0, 1.0, 16.0, 12.0, 16.0),
+            AABB.create(0.0, 0.0, 0.0, 15.0, 12.0, 16.0)
+    };
+    private static final AxisAlignedBB[] HARVESTER_AABB = {
+            AABB.create(0.0, 0.0, 0.0, 16.0, 14.0, 15.0),
+            AABB.create(1.0, 0.0, 0.0, 16.0, 14.0, 16.0),
+            AABB.create(0.0, 0.0, 1.0, 16.0, 14.0, 16.0),
+            AABB.create(0.0, 0.0, 0.0, 15.0, 14.0, 16.0)
+    };
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return state.getValue(VARIANT) == Variant.PLOUGH ?
+                PLOUGH_AABB[state.getValue(FACING).getHorizontalIndex()] :
+                HARVESTER_AABB[state.getValue(FACING).getHorizontalIndex()];
     }
 }
