@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.CuttingRecipes;
+import nl.melonstudios.create.recipe.DeployerRecipe;
+import nl.melonstudios.create.recipe.DeployingRecipes;
 import nl.melonstudios.create.recipe.PressingRecipes;
 
 import java.util.ArrayList;
@@ -513,6 +515,52 @@ public final class RecipeInit {
             );
             tracker++;
         }
+        //endregion
+
+        //region Deploying all over the place
+
+        tracker = 0;
+        for (ItemStack log : OreDictionary.getOres("logWood", false)) {
+            DeployingRecipes.instance.addRecipe("create:casing_andesite" + tracker,
+                    log.copy(),
+                    new ItemStack(ItemInit.INGREDIENT, 1, 15),
+                    new ItemStack(BlockInit.CASING, 1, 0),
+                    DeployerRecipe.InputType.CONSUME
+            );
+            int tracker2 = 0;
+            for (ItemStack copper : OreDictionary.getOres("plateCopper", false)) {
+                DeployingRecipes.instance.addRecipe("create:casing_copper" + tracker + "-" + tracker2,
+                        log.copy(),
+                        copper.copy(),
+                        new ItemStack(BlockInit.CASING, 1, 1),
+                        DeployerRecipe.InputType.CONSUME
+                );
+            }
+            for (ItemStack brass : OreDictionary.getOres("ingotBrass", false)) {
+                DeployingRecipes.instance.addRecipe("create:casing_brass" + tracker + "-" + tracker2,
+                        log.copy(),
+                        brass.copy(),
+                        new ItemStack(BlockInit.CASING, 1, 2),
+                        DeployerRecipe.InputType.CONSUME
+                );
+            }
+            tracker++;
+        }
+        tracker = 0;
+        for (ItemStack obsidian : OreDictionary.getOres("plateObsidian", false)) {
+            DeployingRecipes.instance.addRecipe("create:casing_train" + tracker,
+                    new ItemStack(BlockInit.CASING, 1, 2),
+                    obsidian.copy(),
+                    new ItemStack(BlockInit.CASING, 1, 3),
+                    DeployerRecipe.InputType.CONSUME
+            );
+        }
+        DeployingRecipes.instance.addRecipe("create:rose_quartz_polishing",
+                new ItemStack(ItemInit.INGREDIENT, 1, 3),
+                new ItemStack(ItemInit.SANDPAPER),
+                new ItemStack(ItemInit.INGREDIENT, 1, 4),
+                DeployerRecipe.InputType.DAMAGE
+        );
         //endregion
     }
 

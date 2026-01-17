@@ -71,6 +71,7 @@ public class CreateLegacy {
         addNBTDecodableRecipe(SandingRecipes.instance);
         addNBTDecodableRecipe(MillingRecipes.instance);
         addNBTDecodableRecipe(CuttingRecipes.instance);
+        addNBTDecodableRecipe(DeployingRecipes.instance);
     }
 
     @EventHandler

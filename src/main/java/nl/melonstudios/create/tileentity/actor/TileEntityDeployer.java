@@ -20,10 +20,15 @@ import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockClutch;
 import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.block.actor.BlockDeployer;
+import nl.melonstudios.create.init.SoundInit;
+import nl.melonstudios.create.item.ItemSandpaper;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
+import nl.melonstudios.create.recipe.DeployerRecipe;
+import nl.melonstudios.create.recipe.DeployingRecipes;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.BlockRotationHelper;
@@ -90,35 +95,75 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                     );
                     BlockPos use = pos(this.itemUsePos);
                     this.player.setPosition(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5);
-                    if (!this.heldItem.isEmpty()) {
-                        if (this.heldItem.getItem() instanceof ItemBlock) {
-                            IBlockState pre = world.getBlockState(use);
-                            if (pre.getBlock().isReplaceable(world, use)) {
-                                ItemBlock ib = (ItemBlock) this.heldItem.getItem();
-                                IBlockState placed = ib.getBlock().getStateForPlacement(world, use, facing.getOpposite(),
-                                        this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, this.heldItem.getMetadata(),
-                                        this.player, EnumHand.MAIN_HAND);
-                                if (placed.getBlock().canPlaceBlockAt(world, use)) {
-                                    ib.placeBlockAt(this.heldItem, this.player, world, use, facing.getOpposite(),
-                                            this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, placed);
-                                    SoundType st = placed.getBlock().getSoundType(placed, world, use, null);
-                                    world.playSound(null, use, st.getPlaceSound(), SoundCategory.BLOCKS,
-                                            (1.0F + st.getVolume()) * 0.5F, 0.9F + world.rand.nextFloat() * 0.2F);
-                                    this.heldItem.shrink(1);
+                    IDepot depot = IDepot.get(this.world, use);
+                    if (facing == EnumFacing.DOWN && depot != null) {
+                        if (!this.world.isRemote && !this.heldItem.isEmpty()) {
+                            ItemStack in = depot.getPresentedItem();
+                            DeployerRecipe recipe = DeployingRecipes.instance.getRecipeForInput(in, this.heldItem);
+                            if (recipe != null) {
+                                ItemStack out = recipe.result.copy();
+                                depot.decreasePresentedAndAddOutput(out);
+                                switch (recipe.inputType) {
+                                    case CONSUME:
+                                        this.heldItem.shrink(1);
+                                        break;
+                                    case DAMAGE:
+                                        this.heldItem.damageItem(1, this.player);
+                                        if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                            this.heldItem = ItemStack.EMPTY;
+                                        }
+                                        break;
+                                }
+                                if (recipe.inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                    this.world.playSound(null,
+                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                            SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                    );
+                                } else {
+                                    this.world.playSound(null,
+                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                            SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                    );
+                                }
+                                if (this.heldItem.isEmpty()) {
+                                    this.world.playSound(null,
+                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                            SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                    );
                                 }
                             }
+                        }
+                    } else {
+                        if (!this.heldItem.isEmpty()) {
+                            if (this.heldItem.getItem() instanceof ItemBlock) {
+                                IBlockState pre = world.getBlockState(use);
+                                if (pre.getBlock().isReplaceable(world, use)) {
+                                    ItemBlock ib = (ItemBlock) this.heldItem.getItem();
+                                    IBlockState placed = ib.getBlock().getStateForPlacement(world, use, facing.getOpposite(),
+                                            this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, this.heldItem.getMetadata(),
+                                            this.player, EnumHand.MAIN_HAND);
+                                    if (placed.getBlock().canPlaceBlockAt(world, use)) {
+                                        ib.placeBlockAt(this.heldItem, this.player, world, use, facing.getOpposite(),
+                                                this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z, placed);
+                                        SoundType st = placed.getBlock().getSoundType(placed, world, use, null);
+                                        world.playSound(null, use, st.getPlaceSound(), SoundCategory.BLOCKS,
+                                                (1.0F + st.getVolume()) * 0.5F, 0.9F + world.rand.nextFloat() * 0.2F);
+                                        this.heldItem.shrink(1);
+                                    }
+                                }
+                            } else {
+                                this.heldItem.onItemUse(this.player, world, use,
+                                        EnumHand.MAIN_HAND, facing.getOpposite(),
+                                        this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z
+                                );
+                            }
                         } else {
-                            this.heldItem.onItemUse(this.player, world, use,
-                                    EnumHand.MAIN_HAND, facing.getOpposite(),
+                            IBlockState state = this.world.getBlockState(use);
+                            state.getBlock().onBlockActivated(
+                                    this.world, use, state, this.player, EnumHand.MAIN_HAND, facing.getOpposite(),
                                     this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z
                             );
                         }
-                    } else {
-                        IBlockState state = this.world.getBlockState(use);
-                        state.getBlock().onBlockActivated(
-                                this.world, use, state, this.player, EnumHand.MAIN_HAND, facing.getOpposite(),
-                                this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z
-                        );
                     }
                     this.sync();
                 }
