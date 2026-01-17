@@ -62,6 +62,8 @@ public enum EnumRenderPart implements IStringSerializable {
     DEPLOYER_HOLDING_SOUTH,
     DEPLOYER_HOLDING_WEST,
     DEPLOYER_HOLDING_EAST,
+
+    HARVESTER,
     ;
 
     private final int id = this.ordinal();

@@ -106,6 +106,10 @@ public final class BlockInit {
             registerBlockWithItem(new BlockDeployer(MapColor.STONE, SoundType.WOOD)
             .setRegistryName("deployer").setUnlocalizedName("create.deployer"));
 
+    public static final BlockAutoFarm AUTO_FARM = (BlockAutoFarm)
+            registerBlockWithItem(new BlockAutoFarm()
+            .setRegistryName("auto_farm").setUnlocalizedName("create.auto_farm"), true);
+
     public static final BlockMillstone MILLSTONE = (BlockMillstone)
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
             .setRegistryName("millstone").setUnlocalizedName("create.millstone"));

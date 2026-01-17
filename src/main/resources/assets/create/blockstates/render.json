@@ -179,6 +179,9 @@
       "model": "create:render/deployer_holding",
       "x": 90,
       "y": 90
+    },
+    "render_part=harvester": {
+      "model": "create:render/harvester"
     }
   }
 }

@@ -29,7 +29,7 @@ import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class EntityContraptionBearing extends EntityContraptionBase implements IContraptionHolder, IEntityAdditionalSpawnData {
+public class EntityContraptionBearing extends EntityContraptionBase implements IContraptionHolder {
     public final IContraptionAccessor contraptionAccessor;
     public EntityContraptionBearing(World worldIn) {
         super(worldIn);
@@ -54,7 +54,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this(bearing.getWorld());
 
         BlockPos pos = bearing.getPos().offset(bearing.getFacing());
-        this.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+        this.setPositionInternal(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
         this.bearing = bearing;
         this.bearingPos = bearing.getPos();
@@ -79,6 +79,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
 
     @Override
     public void onUpdate() {
+        super.onUpdate();
         this.setFire(0);
         if (this.bearing == null) {
             if (this.bearingPos == null) {
@@ -99,6 +100,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         if (this.bearing.isInvalid()) this.bearing = null;
 
         if (!this.contraption.actors.isEmpty()) {
+            BlockPos anchor = this.getPosition();
             Vector3f vec = new Vector3f();
             Vector3f movement = new Vector3f();
             for (ActorContext context : this.contraption.actors) {
@@ -108,7 +110,11 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 int oldX = context.actorWorldPos.getX();
                 int oldY = context.actorWorldPos.getY();
                 int oldZ = context.actorWorldPos.getZ();
-                context.actorWorldPos.setPos(context.worldPos.x, context.worldPos.y, context.worldPos.z);
+                context.actorWorldPos.setPos(
+                        context.worldPos.x + anchor.getX(),
+                        context.worldPos.y + anchor.getY(),
+                        context.worldPos.z + anchor.getZ()
+                );
                 movement.set(context.worldPos);
                 Vector3f.sub(movement, vec, movement);
                 context.actor.contraptionTick(
@@ -125,6 +131,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
         this.contraption = new Contraption(this);
         this.contraption.loadNBT(compound.getCompoundTag("Contraption"));
 
@@ -132,6 +139,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     }
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
+        super.writeEntityToNBT(compound);
         compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
         compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearing.getPos()));
     }
@@ -187,19 +195,21 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     }
 
     @Override
-    public void writeSpawnData(ByteBuf buffer) {
-        buffer.writeLong(this.bearingPos.toLong());
+    public void writeSpawnData(ByteBuf buf) {
+        super.writeSpawnData(buf);
+        buf.writeLong(this.bearingPos.toLong());
 
-        new PacketBuffer(buffer).writeCompoundTag(this.contraption.saveNBT(new NBTTagCompound()));
+        new PacketBuffer(buf).writeCompoundTag(this.contraption.saveNBT(new NBTTagCompound()));
     }
 
     @Override
-    public void readSpawnData(ByteBuf additionalData) {
+    public void readSpawnData(ByteBuf buf) {
+        super.readSpawnData(buf);
         try {
-            this.bearingPos = BlockPos.fromLong(additionalData.readLong());
+            this.bearingPos = BlockPos.fromLong(buf.readLong());
 
             this.contraption = new Contraption(this);
-            this.contraption.loadNBT(Objects.requireNonNull(new PacketBuffer(additionalData).readCompoundTag()));
+            this.contraption.loadNBT(Objects.requireNonNull(new PacketBuffer(buf).readCompoundTag()));
         } catch (IOException e) {
             throw new RuntimeException("Failed to read contraption spawn data", e);
         }

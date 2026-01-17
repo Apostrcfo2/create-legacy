@@ -21,6 +21,7 @@ import nl.melonstudios.create.util.BlockProperties;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 public final class BlockCasing extends Block implements IMetaName {
     public enum Variant implements IStringSerializable {
         ANDESITE,

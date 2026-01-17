@@ -41,6 +41,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DRILL, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.SAW, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPLOYER, true);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.AUTO_FARM, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPOT, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CHUTE, 3);
@@ -121,6 +122,9 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:autoAttachToChassisRadial", BlockInit.SAIL_WEST, true);
         BlockDictionary.registerOre("create:autoAttachToChassisRadial", BlockInit.SAIL_EAST, true);
         BlockDictionary.registerOre("create:bypassGlue", BlockInit.DEPOT, false);
+        BlockDictionary.registerOre("create:plowable", Blocks.DIRT, false);
+        BlockDictionary.registerOre("create:plowable", Blocks.GRASS, true);
+        BlockDictionary.registerOre("create:plowable", Blocks.GRASS_PATH, true);
 
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
         registerOreBlockItem("oreZinc", BlockInit.ORE, 1);

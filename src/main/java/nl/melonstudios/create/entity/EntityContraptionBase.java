@@ -1,22 +1,32 @@
 package nl.melonstudios.create.entity;
 
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.BlockFarmland;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class EntityContraptionBase extends Entity implements IContraptionHolder {
+public abstract class EntityContraptionBase extends Entity implements IContraptionHolder, IEntityAdditionalSpawnData {
     public EntityContraptionBase(World worldIn) {
         super(worldIn);
     }
@@ -86,6 +96,13 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     }
 
     @Override
+    public void onUpdate() {
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
+    }
+
+    @Override
     public float getEyeHeight() {
         return 0.0F;
     }
@@ -97,8 +114,26 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
     @Override
     public void setPosition(double x, double y, double z) {
-        super.setPosition(x, y, z);
 
+    }
+
+    @Override
+    public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch) {
+
+    }
+
+    @Override
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
+
+    }
+
+    @Override
+    public void setPositionAndUpdate(double x, double y, double z) {
+
+    }
+
+    public void setPositionInternal(double x, double y, double z) {
+        super.setPosition(x, y, z);
         this.resetBB();
     }
 
@@ -128,5 +163,25 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     @Override
     public Biome getBiome() {
         return this.world.getBiome(this.getPosition());
+    }
+
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound compound) {
+
+    }
+
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound compound) {
+
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buf) {
+
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf buf) {
+
     }
 }

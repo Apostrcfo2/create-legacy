@@ -43,6 +43,8 @@ tile.create.press.name=Mechanical Press
 tile.create.drill.name=Mechanical Drill
 tile.create.saw.name=Mechanical Saw
 tile.create.deployer.name=Deployer
+tile.create.plough.name=Plough
+tile.create.harvester.name=Harvester
 tile.create.millstone.name=Millstone
 
 tile.create.depot.name=Depot

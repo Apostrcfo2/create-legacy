@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,variant=plough": {
+      "model": "create:plough"
+    },
+    "facing=east,variant=plough": {
+      "model": "create:plough",
+      "y": 90
+    },
+    "facing=south,variant=plough": {
+      "model": "create:plough",
+      "y": 180
+    },
+    "facing=west,variant=plough": {
+      "model": "create:plough",
+      "y": 270
+    },
+    "facing=north,variant=harvester": {
+      "model": "create:harvester"
+    },
+    "facing=east,variant=harvester": {
+      "model": "create:harvester",
+      "y": 90
+    },
+    "facing=south,variant=harvester": {
+      "model": "create:harvester",
+      "y": 180
+    },
+    "facing=west,variant=harvester": {
+      "model": "create:harvester",
+      "y": 270
+    }
+  }
+}
