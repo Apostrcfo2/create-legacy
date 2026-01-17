@@ -1,5 +1,7 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import com.melonstudios.melonlib.misc.AABB;
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -69,7 +71,7 @@ public class TileEntityDrill extends TileEntityBreakBlockBase implements IContra
         IBlockState stateToBreak = world.getBlockState(this.breakingPos);
         float blockHardness = stateToBreak.getBlockHardness(world, this.breakingPos);
 
-        if (!this.canBreak(stateToBreak, blockHardness)) {
+        if (stateToBreak.getCollisionBoundingBox(world, this.breakingPos) == AABB.NULL_AABB || !this.canBreak(stateToBreak, blockHardness)) {
             if (this.destroyProgress != 0) {
                 this.destroyProgress = 0;
                 if (!world.isRemote) {
