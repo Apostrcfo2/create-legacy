@@ -214,4 +214,9 @@ public class BlockSaw extends BlockKineticBase implements ITileEntityProvider {
                 EnumSawRotation.fromEnumFacingHorizontal(side)));
         return true;
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

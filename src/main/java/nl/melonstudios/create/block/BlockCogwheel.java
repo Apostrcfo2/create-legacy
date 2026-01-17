@@ -90,4 +90,9 @@ public class BlockCogwheel extends BlockSimpleShaftBase implements ICogwheel {
             default:return FULL_BLOCK_AABB;
         }
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

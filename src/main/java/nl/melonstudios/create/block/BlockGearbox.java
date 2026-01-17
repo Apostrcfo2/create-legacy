@@ -94,4 +94,9 @@ public class BlockGearbox extends BlockKineticRotatedPillarBase implements ITile
     public float getAmbientOcclusionLightValue(IBlockState state) {
         return 0.2F;
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

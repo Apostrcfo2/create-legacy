@@ -72,4 +72,9 @@ public class BlockWaterWheel extends BlockKineticDirectionalBase implements ITil
     public EnumFacing.Axis getRotationAxis(IBlockState state) {
         return state.getValue(FACING).getAxis();
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

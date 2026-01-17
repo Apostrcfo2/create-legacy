@@ -150,4 +150,9 @@ public class BlockDepot extends Block implements ITileEntityProvider, IGoggleInf
         }
         return false;
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

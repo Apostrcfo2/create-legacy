@@ -84,4 +84,9 @@ public class BlockTurntable extends BlockKineticBase implements ITileEntityProvi
 
         tooltip.add(Localizer.translate("tile.create.turntable.desc"));
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

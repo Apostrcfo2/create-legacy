@@ -122,4 +122,9 @@ public final class BlockCasing extends Block implements IMetaName {
         items.add(new ItemStack(this, 1, 2));
         items.add(new ItemStack(this, 1, 3));
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || ("axe".equals(type) && state.getValue(VARIANT) != Variant.TRAIN);
+    }
 }

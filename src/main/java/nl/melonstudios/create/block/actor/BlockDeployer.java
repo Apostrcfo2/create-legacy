@@ -136,6 +136,11 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
         return BlockProperties.CASING_12PX_MAPPED[state.getValue(FACING).getIndex()];
     }
 
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
+
     public static EnumFacing.Axis getShaftAxis(EnumFacing facing, boolean rotated) {
         return STATE_TO_AXIS_LOOKUP[facing.getIndex()*2 + (rotated ? 1 : 0)];
     }

@@ -44,4 +44,9 @@ public class BlockPress extends BlockKineticHorizontalAxisBase implements ITileE
         if (preferredAxis != null) return this.getDefaultState().withProperty(HORIZONTAL_AXIS, preferredAxis);
         return this.getDefaultState().withProperty(HORIZONTAL_AXIS, placer.getHorizontalFacing().getAxis());
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

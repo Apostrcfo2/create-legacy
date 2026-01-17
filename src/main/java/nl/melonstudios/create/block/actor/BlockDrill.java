@@ -77,4 +77,9 @@ public class BlockDrill extends BlockKineticDirectionalBase implements ITileEnti
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return BlockProperties.CASING_12PX_MAPPED[state.getValue(FACING).getIndex()];
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

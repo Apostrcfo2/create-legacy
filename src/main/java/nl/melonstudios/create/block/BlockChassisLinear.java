@@ -172,4 +172,9 @@ public class BlockChassisLinear extends BlockRotatedPillar implements IExtension
         return SubInteractionBox.handleInteraction(worldIn, pos, playerIn, false,
                 playerIn.isSneaking(), playerIn.getHeldItem(hand), hitX, hitY, hitZ);
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

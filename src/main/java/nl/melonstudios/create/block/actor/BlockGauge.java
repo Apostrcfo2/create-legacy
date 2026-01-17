@@ -174,4 +174,9 @@ public class BlockGauge extends BlockKineticHorizontalAxisBase implements ITileE
         world.setBlockState(pos, state.cycleProperty(HORIZONTAL_AXIS), 3);
         return true;
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }

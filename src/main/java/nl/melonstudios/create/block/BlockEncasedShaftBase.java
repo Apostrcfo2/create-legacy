@@ -48,4 +48,9 @@ public abstract class BlockEncasedShaftBase extends BlockKineticRotatedPillarBas
     public float getAmbientOcclusionLightValue(IBlockState state) {
         return 0.2F;
     }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return "pickaxe".equals(type) || "axe".equals(type);
+    }
 }
