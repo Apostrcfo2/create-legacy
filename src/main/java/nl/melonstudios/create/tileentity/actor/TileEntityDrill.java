@@ -30,10 +30,19 @@ public class TileEntityDrill extends TileEntityBreakBlockBase implements IContra
         store.translate(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
     }
 
+    private boolean onContraption = false;
+
     @Override
     public void setOnContraption(boolean onContraption) {
         this.speed = onContraption ? 64.0F : 0.0F;
+        this.onContraption = onContraption;
     }
+
+    @Override
+    public boolean isOnContraption() {
+        return this.onContraption;
+    }
+
     @Override
     public void contraptionTick(IContraptionAccessor contraption, World world, Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
         if (this._tick(contraption, world, position, blockPosition, moved, movement)) {

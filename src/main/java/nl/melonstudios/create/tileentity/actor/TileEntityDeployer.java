@@ -139,6 +139,11 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     }
 
     @Override
+    public boolean isOnContraption() {
+        return this.skipRenderItem;
+    }
+
+    @Override
     public void contraptionTick(IContraptionAccessor contraption, World world,
                                 Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
         this.progressOld = this.progress;

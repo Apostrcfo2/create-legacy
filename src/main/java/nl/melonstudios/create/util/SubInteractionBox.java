@@ -12,6 +12,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.ponder.IVirtualizable;
 
@@ -112,6 +113,8 @@ public final class SubInteractionBox {
     @SideOnly(Side.CLIENT)
     public static <T extends TileEntity & ITileEntityWithSubInteractions> boolean renderPotentialInteractionBoxes(RayTraceResult cameraPointer, T te) {
         if (te instanceof IVirtualizable && ((IVirtualizable)te).isVirtual()) return false;
+        if (te instanceof IContraptionActor && ((IContraptionActor)te).isOnContraption()) return false;
+
         boolean status = false;
         if (Objects.equals(te.getPos(), cameraPointer.getBlockPos())) {
             float hitX = (float) (cameraPointer.hitVec.x - cameraPointer.getBlockPos().getX());
