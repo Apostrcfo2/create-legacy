@@ -19,39 +19,6 @@ import javax.annotation.Nullable;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
-    @Final
-    @Shadow
-    private static Logger LOGGER;
-
-    @Shadow
-    private boolean fullscreen;
-
-    /**
-     * @author siepert
-     * @reason testing
-     */
-    @Overwrite
-    private void createDisplay() throws LWJGLException {
-        Display.setResizable(true);
-        Display.setTitle("if you see this I forgot to remove the test mixin");
-        try {
-            Display.create((new PixelFormat()).withDepthBits(24));
-        } catch (LWJGLException lwjglexception) {
-            LOGGER.error("Couldn't set pixel format", lwjglexception);
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-            }
-            if (this.fullscreen) {
-                this.updateDisplayMode();
-            }
-            Display.create();
-        }
-    }
-
-    @Shadow
-    private void updateDisplayMode() {}
-
     @Shadow
     @Nullable
     public GuiScreen currentScreen;
