@@ -80,9 +80,9 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         super.tick();
 
         this.progressOld = this.progress;
-        if (this.speed != 0.0F) {
+        if (this.getSpeed() != 0.0F) {
             if (this.progress != 0 || (this.cloggedItem.isEmpty() && this.checkForRedstone())) {
-                this.progress += (int) Math.abs(this.speed);
+                this.progress += (int) Math.abs(this.getSpeed());
                 if (this.progressOld < 1000 && this.progress >= 1000) {
                     EnumFacing facing = this.getState().getValue(BlockDeployer.FACING);
                     this.itemUsePos.set(

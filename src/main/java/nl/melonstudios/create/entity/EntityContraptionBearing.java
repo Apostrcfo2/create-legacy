@@ -23,6 +23,8 @@ import org.lwjgl.util.vector.Vector3f;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -161,6 +163,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         super.setDead();
 
         if (!this.world.isRemote) {
+            List<TileEntityKinetic> attachables = new ArrayList<>();
             BlockPos self = this.getPosition();
             Rotation rotation = BlockRotationHelper.getRotationForAngle(this.bearing != null ? this.bearing.angle : this.cachedAngle);
             EnumFacing.Axis axis = this.bearing != null ? this.bearing.getFacing().getAxis() : this.cachedAxis;
@@ -173,8 +176,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                     te.validate();
                     this.world.setTileEntity(pos, te);
                     if (te instanceof TileEntityKinetic) {
-                        TileEntityKinetic kinetic = (TileEntityKinetic)te;
-                        kinetic.attachKinetics();
+                        attachables.add((TileEntityKinetic) te);
                     }
                     if (te instanceof IContraptionActor) {
                         ((IContraptionActor)te).setOnContraption(false);
@@ -187,6 +189,10 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, BlockRotationHelper.rotate(surface.side, axis, rotation)));
                 entityGlue.wasCovered = true;
                 this.world.spawnEntity(entityGlue);
+            }
+
+            for (TileEntityKinetic te : attachables) {
+                te.attachKinetics();
             }
         } else {
             ContraptionRendering.contraptionFinalized(this.contraption);
