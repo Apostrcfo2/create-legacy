@@ -1,6 +1,5 @@
 package nl.melonstudios.create.tileentity;
 
-import com.melonstudios.melonlib.misc.AABB;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;

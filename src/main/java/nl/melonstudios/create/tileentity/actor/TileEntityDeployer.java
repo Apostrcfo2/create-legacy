@@ -17,8 +17,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import nl.melonstudios.create.block.BlockClutch;
-import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.block.actor.BlockDeployer;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.item.ItemSandpaper;
@@ -31,7 +29,6 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
-import nl.melonstudios.create.util.BlockRotationHelper;
 import nl.melonstudios.create.util.PlayerDeployer;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.Utils;
@@ -248,23 +245,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     }
 
     private static EnumFacing getFacingFromVector3f(Vector3f facingVec) {
-        EnumFacing vecFacing;
-        if (facingVec.x == 1.0F) {
-            vecFacing = EnumFacing.EAST;
-        } else if (facingVec.x == -1.0F) {
-            vecFacing = EnumFacing.WEST;
-        } else if (facingVec.z == 1.0F) {
-            vecFacing = EnumFacing.SOUTH;
-        } else if (facingVec.z == -1.0F) {
-            vecFacing = EnumFacing.NORTH;
-        } else if (facingVec.y == 1.0F) {
-            vecFacing = EnumFacing.UP;
-        } else if (facingVec.y == -1.0F) {
-            vecFacing = EnumFacing.DOWN;
-        } else {
-            throw new IllegalStateException("Fix it pls " + facingVec);
-        }
-        return vecFacing;
+        return EnumFacing.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
     }
 
     @Override

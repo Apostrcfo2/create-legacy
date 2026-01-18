@@ -12,7 +12,6 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import nl.melonstudios.create.kinetics.contraption.*;
 import nl.melonstudios.create.kinetics.contraption.accessor.CAccessorBearing;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
