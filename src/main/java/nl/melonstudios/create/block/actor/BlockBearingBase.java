@@ -1,5 +1,6 @@
 package nl.melonstudios.create.block.actor;
 
+import com.melonstudios.melonlib.misc.Localizer;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
@@ -12,13 +13,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
 import nl.melonstudios.create.extensions.IExtensionBlock;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
+import nl.melonstudios.create.util.TextBuilder;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -88,5 +94,24 @@ public abstract class BlockBearingBase extends BlockKineticDirectionalBase imple
     @Override
     public boolean isToolEffective(String type, IBlockState state) {
         return "pickaxe".equals(type) || "axe".equals(type);
+    }
+
+    @Override
+    public List<String> getGoggleInfo(World world, BlockPos pos, IBlockState state) {
+        List<String> list = super.getGoggleInfo(world, pos, state);
+        List<String> realList = list == Collections.EMPTY_LIST ? new ArrayList<>() : list;
+        withTEDo(world, pos, TileEntityBearingBase.class, (te) -> {
+            if (te.lastFailure != null) {
+                TextBuilder builder = new TextBuilder();
+                if (!list.isEmpty()) builder.enter();
+                builder.formatting(TextFormatting.GOLD);
+                builder.translate("assembly_failure.header");
+                builder.enter().space().space();
+                builder.formatting(TextFormatting.GRAY);
+                builder.translate(te.lastFailure.error);
+                realList.addAll(builder.build());
+            }
+        });
+        return realList;
     }
 }

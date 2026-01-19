@@ -66,6 +66,17 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this.cachedAxis = this.bearing.getFacing().getAxis();
         this.cachedAngle = this.bearing.angle;
     }
+    public EntityContraptionBearing(TileEntityBearingBase bearing) {
+        this(bearing.getWorld());
+
+        BlockPos pos = bearing.getPos().offset(bearing.getFacing());
+        this.setPositionInternal(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+
+        this.bearing = bearing;
+        this.bearingPos = bearing.getPos();
+        this.cachedAxis = this.bearing.getFacing().getAxis();
+        this.cachedAngle = this.bearing.angle;
+    }
 
     public BlockPos bearingPos;
     public TileEntityBearingBase bearing;

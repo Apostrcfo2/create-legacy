@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -244,6 +246,59 @@ public class Contraption implements IBlockAccess {
         contraption.inventory.reindex(contraption);
         contraption.compileLight();
         return contraption;
+    }
+
+    public static ContraptionResult assemble(IContraptionHolder holder, BlockPos pos, @Nullable BlockPos exclude, Function<ContraptionAssembly, String> checker) {
+        World world = holder.getWorld();
+
+        Set<BlockPos> positions = new HashSet<>();
+        Set<EntityGlue> glues = new HashSet<>();
+        AtomicBoolean failed = new AtomicBoolean(false);
+        ContraptionAssembly assembly = new ContraptionAssembly(new Object2IntOpenHashMap<>());
+        StickinessPropagator.propagateStickiness(world, pos, 4096, positions, glues, failed, assembly);
+
+        if (failed.get()) return new ContraptionResult("assembly_failure.immovable");
+        if (positions.isEmpty()) return new ContraptionResult("assembly_failure.no_structure");
+        String err = checker.apply(assembly);
+        if (err != null) return new ContraptionResult(err);
+
+        Contraption contraption = new Contraption(holder);
+
+        for (BlockPos blockPos : positions) {
+            if (blockPos.equals(exclude)) continue;
+            IBlockState state = world.getBlockState(blockPos);
+            TileEntity te = world.getTileEntity(blockPos);
+            BlockPos adjusted = blockPos.subtract(pos);
+            contraption.blocks.put(adjusted, state);
+            if (te != null) {
+                te.validate();
+                if (te instanceof IAssemblyBehavior) {
+                    ((IAssemblyBehavior)te).onAssembly();
+                }
+                world.removeTileEntity(blockPos);
+                te.setPos(adjusted);
+                te.validate();
+                contraption.tileEntities.put(adjusted, te);
+                if (te instanceof IContraptionActor) {
+                    IContraptionActor actor = (IContraptionActor) te;
+                    contraption.actors.add(new ActorContext(adjusted, actor));
+                    te.setWorld(world);
+                    actor.setOnContraption(true);
+                }
+            }
+
+            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);
+        }
+        contraption.setTileEntityBlockData();
+        for (EntityGlue entityGlue : glues) {
+            GluedSurface surface = entityGlue.getSurface();
+            contraption.gluedSurfaces.add(new GluedSurface(surface.pos.subtract(pos), surface.side));
+        }
+        glues.forEach(world::removeEntity);
+
+        contraption.inventory.reindex(contraption);
+        contraption.compileLight();
+        return new ContraptionResult(contraption);
     }
 
     public RenderContraption renderContraption = null;

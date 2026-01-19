@@ -167,6 +167,11 @@ itemGroup.create.decorations=Create's Decorations
 Create Common Config.tooltip=Create's common configurations
 Create Client Config.tooltip=Create's client configurations
 
+## ASSEMBLY FAILURE ##
+assembly_failure.header=The contraption could not assemble:
+assembly_failure.no_structure=There is no structure to attach
+assembly_failure.windmill=The structure requires at least 8 sail-like blocks
+
 ## PONDERS ##
 # Test
 tooltip.ponder.create.test.0=the creeper is danger

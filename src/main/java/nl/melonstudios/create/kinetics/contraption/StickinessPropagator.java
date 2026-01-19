@@ -68,4 +68,58 @@ public class StickinessPropagator {
             }
         }
     }
+
+    public static void propagateStickiness(
+            World world, BlockPos pos, int maximum,
+            Set<BlockPos> positions, Set<EntityGlue> glues, AtomicBoolean failed,
+            ContraptionAssembly checker
+    ) {
+        if (failed.get()) return;
+        if (positions.contains(pos)) return;
+        if (positions.size() > maximum) {
+            positions.clear();
+            failed.set(true);
+            return;
+        }
+        IBlockState state = world.getBlockState(pos);
+        if (state.getMaterial().isLiquid() || state.getBlock() instanceof BlockLiquid) return;
+        if (state.getMobilityFlag() == EnumPushReaction.BLOCK) {
+            positions.clear();
+            failed.set(true);
+            return;
+        }
+        if (state.getBlock().isAir(state, world, pos)) return;
+        if (state.getBlock() instanceof BlockBush && !positions.contains(pos.down())) return;
+        positions.add(pos);
+        checker.incrementCounter(state);
+        List<BlockPos> list = new ArrayList<>();
+        ((IExtensionBlock)state.getBlock()).create$addStickyLocations(world, pos, state, list);
+        for (BlockPos sticky : list) {
+            propagateStickiness(
+                    world, sticky, maximum,
+                    positions, glues, failed
+            );
+        }
+        boolean sticksToSelf = BlockDictionary.isBlockTagged(state, "create:sticksToSelf");
+        for (EnumFacing side : EnumFacing.VALUES) {
+            GluedSurface surface = new GluedSurface(pos, side);
+            List<EntityGlue> glue = world.getEntities(EntityGlue.class, (e) -> surface.equals(e.getSurface()));
+            BlockPos off = pos.offset(side);
+            if (!glue.isEmpty()) {
+                glues.addAll(glue);
+                propagateStickiness(
+                        world, off, maximum,
+                        positions, glues, failed
+                );
+            } else if (sticksToSelf) {
+                IBlockState hi = world.getBlockState(off);
+                if (state == hi) {
+                    propagateStickiness(
+                            world, off, maximum,
+                            positions, glues, failed
+                    );
+                }
+            }
+        }
+    }
 }

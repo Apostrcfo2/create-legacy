@@ -14,6 +14,7 @@ import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.item.ItemWrench;
 import nl.melonstudios.create.kinetics.KineticNetwork;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
+import nl.melonstudios.create.kinetics.contraption.ContraptionAssembly;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
@@ -23,6 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -186,6 +188,11 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
         this.doNotUpdateFlipped = true;
         this.syncNextTick();
         return flag;
+    }
+
+    @Override
+    protected Function<ContraptionAssembly, String> getContraptionChecker() {
+        return (assembly) -> assembly.getCount("create:sail") < 8 ? "assembly_failure.windmill" : null;
     }
 
     @Override

@@ -8,16 +8,19 @@ import net.minecraft.util.math.AxisAlignedBB;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.init.SoundInit;
-import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
+import nl.melonstudios.create.kinetics.contraption.*;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.function.Function;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class TileEntityBearingBase extends TileEntityKinetic implements ITileEntityWithContraption {
+    public ContraptionResult.AssemblyFailure lastFailure = null;
+
     public boolean tryAssemble() {
         if (this.isAssembled()) {
             return this.disassemble();
@@ -74,10 +77,20 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     protected boolean assemble() {
         if (this.assemblyChanged) return false;
         this.assemblyChanged = true;
-        EntityContraptionBearing bearing = new EntityContraptionBearing(this, null, this.pos);
-        if (bearing.contraption == null) return false;
-        if (bearing.contraption.tileEntities.containsValue(this)) return false; //Prevent bearing picking up itself
-        if (bearing.contraption.blocks.containsKey(this.pos)) return false; //Ditto
+        //EntityContraptionBearing bearing = new EntityContraptionBearing(this, null, this.pos);
+        //if (bearing.contraption == null) return false;
+        //if (bearing.contraption.tileEntities.containsValue(this)) return false; //Prevent bearing picking up itself
+        //if (bearing.contraption.blocks.containsKey(this.pos)) return false; //Ditto
+        //if (!this.world.isRemote) this.world.spawnEntity(bearing);
+        EntityContraptionBearing bearing = new EntityContraptionBearing(this);
+        ContraptionResult result = this.assembleContraption(bearing);
+        if (result.hasFailed()) {
+            this.lastFailure = result.getError();
+            this.sync();
+            return true;
+        }
+        this.lastFailure = null;
+        bearing.contraption = result.getContraption();
         if (!this.world.isRemote) this.world.spawnEntity(bearing);
         this.preventNextRemoval();
         this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, true));
@@ -88,6 +101,14 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.world.playSound(null, this.pos, SoundInit.contraption_assemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
         this.world.playSound(null, this.pos, SoundInit.contraption_assemble_compound, SoundCategory.BLOCKS, 0.25F, 1.1F);
         return true;
+    }
+
+    protected ContraptionResult assembleContraption(IContraptionHolder holder) {
+        return Contraption.assemble(holder, this.pos.offset(this.getFacing()), this.pos, this.getContraptionChecker());
+    }
+
+    protected Function<ContraptionAssembly, String> getContraptionChecker() {
+        return ContraptionAssembly.NO_CHECKER;
     }
 
     public EnumFacing getFacing() {
@@ -164,6 +185,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         NBTTagCompound nbt = super.writePacket();
 
         if (this.angle != 0.0F) nbt.setFloat("angle", this.angle);
+        if (this.lastFailure != null) nbt.setString("fail", this.lastFailure.error);
 
         return nbt;
     }
@@ -180,6 +202,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         super.readPacket(nbt);
 
         this.angle = nbt.getFloat("angle");
+        if (nbt.hasKey("fail", 8)) this.lastFailure = new ContraptionResult.AssemblyFailure(nbt.getString("fail"));
+        else this.lastFailure = null;
     }
 
     @Override
