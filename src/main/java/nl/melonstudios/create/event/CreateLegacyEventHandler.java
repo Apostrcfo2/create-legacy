@@ -42,6 +42,7 @@ import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
+import nl.melonstudios.create.kinetics.contraption.RenderContraption;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
@@ -195,7 +196,18 @@ public class CreateLegacyEventHandler {
             PerFrameDebugInfo.renderAgain = true;
             for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
                 Contraption contraption = entity.attachedContraption();
-                if (contraption != null) ContraptionRendering.getList(contraption);
+                if (contraption != null && !ContraptionRendering.available(contraption)) {
+                    boolean allow = false;
+                    for (RenderContraption render : ContraptionRendering.getRenderContraptions()) {
+                        if (render.contraption == contraption) {
+                            allow = true;
+                            break;
+                        }
+                    }
+                    if (allow) {
+                        ContraptionRendering.getList(contraption);
+                    }
+                }
             }
         }
     }
