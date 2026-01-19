@@ -1,6 +1,5 @@
 package nl.melonstudios.create.block.actor;
 
-import com.melonstudios.melonlib.misc.Localizer;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;

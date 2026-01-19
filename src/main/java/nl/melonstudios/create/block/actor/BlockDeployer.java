@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
-import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.SubInteractionBox;
@@ -110,6 +109,7 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
         if (playerIn.isSneaking()) return false;
         EnumFacing blockFacing = state.getValue(FACING);
         if (facing == blockFacing) {
+            if (EnumFacing.getFacingFromVector(hitX-0.5F, hitY-0.5F, hitZ-0.5F) != blockFacing) return false;
             return Boolean.TRUE.equals(withTEDo(worldIn, pos, TileEntityDeployer.class, (te) -> {
                 ItemStack inHand = playerIn.getHeldItemMainhand();
                 if (!te.heldItem.isEmpty()) {

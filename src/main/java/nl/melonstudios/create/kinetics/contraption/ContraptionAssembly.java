@@ -3,7 +3,6 @@ package nl.melonstudios.create.kinetics.contraption;
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.block.state.IBlockState;
-import nl.melonstudios.create.CreateLegacy;
 
 import java.util.function.Function;
 

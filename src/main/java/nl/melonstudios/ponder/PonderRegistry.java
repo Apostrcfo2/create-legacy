@@ -1,29 +1,15 @@
 package nl.melonstudios.ponder;
 
-import com.melonstudios.melonlib.misc.MetaItem;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.init.BlockInit;
-import nl.melonstudios.create.init.ItemInit;
-import nl.melonstudios.create.tileentity.TileEntityDepot;
 import nl.melonstudios.ponder.event.RegisterPondersEvent;
-import nl.melonstudios.ponder.plan.PonderPlan;
-import nl.melonstudios.ponder.plan.PonderPlanBuilder;
-import nl.melonstudios.ponder.plan.action.ActionSetScene;
-import nl.melonstudios.ponder.scene.IPonderSceneProvider;
-import nl.melonstudios.ponder.world.EnumEntityPonder;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
