@@ -168,7 +168,7 @@ public class BlockChassisLinear extends BlockRotatedPillar implements IExtension
         if (state.getValue(AXIS).apply(side)) return false;
         EnumFacing.Axis rotated = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, state.getValue(AXIS))
                 .rotateAround(side.getAxis()).getAxis();
-        world.setBlockState(pos, state.withProperty(AXIS, rotated));
+        Utils.setBlockTESafe(world, pos, state.withProperty(AXIS, rotated), 3);
         return true;
     }
 

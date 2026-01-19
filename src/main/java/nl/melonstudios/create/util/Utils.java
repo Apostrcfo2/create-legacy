@@ -1,11 +1,16 @@
 package nl.melonstudios.create.util;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -139,5 +144,34 @@ public class Utils {
             }
         }
         return list;
+    }
+
+    public static void setBlockTESafe(World world, BlockPos pos, IBlockState state, int flags) {
+        TileEntity te = world.getTileEntity(pos);
+        TileEntityOptimizedBase optimized = cast(te, TileEntityOptimizedBase.class);
+        if (optimized != null) optimized.preventNextRemoval();
+        world.setBlockState(pos, state, flags);
+        if (te != null) {
+            te.validate();
+            world.setTileEntity(pos, te);
+            te.updateContainingBlockInfo();
+        }
+    }
+    public static void setBlockKineticTESafe(World world, BlockPos pos, IBlockState state, int flags) {
+        TileEntity te = world.getTileEntity(pos);
+        TileEntityKinetic kinetic = cast(te, TileEntityKinetic.class);
+        if (kinetic != null) {
+            kinetic.preventNextRemoval();
+            kinetic.detachKinetics();
+        }
+        world.setBlockState(pos, state, flags);
+        if (te != null) {
+            te.validate();
+            world.setTileEntity(pos, te);
+            te.updateContainingBlockInfo();
+        }
+        if (kinetic != null) {
+            kinetic.attachKinetics();
+        }
     }
 }

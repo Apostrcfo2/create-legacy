@@ -13,6 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
 import javax.annotation.Nullable;
@@ -94,7 +95,7 @@ public abstract class BlockKineticRotatedPillarBase extends BlockKineticBase {
         if (this.disabledWrenchRotation || state.getValue(AXIS).apply(side)) return false;
         EnumFacing.Axis rotated = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, state.getValue(AXIS))
                 .rotateAround(side.getAxis()).getAxis();
-        world.setBlockState(pos, state.withProperty(AXIS, rotated));
+        Utils.setBlockKineticTESafe(world, pos, state.withProperty(AXIS, rotated), 3);
         return true;
     }
 }
