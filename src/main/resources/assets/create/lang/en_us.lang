@@ -170,6 +170,7 @@ Create Client Config.tooltip=Create's client configurations
 ## ASSEMBLY FAILURE ##
 assembly_failure.header=The contraption could not assemble:
 assembly_failure.no_structure=There is no structure to attach
+assembly_failure.immovable=The structure is either too large or contains immovable blocks
 assembly_failure.windmill=The structure requires at least 8 sail-like blocks
 
 ## PONDERS ##
