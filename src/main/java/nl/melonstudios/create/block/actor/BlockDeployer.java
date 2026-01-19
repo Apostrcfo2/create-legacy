@@ -19,10 +19,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticDirectionalBase;
 import nl.melonstudios.create.block.state.CreateStateProperties;
+import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.SubInteractionBox;
+import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
 
@@ -82,12 +84,19 @@ public class BlockDeployer extends BlockKineticDirectionalBase implements ITileE
     public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!super.onWrenched(world, pos, state, side, hitX, hitY, hitZ)) {
             TileEntity te = world.getTileEntity(pos);
-            if (te instanceof TileEntityOptimizedBase) ((TileEntityOptimizedBase)te).preventNextRemoval();
+            TileEntityKinetic kinetic = Utils.cast(te, TileEntityKinetic.class);
+            if (kinetic != null) {
+                kinetic.preventNextRemoval();
+                kinetic.detachKinetics();
+            }
             world.setBlockState(pos, state.cycleProperty(ROTATED));
             if (te != null) {
                 te.validate();
                 te.updateContainingBlockInfo();
                 world.setTileEntity(pos, te);
+            }
+            if (kinetic != null) {
+                kinetic.attachKinetics();
             }
         }
         return true;
