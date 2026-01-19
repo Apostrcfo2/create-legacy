@@ -1,5 +1,6 @@
 package nl.melonstudios.create.kinetics.contraption;
 
+import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -9,13 +10,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.entity.EntityContraptionBase;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class ContraptionRendering {
+    public static final Set<EntityContraptionBase> CONTRAPTIONS_TO_RENDER = new ConcurrentSet<>();
+
     private static final HashMap<Contraption, int[]> RENDER_LISTS = new HashMap<>();
     public static void contraptionFinalized(Contraption contraption) {
         int[] list = RENDER_LISTS.remove(contraption);
@@ -41,6 +42,12 @@ public class ContraptionRendering {
             RENDER_LISTS.put(contraption, list);
             return list;
         }
+    }
+    public static int[] getListNoCreate(Contraption contraption) {
+        return RENDER_LISTS.get(contraption);
+    }
+    public static boolean available(Contraption contraption) {
+        return RENDER_LISTS.containsKey(contraption);
     }
 
     @SideOnly(Side.CLIENT)

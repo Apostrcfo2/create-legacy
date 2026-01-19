@@ -29,6 +29,7 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.entity.EntityContraptionBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionWorld;
@@ -38,6 +39,8 @@ import nl.melonstudios.create.init.OreDictInit;
 import nl.melonstudios.create.init.PonderInit;
 import nl.melonstudios.create.item.ItemGoggles;
 import nl.melonstudios.create.kinetics.KNManager;
+import nl.melonstudios.create.kinetics.contraption.Contraption;
+import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
 import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
@@ -188,6 +191,12 @@ public class CreateLegacyEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void postFrame(TickEvent.RenderTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) PerFrameDebugInfo.renderAgain = true;
+        if (event.phase == TickEvent.Phase.END) {
+            PerFrameDebugInfo.renderAgain = true;
+            for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
+                Contraption contraption = entity.attachedContraption();
+                if (contraption != null) ContraptionRendering.getList(contraption);
+            }
+        }
     }
 }

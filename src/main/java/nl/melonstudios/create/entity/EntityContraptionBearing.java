@@ -205,8 +205,6 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             for (TileEntityKinetic te : attachables) {
                 te.attachKinetics();
             }
-        } else {
-            ContraptionRendering.contraptionFinalized(this.contraption);
         }
     }
 

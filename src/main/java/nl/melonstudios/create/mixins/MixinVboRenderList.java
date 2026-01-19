@@ -18,10 +18,12 @@ public class MixinVboRenderList {
     public void renderChunkLayer(BlockRenderLayer layer, CallbackInfo ci) {
         Minecraft.getMinecraft().mcProfiler.startSection("contraptions");
         for (RenderContraption contraption : ContraptionRendering.getRenderContraptions()) {
-            GlStateManager.pushMatrix();
-            ((IExtensionChunkRenderContainer)this).create$preRenderContraption(contraption);
-            GlStateManager.callList(ContraptionRendering.getList(contraption.contraption)[layer.ordinal()]);
-            GlStateManager.popMatrix();
+            if (ContraptionRendering.available(contraption.contraption)) {
+                GlStateManager.pushMatrix();
+                ((IExtensionChunkRenderContainer) this).create$preRenderContraption(contraption);
+                GlStateManager.callList(ContraptionRendering.getListNoCreate(contraption.contraption)[layer.ordinal()]);
+                GlStateManager.popMatrix();
+            }
         }
         if (layer == BlockRenderLayer.CUTOUT) {
             ContraptionRendering.clearRenderContraptions();

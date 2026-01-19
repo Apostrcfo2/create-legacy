@@ -11,7 +11,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
+import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
 
 import javax.annotation.Nullable;
@@ -22,6 +25,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class EntityContraptionBase extends Entity implements IContraptionHolder, IEntityAdditionalSpawnData {
     public EntityContraptionBase(World worldIn) {
         super(worldIn);
+
+        if (worldIn.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+            ContraptionRendering.CONTRAPTIONS_TO_RENDER.add(this);
+        }
     }
 
     private static final double HALF_SQRT_2 = 0.5 * MathHelper.SQRT_2;
@@ -176,5 +183,16 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     @Override
     public void readSpawnData(ByteBuf buf) {
 
+    }
+
+    @Override
+    public void setDead() {
+        super.setDead();
+        if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+            ContraptionRendering.CONTRAPTIONS_TO_RENDER.remove(this);
+            Contraption ctr = this.attachedContraption();
+            if (ctr != null)
+                ContraptionRendering.contraptionFinalized(ctr);
+        }
     }
 }

@@ -237,6 +237,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                 state.getBlock().onBlockActivated(world, use, state, this.player, EnumHand.MAIN_HAND, vecFacing.getOpposite(),
                         this.itemUsePos.x, this.itemUsePos.y, this.itemUsePos.z);
             }
+            this.progress = 1000;
         }
 
         if (!this.cloggedItem.isEmpty()) {

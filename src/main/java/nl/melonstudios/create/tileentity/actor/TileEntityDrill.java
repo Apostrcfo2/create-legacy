@@ -1,6 +1,7 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.AABB;
+import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +16,9 @@ import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityBreakBlockBase;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileEntityDrill extends TileEntityBreakBlockBase implements IContraptionActor {
     public TileEntityDrill() {
@@ -96,6 +100,15 @@ public class TileEntityDrill extends TileEntityBreakBlockBase implements IContra
                     IBlockState state = world.getBlockState(this.breakingPos);
                     NonNullList<ItemStack> drops = NonNullList.create();
                     state.getBlock().getDrops(drops, world, this.breakingPos, state, 0);
+                    List<ItemStack> leftovers = new ArrayList<>();
+                    for (ItemStack  stack : drops) {
+                        stack = inventory.insertItem(stack);
+                        if (!stack.isEmpty()) leftovers.add(stack);
+                    }
+                    if (!leftovers.isEmpty()) {
+                        StackUtil.dropItemsAt(world, this.breakingPos, leftovers.toArray(new ItemStack[0]));
+                    }
+                    world.destroyBlock(this.breakingPos, false);
                 }
             }
             this.destroyProgress = 0;
