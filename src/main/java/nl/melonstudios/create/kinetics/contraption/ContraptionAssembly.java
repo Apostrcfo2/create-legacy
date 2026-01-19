@@ -3,6 +3,7 @@ package nl.melonstudios.create.kinetics.contraption;
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.block.state.IBlockState;
+import nl.melonstudios.create.CreateLegacy;
 
 import java.util.function.Function;
 
@@ -14,7 +15,7 @@ public class ContraptionAssembly {
     }
 
     public void incrementCounter(IBlockState state) {
-        this.stateCounter.compute(state, (k, v) -> (v == null ? 1 : v + 1));
+        this.stateCounter.put(state, this.stateCounter.getInt(state) + 1);
     }
     public int getCount(IBlockState state) {
         return this.stateCounter.getInt(state);

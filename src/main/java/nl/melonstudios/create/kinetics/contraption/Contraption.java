@@ -1,5 +1,6 @@
 package nl.melonstudios.create.kinetics.contraption;
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import mcp.MethodsReturnNonnullByDefault;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.event.RegisterContraptionInventoriesEvent;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
@@ -254,7 +256,7 @@ public class Contraption implements IBlockAccess {
         Set<BlockPos> positions = new HashSet<>();
         Set<EntityGlue> glues = new HashSet<>();
         AtomicBoolean failed = new AtomicBoolean(false);
-        ContraptionAssembly assembly = new ContraptionAssembly(new Object2IntOpenHashMap<>());
+        ContraptionAssembly assembly = new ContraptionAssembly(new Object2IntArrayMap<>());
         StickinessPropagator.propagateStickiness(world, pos, 4096, positions, glues, failed, assembly);
 
         if (failed.get()) return new ContraptionResult("assembly_failure.immovable");

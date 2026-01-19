@@ -97,7 +97,8 @@ public class StickinessPropagator {
         for (BlockPos sticky : list) {
             propagateStickiness(
                     world, sticky, maximum,
-                    positions, glues, failed
+                    positions, glues, failed,
+                    checker
             );
         }
         boolean sticksToSelf = BlockDictionary.isBlockTagged(state, "create:sticksToSelf");
@@ -109,14 +110,16 @@ public class StickinessPropagator {
                 glues.addAll(glue);
                 propagateStickiness(
                         world, off, maximum,
-                        positions, glues, failed
+                        positions, glues, failed,
+                        checker
                 );
             } else if (sticksToSelf) {
                 IBlockState hi = world.getBlockState(off);
                 if (state == hi) {
                     propagateStickiness(
                             world, off, maximum,
-                            positions, glues, failed
+                            positions, glues, failed,
+                            checker
                     );
                 }
             }
