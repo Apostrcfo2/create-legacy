@@ -182,8 +182,14 @@ public class CreateLegacyEventHandler {
                 font.drawStringWithShadow("TESRKinetics rendered: " + PerFrameDebugInfo.kineticTileEntitiesRendered,
                         2, 12, -1);
                 font.drawStringWithShadow("Total contraption TEs in client world: " +
-                                ((IExtensionWorld)mc.world).    create$getContraptionTileEntities().size(),
+                                ((IExtensionWorld)mc.world).create$getContraptionTileEntities().size(),
                         2, 22, -1);
+                font.drawStringWithShadow("Rendered contraptions (by layer): " +
+                        ContraptionRendering.formatList(PerFrameDebugInfo.contraptionsRendered),
+                        2, 32, -1);
+                font.drawStringWithShadow("Skipped contraptions (by layer): " +
+                                ContraptionRendering.formatList(PerFrameDebugInfo.contraptionsSkipped),
+                        2, 41, -1);
                 PerFrameDebugInfo.reset();
             }
         }

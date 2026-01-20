@@ -3,6 +3,7 @@ package nl.melonstudios.create.recipe.jei;
 import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientRegistry;
+import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public final class JEICompat implements IModPlugin {
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistry registry) {
+        registry.registerSubtypeInterpreter(BlockInit.SAIL_ITEM, (stack) -> ISubtypeRegistry.ISubtypeInterpreter.NONE);
+    }
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         final IJeiHelpers helpers = registry.getJeiHelpers();

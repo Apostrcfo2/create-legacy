@@ -27,7 +27,7 @@ public class ContraptionRendering {
 
     @SideOnly(Side.CLIENT)
     private static void deleteList(int[] list) {
-        CreateLegacy.logger.debug("Deleting contraption display list (#{})", list);
+        CreateLegacy.logger.info("Deleting contraption display list {}", formatList(list));
         GLAllocation.deleteDisplayLists(list[0], 1);
         GLAllocation.deleteDisplayLists(list[1], 1);
         GLAllocation.deleteDisplayLists(list[2], 1);
@@ -107,7 +107,7 @@ public class ContraptionRendering {
             contraption.isRendering = false;
 
             int[] list = new int[]{solid, cutout_mipped, cutout, translucent};
-            CreateLegacy.logger.debug("Creating contraption display list (#{})", list);
+            CreateLegacy.logger.info("Creating contraption display list {}", formatList(list));
             return list;
         }
     }
@@ -132,5 +132,9 @@ public class ContraptionRendering {
     @SideOnly(Side.CLIENT)
     public static float pt() {
         return mc.isGamePaused() ? 1.0F : mc.getRenderPartialTicks();
+    }
+
+    public static String formatList(int[] list) {
+        return String.format("[%s;%s;%s;%s]", list[0], list[1], list[2], list[3]);
     }
 }

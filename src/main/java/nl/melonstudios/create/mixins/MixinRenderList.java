@@ -7,6 +7,7 @@ import net.minecraft.util.BlockRenderLayer;
 import nl.melonstudios.create.extensions.IExtensionChunkRenderContainer;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.RenderContraption;
+import nl.melonstudios.create.util.PerFrameDebugInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +24,8 @@ public class MixinRenderList {
                 ((IExtensionChunkRenderContainer) this).create$preRenderContraption(contraption);
                 GlStateManager.callList(ContraptionRendering.getListNoCreate(contraption.contraption)[layer.ordinal()]);
                 GlStateManager.popMatrix();
-            }
+                PerFrameDebugInfo.contraptionsRendered[layer.ordinal()]++;
+            } else PerFrameDebugInfo.contraptionsSkipped[layer.ordinal()]++;
         }
         if (layer == BlockRenderLayer.CUTOUT) {
             ContraptionRendering.clearRenderContraptions();

@@ -170,7 +170,7 @@ publishing {
 sourceSets {
     main {
         output.resourcesDir = output.classesDir
-//        refMap = create_mixin_refmap
+        refMap = create_mixin_refmap
     }
 }
 
