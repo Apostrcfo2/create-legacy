@@ -163,6 +163,11 @@ goggles.inventory_contents=Inventory Contents
 itemGroup.create=Create
 itemGroup.create.decorations=Create's Decorations
 
+## JUST ENOUGH ITEMS ##
+create.pressing=Pressing
+create.cutting=Saw Cutting
+create.sanding=Sandpaper Polishing
+
 ## CONFIG ##
 Create Common Config.tooltip=Create's common configurations
 Create Client Config.tooltip=Create's client configurations

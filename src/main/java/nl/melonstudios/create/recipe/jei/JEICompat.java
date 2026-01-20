@@ -39,6 +39,7 @@ public final class JEICompat implements IModPlugin {
         IRecipeTransferRegistry recipeTransfer = registry.getRecipeTransferRegistry();
 
         registry.addRecipes(RecipeMaker.getPressingRecipes(jeiHelpers), "create.pressing");
+        registry.addRecipeCatalyst(new ItemStack(BlockInit.PRESS), "create.pressing");
 
         registry.addRecipes(RecipeMaker.getSandingRecipes(jeiHelpers), "create.sanding");
         registry.addRecipeCatalyst(new ItemStack(ItemInit.SANDPAPER), "create.sanding");
