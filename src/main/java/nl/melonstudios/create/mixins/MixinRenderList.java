@@ -27,9 +27,9 @@ public class MixinRenderList {
                 PerFrameDebugInfo.contraptionsRendered[layer.ordinal()]++;
             } else PerFrameDebugInfo.contraptionsSkipped[layer.ordinal()]++;
         }
-        if (layer == BlockRenderLayer.CUTOUT) {
-            ContraptionRendering.clearRenderContraptions();
-        }
+        //if (layer == BlockRenderLayer.CUTOUT) {
+        //    ContraptionRendering.clearRenderContraptions();
+        //}
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
 }
