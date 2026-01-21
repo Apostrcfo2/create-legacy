@@ -4,8 +4,6 @@ import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.block.state.IBlockState;
 
-import java.util.function.Function;
-
 public class ContraptionAssembly {
     public final Object2IntMap<IBlockState> stateCounter;
 

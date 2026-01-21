@@ -14,7 +14,6 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.function.Function;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault

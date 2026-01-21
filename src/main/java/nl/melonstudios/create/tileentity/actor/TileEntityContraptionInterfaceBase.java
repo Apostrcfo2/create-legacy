@@ -1,12 +1,10 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.actor.BlockContraptionInterface;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
@@ -109,7 +107,6 @@ public abstract class TileEntityContraptionInterfaceBase extends TileEntityOptim
                     TileEntityContraptionInterfaceBase targetTE = Utils.cast(world.getTileEntity(target), this.getClass());
                     if (this.target != targetTE) {
                         if (!this.lastConnection.equals(target)) {
-                            this.lastConnection = target.toImmutable();
                             this.target = targetTE;
                             if (this.target != null) {
                                 this.target.connectedInv = contraption.getInventory();
@@ -125,6 +122,7 @@ public abstract class TileEntityContraptionInterfaceBase extends TileEntityOptim
                     }
                 } else this.resetTarget();
             } else this.resetTarget();
+            this.lastConnection = target.toImmutable();
         } else this.resetTarget();
     }
 

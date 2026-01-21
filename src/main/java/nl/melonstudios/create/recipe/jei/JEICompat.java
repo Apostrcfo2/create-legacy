@@ -3,7 +3,6 @@ package nl.melonstudios.create.recipe.jei;
 import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientRegistry;
-import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.item.ItemStack;
