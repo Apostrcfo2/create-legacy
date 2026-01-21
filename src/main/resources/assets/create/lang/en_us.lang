@@ -45,6 +45,8 @@ tile.create.saw.name=Mechanical Saw
 tile.create.deployer.name=Deployer
 tile.create.plough.name=Plough
 tile.create.harvester.name=Harvester
+tile.create.interface_storage.name=Portable Storage Interface
+tile.create.interface_fluid.name=Portable Fluid Interface
 tile.create.millstone.name=Millstone
 
 tile.create.depot.name=Depot

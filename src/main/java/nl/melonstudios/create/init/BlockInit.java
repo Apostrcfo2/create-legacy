@@ -109,6 +109,9 @@ public final class BlockInit {
     public static final BlockAutoFarm AUTO_FARM = (BlockAutoFarm)
             registerBlockWithItem(new BlockAutoFarm()
             .setRegistryName("auto_farm").setUnlocalizedName("create.auto_farm"), true);
+    public static final BlockContraptionInterface CONTRAPTION_INTERFACE = (BlockContraptionInterface)
+            registerBlockWithItem(new BlockContraptionInterface()
+            .setRegistryName("contraption_interface").setUnlocalizedName("create.contraption_interface"), true);
 
     public static final BlockMillstone MILLSTONE = (BlockMillstone)
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)

@@ -89,6 +89,8 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.DEPLOYER);
         CreateLegacy.proxy.setItemModel(BlockInit.AUTO_FARM, 0, "plough");
         CreateLegacy.proxy.setItemModel(BlockInit.AUTO_FARM, 1, "harvester");
+        CreateLegacy.proxy.setItemModel(BlockInit.CONTRAPTION_INTERFACE, 0, "interface_storage");
+        CreateLegacy.proxy.setItemModel(BlockInit.CONTRAPTION_INTERFACE, 1, "interface_fluid");
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
         CreateLegacy.proxy.setItemModel(BlockInit.DEPOT);
         CreateLegacy.proxy.setItemModel(BlockInit.CHUTE);

@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=up,variant=storage": {
+      "model": "create:interface_storage"
+    },
+    "facing=down,variant=storage": {
+      "model": "create:interface_storage",
+      "x": 180
+    },
+    "facing=north,variant=storage": {
+      "model": "create:interface_storage",
+      "x": 90
+    },
+    "facing=east,variant=storage": {
+      "model": "create:interface_storage",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,variant=storage": {
+      "model": "create:interface_storage",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,variant=storage": {
+      "model": "create:interface_storage",
+      "x": 90,
+      "y": 270
+    },
+    "facing=up,variant=fluid": {
+      "model": "create:interface_fluid"
+    },
+    "facing=down,variant=fluid": {
+      "model": "create:interface_fluid",
+      "x": 180
+    },
+    "facing=north,variant=fluid": {
+      "model": "create:interface_fluid",
+      "x": 90
+    },
+    "facing=east,variant=fluid": {
+      "model": "create:interface_fluid",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,variant=fluid": {
+      "model": "create:interface_fluid",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,variant=fluid": {
+      "model": "create:interface_fluid",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

@@ -35,6 +35,9 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     private static boolean porkchop = false;
     private static final ResourceLocation PORK =
             new ResourceLocation("create", "textures/pork.png");
+    public static ResourceLocation bind() {
+        return porkchop ? PORK : TextureMap.LOCATION_BLOCKS_TEXTURE;
+    }
 
     public static void pork() {
         porkchop = new File(Minecraft.getMinecraft().mcDataDir, "porkchop.gears").exists();

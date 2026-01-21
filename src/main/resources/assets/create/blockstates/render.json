@@ -182,6 +182,9 @@
     },
     "render_part=harvester": {
       "model": "create:render/harvester"
+    },
+    "render_part=suction_cup": {
+      "model": "create:render/suction_cup"
     }
   }
 }

@@ -43,8 +43,7 @@ public class TileEntityHarvester extends TileEntity implements IContraptionActor
             IBlockState crop = world.getBlockState(blockPosition);
             if (crop.getBlock() instanceof BlockCrops && !BlockDictionary.isBlockTagged(crop, "create:harvesterBlacklist")) {
                 BlockCrops crops = (BlockCrops) crop.getBlock();
-                int age = crop.getValue(BlockCrops.AGE);
-                if (age == crops.getMaxAge()) {
+                if (crops.isMaxAge(crop)) {
                     ContraptionInventory inventory = contraption.getInventory();
                     NonNullList<ItemStack> drops = NonNullList.create();
                     crops.getDrops(drops, world, blockPosition, crop, 0);

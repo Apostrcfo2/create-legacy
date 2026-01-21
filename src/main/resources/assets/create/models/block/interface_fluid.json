@@ -1,0 +1,21 @@
+{
+	"textures": {
+		"particle": "create:block/casing/casing_copper",
+		"casing": "create:block/copper_casing_short",
+		"back": "create:block/casing/casing_copper"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 12, 16],
+			"faces": {
+				"north": {"uv": [0, 4, 16, 16], "texture": "#casing"},
+				"east": {"uv": [0, 4, 16, 16], "texture": "#casing"},
+				"south": {"uv": [0, 4, 16, 16], "texture": "#casing"},
+				"west": {"uv": [0, 4, 16, 16], "texture": "#casing"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#back"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#back"}
+			}
+		}
+	]
+}
