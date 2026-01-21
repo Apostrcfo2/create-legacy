@@ -29,6 +29,7 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipeCategories(new PressingRecipeCategory(gui));
         registry.addRecipeCategories(new SandingRecipeCategory(gui));
         registry.addRecipeCategories(new CuttingRecipeCategory(gui));
+        registry.addRecipeCategories(new DeployerRecipeCategory(gui));
     }
 
     @Override
@@ -46,5 +47,8 @@ public final class JEICompat implements IModPlugin {
 
         registry.addRecipes(RecipeMaker.getCuttingRecipes(jeiHelpers), "create.cutting");
         registry.addRecipeCatalyst(new ItemStack(BlockInit.SAW), "create.cutting");
+
+        registry.addRecipes(RecipeMaker.getDeployingRecipes(jeiHelpers), "create.deploying");
+        registry.addRecipeCatalyst(new ItemStack(BlockInit.DEPLOYER), "create.deploying");
     }
 }

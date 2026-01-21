@@ -7,6 +7,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,19 @@ public class RecipeMaker {
             }
             recipes.removeAll(bin);
             recipeList.add(new CuttingRecipe(next, out));
+        }
+
+        return recipeList;
+    }
+
+    public static List<JEIDeployerRecipe> getDeployingRecipes(IJeiHelpers helpers) {
+        DeployingRecipes instance = DeployingRecipes.instance;
+
+        Collection<DeployerRecipe> recipes = instance.recipes.values();
+        List<JEIDeployerRecipe> recipeList = new ArrayList<>();
+
+        for (DeployerRecipe recipe : recipes) {
+            recipeList.add(new JEIDeployerRecipe(recipe.input, recipe.applied, recipe.result));
         }
 
         return recipeList;
