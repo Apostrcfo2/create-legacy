@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "create:casing",
+      "data": 0
+    },
+    "A": {
+      "item": "create:chute"
+    }
+  },
+  "result": {
+    "item": "create:contraption_interface",
+    "count": 2,
+    "data": 0
+  }
+}
