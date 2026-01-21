@@ -12,6 +12,7 @@ import nl.melonstudios.create.ponder.CreatePonderPlanBuilder;
 import nl.melonstudios.create.ponder.PonderContraption;
 import nl.melonstudios.create.tileentity.TileEntityCogwheel;
 import nl.melonstudios.create.tileentity.TileEntityDepot;
+import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.ponder.PonderContainer;
 import nl.melonstudios.ponder.PonderRegistrar;
 import nl.melonstudios.ponder.plan.PonderPlan;
@@ -105,6 +106,7 @@ public class PonderInit {
                                 .withProperty(BlockBearingBase.FACING, EnumFacing.UP)
                                 .withProperty(BlockBearingBase.ASSEMBLED, true));
                         builder.setSpeed(bearingPos, 16.0F);
+                        builder.modifyTileEntity(bearingPos, TileEntityBearingBase.class, te -> te.overstressed = false);
                         builder.assembleContraption("bearing-contraption", new BlockPos(4, 3, 4), bearingPos,
                                 PonderContraption.Type.ROTATE_Y, (ctrp) -> ctrp.param1 -= 4.8F);
                         builder.addTooltip(300, 4.5F, 4.0F, 4.5F, "Then assemble it, and the Contraption will move");

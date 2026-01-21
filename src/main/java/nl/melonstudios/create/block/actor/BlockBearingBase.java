@@ -86,11 +86,6 @@ public abstract class BlockBearingBase extends BlockKineticDirectionalBase imple
     }
 
     @Override
-    public boolean create$isSideSticky(IBlockState state, EnumFacing side) {
-        return state.getValue(FACING) == side;
-    }
-
-    @Override
     public boolean isToolEffective(String type, IBlockState state) {
         return "pickaxe".equals(type) || "axe".equals(type);
     }
