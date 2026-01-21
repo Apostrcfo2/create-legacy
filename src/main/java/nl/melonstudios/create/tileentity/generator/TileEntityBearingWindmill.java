@@ -15,6 +15,7 @@ import nl.melonstudios.create.item.ItemWrench;
 import nl.melonstudios.create.kinetics.KineticNetwork;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionAssembly;
+import nl.melonstudios.create.kinetics.contraption.ContraptionAssemblyChecker;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
@@ -191,7 +192,7 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
     }
 
     @Override
-    protected Function<ContraptionAssembly, String> getContraptionChecker() {
+    protected ContraptionAssemblyChecker getContraptionChecker() {
         return (assembly) -> assembly.getCount("create:sail") < 8 ? "assembly_failure.windmill" : null;
     }
 

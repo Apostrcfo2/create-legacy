@@ -107,7 +107,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         return Contraption.assemble(holder, this.pos.offset(this.getFacing()), this.pos, this.getContraptionChecker());
     }
 
-    protected Function<ContraptionAssembly, String> getContraptionChecker() {
+    protected ContraptionAssemblyChecker getContraptionChecker() {
         return ContraptionAssembly.NO_CHECKER;
     }
 

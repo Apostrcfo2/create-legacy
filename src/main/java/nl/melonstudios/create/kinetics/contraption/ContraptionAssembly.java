@@ -27,5 +27,5 @@ public class ContraptionAssembly {
         return i;
     }
 
-    public static final Function<ContraptionAssembly, String> NO_CHECKER = (assembly) -> null;
+    public static final ContraptionAssemblyChecker NO_CHECKER = (assembly) -> null;
 }

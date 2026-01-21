@@ -259,6 +259,7 @@ public class Contraption implements IBlockAccess {
 
         if (failed.get()) return new ContraptionResult("assembly_failure.immovable");
         if (positions.isEmpty()) return new ContraptionResult("assembly_failure.no_structure");
+        if (positions.contains(exclude)) return new ContraptionResult("assembly_failure.moving_self");
         String err = checker.apply(assembly);
         if (err != null) return new ContraptionResult(err);
 
