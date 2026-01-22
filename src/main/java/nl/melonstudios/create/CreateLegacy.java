@@ -24,7 +24,7 @@ import java.util.Random;
 
 import static nl.melonstudios.create.CreateLegacy.DEPENDENCIES;
 
-@Mod(modid = CreateLegacy.MODID, name = CreateLegacy.NAME, version = CreateLegacy.VERSION, useMetadata = true, dependencies = DEPENDENCIES)
+@Mod(modid = CreateLegacy.MODID, name = CreateLegacy.NAME, version = CreateLegacy.VERSION, useMetadata = true, dependencies = DEPENDENCIES, acceptedMinecraftVersions = "1.12.2")
 public class CreateLegacy {
     private static final boolean inIDE = true;
     public static final String MODID = "create";
