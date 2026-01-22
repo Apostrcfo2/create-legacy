@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar_flipped/scoria",
+    "down": "create:block/orestone/pillar_flipped/scoria",
+    "north": "create:block/orestone/pillar_flipped/scoria",
+    "east": "create:block/orestone/cap/scoria",
+    "south": "create:block/orestone/pillar_flipped/scoria",
+    "west": "create:block/orestone/cap/scoria",
+    "particle": "create:block/orestone/pillar/scoria"
+  }
+}

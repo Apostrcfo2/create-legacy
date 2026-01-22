@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar/scorchia",
+    "down": "create:block/orestone/pillar/scorchia",
+    "north": "create:block/orestone/cap/scorchia",
+    "east": "create:block/orestone/pillar_flipped/scorchia",
+    "south": "create:block/orestone/cap/scorchia",
+    "west": "create:block/orestone/pillar_flipped/scorchia",
+    "particle": "create:block/orestone/pillar/scorchia"
+  }
+}

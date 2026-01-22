@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "create:block/orestone/cap/veridium",
+    "side": "create:block/orestone/layered/veridium"
+  }
+}

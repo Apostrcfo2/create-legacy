@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar/crimsite",
+    "down": "create:block/orestone/pillar/crimsite",
+    "north": "create:block/orestone/cap/crimsite",
+    "east": "create:block/orestone/pillar_flipped/crimsite",
+    "south": "create:block/orestone/cap/crimsite",
+    "west": "create:block/orestone/pillar_flipped/crimsite",
+    "particle": "create:block/orestone/pillar/crimsite"
+  }
+}

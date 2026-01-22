@@ -14,6 +14,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
 import javax.annotation.Nullable;
@@ -89,7 +90,7 @@ public abstract class BlockKineticDirectionalBase extends BlockKineticBase {
                               EnumFacing side, float hitX, float hitY, float hitZ) {
         if (this.disabledWrenchRotation || state.getValue(FACING).getAxis().apply(side)) return false;
         EnumFacing rotated = state.getValue(FACING).rotateAround(side.getAxis());
-        world.setBlockState(pos, state.withProperty(FACING, rotated));
+        Utils.setBlockKineticTESafe(world, pos, state.withProperty(FACING, rotated), 3);
         return true;
     }
 }

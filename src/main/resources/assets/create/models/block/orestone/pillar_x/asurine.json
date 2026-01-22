@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar_flipped/asurine",
+    "down": "create:block/orestone/pillar_flipped/asurine",
+    "north": "create:block/orestone/pillar_flipped/asurine",
+    "east": "create:block/orestone/cap/asurine",
+    "south": "create:block/orestone/pillar_flipped/asurine",
+    "west": "create:block/orestone/cap/asurine",
+    "particle": "create:block/orestone/pillar/asurine"
+  }
+}

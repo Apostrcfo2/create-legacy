@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar_flipped/limestone",
+    "down": "create:block/orestone/pillar_flipped/limestone",
+    "north": "create:block/orestone/pillar_flipped/limestone",
+    "east": "create:block/orestone/cap/limestone",
+    "south": "create:block/orestone/pillar_flipped/limestone",
+    "west": "create:block/orestone/cap/limestone",
+    "particle": "create:block/orestone/pillar/limestone"
+  }
+}

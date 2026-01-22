@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar_flipped/veridium",
+    "down": "create:block/orestone/pillar_flipped/veridium",
+    "north": "create:block/orestone/pillar_flipped/veridium",
+    "east": "create:block/orestone/cap/veridium",
+    "south": "create:block/orestone/pillar_flipped/veridium",
+    "west": "create:block/orestone/cap/veridium",
+    "particle": "create:block/orestone/pillar/veridium"
+  }
+}

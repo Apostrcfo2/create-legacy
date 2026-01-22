@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "up": "create:block/orestone/pillar_flipped/ochrum",
+    "down": "create:block/orestone/pillar_flipped/ochrum",
+    "north": "create:block/orestone/pillar_flipped/ochrum",
+    "east": "create:block/orestone/cap/ochrum",
+    "south": "create:block/orestone/pillar_flipped/ochrum",
+    "west": "create:block/orestone/cap/ochrum",
+    "particle": "create:block/orestone/pillar/ochrum"
+  }
+}
