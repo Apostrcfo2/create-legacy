@@ -43,7 +43,7 @@ public class ItemAssembly extends Item {
     };
 
     @Override
-    public String getItemStackDisplayName(ItemStack stack) {
+    public String getUnlocalizedName(ItemStack stack) {
         return "item.create.assembly_" + NAME_LOOKUP[stack.getMetadata() & 1];
     }
 }

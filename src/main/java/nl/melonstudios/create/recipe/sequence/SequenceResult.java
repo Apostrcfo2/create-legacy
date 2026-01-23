@@ -21,6 +21,7 @@ public class SequenceResult {
         this.expected = expected;
         this.chance = chance;
         if ((waste.length & 1) != 0) throw new IllegalArgumentException("Waste products must be in item-chance pairs");
+        if (waste.length == 0) throw new IllegalArgumentException("Must have at least one waste product");
         int amount = waste.length / 2;
         this.waste = new Object2FloatArrayMap<>(amount);
         for (int i = 0; i < amount; i++) {

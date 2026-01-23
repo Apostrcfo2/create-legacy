@@ -152,6 +152,9 @@ item.create.superglue.name=Super Glue
 item.create.superglue.desc1=R-Click to apply Glue to surface
 item.create.superglue.desc2=Shift-R-Click to remove Glue from surface
 
+item.create.assembly_precision_mechanism.name=Incomplete Precision Mechanism
+item.create.assembly_plate_obsidian.name=Unprocessed Sturdy Sheet
+
 ## GOGGLE TOOLTIPS ##
 goggles.kinetic_stats=Kinetic Stats
 goggles.kinetic_capacity=Stress Capacity
@@ -182,7 +185,9 @@ assembly_failure.moving_self=The structure tried to move itself
 assembly_failure.windmill=The structure requires at least 8 sail-like blocks
 
 ## SEQUENCED_ASSEMBLY ##
-tooltip.create.next_sequence=Next Assembly Steps:
+sequence.next_steps=Next Assembly Steps:
+sequence.remaining_steps=...%s Other Steps
+sequence.remaining_step=...1 Other Step
 sequence.pressing=Process by Press
 sequence.deploying=Deploy %s
 sequence.cutting=Cutting by Saw

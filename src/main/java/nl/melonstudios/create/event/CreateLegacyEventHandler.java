@@ -241,13 +241,22 @@ public class CreateLegacyEventHandler {
             List<String> tooltips = event.getToolTip();
             TextBuilder builder = new TextBuilder();
             builder.formatting(TextFormatting.GOLD);
-            builder.translate("tooltip.create.next_sequence");
+            builder.translate("sequence.next_steps");
             int max = recipe.steps.size() * recipe.repetitions;
             for (int i = 0; i < 3; i++) {
                 int s = step+i;
                 if (s < max) {
+                    String pre = s == step ? "->" : "  ";
                     SequenceStep next = recipe.getStep(s);
-                    builder.enter().space().space().formatting(TextFormatting.AQUA).text(SequenceRecipe.getFormat(next.name).getDisplayName(next));
+                    builder.enter().formatting(TextFormatting.AQUA).text(pre).text(SequenceRecipe.getFormat(next.name).getDisplayName(next));
+                }
+            }
+            int remaining = max - (step+3);
+            if (remaining > 0) {
+                if (remaining > 1) {
+                    builder.enter().formatting(TextFormatting.DARK_AQUA).translate("sequence.remaining_steps", remaining);
+                } else {
+                    builder.enter().formatting(TextFormatting.DARK_AQUA).translate("sequence.remaining_step");
                 }
             }
             tooltips.addAll(builder.build());

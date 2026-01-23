@@ -585,7 +585,7 @@ public final class RecipeInit {
                         SequenceStep.deploying(new ItemStack(BlockInit.COG_LARGE)),
                         SequenceStep.deploying(new ItemStack(Items.IRON_NUGGET))
                 ), 5,
-                new SequenceResult(new ItemStack(ItemInit.INGREDIENT, 1, 25), 85.0F,
+                new SequenceResult(new ItemStack(ItemInit.INGREDIENT, 1, 14), 85.0F,
                         new ItemStack(ItemInit.INGREDIENT, 1, 25), 5.4F,
                         new ItemStack(ItemInit.INGREDIENT, 1, 15), 5.4F,
                         new ItemStack(BlockInit.COG_SMALL), 3.4F,
