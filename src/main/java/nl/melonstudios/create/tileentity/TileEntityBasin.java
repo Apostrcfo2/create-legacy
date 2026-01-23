@@ -73,9 +73,6 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
 
     public TileEntityBasin() {
         this.setTickRateLazy(Integer.MAX_VALUE);
-
-        this.tank1.setFluid(new FluidStack(FluidRegistry.LAVA, 1000));
-        this.tank2.setFluid(new FluidStack(FluidRegistry.WATER, 1000));
     }
 
     public boolean hasAnyFluid() {
