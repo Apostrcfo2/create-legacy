@@ -9,13 +9,16 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -43,7 +46,11 @@ import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
 import nl.melonstudios.create.kinetics.contraption.RenderContraption;
+import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
+import nl.melonstudios.create.recipe.sequence.SequenceStep;
+import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
+import nl.melonstudios.create.util.TextBuilder;
 import nl.melonstudios.create.util.interfaces.IBypassBlockUse;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
 import nl.melonstudios.ponder.event.RegisterPondersEvent;
@@ -215,6 +222,35 @@ public class CreateLegacyEventHandler {
                     }
                 }
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void addTooltip(ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        if (SequenceRecipe.isInSequence(stack)) {
+            NBTTagCompound data = stack.getSubCompound("SequencedAssembly");
+            if (data == null) {
+                event.getToolTip().add("[sequence error]");
+                return;
+            }
+            String id = data.getString("id");
+            int step = data.getInteger("step");
+            SequenceRecipe recipe = SequencedRecipes.instance.getRecipe(id);
+            List<String> tooltips = event.getToolTip();
+            TextBuilder builder = new TextBuilder();
+            builder.formatting(TextFormatting.GOLD);
+            builder.translate("tooltip.create.next_sequence");
+            int max = recipe.steps.size() * recipe.repetitions;
+            for (int i = 0; i < 3; i++) {
+                int s = step+i;
+                if (s < max) {
+                    SequenceStep next = recipe.getStep(s);
+                    builder.enter().space().space().formatting(TextFormatting.AQUA).text(SequenceRecipe.getFormat(next.name).getDisplayName(next));
+                }
+            }
+            tooltips.addAll(builder.build());
         }
     }
 }

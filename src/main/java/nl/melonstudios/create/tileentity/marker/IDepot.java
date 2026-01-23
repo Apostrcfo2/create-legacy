@@ -12,6 +12,7 @@ public interface IDepot {
     void decreasePresentedAndAddOutput(ItemStack output);
     double getItemHeight();
     boolean isWool();
+    ItemStack takePresented(int count);
 
     @Nullable
     static IDepot get(World world, BlockPos pos) {

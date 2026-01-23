@@ -16,6 +16,7 @@ import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.proxy.CommonProxy;
 import nl.melonstudios.create.recipe.*;
+import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
 import org.apache.logging.log4j.Logger;
 
@@ -72,6 +73,7 @@ public class CreateLegacy {
         addNBTDecodableRecipe(MillingRecipes.instance);
         addNBTDecodableRecipe(CuttingRecipes.instance);
         addNBTDecodableRecipe(DeployingRecipes.instance);
+        addNBTDecodableRecipe(SequencedRecipes.instance);
     }
 
     @EventHandler

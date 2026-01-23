@@ -1,5 +1,6 @@
 package nl.melonstudios.create.init;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -11,6 +12,9 @@ import nl.melonstudios.create.recipe.CuttingRecipes;
 import nl.melonstudios.create.recipe.DeployerRecipe;
 import nl.melonstudios.create.recipe.DeployingRecipes;
 import nl.melonstudios.create.recipe.PressingRecipes;
+import nl.melonstudios.create.recipe.sequence.SequenceResult;
+import nl.melonstudios.create.recipe.sequence.SequenceStep;
+import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -562,6 +566,36 @@ public final class RecipeInit {
                 DeployerRecipe.InputType.DAMAGE
         );
         //endregion
+
+        sequences();
+    }
+
+    private static void sequences() {
+        SequencedRecipes recipes = SequencedRecipes.instance;
+        recipes.addRecipe("create:test",
+                new ItemStack(Items.COAL), new ItemStack(Blocks.COBBLESTONE),
+                ImmutableList.of(SequenceStep.pressing(), SequenceStep.deploying(new ItemStack(Items.STICK))), 2,
+                new ItemStack(Items.DIAMOND)
+        );
+
+        recipes.addRecipe("create:precision_mechanism",
+                new ItemStack(ItemInit.INGREDIENT, 1, 25),  new ItemStack(ItemInit.ASSEMBLY, 1, 0),
+                ImmutableList.of(
+                        SequenceStep.deploying(new ItemStack(BlockInit.COG_SMALL)),
+                        SequenceStep.deploying(new ItemStack(BlockInit.COG_LARGE)),
+                        SequenceStep.deploying(new ItemStack(Items.IRON_NUGGET))
+                ), 5,
+                new SequenceResult(new ItemStack(ItemInit.INGREDIENT, 1, 25), 85.0F,
+                        new ItemStack(ItemInit.INGREDIENT, 1, 25), 5.4F,
+                        new ItemStack(ItemInit.INGREDIENT, 1, 15), 5.4F,
+                        new ItemStack(BlockInit.COG_SMALL), 3.4F,
+                        new ItemStack(BlockInit.SHAFT), 1.4F,
+                        new ItemStack(ItemInit.INGREDIENT, 1, 27), 1.4F,
+                        new ItemStack(Items.GOLD_NUGGET), 1.4F,
+                        new ItemStack(Items.IRON_INGOT), 0.7F,
+                        new ItemStack(Items.CLOCK), 0.7F
+                )
+        );
     }
 
     private static Item getOrestone(int id) {

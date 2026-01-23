@@ -279,4 +279,10 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
     public boolean isWool() {
         return false;
     }
+
+    @Override
+    public ItemStack takePresented(int count) {
+        this.sync();
+        return this.mainItem.splitStack(count);
+    }
 }

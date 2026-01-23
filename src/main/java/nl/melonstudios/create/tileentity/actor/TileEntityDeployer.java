@@ -25,8 +25,12 @@ import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.recipe.DeployerRecipe;
 import nl.melonstudios.create.recipe.DeployingRecipes;
+import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
+import nl.melonstudios.create.recipe.sequence.SequenceStep;
+import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IDepot;
+import nl.melonstudios.create.tileentity.marker.IHaltBeltContents;
 import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.PlayerDeployer;
@@ -44,7 +48,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class TileEntityDeployer extends TileEntityKinetic implements IContraptionActor, ISidedInventoryDebloated, ITileEntityWithSubInteractions {
+public class TileEntityDeployer extends TileEntityKinetic implements IContraptionActor, ISidedInventoryDebloated, ITileEntityWithSubInteractions, IHaltBeltContents {
     private PlayerDeployer player;
     public TileEntityDeployer() {
         this.createInteractions();
@@ -96,37 +100,129 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                     if (facing == EnumFacing.DOWN && depot != null) {
                         if (!this.world.isRemote && !this.heldItem.isEmpty()) {
                             ItemStack in = depot.getPresentedItem();
-                            DeployerRecipe recipe = DeployingRecipes.instance.getRecipeForInput(in, this.heldItem);
-                            if (recipe != null) {
-                                ItemStack out = recipe.result.copy();
-                                depot.decreasePresentedAndAddOutput(out);
-                                switch (recipe.inputType) {
-                                    case CONSUME:
-                                        this.heldItem.shrink(1);
-                                        break;
-                                    case DAMAGE:
-                                        this.heldItem.damageItem(1, this.player);
-                                        if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
-                                            this.heldItem = ItemStack.EMPTY;
+                            recipes:
+                            {
+                                {
+                                    DeployerRecipe recipe = DeployingRecipes.instance.getRecipeForInput(in, this.heldItem);
+                                    if (recipe != null) {
+                                        ItemStack out = recipe.result.copy();
+                                        depot.decreasePresentedAndAddOutput(out);
+                                        switch (recipe.inputType) {
+                                            case CONSUME:
+                                                this.heldItem.shrink(1);
+                                                break;
+                                            case DAMAGE:
+                                                this.heldItem.damageItem(1, this.player);
+                                                if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                                    this.heldItem = ItemStack.EMPTY;
+                                                }
+                                                break;
                                         }
-                                        break;
+                                        if (recipe.inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                            this.world.playSound(null,
+                                                    use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                    SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                            );
+                                        } else {
+                                            this.world.playSound(null,
+                                                    use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                            );
+                                        }
+                                        if (this.heldItem.isEmpty()) {
+                                            this.world.playSound(null,
+                                                    use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                    SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                            );
+                                        }
+                                        break recipes;
+                                    }
                                 }
-                                if (recipe.inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
-                                    this.world.playSound(null,
-                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                            SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                    );
-                                } else {
-                                    this.world.playSound(null,
-                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                            SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                    );
+                                {
+                                    SequenceRecipe recipe = SequencedRecipes.instance.getRecipe(in);
+                                    if (recipe != null) {
+                                        SequenceStep first = recipe.getFirstStep();
+                                        if ("deploying".equals(first.name)) {
+                                            ItemStack applied = new ItemStack(first.data.getCompoundTag("Applied"));
+                                            if (Utils.itemMatches(applied, this.heldItem)) {
+                                                DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(first.data.getString("inputType"));
+                                                ItemStack processing = recipe.processing.copy();
+                                                SequenceRecipe.initialize(processing, recipe.recipeID);
+                                                processing = SequenceRecipe.advance(processing);
+                                                depot.decreasePresentedAndAddOutput(processing);
+                                                switch (inputType) {
+                                                    case CONSUME:
+                                                        this.heldItem.shrink(1);
+                                                        break;
+                                                    case DAMAGE:
+                                                        this.heldItem.damageItem(1, this.player);
+                                                        if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                                            this.heldItem = ItemStack.EMPTY;
+                                                        }
+                                                        break;
+                                                }
+                                                if (inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                                    this.world.playSound(null,
+                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                            SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                    );
+                                                } else {
+                                                    this.world.playSound(null,
+                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                            SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                    );
+                                                }
+                                                if (this.heldItem.isEmpty()) {
+                                                    this.world.playSound(null,
+                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                            SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                    );
+                                                }
+                                            }
+                                            break recipes;
+                                        }
+                                    }
                                 }
-                                if (this.heldItem.isEmpty()) {
-                                    this.world.playSound(null,
-                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                            SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                    );
+                                {
+                                    if (SequenceRecipe.isInSequence(in)) {
+                                        SequenceStep next = SequenceRecipe.getNextStep(in);
+                                        if ("deploying".equals(next.name)) {
+                                            ItemStack applied = new ItemStack(next.data.getCompoundTag("Applied"));
+                                            if (Utils.itemMatches(applied, this.heldItem)) {
+                                                DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(next.data.getString("inputType"));
+                                                in = SequenceRecipe.advance(in).copy();
+                                                depot.decreasePresentedAndAddOutput(in);
+                                                switch (inputType) {
+                                                    case CONSUME:
+                                                        this.heldItem.shrink(1);
+                                                        break;
+                                                    case DAMAGE:
+                                                        this.heldItem.damageItem(1, this.player);
+                                                        if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                                            this.heldItem = ItemStack.EMPTY;
+                                                        }
+                                                        break;
+                                                }
+                                                if (inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                                    this.world.playSound(null,
+                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                            SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                    );
+                                                } else {
+                                                    this.world.playSound(null,
+                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                            SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                    );
+                                                }
+                                                if (this.heldItem.isEmpty()) {
+                                                    this.world.playSound(null,
+                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                            SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -404,6 +500,12 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     @Override
     public String getName() {
         return "Deployer";
+    }
+
+    @Override
+    public boolean shouldHaltItem(ItemStack stack) {
+        if (this.getState().getValue(BlockDeployer.FACING) != EnumFacing.DOWN) return false;
+        return this.getTheoreticalSpeed() != 0.0F && this.checkForRedstone();
     }
 
     @Override

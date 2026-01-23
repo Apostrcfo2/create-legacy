@@ -15,6 +15,9 @@ import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.recipe.FlatteningRecipe;
 import nl.melonstudios.create.recipe.PressingRecipes;
+import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
+import nl.melonstudios.create.recipe.sequence.SequenceStep;
+import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.IHaltBeltContents;
@@ -37,16 +40,58 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
             IDepot depot = IDepot.get(this.world, this.pos.down(2));
             if (depot != null) {
                 ItemStack stack = depot.getPresentedItem();
-                FlatteningRecipe recipe = PressingRecipes.instance.getRecipeForInput(stack);
-                if (recipe != null) {
-                    this.squishParticles(
-                            stack,
-                            this.pos.getX() + 0.5,
-                            this.pos.getY() - 2 + depot.getItemHeight(),
-                            this.pos.getZ() + 0.5,
-                            depot
-                    );
-                    depot.decreasePresentedAndAddOutput(recipe.result.copy());
+                recipes:
+                {
+                    {
+                        FlatteningRecipe recipe = PressingRecipes.instance.getRecipeForInput(stack);
+                        if (recipe != null) {
+                            this.squishParticles(
+                                    stack,
+                                    this.pos.getX() + 0.5,
+                                    this.pos.getY() - 2 + depot.getItemHeight(),
+                                    this.pos.getZ() + 0.5,
+                                    depot
+                            );
+                            depot.decreasePresentedAndAddOutput(recipe.result.copy());
+                            break recipes;
+                        }
+                    }
+                    {
+                        SequenceRecipe recipe = SequencedRecipes.instance.getRecipe(stack);
+                        if (recipe != null) {
+                            SequenceStep first = recipe.getFirstStep();
+                            if ("pressing".equals(first.name)) {
+                                this.squishParticles(
+                                        stack,
+                                        this.pos.getX() + 0.5,
+                                        this.pos.getY() - 2 + depot.getItemHeight(),
+                                        this.pos.getZ() + 0.5,
+                                        depot
+                                );
+                                ItemStack processing = recipe.processing.copy();
+                                SequenceRecipe.initialize(processing, recipe.recipeID);
+                                processing = SequenceRecipe.advance(processing);
+                                depot.decreasePresentedAndAddOutput(processing);
+                            }
+                            break recipes;
+                        }
+                    }
+                    {
+                        if (SequenceRecipe.isInSequence(stack)) {
+                            SequenceStep next = SequenceRecipe.getNextStep(stack);
+                            if ("pressing".equals(next.name)) {
+                                this.squishParticles(
+                                        stack,
+                                        this.pos.getX() + 0.5,
+                                        this.pos.getY() - 2 + depot.getItemHeight(),
+                                        this.pos.getZ() + 0.5,
+                                        depot
+                                );
+                                stack = SequenceRecipe.advance(stack).copy();
+                                depot.decreasePresentedAndAddOutput(stack);
+                            }
+                        }
+                    }
                 }
             } else {
                 List<EntityItem> entityItems = this.world.getEntitiesWithinAABB(

@@ -9,6 +9,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 
@@ -173,5 +174,16 @@ public class Utils {
         if (kinetic != null) {
             kinetic.attachKinetics();
         }
+    }
+
+    public static boolean itemMatches(ItemStack example, ItemStack input) {
+        if (example.isEmpty() != input.isEmpty()) return false;
+        if (example.getItem() == input.getItem()) {
+            if (example.getItem().getHasSubtypes()) {
+                return (example.getMetadata() == input.getMetadata()) || (example.getMetadata() == OreDictionary.WILDCARD_VALUE);
+            }
+            return true;
+        }
+        return false;
     }
 }

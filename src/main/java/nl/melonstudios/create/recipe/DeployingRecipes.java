@@ -2,7 +2,7 @@ package nl.melonstudios.create.recipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
+import nl.melonstudios.create.util.Utils;
 
 import java.util.HashMap;
 
@@ -50,13 +50,6 @@ public class DeployingRecipes implements NBTDecodableRecipeType {
     }
 
     private static boolean itemMatches(ItemStack example, ItemStack input) {
-        if (example.isEmpty() != input.isEmpty()) return false;
-        if (example.getItem() == input.getItem()) {
-            if (example.getItem().getHasSubtypes()) {
-                return (example.getMetadata() == input.getMetadata()) || (example.getMetadata() == OreDictionary.WILDCARD_VALUE);
-            }
-            return true;
-        }
-        return false;
+        return Utils.itemMatches(example, input);
     }
 }
