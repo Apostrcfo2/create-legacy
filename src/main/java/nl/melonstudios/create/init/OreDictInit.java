@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.HashSet;
@@ -103,7 +104,8 @@ public final class OreDictInit {
         OreDictionary.registerOre("create:uprightOnBelt", Items.WATER_BUCKET);
         OreDictionary.registerOre("create:uprightOnBelt", Items.LAVA_BUCKET);
         OreDictionary.registerOre("create:uprightOnBelt", Items.MILK_BUCKET);
-        OreDictionary.registerOre("create:uprightOnBelt", ForgeModContainer.getInstance().universalBucket);
+        if (FluidRegistry.isUniversalBucketEnabled())
+            OreDictionary.registerOre("create:uprightOnBelt", ForgeModContainer.getInstance().universalBucket);
         //endregion
 
         //region Windmill sails

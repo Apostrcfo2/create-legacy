@@ -7,9 +7,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -17,6 +19,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -90,6 +93,21 @@ public class CreateLegacyEventHandler {
     @SubscribeEvent
     public static void registerPonders(RegisterPondersEvent event) {
         PonderInit.register(event.getRegistrar());
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void stitchTerrain(TextureStitchEvent.Pre event) {
+        TextureMap map = event.getMap();
+        if ("textures".equals(map.getBasePath())) {
+            CreateLegacy.logger.info("Adding fluid textures to texture atlas");
+            map.registerSprite(new ResourceLocation("create:fluid/milk_still"));
+            map.registerSprite(new ResourceLocation("create:fluid/milk_flowing"));
+            map.registerSprite(new ResourceLocation("create:fluid/chocolate_still"));
+            map.registerSprite(new ResourceLocation("create:fluid/chocolate_flowing"));
+            map.registerSprite(new ResourceLocation("create:fluid/tea_still"));
+            map.registerSprite(new ResourceLocation("create:fluid/tea_flowing"));
+        }
     }
 
     //Other

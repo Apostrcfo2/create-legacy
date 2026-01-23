@@ -1,10 +1,15 @@
 package nl.melonstudios.create.tileentity;
 
+import com.google.common.collect.ImmutableList;
+import com.melonstudios.melonlib.misc.StackUtil;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -12,11 +17,18 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
 import nl.melonstudios.create.tileentity.marker.IInventoryDebloated;
+import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
+import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
+import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.Utils;
+import nl.melonstudios.create.util.filter.IItemFilter;
+import nl.melonstudios.create.util.filter.ItemFilterExact;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
 
-public class TileEntityBasin extends TileEntityOptimizedBase implements IInventoryDebloated {
+public class TileEntityBasin extends TileEntityOptimizedBase implements IInventoryDebloated, ITileEntityWithSubInteractions, ITopOpenInventory {
     public final FluidTank tank1 = new FluidTank(1000) {
         @Override
         public boolean canFillFluidType(FluidStack fluid) {
@@ -70,13 +82,39 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
     };
     public final FluidHandlerConcatenate fluid = new FluidHandlerConcatenate(this.tank1, this.tank2, this.tank3);
     public final NonNullList<ItemStack> inventory = NonNullList.create();
+    public IItemFilter recipeFilter = null;
 
     public TileEntityBasin() {
         this.setTickRateLazy(Integer.MAX_VALUE);
+
+        this.subInteractionBoxes = ImmutableList.of(
+                SubInteractionBox.Helper.createDefaultAt(0.0F, 0.75F, 0.5F, this::setRecipeFilter),
+                SubInteractionBox.Helper.createDefaultAt(1.0F, 0.75F, 0.5F, this::setRecipeFilter),
+                SubInteractionBox.Helper.createDefaultAt(0.5F, 0.75F, 1.0F, this::setRecipeFilter),
+                SubInteractionBox.Helper.createDefaultAt(0.5F, 0.75F, 0.0F, this::setRecipeFilter)
+        );
     }
 
     public boolean hasAnyFluid() {
         return this.tank1.getFluidAmount() > 0 || this.tank2.getFluidAmount() > 0 || this.tank3.getFluidAmount() > 0;
+    }
+    public boolean setRecipeFilter(@Nullable EntityPlayer player, boolean sneaking, ItemStack held) {
+        if (held.isEmpty()) {
+            this.recipeFilter = null;
+        } else {
+            this.recipeFilter = new ItemFilterExact(held);
+        }
+        this.sync();
+        if (player != null) {
+            if (held.isEmpty()) {
+                player.playSound(SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, 1.0F, 1.0F);
+                player.sendStatusMessage(new TextComponentString("Cleared recipe filter"), true);
+            } else {
+                player.playSound(SoundEvents.ENTITY_ITEMFRAME_ADD_ITEM, 1.0F, 1.0F);
+                player.sendStatusMessage(new TextComponentString("Set recipe filter to " + held.getDisplayName()), true);
+            }
+        }
+        return true;
     }
 
     @Override
@@ -269,5 +307,35 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
 
     public void optimizeInventory() {
         this.inventory.removeIf(ItemStack::isEmpty);
+    }
+
+    @Override
+    public void destroy() {
+        StackUtil.dropItemsAt(this.world, this.pos, this.inventory.toArray(new ItemStack[0]));
+    }
+
+    private final List<SubInteractionBox> subInteractionBoxes;
+    @Override
+    public Collection<SubInteractionBox> getSubInteractionBoxes() {
+        return this.subInteractionBoxes;
+    }
+
+    @Override
+    public ItemStack tryInsertItem(ItemStack stack) {
+        for (int i = 0; i < this.getSizeInventory(); i++) {
+            ItemStack prev = this.getStackInSlot(i);
+            if (prev.isEmpty()) {
+                this.setInventorySlotContents(i, stack.splitStack(16));
+                return stack;
+            }
+            if (ItemStack.areItemsEqual(prev, stack) && ItemStack.areItemStackTagsEqual(prev, stack)) {
+                int space = Math.min(prev.getMaxStackSize(), this.getInventoryStackLimit());
+                prev.grow(space);
+                stack.shrink(space);
+            }
+            if (stack.isEmpty()) return ItemStack.EMPTY;
+        }
+        this.sync();
+        return stack;
     }
 }

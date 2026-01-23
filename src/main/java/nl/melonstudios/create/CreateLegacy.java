@@ -8,10 +8,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import nl.melonstudios.create.init.CommandInit;
-import nl.melonstudios.create.init.OreDictInit;
-import nl.melonstudios.create.init.RecipeInit;
-import nl.melonstudios.create.init.SoundInit;
+import nl.melonstudios.create.init.*;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.proxy.CommonProxy;
@@ -58,6 +55,12 @@ public class CreateLegacy {
 
     public static Logger logger;
     public static final Random rand = new Random();
+
+    // Pre pre init
+    static {
+        FluidInit.init();
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
@@ -74,6 +77,8 @@ public class CreateLegacy {
         addNBTDecodableRecipe(CuttingRecipes.instance);
         addNBTDecodableRecipe(DeployingRecipes.instance);
         addNBTDecodableRecipe(SequencedRecipes.instance);
+
+        FluidInit.register();
     }
 
     @EventHandler

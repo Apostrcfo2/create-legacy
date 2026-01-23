@@ -156,6 +156,11 @@ item.create.superglue.desc2=Shift-R-Click to remove Glue from surface
 item.create.assembly_precision_mechanism.name=Incomplete Precision Mechanism
 item.create.assembly_plate_obsidian.name=Unprocessed Sturdy Sheet
 
+## FLUIDS ##
+fluid.create.milk=Milk
+fluid.create.chocolate=Chocolate
+fluid.create.builders_tea=Builder's Tea
+
 ## GOGGLE TOOLTIPS ##
 goggles.kinetic_stats=Kinetic Stats
 goggles.kinetic_capacity=Stress Capacity

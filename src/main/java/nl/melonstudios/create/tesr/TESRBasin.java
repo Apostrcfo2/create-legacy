@@ -2,16 +2,21 @@ package nl.melonstudios.create.tesr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.fluids.FluidStack;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 import nl.melonstudios.create.util.RenderUtils;
+import nl.melonstudios.create.util.SubInteractionBox;
 import org.lwjgl.opengl.GL11;
 
 public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
@@ -24,12 +29,15 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
     @Override
     public void render(TileEntityBasin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
         FluidStack liquid1 = te.tank1.getFluid();
         FluidStack liquid2 = te.tank2.getFluid();
         FluidStack liquid3 = te.tank3.getFluid();
 
         if (liquid1 != null || liquid2 != null || liquid3 != null) {
             RenderUtils.prepare(x, y, z);
+            //GlStateManager.disableBlend(); //transparency is an issue at times
 
             double level = 0.0;
             if (liquid1 != null) level = Math.max(level, liquid1.amount * 0.00085);
@@ -46,7 +54,6 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder renderer = tessellator.getBuffer();
             renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-            this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
             if (liquid1 != null) {
                 TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid1.getFluid().getStill(liquid1).toString());
@@ -89,5 +96,37 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
             RenderUtils.finish();
         }
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        if (te.recipeFilter != null) {
+            ItemStack stack = te.recipeFilter.getRenderItem();
+            if (!stack.isEmpty()) {
+                GlStateManager.pushMatrix();
+                GlStateManager.enableRescaleNormal();
+                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
+                IBakedModel itemModel = this.mc.getRenderItem()
+                        .getItemModelWithOverrides(stack, te.getWorld(), null);
+                GlStateManager.translate(0.5F, 0.75F, 0.5F);
+                for (int i = 0; i < 4; i++) {
+                    GlStateManager.pushMatrix();
+                    if (i != 0) GlStateManager.rotate(i*90.0F, 0.0F, 1.0F, 0.0F);
+                    GlStateManager.translate(0.0F, 0.0F, 0.5F);
+                    if (!(itemModel instanceof BakedItemModel)) GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                    GlStateManager.scale(0.25F, 0.25F, 0.25F);
+                    this.mc.getRenderItem().renderItem(stack, itemModel);
+                    GlStateManager.popMatrix();
+                }
+                GlStateManager.disableRescaleNormal();
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
+            }
+        }
+
+        SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);
+        GlStateManager.popMatrix();
     }
 }
