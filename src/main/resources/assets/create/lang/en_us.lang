@@ -50,6 +50,7 @@ tile.create.interface_fluid.name=Portable Fluid Interface
 tile.create.millstone.name=Millstone
 
 tile.create.depot.name=Depot
+tile.create.basin.name=Basin
 tile.create.chute.name=Chute
 
 ## Create's Decorations ##

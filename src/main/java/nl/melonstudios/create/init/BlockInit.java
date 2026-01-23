@@ -120,6 +120,9 @@ public final class BlockInit {
     public static final BlockDepot DEPOT = (BlockDepot)
             registerBlockWithItem(new BlockDepot()
             .setRegistryName("depot").setUnlocalizedName("create.depot"));
+    public static final BlockBasin BASIN = (BlockBasin)
+            registerBlockWithItem(new BlockBasin()
+            .setRegistryName("basin").setUnlocalizedName("create.basin"));
     public static final BlockChute CHUTE = (BlockChute)
             registerBlockWithItem(new BlockChute()
             .setRegistryName("chute").setUnlocalizedName("create.chute"));

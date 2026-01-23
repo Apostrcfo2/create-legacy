@@ -272,7 +272,7 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
 
     @Override
     public double getItemHeight() {
-        return 0.875;
+        return 0.75;
     }
 
     @Override

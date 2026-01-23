@@ -1,5 +1,6 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.entity.item.EntityItem;
@@ -27,16 +28,24 @@ import java.util.List;
 import java.util.Random;
 
 public class TileEntityPress extends TileEntityKinetic implements IHaltBeltContents {
+    public static final float SPEED_MULTIPLIER = 1.0F;
+
     @SideOnly(Side.CLIENT)
     public EnumFacing.Axis getRenderAxis() {
         return this.getState().getValue(BlockStateProperties.HORIZONTAL_AXIS);
     }
 
+    public float lastProgress;
+    public float progress;
+
     @Override
     public void tick() {
         super.tick();
 
+        boolean shouldMove = false;
+        boolean flag = false;
         if (this.getSpeed() != 0.0F) {
+            shouldMove = this.progress >= 1000;
             IDepot depot = IDepot.get(this.world, this.pos.down(2));
             if (depot != null) {
                 ItemStack stack = depot.getPresentedItem();
@@ -45,14 +54,18 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                     {
                         FlatteningRecipe recipe = PressingRecipes.instance.getRecipeForInput(stack);
                         if (recipe != null) {
-                            this.squishParticles(
-                                    stack,
-                                    this.pos.getX() + 0.5,
-                                    this.pos.getY() - 2 + depot.getItemHeight(),
-                                    this.pos.getZ() + 0.5,
-                                    depot
-                            );
-                            depot.decreasePresentedAndAddOutput(recipe.result.copy());
+                            shouldMove = true;
+                            if (this.lastProgress < 1000 && this.progress >= 1000) {
+                                this.squishParticles(
+                                        stack,
+                                        this.pos.getX() + 0.5,
+                                        this.pos.getY() - 2 + depot.getItemHeight(),
+                                        this.pos.getZ() + 0.5,
+                                        depot
+                                );
+                                depot.decreasePresentedAndAddOutput(recipe.result.copy());
+                                flag = true;
+                            }
                             break recipes;
                         }
                     }
@@ -61,17 +74,21 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                         if (recipe != null) {
                             SequenceStep first = recipe.getFirstStep();
                             if ("pressing".equals(first.name)) {
-                                this.squishParticles(
-                                        stack,
-                                        this.pos.getX() + 0.5,
-                                        this.pos.getY() - 2 + depot.getItemHeight(),
-                                        this.pos.getZ() + 0.5,
-                                        depot
-                                );
-                                ItemStack processing = recipe.processing.copy();
-                                SequenceRecipe.initialize(processing, recipe.recipeID);
-                                processing = SequenceRecipe.advance(processing);
-                                depot.decreasePresentedAndAddOutput(processing);
+                                shouldMove = true;
+                                if (this.lastProgress < 1000 && this.progress >= 1000) {
+                                    this.squishParticles(
+                                            stack,
+                                            this.pos.getX() + 0.5,
+                                            this.pos.getY() - 2 + depot.getItemHeight(),
+                                            this.pos.getZ() + 0.5,
+                                            depot
+                                    );
+                                    ItemStack processing = recipe.processing.copy();
+                                    SequenceRecipe.initialize(processing, recipe.recipeID);
+                                    processing = SequenceRecipe.advance(processing);
+                                    depot.decreasePresentedAndAddOutput(processing);
+                                    flag = true;
+                                }
                             }
                             break recipes;
                         }
@@ -80,15 +97,19 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                         if (SequenceRecipe.isInSequence(stack)) {
                             SequenceStep next = SequenceRecipe.getNextStep(stack);
                             if ("pressing".equals(next.name)) {
-                                this.squishParticles(
-                                        stack,
-                                        this.pos.getX() + 0.5,
-                                        this.pos.getY() - 2 + depot.getItemHeight(),
-                                        this.pos.getZ() + 0.5,
-                                        depot
-                                );
-                                stack = SequenceRecipe.advance(stack).copy();
-                                depot.decreasePresentedAndAddOutput(stack);
+                                shouldMove = true;
+                                if (this.lastProgress < 1000 && this.progress >= 1000) {
+                                    this.squishParticles(
+                                            stack,
+                                            this.pos.getX() + 0.5,
+                                            this.pos.getY() - 2 + depot.getItemHeight(),
+                                            this.pos.getZ() + 0.5,
+                                            depot
+                                    );
+                                    stack = SequenceRecipe.advance(stack).copy();
+                                    depot.decreasePresentedAndAddOutput(stack);
+                                    flag = true;
+                                }
                             }
                         }
                     }
@@ -104,16 +125,35 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                         ItemStack stack = entityItem.getItem();
                         FlatteningRecipe recipe = PressingRecipes.instance.getRecipeForInput(stack);
                         if (recipe != null) {
-                            this.squishParticles(stack, entityItem.posX, entityItem.posY, entityItem.posZ, null);
-                            stack.shrink(1);
-                            if (stack.isEmpty()) entityItem.setDead();
-                            else entityItem.setItem(stack);
-                            if (!this.world.isRemote) {
-                                StackUtil.spawnItemNoVelocity(this.world, entityItem.posX, entityItem.posY, entityItem.posZ, recipe.result.copy());
+                            shouldMove = true;
+                            if (this.lastProgress < 1000 && this.progress >= 1000) {
+                                this.squishParticles(stack, entityItem.posX, entityItem.posY, entityItem.posZ, null);
+                                stack.shrink(1);
+                                if (stack.isEmpty()) entityItem.setDead();
+                                else entityItem.setItem(stack);
+                                if (!this.world.isRemote) {
+                                    StackUtil.spawnItemNoVelocity(this.world, entityItem.posX, entityItem.posY, entityItem.posZ, recipe.result.copy());
+                                }
+                                flag = true;
                             }
                             break;
                         }
                     }
+                }
+            }
+        }
+
+        this.lastProgress = this.progress;
+        if (shouldMove) {
+            if (flag) {
+                this.progress = 1000.0F;
+                this.sync();
+            }
+            else {
+                this.progress += Math.abs(this.getSpeed() * SPEED_MULTIPLIER);
+                if (this.progress > 2000.0F) {
+                    this.progress = 0.0F;
+                    this.sync();
                 }
             }
         }
@@ -143,16 +183,54 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
+        nbt.setFloat("lastProgress", this.lastProgress);
+        nbt.setFloat("progress", this.progress);
+
         return nbt;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+
+        this.lastProgress = nbt.getFloat("lastProgress");
+        this.progress = nbt.getFloat("progress");
+    }
+
+    @Override
+    public NBTTagCompound writePacket() {
+        NBTTagCompound nbt =  super.writePacket();
+
+        nbt.setFloat("prgO", this.lastProgress);
+        nbt.setFloat("prg", this.progress);
+
+        return nbt;
+    }
+
+    @Override
+    public void readPacket(NBTTagCompound nbt) {
+        super.readPacket(nbt);
+
+        this.lastProgress = nbt.getFloat("prgO");
+        this.progress = nbt.getFloat("prg");
     }
 
     @Override
     public boolean shouldHaltItem(ItemStack stack) {
         return PressingRecipes.instance.getRecipeForInput(stack) != null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public float multiplier() {
+        IDepot depot = IDepot.get(this.world, this.pos.down(2));
+        if (depot != null) {
+            return (float) (1.0F + (1.0F - depot.getItemHeight()));
+        }
+        return 1.0F;
+    }
+
+    @Override
+    protected AxisAlignedBB createRenderBoundingBox() {
+        return AABB.wrap(this.pos, 1);
     }
 }

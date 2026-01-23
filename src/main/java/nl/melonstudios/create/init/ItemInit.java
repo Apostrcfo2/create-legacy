@@ -96,6 +96,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.CONTRAPTION_INTERFACE, 1, "interface_fluid");
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
         CreateLegacy.proxy.setItemModel(BlockInit.DEPOT);
+        CreateLegacy.proxy.setItemModel(BlockInit.BASIN);
         CreateLegacy.proxy.setItemModel(BlockInit.CHUTE);
 
         for (int i = 0; i < 7; i++) {
