@@ -87,6 +87,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.PRESS);
+        CreateLegacy.proxy.setItemModel(BlockInit.MIXER);
         CreateLegacy.proxy.setItemModel(BlockInit.DRILL);
         CreateLegacy.proxy.setItemModel(BlockInit.SAW);
         CreateLegacy.proxy.setItemModel(BlockInit.DEPLOYER);

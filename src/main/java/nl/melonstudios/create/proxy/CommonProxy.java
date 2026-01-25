@@ -84,16 +84,19 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(te, create(name));
     }
 
-    public void spawnRedstoneFX(World world, double x, double y, double z, double mx, double my, double mz, float size, float r, float g, float b) {
+    public void spawnRedstoneFX(double x, double y, double z, double mx, double my, double mz, float size, float r, float g, float b) {
 
     }
-    public void spawnItemFX(World world, double x, double y, double z, double mx, double my, double mz, ItemStack stack) {
-        this.spawnItemFX(world, x, y, z, mx, my, mz, Item.getIdFromItem(stack.getItem()), stack.getMetadata());
+    public void spawnItemFX(double x, double y, double z, double mx, double my, double mz, ItemStack stack) {
+        this.spawnItemFX(x, y, z, mx, my, mz, Item.getIdFromItem(stack.getItem()), stack.getMetadata());
     }
-    public void spawnItemFX(World world, double x, double y, double z, double mx, double my, double mz, int id, int meta) {
+    public void spawnItemFX(double x, double y, double z, double mx, double my, double mz, int id, int meta) {
 
     }
     public void millstoneFX(TileEntityMillstone millstone) {
+
+    }
+    public void mixerFX(TileEntityBasin basin, double x, double y, double z) {
 
     }
 

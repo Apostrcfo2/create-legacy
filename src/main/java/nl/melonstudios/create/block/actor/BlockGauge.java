@@ -90,7 +90,7 @@ public class BlockGauge extends BlockKineticHorizontalAxisBase implements ITileE
                             .scale(.3F);
                     Vec3d offset = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)
                             .add(faceVec.scale(.55)).add(mul);
-                    CreateLegacy.proxy.spawnRedstoneFX(worldIn, offset.x, offset.y, offset.z, mul.x, mul.y, mul.z, 1, rgb.x, rgb.y, rgb.z);
+                    CreateLegacy.proxy.spawnRedstoneFX(offset.x, offset.y, offset.z, mul.x, mul.y, mul.z, 1, rgb.x, rgb.y, rgb.z);
                 }
             }
         }

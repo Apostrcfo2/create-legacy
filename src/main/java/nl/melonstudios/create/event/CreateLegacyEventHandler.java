@@ -151,6 +151,7 @@ public class CreateLegacyEventHandler {
         event.registerStress(BlockInit.TURNTABLE, 4.0F);
         event.registerStress(BlockInit.BEARING, 4.0F);
         event.registerStress(BlockInit.PRESS, 8.0F);
+        event.registerStress(BlockInit.MIXER, 4.0F);
         event.registerStress(BlockInit.DRILL, 4.0F);
         event.registerStress(BlockInit.SAW, 4.0F);
         event.registerStress(BlockInit.DEPLOYER, 4.0F);

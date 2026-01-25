@@ -7,11 +7,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import nl.melonstudios.create.recipe.CuttingRecipes;
-import nl.melonstudios.create.recipe.DeployerRecipe;
-import nl.melonstudios.create.recipe.DeployingRecipes;
-import nl.melonstudios.create.recipe.PressingRecipes;
+import nl.melonstudios.create.recipe.*;
 import nl.melonstudios.create.recipe.sequence.SequenceResult;
 import nl.melonstudios.create.recipe.sequence.SequenceStep;
 import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
@@ -567,9 +565,28 @@ public final class RecipeInit {
         );
         //endregion
 
+        mixing();
         sequences();
     }
 
+    private static void mixing() {
+        MixingRecipes recipes = MixingRecipes.instance;
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(Items.SUGAR),
+                                new ItemStack(Items.DYE, 1, 0)
+                        )
+                        .setInputFluids(
+                                new FluidStack(FluidInit.milk(), 250)
+                        )
+                        .setOutputItems()
+                        .setOutputFluid(
+                                new FluidStack(FluidInit.chocolate(), 250)
+                        )
+                        .build("create:chocolate")
+        );
+    }
     private static void sequences() {
         SequencedRecipes recipes = SequencedRecipes.instance;
         recipes.addRecipe("create:test",

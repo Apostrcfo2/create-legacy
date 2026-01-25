@@ -130,7 +130,6 @@ public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
                 for (int x = 0; x < 4; x++) {
                     for (int y = 0; y < 4; y++) {
                         CreateLegacy.proxy.spawnItemFX(
-                                this.world,
                                 this.surface.pos.getX() + 1,
                                 this.surface.pos.getY() + (x * 0.25),
                                 this.surface.pos.getZ() + (y * 0.25),
@@ -144,7 +143,6 @@ public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
                 for (int x = 0; x < 4; x++) {
                     for (int y = 0; y < 4; y++) {
                         CreateLegacy.proxy.spawnItemFX(
-                                this.world,
                                 this.surface.pos.getX() + (x * 0.25),
                                 this.surface.pos.getY() + 1,
                                 this.surface.pos.getZ() + (y * 0.25),
@@ -158,7 +156,6 @@ public class EntityGlue extends Entity implements IEntityAdditionalSpawnData {
                 for (int x = 0; x < 4; x++) {
                     for (int y = 0; y < 4; y++) {
                         CreateLegacy.proxy.spawnItemFX(
-                                this.world,
                                 this.surface.pos.getX() + (x * 0.25),
                                 this.surface.pos.getY() + (y * 0.25),
                                 this.surface.pos.getZ() + 1,

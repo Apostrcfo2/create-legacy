@@ -10,10 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -166,43 +163,55 @@ public class BlockBasin extends Block implements ITileEntityProvider, IGoggleInf
         if (handler == null) return false;
         FluidStack contained = FluidUtil.getFluidContained(held);
         if (contained == null || contained.amount <= 0) {
+            FluidStack fluid;
             if (basin.tank3.getFluidAmount() > 0) {
                 if (handler.fill(basin.tank3.getFluid(), false) > 0) {
-                    basin.tank3.drainInternal(handler.fill(basin.tank3.getFluid(), true), true);
+                    basin.tank3.drainInternal(handler.fill(fluid = basin.tank3.getFluid(), true), true);
                     playerIn.setHeldItem(hand, handler.getContainer());
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    if (fluid != null) {
+                        worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    }
                     return true;
                 }
             }
             if (basin.tank2.getFluidAmount() > 0) {
                 if (handler.fill(basin.tank2.getFluid(), false) > 0) {
-                    basin.tank2.drainInternal(handler.fill(basin.tank2.getFluid(), true), true);
+                    basin.tank2.drainInternal(handler.fill(fluid = basin.tank2.getFluid(), true), true);
                     playerIn.setHeldItem(hand, handler.getContainer());
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    if (fluid != null) {
+                        worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    }
                     return true;
                 }
             }
             if (basin.tank1.getFluidAmount() > 0) {
                 if (handler.fill(basin.tank1.getFluid(), false) > 0) {
-                    basin.tank1.drainInternal(handler.fill(basin.tank1.getFluid(), true), true);
+                    basin.tank1.drainInternal(handler.fill(fluid = basin.tank1.getFluid(), true), true);
                     playerIn.setHeldItem(hand, handler.getContainer());
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    if (fluid != null) {
+                        worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    }
                     return true;
                 }
             }
         } else {
             IFluidTankProperties[] properties = handler.getTankProperties();
             if (properties.length == 0) return false;
+            FluidStack fluid;
             if (basin.tank1.fill(handler.drain(1000, false), false) > 0) {
-                basin.tank1.fill(handler.drain(1000, true), true);
+                basin.tank1.fill(fluid = handler.drain(1000, true), true);
                 playerIn.setHeldItem(hand, handler.getContainer());
-                worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                if (fluid != null) {
+                    worldIn.playSound(null, pos, fluid.getFluid().getEmptySound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                }
                 return true;
             }
             if (basin.tank2.fill(handler.drain(1000, false), false) > 0) {
-                basin.tank2.fill(handler.drain(1000, true), true);
+                basin.tank2.fill(fluid = handler.drain(1000, true), true);
                 playerIn.setHeldItem(hand, handler.getContainer());
-                worldIn.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                if (fluid != null) {
+                    worldIn.playSound(null, pos, fluid.getFluid().getEmptySound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                }
                 return true;
             }
         }

@@ -95,6 +95,9 @@ public final class BlockInit {
     public static final BlockPress PRESS = (BlockPress)
             registerBlockWithItem(new BlockPress(MapColor.WOOD, SoundType.METAL)
             .setRegistryName("press").setUnlocalizedName("create.press"));
+    public static final BlockMixer MIXER = (BlockMixer)
+            registerBlockWithItem(new BlockMixer()
+            .setRegistryName("mixer").setUnlocalizedName("create.mixer"));
 
     public static final BlockDrill DRILL = (BlockDrill)
             registerBlockWithItem(new BlockDrill(MapColor.STONE, SoundType.METAL)

@@ -19,6 +19,7 @@ import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.contraption.IWrenchable;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
+import nl.melonstudios.create.tileentity.marker.ISpeedRequirement;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.TextBuilder;
 import nl.melonstudios.create.util.interfaces.IGoggleInfo;
@@ -107,17 +108,28 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
             TextBuilder builder = new TextBuilder();
             float stressCapacity = te.calculateCapacity() * Math.abs(te.getGeneratedSpeed());
             float stressImpact = te.calculateImpact() * Math.abs(te.getTheoreticalSpeed());
-            if (stressCapacity == 0 && stressImpact == 0) return Collections.emptyList();
-            builder.translate("goggles.kinetic_stats").enter();
-            if (stressCapacity != 0) {
-                builder.formatting(TextFormatting.GRAY)
-                        .translate("goggles.kinetic_capacity")
-                        .text(": ").formatting(TextFormatting.AQUA).number(stressCapacity).text("su").enter();
-            }
-            if (stressImpact != 0) {
-                builder.formatting(TextFormatting.GRAY)
-                        .translate("goggles.kinetic_impact")
-                        .text(": ").formatting(TextFormatting.AQUA).number(stressImpact).text("su").enter();
+            boolean flag;
+            if (stressCapacity != 0 || stressImpact != 0) {
+                flag = true;
+                builder.translate("goggles.kinetic_stats").enter();
+                if (stressCapacity != 0) {
+                    builder.formatting(TextFormatting.GRAY)
+                            .translate("goggles.kinetic_capacity")
+                            .text(": ").formatting(TextFormatting.AQUA).number(stressCapacity).text("su").enter();
+                }
+                if (stressImpact != 0) {
+                    builder.formatting(TextFormatting.GRAY)
+                            .translate("goggles.kinetic_impact")
+                            .text(": ").formatting(TextFormatting.AQUA).number(stressImpact).text("su").enter();
+                }
+            } else flag = false;
+            if (te instanceof ISpeedRequirement) {
+                float min = ((ISpeedRequirement)te).minimumSpeed();
+                if (te.getTheoreticalSpeed() < min) {
+                    if (flag) builder.enter();
+                    builder.formatting(TextFormatting.GOLD).translate("goggles.speed_requirement").enter();
+                    builder.formatting(TextFormatting.AQUA).space().space().translate("goggles.speed_requirement.desc", min).enter();
+                }
             }
             return builder.build();
         }

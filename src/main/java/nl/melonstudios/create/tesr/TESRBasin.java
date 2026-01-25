@@ -37,7 +37,7 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
         if (liquid1 != null || liquid2 != null || liquid3 != null) {
             RenderUtils.prepare(x, y, z);
-            //GlStateManager.disableBlend(); //transparency is an issue at times
+            GlStateManager.disableBlend(); //transparency is an issue at times
 
             double level = 0.0;
             if (liquid1 != null) level = Math.max(level, liquid1.amount * 0.00085);

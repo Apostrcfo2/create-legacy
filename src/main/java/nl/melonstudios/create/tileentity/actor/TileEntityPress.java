@@ -174,7 +174,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                 int rot = i * 45 + offset;
                 double sin = Math.sin(Math.toRadians(rot)) * 0.2;
                 double cos = Math.cos(Math.toRadians(rot)) * 0.2;
-                CreateLegacy.proxy.spawnItemFX(this.world, x, y, z, sin, 0.1, cos, stack);
+                CreateLegacy.proxy.spawnItemFX(x, y, z, sin, 0.1, cos, stack);
             }
         }
     }

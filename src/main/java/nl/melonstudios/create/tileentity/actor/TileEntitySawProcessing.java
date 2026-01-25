@@ -80,7 +80,6 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
             EnumFacing side = this.getProcessingDirection();
             if (this.world.isRemote) {
                 CreateLegacy.proxy.spawnItemFX(
-                        this.world,
                         this.pos.getX() + 0.5,
                         this.pos.getY() + 0.75,
                         this.pos.getZ() + 0.5,

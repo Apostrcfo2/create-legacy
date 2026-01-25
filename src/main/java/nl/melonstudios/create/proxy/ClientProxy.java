@@ -1,8 +1,11 @@
 package nl.melonstudios.create.proxy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleBreaking;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
@@ -14,9 +17,11 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.actor.BlockGauge;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
@@ -37,6 +42,8 @@ import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
 import nl.melonstudios.ponder.PonderRegistry;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -100,7 +107,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void spawnRedstoneFX(World world, double x, double y, double z, double mx, double my, double mz,
+    public void spawnRedstoneFX(double x, double y, double z, double mx, double my, double mz,
                                 float size, float r, float g, float b) {
         ParticleRedstone particle = (ParticleRedstone) Objects.requireNonNull(Minecraft.getMinecraft().effectRenderer
                 .spawnEffectParticle(EnumParticleTypes.REDSTONE.getParticleID(), x, y, z, mx, my, mz));
@@ -109,7 +116,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void spawnItemFX(World world, double x, double y, double z, double mx, double my, double mz, int id, int meta) {
+    public void spawnItemFX(double x, double y, double z, double mx, double my, double mz, int id, int meta) {
         Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(
                 EnumParticleTypes.ITEM_CRACK.getParticleID(),
                 x, y, z, mx, my, mz, id, meta
@@ -140,6 +147,44 @@ public class ClientProxy extends CommonProxy {
                             pos.getX() + rnd.nextDouble(), pos.getY() + 0.5, pos.getZ() + rnd.nextDouble(),
                             0, 0, 0);
         }
+    }
+    @Override
+    public void mixerFX(TileEntityBasin basin, double x, double y, double z) {
+        List<FluidStack> fluids = new ArrayList<>();
+        FluidStack fluid1 = basin.tank1.getFluid();
+        FluidStack fluid2 = basin.tank2.getFluid();
+        FluidStack fluid3 = basin.tank3.getFluid();
+        if (fluid1 != null) fluids.add(fluid1);
+        if (fluid2 != null) fluids.add(fluid2);
+        if (fluid3 != null) fluids.add(fluid3);
+        TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+        double offset = CreateLegacy.rand.nextDouble();
+        if (!fluids.isEmpty()) {
+            for (int i = 0; i < 5; i++) {
+                FluidStack fluid = fluids.get(CreateLegacy.rand.nextInt(fluids.size()));
+                TextureAtlasSprite sprite = map.getAtlasSprite(fluid.getFluid().getStill(fluid).toString());
+                double angle = (1.2566370614359172) * (i+offset);
+                double vx = Math.sin(angle);
+                double vz = Math.cos(angle);
+                this.getTexturePieceParticle(x, y, z, vx, 0.5, vz, sprite);
+            }
+        }
+        if (!basin.inventory.isEmpty()) {
+            for (int i = 0; i < 5; i++) {
+                ItemStack item = basin.inventory.get(CreateLegacy.rand.nextInt(basin.inventory.size()));
+                double angle = (1.2566370614359172) * (i+offset+0.1);
+                double vx = Math.sin(angle);
+                double vz = Math.cos(angle);
+                this.spawnItemFX(x, y, z, vx, 0.5, vz, item);
+            }
+        }
+    }
+
+    public void getTexturePieceParticle(double x, double y, double z, double vx, double vy, double vz, TextureAtlasSprite sprite) {
+        ParticleBreaking particle = (ParticleBreaking) Minecraft.getMinecraft().effectRenderer
+                .spawnEffectParticle(EnumParticleTypes.ITEM_CRACK.getParticleID(), x, y, z, vx, vy, vz, 0, 0);
+        Objects.requireNonNull(particle, "null particle!");
+        particle.setParticleTexture(sprite);
     }
 
     @Override

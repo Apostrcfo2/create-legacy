@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
+import nl.melonstudios.create.recipe.MixingRecipe;
 import nl.melonstudios.create.tileentity.marker.IInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
@@ -125,6 +127,37 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
     @Override
     public void tickLazy() {
 
+    }
+
+    public int getHeat() {
+        return 0;
+    }
+
+    //TODO: Add the output spout thingamajig
+    public void dumpRecipeResults(@Nullable FluidStack[] fluids, ItemStack... items) {
+        if (fluids != null) {
+            if (fluids.length > 1)
+                throw new IllegalArgumentException("More than 1 output fluid is currently unsupported");
+            FluidStack fluid = fluids.length > 0 ? fluids[0] : null;
+            this.tank3.fill(fluid, true);
+        }
+        loop:
+        for (ItemStack stack : items) {
+            for (ItemStack pre : this.inventory) {
+                if (ItemStack.areItemsEqual(pre, stack) && ItemStack.areItemStackTagsEqual(pre, stack)) {
+                    pre.grow(stack.getCount());
+                    continue loop;
+                }
+            }
+            this.inventory.add(stack.copy());
+        }
+    }
+
+    public void dumpRecipeResults(MixingRecipe recipe) {
+        this.dumpRecipeResults(
+                recipe.fluidOut != null ? new FluidStack[]{recipe.fluidOut} : null,
+                recipe.resultItems.toArray(new ItemStack[0])
+        );
     }
 
     @Override
