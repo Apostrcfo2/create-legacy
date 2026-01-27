@@ -575,7 +575,7 @@ public final class RecipeInit {
                 MixingRecipe.builder()
                         .setInputItems(
                                 new ItemStack(Items.SUGAR),
-                                new ItemStack(Items.DYE, 1, 0)
+                                new ItemStack(Items.DYE, 1, 3)
                         )
                         .setInputFluids(
                                 new FluidStack(FluidInit.milk(), 250)
@@ -584,6 +584,7 @@ public final class RecipeInit {
                         .setOutputFluid(
                                 new FluidStack(FluidInit.chocolate(), 250)
                         )
+                        .setRecipeTime64RPM(20)
                         .build("create:chocolate")
         );
     }

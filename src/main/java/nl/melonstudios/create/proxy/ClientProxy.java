@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -77,6 +79,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
         this.registerTESR(TileEntityStressometer.class, "stressometer", new TESRGauge<>(BlockGauge.Type.STRESS));
         this.registerTESR(TileEntityPress.class, "press", new TESRPress<>());
+        this.registerTESR(TileEntityMixer.class, "mixer", new TESRMixer());
         this.registerTESR(TileEntityDrill.class, "drill", new TESRDrill<>());
         this.registerTESR(TileEntitySaw.class, "saw", new TESRSaw());
         this.registerTESR(TileEntitySawProcessing.class, "saw_processing", new TESRSawProcessing());
@@ -164,8 +167,8 @@ public class ClientProxy extends CommonProxy {
                 FluidStack fluid = fluids.get(CreateLegacy.rand.nextInt(fluids.size()));
                 TextureAtlasSprite sprite = map.getAtlasSprite(fluid.getFluid().getStill(fluid).toString());
                 double angle = (1.2566370614359172) * (i+offset);
-                double vx = Math.sin(angle);
-                double vz = Math.cos(angle);
+                double vx = Math.sin(angle) * 0.2;
+                double vz = Math.cos(angle) * 0.2;
                 this.getTexturePieceParticle(x, y, z, vx, 0.5, vz, sprite);
             }
         }
@@ -173,11 +176,16 @@ public class ClientProxy extends CommonProxy {
             for (int i = 0; i < 5; i++) {
                 ItemStack item = basin.inventory.get(CreateLegacy.rand.nextInt(basin.inventory.size()));
                 double angle = (1.2566370614359172) * (i+offset+0.1);
-                double vx = Math.sin(angle);
-                double vz = Math.cos(angle);
+                double vx = Math.sin(angle) * 0.2;
+                double vz = Math.cos(angle) * 0.2;
                 this.spawnItemFX(x, y, z, vx, 0.5, vz, item);
             }
         }
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (basin.hasAnyFluid()) {
+            basin.getWorld().playSound(player, x, y, z, SoundEvents.ENTITY_BOAT_PADDLE_WATER, SoundCategory.BLOCKS, 0.125F, 0.5F);
+        }
+        basin.getWorld().playSound(player, x, y, z, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 0.125F, 0.5F);
     }
 
     public void getTexturePieceParticle(double x, double y, double z, double vx, double vy, double vz, TextureAtlasSprite sprite) {

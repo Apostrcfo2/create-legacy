@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,17 +11,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.recipe.MixingRecipe;
-import nl.melonstudios.create.tileentity.marker.IInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.SubInteractionBox;
-import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 
@@ -30,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class TileEntityBasin extends TileEntityOptimizedBase implements IInventoryDebloated, ITileEntityWithSubInteractions, ITopOpenInventory {
+public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEntityWithSubInteractions, ITopOpenInventory, IItemHandler {
     public final FluidTank tank1 = new FluidTank(1000) {
         @Override
         public boolean canFillFluidType(FluidStack fluid) {
@@ -139,7 +137,11 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
             if (fluids.length > 1)
                 throw new IllegalArgumentException("More than 1 output fluid is currently unsupported");
             FluidStack fluid = fluids.length > 0 ? fluids[0] : null;
-            this.tank3.fill(fluid, true);
+            if (fluid != null) {
+                if (this.tank3.getFluidAmount() > 0) {
+                    this.tank3.fillInternal(fluid, true);
+                } else this.tank3.setFluid(fluid);
+            }
         }
         loop:
         for (ItemStack stack : items) {
@@ -151,11 +153,12 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
             }
             this.inventory.add(stack.copy());
         }
+        this.sync();
     }
 
     public void dumpRecipeResults(MixingRecipe recipe) {
         this.dumpRecipeResults(
-                recipe.fluidOut != null ? new FluidStack[]{recipe.fluidOut} : null,
+                recipe.fluidOut != null ? new FluidStack[]{recipe.fluidOut.copy()} : null,
                 recipe.resultItems.toArray(new ItemStack[0])
         );
     }
@@ -171,10 +174,16 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
             nbt.setTag("Tank1", tank1NBT);
         }
 
-        if (this.tank1.getFluidAmount() > 0) {
+        if (this.tank2.getFluidAmount() > 0) {
             NBTTagCompound tank2NBT = new NBTTagCompound();
             this.tank2.writeToNBT(tank2NBT);
             nbt.setTag("Tank2", tank2NBT);
+        }
+
+        if (this.tank3.getFluidAmount() > 0) {
+            NBTTagCompound tank3NBT = new NBTTagCompound();
+            this.tank3.writeToNBT(tank3NBT);
+            nbt.setTag("Tank3", tank3NBT);
         }
 
         if (!this.inventory.isEmpty()) {
@@ -200,6 +209,10 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
             this.tank2.readFromNBT(nbt.getCompoundTag("Tank2"));
         } else this.tank2.setFluid(null);
 
+        if (nbt.hasKey("Tank3", 10)) {
+            this.tank3.readFromNBT(nbt.getCompoundTag("Tank3"));
+        } else this.tank3.setFluid(null);
+
         this.inventory.clear();
         if (nbt.hasKey("Inventory", 9)) {
             NBTTagList list = nbt.getTagList("Inventory", 10);
@@ -221,10 +234,16 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
             nbt.setTag("Tank1", tank1NBT);
         }
 
-        if (this.tank1.getFluidAmount() > 0) {
+        if (this.tank2.getFluidAmount() > 0) {
             NBTTagCompound tank2NBT = new NBTTagCompound();
             this.tank2.writeToNBT(tank2NBT);
             nbt.setTag("Tank2", tank2NBT);
+        }
+
+        if (this.tank3.getFluidAmount() > 0) {
+            NBTTagCompound tank3NBT = new NBTTagCompound();
+            this.tank3.writeToNBT(tank3NBT);
+            nbt.setTag("Tank3", tank3NBT);
         }
 
         if (!this.inventory.isEmpty()) {
@@ -248,6 +267,10 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
             this.tank2.readFromNBT(nbt.getCompoundTag("Tank2"));
         } else this.tank2.setFluid(null);
 
+        if (nbt.hasKey("Tank3", 10)) {
+            this.tank3.readFromNBT(nbt.getCompoundTag("Tank3"));
+        } else this.tank3.setFluid(null);
+
         this.inventory.clear();
         if (nbt.hasKey("Inventory", 9)) {
             NBTTagList list = nbt.getTagList("Inventory", 10);
@@ -260,7 +283,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Nullable
@@ -269,73 +292,9 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T)this.fluid;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return (T)this;
         return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public String getName() {
-        return "Basin";
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return this.inventory.size()+1;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.inventory.isEmpty();
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return index == this.inventory.size() ? ItemStack.EMPTY : this.inventory.get(index);
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        if (index == this.inventory.size()) return ItemStack.EMPTY;
-        this.sync();
-        ItemStack stack = this.inventory.get(index).splitStack(count);
-        this.optimizeInventory();
-        return stack;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (index == this.inventory.size()) return ItemStack.EMPTY;
-        this.sync();
-        return this.inventory.remove(index);
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        if (index == this.inventory.size()) {
-            this.inventory.add(stack);
-            return;
-        }
-        this.sync();
-        this.inventory.set(index, stack);
-        this.optimizeInventory();
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 16;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        for (int i = 0; i < this.inventory.size(); i++) {
-            if (Utils.itemMatches(this.inventory.get(i), stack) && i != index) return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void clear() {
-        this.sync();
-        this.inventory.clear();
     }
 
     public void optimizeInventory() {
@@ -355,20 +314,87 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements IInvento
 
     @Override
     public ItemStack tryInsertItem(ItemStack stack) {
-        for (int i = 0; i < this.getSizeInventory(); i++) {
-            ItemStack prev = this.getStackInSlot(i);
+        this.sync();
+        for (int i = 0; i < this.inventory.size(); i++) {
+            ItemStack prev = this.inventory.get(i);
             if (prev.isEmpty()) {
-                this.setInventorySlotContents(i, stack.splitStack(16));
+                this.inventory.set(i, stack.splitStack(16));
                 return stack;
             }
             if (ItemStack.areItemsEqual(prev, stack) && ItemStack.areItemStackTagsEqual(prev, stack)) {
-                int space = Math.min(prev.getMaxStackSize(), this.getInventoryStackLimit());
+                int space = Math.min(prev.getMaxStackSize(), 16);
                 prev.grow(space);
                 stack.shrink(space);
             }
             if (stack.isEmpty()) return ItemStack.EMPTY;
         }
-        this.sync();
+        this.inventory.add(stack.splitStack(16));
         return stack;
+    }
+
+    @Override
+    public int getSlots() {
+        return this.inventory.size()+1;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return slot == this.inventory.size() ? ItemStack.EMPTY : this.inventory.get(slot);
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (stack.isEmpty()) return ItemStack.EMPTY;
+        ItemStack copy = stack.copy();
+        if (slot == this.inventory.size()) {
+            if (this.mayInsertNewItem(copy)) {
+                if (simulate) {
+                    copy.splitStack(this.getSlotLimit(slot));
+                    return copy;
+                }
+                this.inventory.add(copy.splitStack(this.getSlotLimit(slot)));
+                this.sync();
+            }
+            return copy;
+        }
+        ItemStack prev = this.inventory.get(slot);
+        if (ItemStack.areItemsEqual(prev, copy) && ItemStack.areItemStackTagsEqual(prev, copy)) {
+            int space = Math.min(prev.getMaxStackSize(), this.getSlotLimit(slot)) - prev.getCount();
+            if (space > 0) {
+                ItemStack ret = copy.splitStack(space);
+                if (simulate) {
+                    return copy;
+                }
+                prev.grow(ret.getCount());
+                this.sync();
+                return copy;
+            }
+        }
+        return copy;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (amount == 0 || slot == this.inventory.size()) return ItemStack.EMPTY;
+        ItemStack prev = this.inventory.get(slot);
+        if (simulate) {
+            return prev.copy().splitStack(amount);
+        }
+        this.sync();
+        return prev.splitStack(amount);
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 16;
+    }
+
+    private boolean mayInsertNewItem(ItemStack stack) {
+        for (ItemStack prev : this.inventory) {
+            if (ItemStack.areItemsEqual(prev, stack) && ItemStack.areItemStackTagsEqual(prev, stack)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

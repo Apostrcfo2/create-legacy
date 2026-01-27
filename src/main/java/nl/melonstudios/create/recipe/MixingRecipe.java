@@ -81,6 +81,39 @@ public class MixingRecipe {
         }
         return true;
     }
+    public boolean removeRequiredInput(TileEntityBasin basin) {
+        if (this.requiredHeat > basin.getHeat()) return false;
+        FluidStack fluid1 = basin.tank1.getFluid();
+        FluidStack fluid2 = basin.tank2.getFluid();
+        boolean firstFluidFirst = true;
+        if (this.fluidIn1 != null) {
+            if (fluid1 == null) {
+                firstFluidFirst = false;
+                basin.tank2.drainInternal(this.fluidIn1, true);
+            } else {
+                basin.tank1.drainInternal(this.fluidIn1, true);
+            }
+        }
+        if (this.fluidIn2 != null) {
+            if (firstFluidFirst) {
+                basin.tank2.drainInternal(this.fluidIn2, true);
+            }
+        }
+        if (!this.requiredItems.isEmpty()) {
+            for (ItemStack require : this.requiredItems) {
+                int c = require.getCount();
+                for (ItemStack stack : basin.inventory) {
+                    if (Utils.itemMatches(require, stack)) {
+                        int rem = stack.getCount();
+                        stack.shrink(Math.min(c, rem));
+                        c = Math.max(c - rem, 0);
+                    }
+                }
+            }
+        }
+        basin.sync();
+        return true;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -92,7 +125,7 @@ public class MixingRecipe {
         private FluidStack fluidOut;
         private List<ItemStack> resultItems = Collections.emptyList();
         private int requiredHeat = 0;
-        private int recipeTime = 1000;
+        private int recipeTime = 1280;
 
         public MixingRecipe build(String recipeID) {
             return new MixingRecipe(recipeID, this.fluidIn1, this.fluidIn2, this.requiredItems, this.fluidOut, this.resultItems, this.requiredHeat, this.recipeTime);

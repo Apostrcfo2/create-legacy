@@ -1,6 +1,7 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -23,19 +24,25 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
 
     public final BlockPos.MutableBlockPos basinPos = new BlockPos.MutableBlockPos();
     public TileEntityBasin cachedBasin = null;
+    public int loweringOld = 0;
     public int lowering = 0;
     public int progress = 0;
     public String currentRecipe = null;
 
     @Override
     public void tick() {
+        this.loweringOld = this.lowering;
+        this.markDirty();
         super.tick();
 
         TileEntityBasin basin = this.getBasin();
         if (basin == null) this.currentRecipe = null;
         if (this.currentRecipe != null) {
             MixingRecipe recipe = MixingRecipes.instance.getRecipe(this.currentRecipe);
-            if (!recipe.matches(basin)) this.currentRecipe = null;
+            if (!recipe.matches(basin)) {
+                this.currentRecipe = null;
+                this.sync();
+            }
         }
         MixingRecipe recipe = this.getRecipe();
         boolean process = recipe != null && recipe.checkOutputSpace(basin);
@@ -50,7 +57,10 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
             this.recipeFX(basin, this.basinPos.getX() + 0.5, this.basinPos.getY() + 0.5, this.basinPos.getZ() + 0.5);
             if ((this.progress += (int) this.getSpeed()) >= recipe.recipeTime) {
                 this.progress = 0;
-                basin.dumpRecipeResults(recipe);
+                if (recipe.removeRequiredInput(basin)) {
+                    basin.dumpRecipeResults(recipe);
+                } else throw new RuntimeException("Recipe went wrong! pls fix");
+                this.sync();
             }
         }
     }
@@ -70,10 +80,6 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         if (this.world.isRemote) {
             if ((this.world.getTotalWorldTime() & 1) == 0) {
                 CreateLegacy.proxy.mixerFX(basin, x, y, z);
-                if (basin.hasAnyFluid()) {
-                    this.world.playSound(null, x, y, z, SoundEvents.ENTITY_BOAT_PADDLE_WATER, SoundCategory.BLOCKS, 0.125F, 0.5F);
-                }
-                this.world.playSound(null, x, y, z, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 0.125F, 0.5F);
             }
         }
     }
@@ -94,5 +100,47 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
     @Override
     public float minimumSpeed() {
         return 32.0F;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+
+        if (this.lowering != 0) nbt.setInteger("lower", this.lowering);
+        if (this.progress != 0) nbt.setInteger("progress", this.progress);
+        if (this.currentRecipe != null) nbt.setString("recipe", this.currentRecipe);
+
+        return nbt;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        this.lowering = nbt.getInteger("lower");
+        this.progress = nbt.getInteger("progress");
+        if (nbt.hasKey("recipe")) this.currentRecipe = nbt.getString("recipe");
+        else this.currentRecipe = null;
+    }
+
+    @Override
+    public NBTTagCompound writePacket() {
+        NBTTagCompound nbt = super.writePacket();
+
+        if (this.lowering != 0) nbt.setInteger("lower", this.lowering);
+        if (this.progress != 0) nbt.setInteger("progress", this.progress);
+        if (this.currentRecipe != null) nbt.setString("recipe", this.currentRecipe);
+
+        return nbt;
+    }
+
+    @Override
+    public void readPacket(NBTTagCompound nbt) {
+        super.readPacket(nbt);
+
+        this.lowering = nbt.getInteger("lower");
+        this.progress = nbt.getInteger("progress");
+        if (nbt.hasKey("recipe")) this.currentRecipe = nbt.getString("recipe");
+        else this.currentRecipe = null;
     }
 }

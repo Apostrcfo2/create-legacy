@@ -107,7 +107,7 @@ public class BlockBasin extends Block implements ITileEntityProvider, IGoggleInf
     @Override
     public List<String> getGoggleInfo(World world, BlockPos pos, IBlockState state) {
         List<String> list = BlockKineticBase.withTEDo(world, pos, TileEntityBasin.class, (te) -> {
-            boolean inv = !te.isEmpty();
+            boolean inv = !te.inventory.isEmpty();
             boolean fluid = te.hasAnyFluid();
             if (!inv && !fluid) return null;
             TextBuilder builder = new TextBuilder();
@@ -157,7 +157,8 @@ public class BlockBasin extends Block implements ITileEntityProvider, IGoggleInf
             for (ItemStack stack : basin.inventory) {
                 playerIn.addItemStackToInventory(stack.copy());
             }
-            basin.clear();
+            basin.inventory.clear();
+            return true;
         }
         IFluidHandlerItem handler = FluidUtil.getFluidHandler(held);
         if (handler == null) return false;

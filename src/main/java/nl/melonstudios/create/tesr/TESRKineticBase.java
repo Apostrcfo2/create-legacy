@@ -52,11 +52,15 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         for (EnumFacing side : EnumFacing.VALUES) {
             this.halfShafts[side.getIndex()] = BlockRender.byEnum(EnumRenderPart.getHalfShaft(side));
         }
+        for (EnumFacing.Axis axis : EnumFacing.Axis.values()) {
+            this.shaftlessCogs[axis.ordinal()] = BlockRender.byEnum(EnumRenderPart.getShaftlessCog(axis));
+        }
     }
 
     protected final Minecraft mc;
     protected final IBlockState shaftX, shaftY, shaftZ;
     protected final IBlockState[] halfShafts = new IBlockState[6];
+    protected final IBlockState[] shaftlessCogs = new IBlockState[3];
     @Override
     public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
@@ -103,6 +107,11 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         IBlockState state = this.halfShafts[side.getIndex()];
         IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(state);
         this.rotateModel(this.calculateAngle(te, side.getAxis(), pt, speed), side.getAxis(), model, state, 1.0F);
+    }
+    protected final void spinShaftlessCog(TileEntityKinetic te, float speed, EnumFacing.Axis axis, float pt) {
+        IBlockState state = this.shaftlessCogs[axis.ordinal()];
+        IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(state);
+        this.rotateModel(this.calculateAngle(te, axis, pt, speed), axis, model, state, 1.0F);
     }
 
     protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float speed) {

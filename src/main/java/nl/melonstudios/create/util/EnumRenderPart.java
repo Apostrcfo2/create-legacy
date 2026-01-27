@@ -66,6 +66,9 @@ public enum EnumRenderPart implements IStringSerializable {
     HARVESTER,
 
     SUCTION_CUP,
+    SHAFTLESS_COG_X,
+    SHAFTLESS_COG_Y,
+    SHAFTLESS_COG_Z,
     ;
 
     private final int id = this.ordinal();
@@ -89,6 +92,7 @@ public enum EnumRenderPart implements IStringSerializable {
     private static final EnumRenderPart[] BEARING_PLATES = new EnumRenderPart[6];
     private static final EnumRenderPart[] DEPLOYERS = new EnumRenderPart[6];
     private static final EnumRenderPart[] DEPLOYER_HOLDINGS = new EnumRenderPart[6];
+    private static final EnumRenderPart[] SHAFTLESS_COGS = new EnumRenderPart[3];
 
     public static EnumRenderPart byID(int id) {
         return values()[id % values().length];
@@ -147,6 +151,10 @@ public enum EnumRenderPart implements IStringSerializable {
         DEPLOYER_HOLDINGS[3] = DEPLOYER_HOLDING_SOUTH;
         DEPLOYER_HOLDINGS[4] = DEPLOYER_HOLDING_WEST;
         DEPLOYER_HOLDINGS[5] = DEPLOYER_HOLDING_EAST;
+
+        SHAFTLESS_COGS[0] = SHAFTLESS_COG_X;
+        SHAFTLESS_COGS[1] = SHAFTLESS_COG_Y;
+        SHAFTLESS_COGS[2] = SHAFTLESS_COG_Z;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
@@ -166,5 +174,8 @@ public enum EnumRenderPart implements IStringSerializable {
     }
     public static EnumRenderPart getDeployer(EnumFacing facing, boolean itemEmpty) {
         return itemEmpty ? DEPLOYERS[facing.getIndex()] : DEPLOYER_HOLDINGS[facing.getIndex()];
+    }
+    public static EnumRenderPart getShaftlessCog(EnumFacing.Axis axis) {
+        return SHAFTLESS_COGS[axis.ordinal()];
     }
 }
