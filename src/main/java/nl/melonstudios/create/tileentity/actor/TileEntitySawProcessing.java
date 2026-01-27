@@ -137,7 +137,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         } else {
             TileEntity te = this.world.getTileEntity(drop);
             if (te instanceof ITopOpenInventory) {
-                this.outputQueue = ((ITopOpenInventory)te).tryInsertItem(this.outputQueue);
+                this.outputQueue = ((ITopOpenInventory)te).tryInsertItem(this.outputQueue, side.getOpposite());
                 this.sync();
             }
         }

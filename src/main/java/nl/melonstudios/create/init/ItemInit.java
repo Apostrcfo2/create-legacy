@@ -99,6 +99,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.DEPOT);
         CreateLegacy.proxy.setItemModel(BlockInit.BASIN);
         CreateLegacy.proxy.setItemModel(BlockInit.CHUTE);
+        CreateLegacy.proxy.setItemModel(BlockInit.ITEM_DRAIN);
 
         for (int i = 0; i < 7; i++) {
             String type = EnumOrestoneVariant.byId(i).getName();

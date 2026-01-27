@@ -129,6 +129,10 @@ public final class BlockInit {
     public static final BlockChute CHUTE = (BlockChute)
             registerBlockWithItem(new BlockChute()
             .setRegistryName("chute").setUnlocalizedName("create.chute"));
+
+    public static final BlockItemDrain ITEM_DRAIN = (BlockItemDrain)
+            registerBlockWithItem(new BlockItemDrain()
+            .setRegistryName("item_drain").setUnlocalizedName("create.item_drain"));
     //endregion
 
     //region Decorations

@@ -76,6 +76,7 @@ public class CommonProxy {
         this.registerTE(TileEntityDepot.class, "depot");
         this.registerTE(TileEntityBasin.class, "basin");
         this.registerTE(TileEntityChute.class, "chute");
+        this.registerTE(TileEntityItemDrain.class, "item_drain");
     }
     public void registerEntityRenderers() {}
 
