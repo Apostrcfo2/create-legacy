@@ -76,6 +76,11 @@ public class Utils {
     public static float lerp(float delta, float start, float end) {
         return start + delta * (end - start);
     }
+    public static float clampedLerp(float delta, float start, float end) {
+        if (delta <= 0.0F) return start;
+        if (delta >= 1.0F) return end;
+        return lerp(delta, start, end);
+    }
 
     public static double lerp(double delta, double start, double end) {
         return start + delta * (end - start);

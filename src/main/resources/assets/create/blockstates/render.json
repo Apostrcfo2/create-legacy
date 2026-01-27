@@ -197,6 +197,9 @@
     "render_part=shaftless_cog_z": {
       "model": "create:cogwheel_shaftless",
       "x": 90
+    },
+    "render_part=whisk": {
+      "model": "create:render/whisk"
     }
   }
 }

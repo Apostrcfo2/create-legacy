@@ -7,6 +7,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.*;
@@ -586,6 +587,38 @@ public final class RecipeInit {
                         )
                         .setRecipeTime64RPM(20)
                         .build("create:chocolate")
+        );
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(Blocks.LEAVES, 1, OreDictionary.WILDCARD_VALUE)
+                        )
+                        .setInputFluids(
+                                new FluidStack(FluidRegistry.WATER, 250),
+                                new FluidStack(FluidInit.milk(), 250)
+                        )
+                        .setOutputItems()
+                        .setOutputFluid(
+                                new FluidStack(FluidInit.tea(), 500)
+                        )
+                        .setRecipeTime64RPM(20)
+                        .build("create:tea")
+        );
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(Blocks.LEAVES2, 1, OreDictionary.WILDCARD_VALUE)
+                        )
+                        .setInputFluids(
+                                new FluidStack(FluidRegistry.WATER, 250),
+                                new FluidStack(FluidInit.milk(), 250)
+                        )
+                        .setOutputItems()
+                        .setOutputFluid(
+                                new FluidStack(FluidInit.tea(), 500)
+                        )
+                        .setRecipeTime64RPM(20)
+                        .build("create:tea2")
         );
     }
     private static void sequences() {

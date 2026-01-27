@@ -69,6 +69,8 @@ public enum EnumRenderPart implements IStringSerializable {
     SHAFTLESS_COG_X,
     SHAFTLESS_COG_Y,
     SHAFTLESS_COG_Z,
+
+    WHISK,
     ;
 
     private final int id = this.ordinal();

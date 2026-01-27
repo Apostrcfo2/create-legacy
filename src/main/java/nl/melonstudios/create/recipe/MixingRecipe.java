@@ -43,14 +43,20 @@ public class MixingRecipe {
                 firstFluidFirst = false;
                 if (!fluid2.containsFluid(this.fluidIn1)) return false;
             } else {
-                if (!fluid1.containsFluid(this.fluidIn1)) return false;
+                if (!fluid1.containsFluid(this.fluidIn1)) {
+                    firstFluidFirst = false;
+                    if (fluid2 == null || !fluid2.containsFluid(this.fluidIn1)) return false;
+                }
             }
         }
         if (this.fluidIn2 != null) {
             if (firstFluidFirst) {
                 if (fluid2 == null) return false;
                 if (!fluid2.containsFluid(this.fluidIn2)) return false;
-            } else return false;
+            } else {
+                if (fluid1 == null) return false;
+                if (!fluid1.containsFluid(this.fluidIn2)) return false;
+            }
         }
         if (!this.requiredItems.isEmpty()) {
             for (ItemStack require : this.requiredItems) {
@@ -87,7 +93,7 @@ public class MixingRecipe {
         FluidStack fluid2 = basin.tank2.getFluid();
         boolean firstFluidFirst = true;
         if (this.fluidIn1 != null) {
-            if (fluid1 == null) {
+            if (fluid1 == null || !fluid1.containsFluid(this.fluidIn1)) {
                 firstFluidFirst = false;
                 basin.tank2.drainInternal(this.fluidIn1, true);
             } else {
@@ -97,6 +103,8 @@ public class MixingRecipe {
         if (this.fluidIn2 != null) {
             if (firstFluidFirst) {
                 basin.tank2.drainInternal(this.fluidIn2, true);
+            } else {
+                basin.tank1.drainInternal(this.fluidIn2, true);
             }
         }
         if (!this.requiredItems.isEmpty()) {

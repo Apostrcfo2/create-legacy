@@ -1,6 +1,5 @@
 package nl.melonstudios.create.block.actor;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -18,10 +17,8 @@ import nl.melonstudios.create.tileentity.actor.TileEntityPress;
 import nl.melonstudios.create.util.BlockProperties;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@SuppressWarnings("deprecation")
 public class BlockPress extends BlockKineticHorizontalAxisBase implements ITileEntityProvider {
     public BlockPress(MapColor color, SoundType soundType) {
         super(color, soundType);

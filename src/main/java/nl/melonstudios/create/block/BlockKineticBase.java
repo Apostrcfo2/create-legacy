@@ -125,7 +125,7 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
             } else flag = false;
             if (te instanceof ISpeedRequirement) {
                 float min = ((ISpeedRequirement)te).minimumSpeed();
-                if (te.getTheoreticalSpeed() < min) {
+                if (te.getTheoreticalSpeed() < min && te.getSpeed() != 0.0F) {
                     if (flag) builder.enter();
                     builder.formatting(TextFormatting.GOLD).translate("goggles.speed_requirement").enter();
                     builder.formatting(TextFormatting.AQUA).space().space().translate("goggles.speed_requirement.desc", min).enter();

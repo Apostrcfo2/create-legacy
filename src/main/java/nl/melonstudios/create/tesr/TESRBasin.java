@@ -39,11 +39,13 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
             RenderUtils.prepare(x, y, z);
             GlStateManager.disableBlend(); //transparency is an issue at times
 
-            double level = 0.0;
-            if (liquid1 != null) level = Math.max(level, liquid1.amount * 0.00085);
-            if (liquid2 != null) level = Math.max(level, liquid2.amount * 0.00085);
-            if (liquid3 != null) level = Math.max(level, liquid3.amount * 0.00085);
-            level += 0.125;
+            double level;
+            int fluidAmount = 0;
+            if (liquid1 != null) fluidAmount += liquid1.amount;
+            if (liquid2 != null) fluidAmount += liquid2.amount;
+            if (liquid3 != null) fluidAmount += liquid3.amount;
+            fluidAmount = Math.min(fluidAmount, 1500);
+            level = 0.125 + ((fluidAmount / 1500.0) * 0.8);
 
             World world = te.getWorld();
             long time = world.getTotalWorldTime() + Math.abs(te.hashCode() | ((long)te.getPos().hashCode() << 32));
