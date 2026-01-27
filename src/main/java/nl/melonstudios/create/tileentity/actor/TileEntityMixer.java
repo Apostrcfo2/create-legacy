@@ -57,6 +57,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
 
         if (this.lowering >= 20 && recipe != null && basin != null) {
             this.recipeFX(basin, this.basinPos.getX() + 0.5, this.basinPos.getY() + 0.5, this.basinPos.getZ() + 0.5);
+            basin.addedItemRotation += (int)(this.getSpeed() * 0.3);
             if ((this.progress += (int) this.getSpeed()) >= recipe.recipeTime) {
                 this.progress = 0;
                 if (recipe.removeRequiredInput(basin)) {

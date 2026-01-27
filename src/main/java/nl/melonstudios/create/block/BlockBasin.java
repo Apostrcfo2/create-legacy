@@ -6,6 +6,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -217,5 +219,19 @@ public class BlockBasin extends Block implements ITileEntityProvider, IGoggleInf
             }
         }
         return false;
+    }
+
+    @Override
+    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
+        if (entityIn instanceof EntityItem) {
+            TileEntityBasin basin = Utils.cast(worldIn.getTileEntity(pos), TileEntityBasin.class);
+            if (basin != null) {
+                EntityItem item = (EntityItem) entityIn;
+                ItemStack stack = item.getItem();
+                stack = basin.tryInsertItem(stack);
+                if (stack.isEmpty()) item.setDead();
+                else item.setItem(stack);
+            }
+        }
     }
 }

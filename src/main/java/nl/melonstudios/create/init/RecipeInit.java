@@ -601,7 +601,7 @@ public final class RecipeInit {
                         .setOutputFluid(
                                 new FluidStack(FluidInit.tea(), 500)
                         )
-                        .setRecipeTime64RPM(20)
+                        .setRecipeTime64RPM(200)
                         .build("create:tea")
         );
         recipes.addRecipe(
@@ -617,7 +617,7 @@ public final class RecipeInit {
                         .setOutputFluid(
                                 new FluidStack(FluidInit.tea(), 500)
                         )
-                        .setRecipeTime64RPM(20)
+                        .setRecipeTime64RPM(200)
                         .build("create:tea2")
         );
     }

@@ -17,7 +17,10 @@ import net.minecraftforge.fluids.FluidStack;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 import nl.melonstudios.create.util.RenderUtils;
 import nl.melonstudios.create.util.SubInteractionBox;
+import nl.melonstudios.create.util.Utils;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Random;
 
 public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
     public TESRBasin() {
@@ -35,17 +38,16 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
         FluidStack liquid2 = te.tank2.getFluid();
         FluidStack liquid3 = te.tank3.getFluid();
 
+        double level;
+        int fluidAmount = 0;
+        if (liquid1 != null) fluidAmount += liquid1.amount;
+        if (liquid2 != null) fluidAmount += liquid2.amount;
+        if (liquid3 != null) fluidAmount += liquid3.amount;
+        fluidAmount = Math.min(fluidAmount, 1500);
+        level = 0.125 + ((fluidAmount / 1500.0) * 0.8);
         if (liquid1 != null || liquid2 != null || liquid3 != null) {
             RenderUtils.prepare(x, y, z);
             GlStateManager.disableBlend(); //transparency is an issue at times
-
-            double level;
-            int fluidAmount = 0;
-            if (liquid1 != null) fluidAmount += liquid1.amount;
-            if (liquid2 != null) fluidAmount += liquid2.amount;
-            if (liquid3 != null) fluidAmount += liquid3.amount;
-            fluidAmount = Math.min(fluidAmount, 1500);
-            level = 0.125 + ((fluidAmount / 1500.0) * 0.8);
 
             World world = te.getWorld();
             long time = world.getTotalWorldTime() + Math.abs(te.hashCode() | ((long)te.getPos().hashCode() << 32));
@@ -101,14 +103,14 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         if (te.recipeFilter != null) {
             ItemStack stack = te.recipeFilter.getRenderItem();
             if (!stack.isEmpty()) {
                 GlStateManager.pushMatrix();
-                GlStateManager.enableRescaleNormal();
-                GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
-                GlStateManager.enableBlend();
-                GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
                 IBakedModel itemModel = this.mc.getRenderItem()
                         .getItemModelWithOverrides(stack, te.getWorld(), null);
@@ -122,11 +124,36 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
                     this.mc.getRenderItem().renderItem(stack, itemModel);
                     GlStateManager.popMatrix();
                 }
-                GlStateManager.disableRescaleNormal();
-                GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
             }
         }
+        if (!te.inventory.isEmpty()) {
+            GlStateManager.pushMatrix();
+            int count = te.inventory.size();
+            GlStateManager.translate(0.5, level, 0.5);
+            float baseRot = Utils.clampedLerp(partialTicks, te.itemRotationOld, te.itemRotation);
+            float spacing = 360.0F / count;
+            Random rnd = new Random(te.hashCode());
+            for (int i = 0; i < count; i++) {
+                GlStateManager.pushMatrix();
+                ItemStack stack = te.inventory.get(i);
+                IBakedModel itemModel = this.mc.getRenderItem()
+                        .getItemModelWithOverrides(stack, te.getWorld(), null);
+                GlStateManager.rotate(spacing*i+baseRot, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translate(0.35F, 0.0F, 0.0F);
+                if (itemModel instanceof BakedItemModel) {
+                    GlStateManager.scale(0.25F, 0.25F, 0.25F);
+                } else {
+                    GlStateManager.scale(0.15F, 0.15F, 0.15F);
+                }
+                GlStateManager.rotate(90.0F, rnd.nextFloat(), rnd.nextFloat(), rnd.nextFloat());
+                this.mc.getRenderItem().renderItem(stack, itemModel);
+                GlStateManager.popMatrix();
+            }
+            GlStateManager.popMatrix();
+        }
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableBlend();
 
         SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);
         GlStateManager.popMatrix();

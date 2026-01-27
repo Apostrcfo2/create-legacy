@@ -19,7 +19,7 @@ public class TESRMixer extends TESRKineticBase<TileEntityMixer> {
         float lowering = Utils.clampedLerp(pt, te.loweringOld, te.lowering) * -0.05F;
         GlStateManager.translate(0.0F, lowering, 0.0F);
         {
-            IBlockState state = BlockRender.byEnum(EnumRenderPart.PRESS_X);
+            IBlockState state = BlockRender.byEnum(EnumRenderPart.PRESS_Z);
             IBakedModel model = this.mc.getBlockRendererDispatcher().getModelForState(state);
             this.renderBakedModel(1.0F, model, state);
         }

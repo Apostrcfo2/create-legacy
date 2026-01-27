@@ -119,7 +119,9 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
 
     @Override
     public void tick() {
-
+        this.itemRotationOld = this.itemRotation;
+        this.itemRotation += this.addedItemRotation;
+        this.addedItemRotation = 0;
     }
 
     @Override
@@ -130,6 +132,10 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
     public int getHeat() {
         return 0;
     }
+
+    public int itemRotation = 0;
+    public int itemRotationOld = 0;
+    public int addedItemRotation = 0;
 
     //TODO: Add the output spout thingamajig
     public void dumpRecipeResults(@Nullable FluidStack[] fluids, ItemStack... items) {
