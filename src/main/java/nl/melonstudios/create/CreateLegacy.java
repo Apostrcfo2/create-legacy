@@ -98,17 +98,27 @@ public class CreateLegacy {
     @EventHandler
     public void youGotMail(FMLInterModComms.IMCEvent event) {
         for (FMLInterModComms.IMCMessage message : event.getMessages()) {
-            if (message.getMessageType() == NBTTagCompound.class) {
+            if (message.isNBTMessage()) {
                 NBTTagCompound nbt = message.getNBTValue();
 
-                if (nbt.hasKey("RecipeData", 10)) {
-                    NBTTagCompound data = nbt.getCompoundTag("RecipeData");
-                    String recipeType = data.getString("type");
-                    NBTDecodableRecipeType type = DECODABLE_RECIPE_TYPE_MAP.get(recipeType);
-                    if (type != null) {
-                        String recipeId = data.getString("id");
-                        type.decodeRecipe(recipeId, data);
+                if ("addRecipe".equals(message.key)) {
+                    if (nbt.hasKey("RecipeData", 10)) {
+                        NBTTagCompound data = nbt.getCompoundTag("RecipeData");
+                        String recipeType = data.getString("type");
+                        NBTDecodableRecipeType type = DECODABLE_RECIPE_TYPE_MAP.get(recipeType);
+                        if (type != null) {
+                            CreateLegacy.logger.debug("Adding recipe of type {} (received from {})", recipeType, message.getSender());
+                            String recipeId = data.getString("id");
+                            type.decodeRecipe(recipeId, data);
+                        } else {
+                            CreateLegacy.logger.debug("Could not add recipe of unknown type {} (received from {})", recipeType, message.getSender());
+                        }
                     }
+                }
+            }
+            if (message.isStringMessage()) {
+                if ("addContraptionInventory".equals(message.key)) {
+                    Contraption.addValidInventoryFromIMC(message);
                 }
             }
         }

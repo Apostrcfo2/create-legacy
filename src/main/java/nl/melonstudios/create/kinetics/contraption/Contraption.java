@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.event.RegisterContraptionInventoriesEvent;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
@@ -320,5 +322,16 @@ public class Contraption implements IBlockAccess {
     }
     public static boolean isValidInventory(TileEntity te) {
         return VALID_INVENTORY_CLASSES.contains(te.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void addValidInventoryFromIMC(FMLInterModComms.IMCMessage message) {
+        try {
+            Class<? extends TileEntity> clazz = (Class<? extends TileEntity>) Class.forName(message.getStringValue());
+            VALID_INVENTORY_CLASSES.add(clazz);
+            CreateLegacy.logger.debug("Added contraption inventory {} (received from {})", clazz.getSimpleName(), message.getSender());
+        } catch (Throwable e) {
+            CreateLegacy.logger.warn("Could not add valid contraption inventory from IMC: {}", String.valueOf(e));
+        }
     }
 }
