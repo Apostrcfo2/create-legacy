@@ -330,7 +330,7 @@ public class Contraption implements IBlockAccess {
             VALID_INVENTORY_CLASSES.add(clazz);
             CreateLegacy.logger.debug("Added contraption inventory {} (received from {})", clazz.getSimpleName(), message.getSender());
         } catch (Throwable e) {
-            CreateLegacy.logger.warn("Could not add valid contraption inventory from IMC: {}", String.valueOf(e));
+            CreateLegacy.logger.warn("Could not add contraption inventory from IMC: {} (received from {})", String.valueOf(e), message.getSender());
         }
     }
 }
