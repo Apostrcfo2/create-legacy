@@ -151,6 +151,7 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
         if (this.draining.isEmpty()) {
             this.rollingDirection = null;
             this.draining = stack;
+            this.sync();
             return ItemStack.EMPTY;
         }
         return stack;
@@ -161,6 +162,7 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
         if (this.draining.isEmpty()) {
             this.rollingDirection = side != null ? side.getOpposite() : null;
             this.draining = stack;
+            this.sync();
             return ItemStack.EMPTY;
         }
         return stack;

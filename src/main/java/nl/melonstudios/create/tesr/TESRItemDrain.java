@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.fluids.FluidStack;
 import nl.melonstudios.create.tileentity.TileEntityItemDrain;
 import nl.melonstudios.create.util.RenderUtils;
@@ -56,9 +57,13 @@ public class TESRItemDrain extends TileEntitySpecialRenderer<TileEntityItemDrain
                 GlStateManager.rotate(-te.rollingDirection.getHorizontalAngle(), 0.0F, 1.0F, 0.0F);
             }
             GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(0.25F, 0.25F, 0.25F);
             IBakedModel model = Minecraft.getMinecraft().getRenderItem()
                     .getItemModelWithOverrides(te.draining, this.getWorld(), null);
+            if (model instanceof BakedItemModel) {
+                GlStateManager.scale(0.5F, 0.5F, 0.5F);
+            } else {
+                GlStateManager.scale(0.25F, 0.25F, 0.25F);
+            }
             Minecraft.getMinecraft().getRenderItem()
                     .renderItem(te.draining, model);
         }

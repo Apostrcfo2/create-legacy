@@ -50,6 +50,8 @@ tile.create.interface_storage.name=Portable Storage Interface
 tile.create.interface_fluid.name=Portable Fluid Interface
 tile.create.millstone.name=Millstone
 
+tile.create.blaze_burner_empty.name=Empty Blaze Burner
+tile.create.blaze_burner.name=Blaze Burner
 tile.create.depot.name=Depot
 tile.create.basin.name=Basin
 tile.create.chute.name=Chute

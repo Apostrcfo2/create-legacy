@@ -160,7 +160,9 @@ public class BlockBlazeBurner extends Block implements IHeatProvider, IMetaName,
         if (isBlazecake) {
             te.blazecake(4000);
             if (!worldIn.isRemote) {
+                ItemStack container = held.getItem().getContainerItem(held);
                 held.shrink(1);
+                if (!container.isEmpty()) playerIn.addItemStackToInventory(container);
                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                         SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.7F, 1.0F);
                 worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
@@ -183,7 +185,9 @@ public class BlockBlazeBurner extends Block implements IHeatProvider, IMetaName,
             if (fuelTicks > 0) {
                 te.feed(fuelTicks);
                 if (!worldIn.isRemote) {
+                    ItemStack container = held.getItem().getContainerItem(held);
                     held.shrink(1);
+                    if (!container.isEmpty()) playerIn.addItemStackToInventory(container);
                     worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                             SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS, 0.7F, 1.0F);
                     worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,

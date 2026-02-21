@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "gearbox",
+  "pattern": [
+    " B ",
+    "B#B",
+    " B "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:netherrack"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "item": "create:blaze_burner",
+    "data": 0
+  }
+}
