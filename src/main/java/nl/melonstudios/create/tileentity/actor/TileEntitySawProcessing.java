@@ -13,17 +13,20 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.recipe.CuttingRecipes;
 import nl.melonstudios.create.recipe.SawingRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
-import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class TileEntitySawProcessing extends TileEntityKinetic implements ITileEntityWithSubInteractions, ITopOpenInventory, ISidedInventoryDebloated {
+public class TileEntitySawProcessing extends TileEntityKinetic implements ITileEntityWithSubInteractions, ITopOpenInventory, IItemHandler {
     public static void addSubInteractionsAlongX(TileEntitySawProcessing te) {
         te.subInteractionBoxes.add(SubInteractionBox.Helper.createDefaultAt(0.25F, 0.75F, 0.5F, te::setFilter));
         te.subInteractionBoxes.add(SubInteractionBox.Helper.createDefaultAt(0.75F, 0.75F, 0.5F, te::setFilter));
@@ -285,82 +288,55 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         return ret.isEmpty() ? ItemStack.EMPTY : ret;
     }
 
-    private static final int[] SLOTS = {0,1};
-    private static final int[] NONE = {};
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.UP ? NONE : SLOTS;
+    public int getSlots() {
+        return 0;
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-        return direction != EnumFacing.UP && index == 0 && (this.currentlyProcessing.isEmpty() && this.outputQueue.isEmpty());
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 ? this.currentlyProcessing : this.outputQueue;
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return direction != EnumFacing.UP && index == 1 && !this.outputQueue.isEmpty();
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return 2;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return (this.currentlyProcessing.isEmpty() && this.outputQueue.isEmpty());
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return index == 0 ? this.currentlyProcessing : this.outputQueue;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        if (index == 0 || this.outputQueue.isEmpty()) return ItemStack.EMPTY;
-        ItemStack stack = this.outputQueue.splitStack(count);
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (slot != 0 || stack.isEmpty() || !this.currentlyProcessing.isEmpty()) return stack;
+        ItemStack ret = stack.copy();
+        ItemStack split = ret.splitStack(1);
+        if (simulate) return ret;
+        this.currentlyProcessing = split;
         this.sync();
-        return stack;
+        return ret;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (index == 0 || this.outputQueue.isEmpty()) return ItemStack.EMPTY;
-        ItemStack stack = this.outputQueue.copy();
-        this.outputQueue = ItemStack.EMPTY;
-        this.sync();
-        return stack;
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot != 1 || amount == 0 || this.outputQueue.isEmpty()) return ItemStack.EMPTY;
+        ItemStack copy = simulate ? this.outputQueue.copy() : this.outputQueue;
+        if (!simulate) this.sync();
+        return copy.splitStack(amount);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        if (index == 0) {
-            this.setCurrentlyProcessing(stack.copy());
-        }
+    public int getSlotLimit(int slot) {
+        return 1;
     }
 
     @Override
-    public int getInventoryStackLimit() {
-        return 64;
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slot == 0;
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0;
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
+    @Nullable
     @Override
-    public void clear() {
-        this.currentlyProcessing = ItemStack.EMPTY;
-        this.outputQueue = ItemStack.EMPTY;
-        this.progress = 0;
-        this.sync();
-    }
-
-    @Override
-    public String getName() {
-        return "Mechanical Saw (Processing)";
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
+        return super.getCapability(capability, facing);
     }
 }

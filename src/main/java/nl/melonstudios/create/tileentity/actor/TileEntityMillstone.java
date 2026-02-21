@@ -7,13 +7,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.recipe.MillingRecipes;
 import nl.melonstudios.create.recipe.PulverizationRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.Utils;
 
-public class TileEntityMillstone extends TileEntityKinetic implements ISidedInventory {
+import javax.annotation.Nonnull;
+
+public class TileEntityMillstone extends TileEntityKinetic implements IItemHandler {
     public ItemStack input = ItemStack.EMPTY;
     public final ItemStack[] output = new ItemStack[] {
             ItemStack.EMPTY,
@@ -180,119 +183,40 @@ public class TileEntityMillstone extends TileEntityKinetic implements ISidedInve
         this.timer = nbt.getInteger("timer");
     }
 
-    private static final int[] SLOTS = {0,1,2,3,4,5,6,7,8,9};
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return SLOTS;
-    }
-
-    @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-        return index == 0 && this.input.isEmpty() && MillingRecipes.instance.getRecipeForInput(itemStackIn) != null;
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return index != 0 && direction != EnumFacing.UP;
-    }
-
-    @Override
-    public int getSizeInventory() {
+    public int getSlots() {
         return 10;
     }
 
     @Override
-    public boolean isEmpty() {
-        if (!this.input.isEmpty()) return false;
-        for (int i = 0; i < 9; i++) if (!this.output[i].isEmpty()) return false;
-        return true;
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 ? this.input : this.output[slot-1];
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
-        return index == 0 ? this.input : this.output[index-1];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        if (index == 0) {
-            ItemStack ret = this.input.splitStack(count);
-            this.sync();
-            return ret;
-        }
-        ItemStack ret = this.output[index-1].splitStack(count);
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (slot != 0 || stack.isEmpty() || !this.input.isEmpty() || MillingRecipes.instance.getRecipeForInput(stack) == null) return stack;
+        if (simulate) return ItemStack.EMPTY;
+        this.input = stack.copy();
         this.sync();
-        return ret;
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (index == 0) {
-            ItemStack ret = this.input.copy();
-            this.input = ItemStack.EMPTY;
-            this.sync();
-            return ret;
-        }
-        ItemStack ret = this.output[index-1].copy();
-        this.output[index-1] = ItemStack.EMPTY;
-        this.sync();
-        return ret;
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot == 0 || amount == 0) return ItemStack.EMPTY;
+        ItemStack prev = simulate ? this.output[slot-1].copy() : this.output[slot-1];
+        if (!simulate) this.sync();
+        return prev.splitStack(amount);
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        if (index == 0) {
-            this.input = stack;
-            this.sync();
-        } else {
-            this.output[index - 1] = stack;
-            this.sync();
-        }
-    }
-    @Override
-    public int getInventoryStackLimit() {
+    public int getSlotLimit(int slot) {
         return 64;
     }
-    @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
-        return false;
-    }
-    @Override
-    public void openInventory(EntityPlayer player) {
 
-    }
     @Override
-    public void closeInventory(EntityPlayer player) {
-
-    }
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && MillingRecipes.instance.getRecipeForInput(stack) != null;
-    }
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-    @Override
-    public void setField(int id, int value) {
-
-    }
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-    @Override
-    public void clear() {
-        this.input = ItemStack.EMPTY;
-        for (int i = 0; i < 9; i++) this.output[i] = ItemStack.EMPTY;
-        this.sync();
-    }
-    @Override
-    public String getName() {
-        return "Millstone";
-    }
-    @Override
-    public boolean hasCustomName() {
-        return false;
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slot == 0 && MillingRecipes.instance.getRecipeForInput(stack) != null;
     }
 }
