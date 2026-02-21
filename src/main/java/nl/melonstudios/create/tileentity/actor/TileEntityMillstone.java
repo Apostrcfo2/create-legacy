@@ -1,11 +1,8 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
@@ -13,8 +10,6 @@ import nl.melonstudios.create.recipe.MillingRecipes;
 import nl.melonstudios.create.recipe.PulverizationRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.Utils;
-
-import javax.annotation.Nonnull;
 
 public class TileEntityMillstone extends TileEntityKinetic implements IItemHandler {
     public ItemStack input = ItemStack.EMPTY;

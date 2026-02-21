@@ -35,7 +35,6 @@ import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.IHaltBeltContents;
-import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.PlayerDeployer;
 import nl.melonstudios.create.util.SubInteractionBox;
@@ -44,7 +43,6 @@ import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 import org.lwjgl.util.vector.Vector3f;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;

@@ -26,7 +26,6 @@ import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
