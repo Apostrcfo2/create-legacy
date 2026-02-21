@@ -44,7 +44,7 @@ public final class BlockCasing extends Block implements IMetaName {
                 ANDESITE, COPPER, BRASS, TRAIN
         };
         public static Variant byID(int id) {
-            return VALUES[id % 4];
+            return VALUES[id & 3];
         }
     }
 
