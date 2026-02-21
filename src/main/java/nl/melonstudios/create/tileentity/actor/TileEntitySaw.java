@@ -210,7 +210,7 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
                     List<ItemStack> leftovers = new ArrayList<>();
                     ItemStack leftover;
                     for (ItemStack stack : drops) {
-                        leftover = inventory.insertItem(stack);
+                        leftover = inventory.insertItem(stack, false);
                         if (!leftover.isEmpty()) leftovers.add(leftover.copy());
                     }
                     if (!leftovers.isEmpty()) {

@@ -3,6 +3,7 @@ package nl.melonstudios.create.kinetics.contraption.accessor;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
+import nl.melonstudios.create.kinetics.contraption.ContraptionInventoryLegacy;
 import org.lwjgl.util.vector.Vector3f;
 
 public interface IContraptionAccessor {
@@ -12,5 +13,9 @@ public interface IContraptionAccessor {
     void getWorldPos(Vector3f localPos, Vector3f store);
     void getNormal(EnumFacing facing, Vector3f store);
     void pauseContraption();
+    @Deprecated
+    default ContraptionInventoryLegacy getInventoryLegacy() {
+        throw new UnsupportedOperationException("The contraption inventories have been reworked after 26w04a");
+    }
     ContraptionInventory getInventory();
 }

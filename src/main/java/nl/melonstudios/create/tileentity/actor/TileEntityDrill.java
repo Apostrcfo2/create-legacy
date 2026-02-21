@@ -102,7 +102,7 @@ public class TileEntityDrill extends TileEntityBreakBlockBase implements IContra
                     state.getBlock().getDrops(drops, world, this.breakingPos, state, 0);
                     List<ItemStack> leftovers = new ArrayList<>();
                     for (ItemStack  stack : drops) {
-                        stack = inventory.insertItem(stack);
+                        stack = inventory.insertItem(stack, false);
                         if (!stack.isEmpty()) leftovers.add(stack);
                     }
                     if (!leftovers.isEmpty()) {

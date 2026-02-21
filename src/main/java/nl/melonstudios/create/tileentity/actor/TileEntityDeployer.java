@@ -298,7 +298,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         BlockPos use = pos(this.itemUsePos);
         if (!pos(this.itemUsePosOld).equals(use)) {
             if (this.heldItem.isEmpty()) {
-                this.heldItem = inventory.retrieveItem(this.filter);
+                this.heldItem = inventory.retrieveItem(this.filter, 64, false);
             }
             Vector3f facingVec = new Vector3f();
             contraption.getNormal(facing, facingVec);
@@ -337,7 +337,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         }
 
         if (!this.cloggedItem.isEmpty()) {
-            this.cloggedItem = inventory.insertItem(this.cloggedItem);
+            this.cloggedItem = inventory.insertItem(this.cloggedItem, false);
         }
     }
 

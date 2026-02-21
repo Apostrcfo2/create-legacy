@@ -49,7 +49,7 @@ public class TileEntityHarvester extends TileEntity implements IContraptionActor
                     crops.getDrops(drops, world, blockPosition, crop, 0);
                     List<ItemStack> leftovers = new ArrayList<>();
                     for (ItemStack stack : drops) {
-                        stack = inventory.insertItem(stack);
+                        stack = inventory.insertItem(stack, false);
                         if (!stack.isEmpty()) leftovers.add(stack);
                     }
                     if (!leftovers.isEmpty()) {

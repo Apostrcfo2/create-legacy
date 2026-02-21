@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -304,7 +305,7 @@ public class Contraption implements IBlockAccess {
 
     public RenderContraption renderContraption = null;
 
-    private static final Set<Class<? extends IInventory>> VALID_INVENTORY_CLASSES = new HashSet<>();
+    private static final Set<Class<? extends TileEntity>> VALID_INVENTORY_CLASSES = new HashSet<>();
     public static void registerValidInventoryClasses() {
         if (!VALID_INVENTORY_CLASSES.isEmpty()) throw new IllegalStateException("Already registered valid inventory classes");
         VALID_INVENTORY_CLASSES.add(TileEntityChest.class);
@@ -313,7 +314,11 @@ public class Contraption implements IBlockAccess {
         MinecraftForge.EVENT_BUS.post(event);
         event.load(VALID_INVENTORY_CLASSES);
     }
+    @Deprecated
     public static boolean isValidInventory(IInventory inventory) {
-        return VALID_INVENTORY_CLASSES.contains(inventory.getClass());
+        throw new UnsupportedOperationException("The contraption inventories have been reworked after 26w04a");
+    }
+    public static boolean isValidInventory(TileEntity te) {
+        return VALID_INVENTORY_CLASSES.contains(te.getClass());
     }
 }

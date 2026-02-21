@@ -1,66 +1,40 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.item.ItemStack;
-import nl.melonstudios.create.tileentity.marker.IInventoryDebloated;
+import net.minecraftforge.items.IItemHandler;
 
-public class TileEntityStorageInterface extends TileEntityContraptionInterfaceBase implements IInventoryDebloated {
+public class TileEntityStorageInterface extends TileEntityContraptionInterfaceBase implements IItemHandler {
     public TileEntityStorageInterface() {
         super();
     }
 
     @Override
-    public String getName() {
-        return "Storage Interface";
+    public int getSlots() {
+        return this.getInventory().getInventoryRepresentation().getSlots();
     }
 
     @Override
-    public int getSizeInventory() {
-        return this.getInventory().getInventoryRepresentation().getSizeInventory();
+    public ItemStack getStackInSlot(int slot) {
+        return this.getInventory().getInventoryRepresentation().getStackInSlot(slot);
     }
 
     @Override
-    public boolean isEmpty() {
-        return this.getInventory().getInventoryRepresentation().isEmpty();
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        return this.getInventory().getInventoryRepresentation().insertItem(slot, stack, simulate);
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
-        return this.getInventory().getInventoryRepresentation().getStackInSlot(index);
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        return this.getInventory().getInventoryRepresentation().extractItem(slot, amount, simulate);
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack stack = this.getInventory().getInventoryRepresentation().decrStackSize(index, count);
-        if (!stack.isEmpty()) this.setDisconnectionTimer(40);
-        return stack;
+    public int getSlotLimit(int slot) {
+        return this.getInventory().getInventoryRepresentation().getSlotLimit(slot);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack stack = this.getInventory().getInventoryRepresentation().removeStackFromSlot(index);
-        if (!stack.isEmpty()) this.setDisconnectionTimer(40);
-        return stack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        this.setDisconnectionTimer(40);
-        this.getInventory().getInventoryRepresentation().setInventorySlotContents(index, stack);
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return this.getInventory().getInventoryRepresentation().getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return this.getInventory().getInventoryRepresentation().isItemValidForSlot(index, stack);
-    }
-
-    @Override
-    public void clear() {
-        this.getInventory().getInventoryRepresentation().clear();
-        this.setDisconnectionTimer(40);
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return this.getInventory().getInventoryRepresentation().isItemValid(slot, stack);
     }
 }
