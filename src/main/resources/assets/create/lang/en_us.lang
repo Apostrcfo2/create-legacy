@@ -148,6 +148,8 @@ item.create.crushed_iron_ore.name=Crushed Iron Ore
 item.create.crushed_gold_ore.name=Crushed Gold Ore
 item.create.crushed_copper_ore.name=Crushed Copper Ore
 item.create.crushed_zinc_ore.name=Crushed Zinc Ore
+item.create.blazecake_base.name=Blazecake Base
+item.create.blazecake.name=Blazecake
 
 item.create.goggles.name=Engineer's Goggles
 item.create.sandpaper.name=Sandpaper
@@ -172,6 +174,7 @@ goggles.info.currently_processing=Currently Processing
 goggles.info.output=Output
 goggles.info.clogging=An Item is clogging the output of this Machine
 goggles.inventory_contents=Inventory Contents
+goggles.fluid_contents=Fluid Contents
 
 ## TABS ##
 itemGroup.create=Create

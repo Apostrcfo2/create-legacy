@@ -133,7 +133,7 @@ public class MixingRecipe {
         private FluidStack fluidOut;
         private List<ItemStack> resultItems = Collections.emptyList();
         private int requiredHeat = 0;
-        private int recipeTime = 1280;
+        private int recipeTime = 5120;
 
         public MixingRecipe build(String recipeID) {
             return new MixingRecipe(recipeID, this.fluidIn1, this.fluidIn2, this.requiredItems, this.fluidOut, this.resultItems, this.requiredHeat, this.recipeTime);

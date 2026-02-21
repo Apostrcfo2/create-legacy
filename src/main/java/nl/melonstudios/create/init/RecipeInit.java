@@ -585,7 +585,6 @@ public final class RecipeInit {
                         .setOutputFluid(
                                 new FluidStack(FluidInit.chocolate(), 250)
                         )
-                        .setRecipeTime64RPM(20)
                         .build("create:chocolate")
         );
         recipes.addRecipe(
@@ -601,7 +600,6 @@ public final class RecipeInit {
                         .setOutputFluid(
                                 new FluidStack(FluidInit.tea(), 500)
                         )
-                        .setRecipeTime64RPM(200)
                         .build("create:tea")
         );
         recipes.addRecipe(
@@ -617,8 +615,84 @@ public final class RecipeInit {
                         .setOutputFluid(
                                 new FluidStack(FluidInit.tea(), 500)
                         )
-                        .setRecipeTime64RPM(200)
                         .build("create:tea2")
+        );
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(Blocks.STONE, 1, 5),
+                                new ItemStack(Items.IRON_NUGGET)
+                        )
+                        .setOutputItems(
+                                new ItemStack(ItemInit.INGREDIENT, 1, 15)
+                        )
+                        .build("create:andesite_alloy")
+        );
+        int tracker = 0;
+        for (ItemStack stack : OreDictionary.getOres("nuggetZinc")) {
+            recipes.addRecipe(
+                    MixingRecipe.builder()
+                            .setInputItems(
+                                    new ItemStack(Blocks.STONE, 1, 5),
+                                    stack.copy()
+                            )
+                            .setOutputItems(
+                                    new ItemStack(ItemInit.INGREDIENT, 1, 15)
+                            )
+                            .build("create:andesite_alloy_zinc" + tracker++)
+            );
+        }
+        tracker = 0;
+        for (ItemStack zinc : OreDictionary.getOres("ingotZinc")) {
+            for (ItemStack copper : OreDictionary.getOres("ingotCopper")) {
+                recipes.addRecipe(
+                        MixingRecipe.builder()
+                                .setInputItems(
+                                        zinc.copy(),
+                                        copper.copy()
+                                )
+                                .setOutputItems(
+                                        new ItemStack(ItemInit.INGREDIENT, 2, 18)
+                                )
+                                .setRequiredHeat(1)
+                                .build("create:brass" + tracker++)
+                );
+            }
+        }
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(Blocks.SAPLING, 4, OreDictionary.WILDCARD_VALUE)
+                        )
+                        .setInputFluids(
+                                new FluidStack(FluidRegistry.WATER, 250)
+                        )
+                        .setOutputItems(
+                                new ItemStack(ItemInit.INGREDIENT, 1, 12)
+                        )
+                        .build("create:pulp")
+        );
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(ItemInit.INGREDIENT, 1, 0)
+                        )
+                        .setInputFluids(
+                                new FluidStack(FluidRegistry.WATER, 1000)
+                        )
+                        .setOutputItems(
+                                new ItemStack(ItemInit.INGREDIENT, 1, 1)
+                        )
+                        .build("create:dough")
+        );
+        recipes.addRecipe(
+                MixingRecipe.builder()
+                        .setInputItems(
+                                new ItemStack(Blocks.COBBLESTONE, 1, OreDictionary.WILDCARD_VALUE)
+                        )
+                        .setOutputFluid(new FluidStack(FluidRegistry.LAVA, 50))
+                        .setRequiredHeat(2)
+                        .build("create:cobblestone_melting")
         );
     }
     private static void sequences() {

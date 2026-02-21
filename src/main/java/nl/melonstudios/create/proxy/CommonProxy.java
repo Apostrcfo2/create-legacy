@@ -73,6 +73,7 @@ public class CommonProxy {
         this.registerTE(TileEntityHarvester.class, "harvester");
         this.registerTE(TileEntityStorageInterface.class, "storage_interface");
         this.registerTE(TileEntityMillstone.class, "millstone");
+        this.registerTE(TileEntityBlazeBurner.class, "blaze_burner");
         this.registerTE(TileEntityDepot.class, "depot");
         this.registerTE(TileEntityBasin.class, "basin");
         this.registerTE(TileEntityChute.class, "chute");

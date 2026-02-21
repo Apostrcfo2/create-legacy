@@ -4,9 +4,12 @@ import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.Utils;
@@ -35,16 +38,18 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
                         FluidStack stored = this.tank.getFluid();
                         if (stored != null) {
                             if (drained.isFluidEqual(drained)) {
+                                this.world.playSound(null, this.pos, drained.getFluid().getEmptySound(drained), SoundCategory.BLOCKS, 1.0F, 1.0F);
                                 this.tank.fillInternal(handler.drain(this.tank.getCapacity() - this.tank.getFluidAmount(), true), true);
                                 this.roll++;
                             }
                         } else {
+                            this.world.playSound(null, this.pos, drained.getFluid().getEmptySound(drained), SoundCategory.BLOCKS, 1.0F, 1.0F);
                             this.tank.fillInternal(handler.drain(this.tank.getCapacity(), true), true);
                             this.roll++;
                         }
                         this.draining = handler.getContainer();
                     } else this.roll++;
-                }
+                } else this.roll++;
                 this.sync();
             } else if (this.roll > 60) {
                 if (this.rollingDirection != null) {
@@ -159,5 +164,19 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
             return ItemStack.EMPTY;
         }
         return stack;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return true;
+        return super.hasCapability(capability, facing);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return (T)this.tank;
+        return super.getCapability(capability, facing);
     }
 }

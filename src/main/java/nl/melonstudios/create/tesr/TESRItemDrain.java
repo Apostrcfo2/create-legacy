@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -50,7 +51,16 @@ public class TESRItemDrain extends TileEntitySpecialRenderer<TileEntityItemDrain
             tessellator.draw();
         }
         if (!te.draining.isEmpty()) {
-            GlStateManager.translate(0.5, 0.5, 0.5);
+            GlStateManager.translate(0.5, 0.875F, 0.5);
+            if (te.rollingDirection != null) {
+                GlStateManager.rotate(-te.rollingDirection.getHorizontalAngle(), 0.0F, 1.0F, 0.0F);
+            }
+            GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.scale(0.25F, 0.25F, 0.25F);
+            IBakedModel model = Minecraft.getMinecraft().getRenderItem()
+                    .getItemModelWithOverrides(te.draining, this.getWorld(), null);
+            Minecraft.getMinecraft().getRenderItem()
+                    .renderItem(te.draining, model);
         }
         RenderUtils.finish();
     }

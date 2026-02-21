@@ -88,6 +88,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityHarvester.class, "harvester", new TESRHarvester());
         this.registerTESR(TileEntityStorageInterface.class, "storage_interface", new TESRContraptionInterface<>());
         this.registerTESR(TileEntityMillstone.class, "millstone", null);
+        this.registerTESR(TileEntityBlazeBurner.class, "blaze_burner", new TESRBlazeBurner());
         this.registerTESR(TileEntityDepot.class, "depot", new TESRDepot());
         this.registerTESR(TileEntityBasin.class, "basin", new TESRBasin());
         this.registerTESR(TileEntityChute.class, "chute", new TESRChute());
@@ -184,9 +185,9 @@ public class ClientProxy extends CommonProxy {
         }
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (basin.hasAnyFluid()) {
-            basin.getWorld().playSound(player, x, y, z, SoundEvents.ENTITY_BOAT_PADDLE_WATER, SoundCategory.BLOCKS, 0.125F, 0.5F);
+            basin.getWorld().playSound(player, x, y, z, SoundEvents.ENTITY_BOAT_PADDLE_WATER, SoundCategory.BLOCKS, 0.5F, 0.5F);
         }
-        basin.getWorld().playSound(player, x, y, z, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 0.125F, 0.5F);
+        basin.getWorld().playSound(player, x, y, z, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 0.5F, 0.5F);
     }
 
     public void getTexturePieceParticle(double x, double y, double z, double vx, double vy, double vz, TextureAtlasSprite sprite) {

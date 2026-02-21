@@ -22,7 +22,8 @@ public final class ItemIngredient extends Item {
             "sturdy_sheet", "propeller", "whisk", "brass_hand", "electron_tube", "transmitter", "pulp",
             "cardboard", "precision_mechanism", "andesite_alloy", "copper_ingot", "zinc_ingot", "brass_ingot",
             "copper_nugget", "zinc_nugget", "brass_nugget", "copper_sheet", "brass_sheet", "iron_sheet",
-            "gold_sheet", "crushed_iron_ore", "crushed_gold_ore", "crushed_copper_ore", "crushed_zinc_ore"
+            "gold_sheet", "crushed_iron_ore", "crushed_gold_ore", "crushed_copper_ore", "crushed_zinc_ore",
+            "blazecake_base", "blazecake"
     };
 
     @Override

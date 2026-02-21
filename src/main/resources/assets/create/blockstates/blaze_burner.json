@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "variant=empty": {
+      "model": "create:blaze_burner"
+    },
+    "variant=lit": {
+      "model": "create:blaze_burner_lit"
+    },
+    "variant=passive": {
+      "model": "create:blaze_burner"
+    },
+    "variant=heated": {
+      "model": "create:blaze_burner"
+    },
+    "variant=superheated": {
+      "model": "create:blaze_burner"
+    }
+  }
+}

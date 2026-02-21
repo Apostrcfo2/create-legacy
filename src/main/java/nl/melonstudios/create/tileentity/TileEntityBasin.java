@@ -2,6 +2,7 @@ package nl.melonstudios.create.tileentity;
 
 import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.StackUtil;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,6 +25,7 @@ import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
+import nl.melonstudios.create.util.interfaces.IHeatProvider;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -129,7 +132,13 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
 
     }
 
+    private final BlockPos.MutableBlockPos heaterPos = new BlockPos.MutableBlockPos();
     public int getHeat() {
+        this.heaterPos.setPos(this.pos).move(EnumFacing.DOWN);
+        IBlockState state = this.world.getBlockState(this.heaterPos);
+        if (state.getBlock() instanceof IHeatProvider) {
+            return ((IHeatProvider)state.getBlock()).getHeat(this.world, this.heaterPos, state);
+        }
         return 0;
     }
 

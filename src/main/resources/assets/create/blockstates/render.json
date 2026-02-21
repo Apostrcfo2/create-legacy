@@ -200,6 +200,15 @@
     },
     "render_part=whisk": {
       "model": "create:render/whisk"
+    },
+    "render_part=blaze_smouldering": {
+      "model": "create:render/blaze_smouldering"
+    },
+    "render_part=blaze_kindled": {
+      "model": "create:render/blaze_kindled"
+    },
+    "render_part=blaze_seething": {
+      "model": "create:render/blaze_seething"
     }
   }
 }

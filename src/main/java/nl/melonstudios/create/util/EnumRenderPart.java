@@ -2,6 +2,7 @@ package nl.melonstudios.create.util;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
+import nl.melonstudios.create.block.BlockBlazeBurner;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -71,6 +72,10 @@ public enum EnumRenderPart implements IStringSerializable {
     SHAFTLESS_COG_Z,
 
     WHISK,
+
+    BLAZE_SMOULDERING,
+    BLAZE_KINDLED,
+    BLAZE_SEETHING,
     ;
 
     private final int id = this.ordinal();
@@ -179,5 +184,17 @@ public enum EnumRenderPart implements IStringSerializable {
     }
     public static EnumRenderPart getShaftlessCog(EnumFacing.Axis axis) {
         return SHAFTLESS_COGS[axis.ordinal()];
+    }
+    public static EnumRenderPart getBlaze(BlockBlazeBurner.Variant variant) {
+        switch (variant) {
+            case PASSIVE:
+                return BLAZE_SMOULDERING;
+            case HEATED:
+                return BLAZE_KINDLED;
+            case SUPERHEATED:
+                return BLAZE_SEETHING;
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + variant);
+        }
     }
 }

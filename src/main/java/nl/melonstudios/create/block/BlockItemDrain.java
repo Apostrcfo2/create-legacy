@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -123,5 +124,10 @@ public class BlockItemDrain extends Block implements ITileEntityProvider {
         te.tank.drainInternal(handler.fill(te.tank.drainInternal(1500, false), true), true);
         playerIn.setHeldItem(hand, handler.getContainer());
         return true;
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 }

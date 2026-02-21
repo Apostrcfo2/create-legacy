@@ -46,6 +46,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.AUTO_FARM, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CONTRAPTION_INTERFACE, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BLAZE_BURNER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPOT, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BASIN, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CHUTE, 3);
@@ -163,6 +164,7 @@ public final class OreDictInit {
         registerOre("crushedGold", ItemInit.INGREDIENT, 27);
         registerOre("crushedCopper", ItemInit.INGREDIENT, 28);
         registerOre("crushedZinc", ItemInit.INGREDIENT, 29);
+        registerOre("create:blazecake", ItemInit.INGREDIENT, 31);
     }
 
     private static void registerOre(String ore, Item item, int meta) {

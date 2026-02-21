@@ -18,11 +18,13 @@ import nl.melonstudios.create.block.generator.BlockBearingWindmill;
 import nl.melonstudios.create.block.generator.BlockHandCrank;
 import nl.melonstudios.create.block.generator.BlockSail;
 import nl.melonstudios.create.block.generator.BlockWaterWheel;
+import nl.melonstudios.create.item.ItemBlockBlazeBurner;
 import nl.melonstudios.create.item.ItemBlockSail;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.Function;
 
 public final class BlockInit {
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
@@ -120,6 +122,10 @@ public final class BlockInit {
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
             .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
 
+    public static final BlockBlazeBurner BLAZE_BURNER = (BlockBlazeBurner)
+            registerBlockWithItem(new BlockBlazeBurner()
+            .setRegistryName("blaze_burner").setUnlocalizedName("create.blaze_burner"), ItemBlockBlazeBurner::new);
+
     public static final BlockDepot DEPOT = (BlockDepot)
             registerBlockWithItem(new BlockDepot()
             .setRegistryName("depot").setUnlocalizedName("create.depot"));
@@ -163,6 +169,10 @@ public final class BlockInit {
     }
     private static <T extends Block> T registerBlockWithItem(@Nonnull T block) {
         return registerBlockWithItem(block, false);
+    }
+    private static <T extends Block> T registerBlockWithItem(@Nonnull T block, Function<T, ? extends Item> item) {
+        Objects.requireNonNull(block.getRegistryName(), "Block has no registry name!!");
+        return registerBlockWithItem(block, item.apply(block).setRegistryName(block.getRegistryName()));
     }
 
     public static void registerTileEntities() {
