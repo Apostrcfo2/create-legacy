@@ -29,7 +29,7 @@ public enum EnumOrestoneVariant implements IStringSerializable {
     }
 
     public static EnumOrestoneVariant byId(int id) {
-        return META_LOOKUP[id];
+        return id < 0 || id > 6 ? META_LOOKUP[0] : /*Fix "giving self orestone:7 creates crashing item"*/ META_LOOKUP[id];
     }
 
     private static final EnumOrestoneVariant[] META_LOOKUP = {
