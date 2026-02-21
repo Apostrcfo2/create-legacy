@@ -146,17 +146,24 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IItemHan
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (stack.isEmpty()) return ItemStack.EMPTY;
         if (slot != 0) throw  new IndexOutOfBoundsException("I only have one slot!");
         if (this.stack.isEmpty()) {
             ItemStack copy = stack.copy();
             ItemStack ret = copy.splitStack(16);
-            if (!simulate) this.stack = ret;
+            if (!simulate) {
+                this.stack = ret;
+                this.sync();
+            }
             return copy;
         }
         if (ItemHandlerHelper.canItemStacksStack(this.stack, stack)) {
             ItemStack copy = stack.copy();
             ItemStack ret = copy.splitStack(Math.min(this.stack.getMaxStackSize(), this.getSlotLimit(slot)) - this.stack.getCount());
-            if (!simulate) this.stack.grow(ret.getCount());
+            if (!simulate) {
+                this.stack.grow(ret.getCount());
+                this.sync();
+            }
             return copy;
         }
         return stack;
@@ -164,11 +171,13 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IItemHan
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (amount == 0) return ItemStack.EMPTY;
         if (slot != 0) throw new IndexOutOfBoundsException("I only have one slot!");
         if (simulate) {
             ItemStack copy = this.stack.copy();
             return copy.splitStack(amount);
         }
+        this.sync();
         return this.stack.splitStack(amount);
     }
 

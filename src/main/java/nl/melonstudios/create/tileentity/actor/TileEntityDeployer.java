@@ -17,6 +17,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import nl.melonstudios.create.block.actor.BlockDeployer;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.item.ItemSandpaper;
@@ -40,6 +44,7 @@ import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -48,7 +53,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class TileEntityDeployer extends TileEntityKinetic implements IContraptionActor, ISidedInventoryDebloated, ITileEntityWithSubInteractions, IHaltBeltContents {
+public class TileEntityDeployer extends TileEntityKinetic implements IContraptionActor, ITileEntityWithSubInteractions, IHaltBeltContents, IItemHandler {
     private PlayerDeployer player;
     public TileEntityDeployer() {
         this.createInteractions();
@@ -423,45 +428,11 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     public IItemFilter filter = null;
     public ItemStack heldItem = ItemStack.EMPTY;
     public ItemStack cloggedItem = ItemStack.EMPTY;
-    private static final int[] SLOTS = new int[]{0,1};
-    @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return SLOTS;
-    }
 
-    @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-        return index == 0 && (this.filter == null || this.filter.matches(itemStackIn));
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return index == 1;
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return 2;
-    }
-
-    @Override
     public boolean isEmpty() {
         return this.heldItem.isEmpty() && this.cloggedItem.isEmpty();
     }
 
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return index == 0 ? this.heldItem : this.cloggedItem;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack stack = this.getStackInSlot(index).splitStack(count);
-        this.sync();
-        return stack;
-    }
-
-    @Override
     public ItemStack removeStackFromSlot(int index) {
         ItemStack stack;
         if (index == 0) {
@@ -474,7 +445,6 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         this.sync();
         return stack;
     }
-    @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         if (index == 0) {
             this.heldItem = stack;
@@ -482,24 +452,6 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
             this.cloggedItem = stack;
         }
         this.sync();
-    }
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0;
-    }
-    @Override
-    public void clear() {
-        this.heldItem = ItemStack.EMPTY;
-        this.cloggedItem = ItemStack.EMPTY;
-        this.sync();
-    }
-    @Override
-    public String getName() {
-        return "Deployer";
     }
 
     @Override
@@ -538,6 +490,72 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
         this.interactionsY.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.UP, 0.25F, interaction));
         this.interactionsZ.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.NORTH, 0.25F, interaction));
         this.interactionsZ.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.SOUTH, 0.25F, interaction));
+    }
+
+    @Override
+    public int getSlots() {
+        return 2;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 ? this.heldItem : this.cloggedItem;
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (slot != 0) return stack;
+        if (this.heldItem.isEmpty()) {
+            if (simulate) return ItemStack.EMPTY;
+            this.heldItem = stack.copy();
+            this.sync();
+            return ItemStack.EMPTY;
+        }
+        if (ItemHandlerHelper.canItemStacksStack(this.heldItem, stack)) {
+            ItemStack copy = stack.copy();
+            ItemStack ret = copy.splitStack(Math.min(this.getSlotLimit(slot), this.heldItem.getMaxStackSize()) - this.heldItem.getCount());
+            if (!simulate) {
+                this.heldItem.grow(ret.getCount());
+                this.sync();
+            }
+            return copy;
+        }
+        return stack;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (amount == 0 || slot == 0) return ItemStack.EMPTY;
+        if (simulate) {
+            ItemStack copy = this.heldItem.copy();
+            return copy.splitStack(amount);
+        } else {
+            this.sync();
+            return this.heldItem.splitStack(amount);
+        }
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 64;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slot == 0;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
+        return super.getCapability(capability, facing);
     }
 
     private static class SetFilterInteraction implements SubInteractionBox.Interaction {

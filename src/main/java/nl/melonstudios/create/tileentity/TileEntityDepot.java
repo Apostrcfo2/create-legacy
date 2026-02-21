@@ -6,13 +6,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import nl.melonstudios.create.tileentity.marker.IDepot;
-import nl.melonstudios.create.tileentity.marker.ISidedInventoryDebloated;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedInventoryDebloated, ITopOpenInventory, IDepot {
+public class TileEntityDepot extends TileEntityOptimizedBase implements ITopOpenInventory, IDepot, IItemHandler {
     public float randomizedItemRotation;
     public TileEntityDepot() {
         this.setTickRateLazy(10);
@@ -113,100 +117,12 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
         }
     }
 
-    private static final int[] slots = {0,1,2,3,4,5,6,7,8};
-    private static final int[] none = {};
-    @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return slots;
-    }
-
-    @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
-        return index == 0 && this.mainItem.isEmpty();
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return true;
-    }
-
-    @Override
-    public int getSizeInventory() {
-        return 9;
-    }
-
-    @Override
     public boolean isEmpty() {
         if (!this.mainItem.isEmpty()) return false;
         for (int i = 0; i < 8; i++) {
             if (!this.additionalItems[i].isEmpty()) return false;
         }
         return true;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return index == 0 ? this.mainItem : this.additionalItems[index-1];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        if (index == 0) {
-            ItemStack stack = this.mainItem.splitStack(count);
-            this.sync();
-            return stack;
-        }
-        ItemStack stack = this.additionalItems[index-1].splitStack(count);
-        this.sync();
-        return stack;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (index == 0) {
-            ItemStack stack = this.mainItem.copy();
-            this.mainItem = ItemStack.EMPTY;
-            this.sync();
-            return stack;
-        }
-        ItemStack stack = this.additionalItems[index-1].copy();
-        this.additionalItems[index-1] = ItemStack.EMPTY;
-        this.sync();
-        return stack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        if (index == 0) {
-            this.mainItem = stack;
-        } else {
-            this.additionalItems[index-1] = stack;
-        }
-        this.sync();
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0;
-    }
-
-    @Override
-    public void clear() {
-        this.mainItem = ItemStack.EMPTY;
-        for (int i = 0; i < 8; i++) {
-            this.additionalItems[i] = ItemStack.EMPTY;
-        }
-        this.sync();
-    }
-
-    @Override
-    public String getName() {
-        return "Depot";
     }
 
     @Override
@@ -284,5 +200,73 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ISidedIn
     public ItemStack takePresented(int count) {
         this.sync();
         return this.mainItem.splitStack(count);
+    }
+
+    @Override
+    public int getSlots() {
+        return 9;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 ? this.mainItem : this.additionalItems[slot - 1];
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (stack.isEmpty()) return ItemStack.EMPTY;
+        if (slot != 0) return stack;
+        ItemStack copy = stack.copy();
+        if (simulate) {
+            if (this.mainItem.isEmpty()) return ItemStack.EMPTY;
+            if (ItemHandlerHelper.canItemStacksStack(this.mainItem, stack)) {
+                int space = Math.min(this.getSlotLimit(slot), this.mainItem.getMaxStackSize()) - this.mainItem.getCount();
+                copy.splitStack(space);
+                return copy;
+            } else return stack;
+        }
+        this.sync();
+        if (this.mainItem.isEmpty()) {
+            this.mainItem = stack.copy();
+            return ItemStack.EMPTY;
+        }
+        if (ItemHandlerHelper.canItemStacksStack(this.mainItem, stack)) {
+            int space = Math.min(this.getSlotLimit(slot), this.mainItem.getMaxStackSize()) - this.mainItem.getCount();
+            copy.splitStack(space);
+            this.mainItem.grow(copy.getCount());
+            return copy;
+        } else return stack;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (amount == 0) return ItemStack.EMPTY;
+        ItemStack target = slot == 0 ? this.mainItem : this.additionalItems[slot - 1];
+        ItemStack copy = simulate ? target.copy() : target;
+        if (!simulate) this.sync();
+        return copy.splitStack(amount);
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 64;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slot == 0;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
+        return super.getCapability(capability, facing);
     }
 }
