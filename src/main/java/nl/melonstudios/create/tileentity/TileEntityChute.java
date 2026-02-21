@@ -2,21 +2,22 @@ package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.misc.StackUtil;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import nl.melonstudios.create.tileentity.marker.IInventoryDebloated;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class TileEntityChute extends TileEntityOptimizedBase implements IInventoryDebloated {
+public class TileEntityChute extends TileEntityOptimizedBase implements IItemHandler {
     public float randomizedItemRotation;
     public TileEntityChute() {
         super();
@@ -31,6 +32,7 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
         this.randomizedItemRotation = this.world.rand.nextInt(360);
     }
 
+    private boolean itemLocked = false;
     public ItemStack stack = ItemStack.EMPTY;
 
     @Override
@@ -42,19 +44,31 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
     public void tickLazy() {
         boolean mod = false;
         if (!this.stack.isEmpty()) {
-            IInventory below = this.getInv(this.pos.down());
+            IItemHandler below = this.getInv(this.pos.down(), EnumFacing.UP);
             if (below != null) {
-                this.stack = TileEntityHopper.putStackInInventoryAllSlots(this, below, this.stack, EnumFacing.UP);
-                mod = true;
+                for (int i = 0; i < below.getSlots(); i++) {
+                    ItemStack ret = below.insertItem(i, this.stack, false);
+                    if (ret != this.stack) {
+                        mod = true;
+                        this.stack = ret;
+                    }
+                    if (this.stack.isEmpty()) {
+                        break;
+                    }
+                }
+                if (mod && below instanceof TileEntityChute) ((TileEntityChute)below).itemLocked = true;
             }
         }
 
+        this.itemLocked = false;
+
         if (this.stack.isEmpty()) {
-            IInventory above = this.getInv(this.pos.up());
+            IItemHandler above = this.getInv(this.pos.up(), EnumFacing.DOWN);
             if (above != null) {
-                for (int i = 0; i < above.getSizeInventory(); i++) {
-                    if (!above.getStackInSlot(i).isEmpty()) {
-                        this.stack = above.decrStackSize(i, 16);
+                for (int i = 0; i < above.getSlots(); i++) {
+                    this.stack = above.extractItem(i, 16, false);
+                    if (!this.stack.isEmpty()) {
+                        this.itemLocked = true;
                         mod = true;
                         break;
                     }
@@ -66,9 +80,11 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
     }
 
     @Nullable
-    private IInventory getInv(BlockPos pos) {
+    private IItemHandler getInv(BlockPos pos, EnumFacing side) {
         TileEntity te = this.world.getTileEntity(pos);
-        return te instanceof IInventory ? (IInventory) te : null;
+        if (te == null || !te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) return null;
+        if (te instanceof TileEntityChute && ((TileEntityChute)te).itemLocked) return null;
+        return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
     }
 
     @Override
@@ -78,6 +94,7 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
         if (!this.stack.isEmpty()) {
             nbt.setTag("Stack", this.stack.writeToNBT(new NBTTagCompound()));
         }
+        nbt.setBoolean("itemLocked", this.itemLocked);
 
         return nbt;
     }
@@ -88,6 +105,7 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
         if (nbt.hasKey("Stack", 10)) {
             this.stack = new ItemStack(nbt.getCompoundTag("Stack"));
         }
+        this.itemLocked = nbt.getBoolean("itemLocked");
     }
 
     @Override
@@ -97,6 +115,7 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
         if (!this.stack.isEmpty()) {
             nbt.setTag("Stack", this.stack.writeToNBT(new NBTTagCompound()));
         }
+        if (this.itemLocked) nbt.setBoolean("itemLocked", true);
 
         return nbt;
     }
@@ -106,58 +125,68 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IInvento
         if (nbt.hasKey("Stack", 10)) {
             this.stack = new ItemStack(nbt.getCompoundTag("Stack"));
         }
-    }
-
-    @Override
-    public String getName() {
-        return "Chute";
-    }
-    @Override
-    public int getSizeInventory() {
-        return 1;
-    }
-    @Override
-    public boolean isEmpty() {
-        return this.stack.isEmpty();
-    }
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return this.stack;
-    }
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack split = this.stack.splitStack(count);
-        this.sync();
-        return split;
-    }
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack split = this.stack.copy();
-        this.stack = ItemStack.EMPTY;
-        this.sync();
-        return split;
-    }
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        this.stack = stack;
-        this.sync();
-    }
-    @Override
-    public int getInventoryStackLimit() {
-        return 16;
-    }
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return true;
-    }
-    @Override
-    public void clear() {
-        this.stack = ItemStack.EMPTY;
-        this.sync();
+        this.itemLocked = nbt.getBoolean("itemLocked");
     }
 
     @Override
     public void destroy() {
         StackUtil.dropItemsAt(this.world, this.pos, this.stack.copy());
+    }
+
+    @Override
+    public int getSlots() {
+        return 1;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        if (slot != 0) throw  new IndexOutOfBoundsException("I only have one slot!");
+        return this.stack;
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (slot != 0) throw  new IndexOutOfBoundsException("I only have one slot!");
+        if (this.stack.isEmpty()) {
+            ItemStack copy = stack.copy();
+            ItemStack ret = copy.splitStack(16);
+            if (!simulate) this.stack = ret;
+            return copy;
+        }
+        if (ItemHandlerHelper.canItemStacksStack(this.stack, stack)) {
+            ItemStack copy = stack.copy();
+            ItemStack ret = copy.splitStack(Math.min(this.stack.getMaxStackSize(), this.getSlotLimit(slot)) - this.stack.getCount());
+            if (!simulate) this.stack.grow(ret.getCount());
+            return copy;
+        }
+        return stack;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot != 0) throw new IndexOutOfBoundsException("I only have one slot!");
+        if (simulate) {
+            ItemStack copy = this.stack.copy();
+            return copy.splitStack(amount);
+        }
+        return this.stack.splitStack(amount);
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 16;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
+        return super.getCapability(capability, facing);
     }
 }

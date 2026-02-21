@@ -23,7 +23,7 @@ public class TESRChute extends TileEntitySpecialRenderer<TileEntityChute> {
 
     @Override
     public void render(TileEntityChute te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        if (te.isEmpty()) return;
+        if (te.stack.isEmpty()) return;
         GlStateManager.pushMatrix();
         GlStateManager.translate(x+0.5, y+0.5, z+0.5);
         GlStateManager.rotate(te.randomizedItemRotation + ((te.getWorld().getTotalWorldTime() + partialTicks) % 120) * 3,
