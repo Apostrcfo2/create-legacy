@@ -289,7 +289,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
 
     @Override
     public int getSlots() {
-        return 0;
+        return 2;
     }
 
     @Override
