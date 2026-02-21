@@ -8,15 +8,19 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import nl.melonstudios.create.block.actor.BlockDeployer;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
+import nl.melonstudios.create.util.interfaces.IExcludeAttachingCapabilities;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class PlayerDeployer extends EntityPlayer {
+public class PlayerDeployer extends EntityPlayer implements IExcludeAttachingCapabilities {
     private final TileEntityDeployer deployer;
     public PlayerDeployer(TileEntityDeployer deployer) {
         super(deployer.getWorld(), new GameProfile(UUID.randomUUID(), "Deployer-" + Long.toHexString(deployer.getPos().toLong())));
@@ -60,5 +64,16 @@ public class PlayerDeployer extends EntityPlayer {
     public EnumFacing getHorizontalFacing() {
         EnumFacing facing = this.deployer.getState().getValue(BlockDeployer.FACING);
         return facing.getAxis() == EnumFacing.Axis.Y ? EnumFacing.NORTH : facing;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        return null;
     }
 }

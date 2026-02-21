@@ -5,6 +5,7 @@
   "mixins": [
     "MixinBlock",
     "MixinContraptionInteraction",
+    "MixinForgeEventFactory",
     "MixinInventoryPlayer",
     "MixinMobSpawnerBaseLogic",
     "MixinTileEntity",
