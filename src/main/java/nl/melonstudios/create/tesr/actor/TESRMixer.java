@@ -4,7 +4,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityMixer;

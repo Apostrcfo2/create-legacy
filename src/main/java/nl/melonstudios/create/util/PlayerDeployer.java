@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import nl.melonstudios.create.block.actor.BlockDeployer;
 import nl.melonstudios.create.tileentity.actor.TileEntityDeployer;
 import nl.melonstudios.create.util.interfaces.IExcludeAttachingCapabilities;

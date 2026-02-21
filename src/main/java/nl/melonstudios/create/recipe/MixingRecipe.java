@@ -6,7 +6,6 @@ import net.minecraftforge.fluids.FluidStack;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 import nl.melonstudios.create.util.Utils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

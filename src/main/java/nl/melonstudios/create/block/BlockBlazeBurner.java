@@ -25,7 +25,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.TileEntityBlazeBurner;
 import nl.melonstudios.create.util.BlockProperties;
