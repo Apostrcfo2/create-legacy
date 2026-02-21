@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinForgeEventFactory {
     //Fix "Incompatibility with Deployer and DynamicSurrounding"
     //May need performance testing
-    @Inject(method = "gatherCapabilities(Lnet/minecraft/entity/Entity;)Lnet/minecraftforge/common/capabilities/CapabilityDispatcher;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "gatherCapabilities(Lnet/minecraft/entity/Entity;)Lnet/minecraftforge/common/capabilities/CapabilityDispatcher;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void gatherCapabilities(Entity entity, CallbackInfoReturnable<CapabilityDispatcher> cir) {
         if (entity instanceof IExcludeAttachingCapabilities) cir.setReturnValue(null);
     }
