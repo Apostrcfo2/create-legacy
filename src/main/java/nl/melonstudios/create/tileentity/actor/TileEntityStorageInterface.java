@@ -1,7 +1,12 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import javax.annotation.Nullable;
 
 public class TileEntityStorageInterface extends TileEntityContraptionInterfaceBase implements IItemHandler {
     public TileEntityStorageInterface() {
@@ -36,5 +41,18 @@ public class TileEntityStorageInterface extends TileEntityContraptionInterfaceBa
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         return this.getInventory().getInventoryRepresentation().isItemValid(slot, stack);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
+        return super.getCapability(capability, facing);
     }
 }
