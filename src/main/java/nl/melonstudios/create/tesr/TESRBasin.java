@@ -14,13 +14,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 import nl.melonstudios.create.util.RenderUtils;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.Utils;
 import org.lwjgl.opengl.GL11;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
     public TESRBasin() {
@@ -30,22 +33,20 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
     protected final Minecraft mc;
 
+    protected final double[] levels = new double[4];
+
     @Override
     public void render(TileEntityBasin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        FluidStack liquid1 = te.tank1.getFluid();
-        FluidStack liquid2 = te.tank2.getFluid();
-        FluidStack liquid3 = te.tank3.getFluid();
+        List<FluidStack> liquids = te.fluid.getHandlers().stream().map(FluidTank::getFluid).collect(Collectors.toList());
 
         double level;
         int fluidAmount = 0;
-        if (liquid1 != null) fluidAmount += liquid1.amount;
-        if (liquid2 != null) fluidAmount += liquid2.amount;
-        if (liquid3 != null) fluidAmount += liquid3.amount;
+        for (FluidStack liquid : liquids) fluidAmount += liquid.amount;
         fluidAmount = Math.min(fluidAmount, 1500);
         level = 0.125 + ((fluidAmount / 1500.0) * 0.8);
-        if (liquid1 != null || liquid2 != null || liquid3 != null) {
+        if (!liquids.isEmpty()) {
             RenderUtils.prepare(x, y, z);
             GlStateManager.disableBlend(); //transparency is an issue at times
 
@@ -55,45 +56,30 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
             double lvl2 = Math.sin(Math.toRadians((time+90) % 360))*0.01+level;
             double lvl3 = Math.sin(Math.toRadians((time+180) % 360))*0.01+level;
             double lvl4 = Math.sin(Math.toRadians((time+270) % 360))*0.01+level;
+            this.levels[0] = lvl1;
+            this.levels[1] = lvl2;
+            this.levels[2] = lvl3;
+            this.levels[3] = lvl4;
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder renderer = tessellator.getBuffer();
             renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
-            if (liquid1 != null) {
-                TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid1.getFluid().getStill(liquid1).toString());
-                int brightness = world.getCombinedLight(te.getPos(), liquid1.getFluid().getLuminosity(liquid1));
+            for (int i = 0; i < liquids.size(); i++) {
+                FluidStack liquid = liquids.get(i);
+                TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid.getFluid().getStill(liquid).toString());
+                int brightness = world.getCombinedLight(te.getPos(), liquid.getFluid().getLuminosity(liquid));
                 int l1 = brightness >> 0x10 & 0xFFFF;
                 int l2 = brightness & 0xFFFF;
-                int color = liquid1.getFluid().getColor(liquid1);
+                int color = liquid.getFluid().getColor(liquid);
                 int a = color >> 24 & 0xFF;
                 int r = color >> 16 & 0xFF;
                 int g = color >> 8 & 0xFF;
                 int b = color & 0xFF;
-                RenderUtils.renderFluidSurface(renderer, sprite, 0.1, 0.1, 0.9, 0.9, lvl1, lvl2, lvl3, lvl4, r, g, b, a, l1, l2);
-            }
-            if (liquid2 != null) {
-                TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid2.getFluid().getStill(liquid2).toString());
-                int brightness = world.getCombinedLight(te.getPos(), liquid2.getFluid().getLuminosity(liquid2));
-                int l1 = brightness >> 0x10 & 0xFFFF;
-                int l2 = brightness & 0xFFFF;
-                int color = liquid2.getFluid().getColor(liquid2);
-                int a = color >> 24 & 0xFF;
-                int r = color >> 16 & 0xFF;
-                int g = color >> 8 & 0xFF;
-                int b = color & 0xFF;
-                RenderUtils.renderFluidSurface(renderer, sprite, 0.1, 0.1, 0.9, 0.9, lvl2, lvl3, lvl1, lvl4, r, g, b, a, l1, l2);
-            }
-            if (liquid3 != null) {
-                TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid3.getFluid().getStill(liquid3).toString());
-                int brightness = world.getCombinedLight(te.getPos(), liquid3.getFluid().getLuminosity(liquid3));
-                int l1 = brightness >> 0x10 & 0xFFFF;
-                int l2 = brightness & 0xFFFF;
-                int color = liquid3.getFluid().getColor(liquid3);
-                int a = color >> 24 & 0xFF;
-                int r = color >> 16 & 0xFF;
-                int g = color >> 8 & 0xFF;
-                int b = color & 0xFF;
-                RenderUtils.renderFluidSurface(renderer, sprite, 0.1, 0.1, 0.9, 0.9, lvl4, lvl2, lvl3, lvl1, r, g, b, a, l1, l2);
+                RenderUtils.renderFluidSurface(renderer, sprite,
+                        0.1, 0.1, 0.9, 0.9,
+                        this.levels[i&3], this.levels[i+1&3], this.levels[i+2&3], this.levels[i+3&3],
+                        r, g, b, a, l1, l2
+                );
             }
 
             tessellator.draw();

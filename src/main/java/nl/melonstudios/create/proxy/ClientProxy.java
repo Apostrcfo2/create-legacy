@@ -20,6 +20,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,10 +31,7 @@ import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.entity.RenderContraptionBearing;
 import nl.melonstudios.create.entity.RenderGlue;
 import nl.melonstudios.create.init.SoundInit;
-import nl.melonstudios.create.recipe.client.CuttingRecipesClient;
-import nl.melonstudios.create.recipe.client.DeployingRecipesClient;
-import nl.melonstudios.create.recipe.client.PressingRecipesClient;
-import nl.melonstudios.create.recipe.client.SequencedRecipesClient;
+import nl.melonstudios.create.recipe.client.*;
 import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tesr.actor.*;
 import nl.melonstudios.create.tesr.generator.TESRBearingWindmill;
@@ -52,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -159,13 +158,7 @@ public class ClientProxy extends CommonProxy {
     }
     @Override
     public void mixerFX(TileEntityBasin basin, double x, double y, double z) {
-        List<FluidStack> fluids = new ArrayList<>();
-        FluidStack fluid1 = basin.tank1.getFluid();
-        FluidStack fluid2 = basin.tank2.getFluid();
-        FluidStack fluid3 = basin.tank3.getFluid();
-        if (fluid1 != null) fluids.add(fluid1);
-        if (fluid2 != null) fluids.add(fluid2);
-        if (fluid3 != null) fluids.add(fluid3);
+        List<FluidStack> fluids = basin.fluid.getHandlers().stream().map(FluidTank::getFluid).collect(Collectors.toList());
         TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
         double offset = CreateLegacy.rand.nextDouble();
         if (!fluids.isEmpty()) {
@@ -211,6 +204,7 @@ public class ClientProxy extends CommonProxy {
         super.registerRecipeTypes();
         RecipeRegistry.registerClient("create:pressing", PressingRecipesClient.instance);
         RecipeRegistry.registerClient("create:cutting", CuttingRecipesClient.instance);
+        RecipeRegistry.registerClient("create:mixing", MixingRecipesClient.instance);
         RecipeRegistry.registerClient("create:deploying", DeployingRecipesClient.instance);
         RecipeRegistry.registerClient("create:sequence", SequencedRecipesClient.instance);
     }

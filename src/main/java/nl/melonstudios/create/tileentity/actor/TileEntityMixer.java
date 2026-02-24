@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.recipe.MixingRecipe;
 import nl.melonstudios.create.recipe.server.MixingRecipes;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
@@ -38,8 +39,8 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         TileEntityBasin basin = this.getBasin();
         if (basin == null) this.currentRecipe = null;
         if (this.currentRecipe != null) {
-            MixingRecipe recipe = MixingRecipes.instance.getRecipe(this.currentRecipe);
-            if (!recipe.matches(basin)) {
+            MixingRecipe recipe = RecipeInit.getMixingRecipes().getRecipe(this.currentRecipe);
+            if (recipe == null || !recipe.matches(basin)) {
                 this.currentRecipe = null;
                 this.sync();
             }
@@ -56,7 +57,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         if (this.lowering >= 20 && recipe != null && basin != null) {
             this.recipeFX(basin, this.basinPos.getX() + 0.5, this.basinPos.getY() + 0.5, this.basinPos.getZ() + 0.5);
             basin.addedItemRotation += (int)(this.getSpeed() * 0.3);
-            if ((this.progress += (int) this.getSpeed()) >= recipe.recipeTime) {
+            if ((this.progress += (int) this.getSpeed()) >= recipe.processingTime) {
                 this.progress = 0;
                 if (recipe.removeRequiredInput(basin)) {
                     basin.dumpRecipeResults(recipe);
@@ -73,8 +74,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         }
     }
     private void searchRecipe(TileEntityBasin basin) {
-        MixingRecipe recipe = MixingRecipes.instance.getRecipeForInput(basin);
-        this.currentRecipe = recipe != null ? recipe.recipeID : null;
+        this.currentRecipe = MixingRecipes.getRecipeForInput(basin);
     }
 
     private void recipeFX(TileEntityBasin basin, double x, double y, double z) {
@@ -95,7 +95,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
     }
     @Nullable
     public MixingRecipe getRecipe() {
-        return MixingRecipes.instance.getRecipe(this.currentRecipe);
+        return RecipeInit.getMixingRecipes().getRecipe(this.currentRecipe);
     }
 
     @Override

@@ -2,6 +2,9 @@ package nl.melonstudios.create.util.filter;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemFilterExact implements IItemFilter {
@@ -27,5 +30,12 @@ public class ItemFilterExact implements IItemFilter {
     @Override
     public ItemStack getRenderItem() {
         return this.example;
+    }
+
+    @Override
+    public boolean matches(FluidStack stack) {
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(this.example);
+        if (handler == null) return false;
+        return handler.drain(stack, false) != null;
     }
 }

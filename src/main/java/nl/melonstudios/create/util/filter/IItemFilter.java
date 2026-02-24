@@ -2,6 +2,7 @@ package nl.melonstudios.create.util.filter;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
 
 public interface IItemFilter {
     boolean matches(ItemStack stack);
@@ -15,5 +16,9 @@ public interface IItemFilter {
             return new ItemFilterExact(new ItemStack(nbt.getCompoundTag("ExampleItem")));
         }
         return null;
+    }
+
+    default boolean matches(FluidStack stack) {
+        return false;
     }
 }

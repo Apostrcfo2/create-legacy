@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import nl.melonstudios.create.recipe.server.CuttingRecipes;
 import nl.melonstudios.create.recipe.server.DeployerRecipes;
 import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
+import nl.melonstudios.create.recipe.server.MixingRecipes;
 import nl.melonstudios.create.recipe.server.PressingRecipes;
 import nl.melonstudios.create.tileentity.*;
 import nl.melonstudios.create.tileentity.actor.*;
@@ -112,6 +113,7 @@ public class CommonProxy {
     public void registerRecipeTypes() {
         RecipeRegistry.registerServer("create:pressing", PressingRecipes.instance);
         RecipeRegistry.registerServer("create:cutting", CuttingRecipes.instance);
+        RecipeRegistry.registerServer("create:mixing", MixingRecipes.instance);
         RecipeRegistry.registerServer("create:deploying", DeployerRecipes.instance);
         RecipeRegistry.registerServer("create:sequence", SequencedRecipes.instance);
     }

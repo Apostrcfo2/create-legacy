@@ -13,84 +13,39 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import nl.melonstudios.create.capability.fluid.FluidHandlerBasin;
 import nl.melonstudios.create.recipe.MixingRecipe;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
+import nl.melonstudios.create.util.interfaces.IExcludeAttachingCapabilities;
 import nl.melonstudios.create.util.interfaces.IHeatProvider;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEntityWithSubInteractions, ITopOpenInventory, IItemHandler {
-    public final FluidTank tank1 = new FluidTank(1000) {
-        @Override
-        public boolean canFillFluidType(FluidStack fluid) {
-            FluidStack comparator = TileEntityBasin.this.tank2.getFluid();
-            if (comparator == null || comparator.amount <= 0) return true;
-            return !comparator.isFluidEqual(fluid);
-        }
-
-        @Override
-        protected void onContentsChanged() {
-            TileEntityBasin.this.sync();
-        }
-    };
-    public final FluidTank tank2 = new FluidTank(1000) {
-        @Override
-        public boolean canFillFluidType(FluidStack fluid) {
-            FluidStack comparator = TileEntityBasin.this.tank1.getFluid();
-            if (comparator == null || comparator.amount <= 0) return false;
-            return !comparator.isFluidEqual(fluid);
-        }
-
-        @Override
-        public boolean canDrainFluidType(@Nullable FluidStack fluid) {
-            return false;
-        }
-        @Override
-        public boolean canDrain() {
-            return false;
-        }
-
-        @Override
-        protected void onContentsChanged() {
-            TileEntityBasin.this.sync();
-        }
-    };
-    public final FluidTank tank3 = new FluidTank(1000) {
-        @Override
-        public boolean canFillFluidType(FluidStack fluid) {
-            return false;
-        }
-
-        @Override
-        public boolean canFill() {
-            return false;
-        }
-
-        @Override
-        protected void onContentsChanged() {
-            TileEntityBasin.this.sync();
-        }
-    };
-    public final FluidHandlerConcatenate fluid = new FluidHandlerConcatenate(this.tank1, this.tank2, this.tank3);
+    public final FluidHandlerBasin fluid = new FluidHandlerBasin();
     public final NonNullList<ItemStack> inventory = NonNullList.create();
     public IItemFilter recipeFilter = null;
 
     public TileEntityBasin() {
         this.setTickRateLazy(Integer.MAX_VALUE);
 
-        this.subInteractionBoxes = ImmutableList.of(
+        this.subInteractionBoxes = this.flag() ? null : ImmutableList.of(
                 SubInteractionBox.Helper.createDefaultAt(0.0F, 0.75F, 0.5F, this::setRecipeFilter),
                 SubInteractionBox.Helper.createDefaultAt(1.0F, 0.75F, 0.5F, this::setRecipeFilter),
                 SubInteractionBox.Helper.createDefaultAt(0.5F, 0.75F, 1.0F, this::setRecipeFilter),
@@ -98,8 +53,32 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
         );
     }
 
+    protected boolean flag() {
+        return false;
+    }
+    private static class ForTesting extends TileEntityBasin implements IExcludeAttachingCapabilities {
+        private ForTesting() {
+            super();
+        }
+
+        @Override
+        protected boolean flag() {
+            return true;
+        }
+    }
+    public TileEntityBasin copyForTesting() {
+        NBTTagCompound nbt = this.writePacket();
+        TileEntityBasin te = new ForTesting();
+        te.readPacket(nbt);
+        return te;
+    }
+
     public boolean hasAnyFluid() {
-        return this.tank1.getFluidAmount() > 0 || this.tank2.getFluidAmount() > 0 || this.tank3.getFluidAmount() > 0;
+        for (IFluidTankProperties properties : this.fluid.getTankProperties()) {
+            FluidStack contents = properties.getContents();
+            if (contents != null && contents.amount > 0) return true;
+        }
+        return false;
     }
     public boolean setRecipeFilter(@Nullable EntityPlayer player, boolean sneaking, ItemStack held) {
         if (held.isEmpty()) {
@@ -146,36 +125,8 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
     public int itemRotationOld = 0;
     public int addedItemRotation = 0;
 
-    //TODO: Add the output spout thingamajig
-    public void dumpRecipeResults(@Nullable FluidStack[] fluids, ItemStack... items) {
-        if (fluids != null) {
-            if (fluids.length > 1)
-                throw new IllegalArgumentException("More than 1 output fluid is currently unsupported");
-            FluidStack fluid = fluids.length > 0 ? fluids[0] : null;
-            if (fluid != null) {
-                if (this.tank3.getFluidAmount() > 0) {
-                    this.tank3.fillInternal(fluid, true);
-                } else this.tank3.setFluid(fluid);
-            }
-        }
-        loop:
-        for (ItemStack stack : items) {
-            for (ItemStack pre : this.inventory) {
-                if (ItemStack.areItemsEqual(pre, stack) && ItemStack.areItemStackTagsEqual(pre, stack)) {
-                    pre.grow(stack.getCount());
-                    continue loop;
-                }
-            }
-            this.inventory.add(stack.copy());
-        }
-        this.sync();
-    }
-
-    public void dumpRecipeResults(MixingRecipe recipe) {
-        this.dumpRecipeResults(
-                recipe.fluidOut != null ? new FluidStack[]{recipe.fluidOut.copy()} : null,
-                recipe.resultItems.toArray(new ItemStack[0])
-        );
+    public void cleanupFluids() {
+        this.fluid.optimize();
     }
 
     @Override
@@ -183,23 +134,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
         this.optimizeInventory();
         super.writeToNBT(nbt);
 
-        if (this.tank1.getFluidAmount() > 0) {
-            NBTTagCompound tank1NBT = new NBTTagCompound();
-            this.tank1.writeToNBT(tank1NBT);
-            nbt.setTag("Tank1", tank1NBT);
-        }
-
-        if (this.tank2.getFluidAmount() > 0) {
-            NBTTagCompound tank2NBT = new NBTTagCompound();
-            this.tank2.writeToNBT(tank2NBT);
-            nbt.setTag("Tank2", tank2NBT);
-        }
-
-        if (this.tank3.getFluidAmount() > 0) {
-            NBTTagCompound tank3NBT = new NBTTagCompound();
-            this.tank3.writeToNBT(tank3NBT);
-            nbt.setTag("Tank3", tank3NBT);
-        }
+        this.fluid.writeToNBT(nbt);
 
         if (!this.inventory.isEmpty()) {
             NBTTagList list = new NBTTagList();
@@ -216,17 +151,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        if (nbt.hasKey("Tank1", 10)) {
-            this.tank1.readFromNBT(nbt.getCompoundTag("Tank1"));
-        } else this.tank1.setFluid(null);
-
-        if (nbt.hasKey("Tank2", 10)) {
-            this.tank2.readFromNBT(nbt.getCompoundTag("Tank2"));
-        } else this.tank2.setFluid(null);
-
-        if (nbt.hasKey("Tank3", 10)) {
-            this.tank3.readFromNBT(nbt.getCompoundTag("Tank3"));
-        } else this.tank3.setFluid(null);
+        this.fluid.readFromNBT(nbt);
 
         this.inventory.clear();
         if (nbt.hasKey("Inventory", 9)) {
@@ -243,23 +168,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
         this.optimizeInventory();
         NBTTagCompound nbt = new NBTTagCompound();
 
-        if (this.tank1.getFluidAmount() > 0) {
-            NBTTagCompound tank1NBT = new NBTTagCompound();
-            this.tank1.writeToNBT(tank1NBT);
-            nbt.setTag("Tank1", tank1NBT);
-        }
-
-        if (this.tank2.getFluidAmount() > 0) {
-            NBTTagCompound tank2NBT = new NBTTagCompound();
-            this.tank2.writeToNBT(tank2NBT);
-            nbt.setTag("Tank2", tank2NBT);
-        }
-
-        if (this.tank3.getFluidAmount() > 0) {
-            NBTTagCompound tank3NBT = new NBTTagCompound();
-            this.tank3.writeToNBT(tank3NBT);
-            nbt.setTag("Tank3", tank3NBT);
-        }
+        this.fluid.writeToNBT(nbt);
 
         if (!this.inventory.isEmpty()) {
             NBTTagList list = new NBTTagList();
@@ -274,17 +183,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
 
     @Override
     public void readPacket(NBTTagCompound nbt) {
-        if (nbt.hasKey("Tank1", 10)) {
-            this.tank1.readFromNBT(nbt.getCompoundTag("Tank1"));
-        } else this.tank1.setFluid(null);
-
-        if (nbt.hasKey("Tank2", 10)) {
-            this.tank2.readFromNBT(nbt.getCompoundTag("Tank2"));
-        } else this.tank2.setFluid(null);
-
-        if (nbt.hasKey("Tank3", 10)) {
-            this.tank3.readFromNBT(nbt.getCompoundTag("Tank3"));
-        } else this.tank3.setFluid(null);
+        this.fluid.readFromNBT(nbt);
 
         this.inventory.clear();
         if (nbt.hasKey("Inventory", 9)) {
@@ -314,6 +213,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
 
     public void optimizeInventory() {
         this.inventory.removeIf(ItemStack::isEmpty);
+        this.cleanupFluids();
     }
 
     @Override
@@ -329,6 +229,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
 
     @Override
     public ItemStack tryInsertItem(ItemStack stack) {
+        if (stack.isEmpty()) return ItemStack.EMPTY;
         this.sync();
         for (int i = 0; i < this.inventory.size(); i++) {
             ItemStack prev = this.inventory.get(i);
@@ -411,5 +312,14 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
             }
         }
         return true;
+    }
+
+    public void dumpRecipeResults(MixingRecipe recipe) {
+        for (ItemStack stack : recipe.itemOutputs) {
+            this.tryInsertItem(stack.copy());
+        }
+        for (FluidStack stack : recipe.fluidOutputs) {
+            this.fluid.fill(stack, true);
+        }
     }
 }

@@ -20,6 +20,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -123,24 +124,13 @@ public class BlockBasin extends Block implements ITileEntityProvider, IGoggleInf
             }
             if (fluid) {
                 builder.translate("goggles.fluid_contents").enter();
-                FluidStack fluid1 = te.tank1.getFluid();
-                FluidStack fluid2 = te.tank2.getFluid();
-                FluidStack fluid3 = te.tank3.getFluid();
-
-                if (fluid1 != null && fluid1.amount > 0) {
+                for (FluidTank tank : te.fluid.getHandlers()) {
+                    if (tank.getFluidAmount() <= 0) continue;
+                    FluidStack stack = tank.getFluid();
+                    if (stack == null) continue;
                     builder.space().space();
-                    builder.formatting(TextFormatting.GRAY).text(fluid1.amount + "mB ");
-                    builder.formatting(TextFormatting.AQUA).text(fluid1.getLocalizedName()).enter();
-                }
-                if (fluid2 != null && fluid2.amount > 0) {
-                    builder.space().space();
-                    builder.formatting(TextFormatting.GRAY).text(fluid2.amount + "mB ");
-                    builder.formatting(TextFormatting.AQUA).text(fluid2.getLocalizedName()).enter();
-                }
-                if (fluid3 != null && fluid3.amount > 0) {
-                    builder.space().space();
-                    builder.formatting(TextFormatting.GRAY).text(fluid3.amount + "mB ");
-                    builder.formatting(TextFormatting.AQUA).text(fluid3.getLocalizedName()).enter();
+                    builder.formatting(TextFormatting.GRAY).text(stack.amount + "mB ");
+                    builder.formatting(TextFormatting.AQUA).text(stack.getLocalizedName()).enter();
                 }
             }
             return builder.build();
@@ -167,53 +157,32 @@ public class BlockBasin extends Block implements ITileEntityProvider, IGoggleInf
         FluidStack contained = FluidUtil.getFluidContained(held);
         if (contained == null || contained.amount <= 0) {
             FluidStack fluid;
-            if (basin.tank3.getFluidAmount() > 0) {
-                if (handler.fill(basin.tank3.getFluid(), false) > 0) {
-                    basin.tank3.drainInternal(handler.fill(fluid = basin.tank3.getFluid(), true), true);
-                    playerIn.setHeldItem(hand, handler.getContainer());
-                    if (fluid != null) {
-                        worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+            basin.cleanupFluids();
+            List<FluidTank> handlers = basin.fluid.getHandlers();
+            int size = handlers.size();
+            for (int i = size - 1; i >= 0; i--) {
+                FluidTank tank = handlers.get(i);
+                if (tank.getFluidAmount() > 0) {
+                    if (handler.fill(tank.getFluid(), false) > 0) {
+                        tank.drainInternal(handler.fill(fluid = tank.getFluid(), true), true);
+                        playerIn.setHeldItem(hand, handler.getContainer());
+                        if (fluid != null) {
+                            worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            }
-            if (basin.tank2.getFluidAmount() > 0) {
-                if (handler.fill(basin.tank2.getFluid(), false) > 0) {
-                    basin.tank2.drainInternal(handler.fill(fluid = basin.tank2.getFluid(), true), true);
-                    playerIn.setHeldItem(hand, handler.getContainer());
-                    if (fluid != null) {
-                        worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    }
-                    return true;
-                }
-            }
-            if (basin.tank1.getFluidAmount() > 0) {
-                if (handler.fill(basin.tank1.getFluid(), false) > 0) {
-                    basin.tank1.drainInternal(handler.fill(fluid = basin.tank1.getFluid(), true), true);
-                    playerIn.setHeldItem(hand, handler.getContainer());
-                    if (fluid != null) {
-                        worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    }
-                    return true;
                 }
             }
         } else {
             IFluidTankProperties[] properties = handler.getTankProperties();
             if (properties.length == 0) return false;
             FluidStack fluid;
-            if (basin.tank1.fill(handler.drain(1000, false), false) > 0) {
-                basin.tank1.fill(fluid = handler.drain(1000, true), true);
+            basin.cleanupFluids();
+            if (basin.fluid.fill(handler.drain(1000, false), false) > 0) {
+                basin.fluid.fill(fluid = handler.drain(1000, true), true);
                 playerIn.setHeldItem(hand, handler.getContainer());
                 if (fluid != null) {
-                    worldIn.playSound(null, pos, fluid.getFluid().getEmptySound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
-                }
-                return true;
-            }
-            if (basin.tank2.fill(handler.drain(1000, false), false) > 0) {
-                basin.tank2.fill(fluid = handler.drain(1000, true), true);
-                playerIn.setHeldItem(hand, handler.getContainer());
-                if (fluid != null) {
-                    worldIn.playSound(null, pos, fluid.getFluid().getEmptySound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    worldIn.playSound(null, pos, fluid.getFluid().getFillSound(fluid), SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
                 return true;
             }

@@ -1,124 +1,203 @@
 package nl.melonstudios.create.recipe;
 
-import com.google.common.collect.Lists;
+import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.recipe.FluidIngredient;
+import com.melonstudios.melonlib.recipe.Ingredient;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
-import nl.melonstudios.create.util.Utils;
+import nl.melonstudios.create.util.filter.IItemFilter;
 
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class MixingRecipe {
-    public final String recipeID;
-    public final FluidStack fluidIn1;
-    public final FluidStack fluidIn2;
-    public final List<ItemStack> requiredItems;
-    public final FluidStack fluidOut;
-    public final List<ItemStack> resultItems;
+    public final List<Ingredient> itemInputs;
+    public final List<FluidStack> fluidInputs;
+    public final List<ItemStack> itemOutputs;
+    public final List<FluidStack> fluidOutputs;
     public final int requiredHeat;
-    public final int recipeTime;
+    public final int processingTime;
 
-    public MixingRecipe(String recipeID, FluidStack fluidIn1, FluidStack fluidIn2, List<ItemStack> requiredItems,
-                        FluidStack fluidOut, List<ItemStack> resultItems, int requiredHeat, int recipeTime) {
-        this.recipeID = recipeID;
-        this.fluidIn1 = fluidIn1;
-        this.fluidIn2 = fluidIn2;
-        this.requiredItems = requiredItems;
-        this.fluidOut = fluidOut;
-        this.resultItems = resultItems;
+    public MixingRecipe(
+            List<Ingredient> itemInputs,
+            List<FluidStack> fluidInputs,
+            List<ItemStack> itemOutputs,
+            List<FluidStack> fluidOutputs,
+            int requiredHeat,
+            int processingTime
+    ) {
+        this.itemInputs = itemInputs;
+        this.fluidInputs = fluidInputs;
+        this.itemOutputs = itemOutputs;
+        this.fluidOutputs = fluidOutputs;
         this.requiredHeat = requiredHeat;
-        this.recipeTime = recipeTime;
+        this.processingTime = processingTime;
+    }
+
+    private static void serializeFluid(FluidStack stack, ByteBuf buf) {
+        String id = FluidRegistry.getFluidName(stack);
+        int amount = stack.amount;
+        NBTTagCompound tag = stack.tag;
+        buf.writeInt(id.length());
+        buf.writeCharSequence(id, StandardCharsets.UTF_8);
+        buf.writeInt(amount);
+        if (tag != null) {
+            buf.writeBoolean(true);
+            new PacketBuffer(buf).writeCompoundTag(tag);
+        } else {
+            buf.writeBoolean(false);
+        }
+    }
+    private static FluidStack readFluid(ByteBuf buf) throws IOException {
+        int len = buf.readInt();
+        String id = buf.readCharSequence(len, StandardCharsets.UTF_8).toString();
+        int amount = buf.readInt();
+        NBTTagCompound nbt = buf.readBoolean() ? new PacketBuffer(buf).readCompoundTag() : null;
+        return new FluidStack(FluidRegistry.getFluid(id), amount, nbt);
+    }
+
+    public void write(ByteBuf buf) {
+        buf.writeInt(this.itemInputs.size());
+        for (Ingredient input : this.itemInputs) input.serialize(buf);
+        buf.writeInt(this.fluidInputs.size());
+        for (FluidStack input : this.fluidInputs) FluidIngredient.of(input).serialize(buf);
+        buf.writeInt(this.itemOutputs.size());
+        for (ItemStack stack : this.itemOutputs) StackUtil.writeItemStack(stack, buf, true, true);
+        buf.writeInt(this.fluidOutputs.size());
+        for (FluidStack stack : this.fluidOutputs) serializeFluid(stack, buf);
+        buf.writeByte(this.requiredHeat);
+        buf.writeInt(this.processingTime);
+    }
+    public static MixingRecipe read(ByteBuf buf) throws IOException {
+        int itemInputsLen = buf.readInt();
+        List<Ingredient> itemInputs = new ArrayList<>(itemInputsLen);
+        for (int i = 0; i < itemInputsLen; i++) {
+            itemInputs.add(Ingredient.read(buf));
+        }
+        int fluidInputsLen = buf.readInt();
+        List<FluidStack> fluidInputs = new ArrayList<>(fluidInputsLen);
+        for (int i = 0; i < fluidInputsLen; i++) {
+            fluidInputs.add(readFluid(buf));
+        }
+        int itemOutputsLen = buf.readInt();
+        List<ItemStack> itemOutputs = new ArrayList<>(itemOutputsLen);
+        for (int i = 0; i < itemOutputsLen; i++) {
+            itemOutputs.add(StackUtil.readItemStack(buf, true, true));
+        }
+        int fluidOutputsLen = buf.readInt();
+        List<FluidStack> fluidOutputs = new ArrayList<>(fluidOutputsLen);
+        for (int i = 0; i < fluidOutputsLen; i++) {
+            fluidOutputs.add(readFluid(buf));
+        }
+        int requiredHeat = buf.readUnsignedByte();
+        int processingTime = buf.readInt();
+        return new MixingRecipe(itemInputs, fluidInputs, itemOutputs, fluidOutputs, requiredHeat, processingTime);
+    }
+
+    public boolean checkFilter(IItemFilter filter) {
+        for (ItemStack stack : this.itemOutputs) {
+            if (filter.matches(stack)) return true;
+        }
+        for (FluidStack stack : this.fluidOutputs) {
+            if (filter.matches(stack)) return true;
+        }
+        return false;
     }
 
     public boolean matches(TileEntityBasin basin) {
         if (this.requiredHeat > basin.getHeat()) return false;
-        FluidStack fluid1 = basin.tank1.getFluid();
-        FluidStack fluid2 = basin.tank2.getFluid();
-        boolean firstFluidFirst = true;
-        if (this.fluidIn1 != null) {
-            if (fluid1 == null) {
-                if (fluid2 == null) return false;
-                firstFluidFirst = false;
-                if (!fluid2.containsFluid(this.fluidIn1)) return false;
-            } else {
-                if (!fluid1.containsFluid(this.fluidIn1)) {
-                    firstFluidFirst = false;
-                    if (fluid2 == null || !fluid2.containsFluid(this.fluidIn1)) return false;
-                }
-            }
-        }
-        if (this.fluidIn2 != null) {
-            if (firstFluidFirst) {
-                if (fluid2 == null) return false;
-                if (!fluid2.containsFluid(this.fluidIn2)) return false;
-            } else {
-                if (fluid1 == null) return false;
-                if (!fluid1.containsFluid(this.fluidIn2)) return false;
-            }
-        }
-        if (!this.requiredItems.isEmpty()) {
-            for (ItemStack require : this.requiredItems) {
-                int c = require.getCount();
+        if (basin.recipeFilter == null || this.checkFilter(basin.recipeFilter)) {
+            if (!this.itemInputs.isEmpty()) {
+                List<Ingredient> test = new ArrayList<>(this.itemInputs);
+                loop:
                 for (ItemStack stack : basin.inventory) {
-                    if (Utils.itemMatches(require, stack)) {
-                        c -= stack.getCount();
+                    while (!test.isEmpty()) {
+                        Ingredient ingredient = test.remove(0);
+                        if (ingredient.matches(stack)) {
+                            continue loop;
+                        }
+                        test.add(ingredient);
                     }
                 }
-                if (c > 0) return false;
+                if (!test.isEmpty()) return false;
             }
+            if (!this.fluidInputs.isEmpty()) {
+                List<FluidStack> test = new ArrayList<>(this.fluidInputs);
+                loop:
+                for (FluidTank tank : basin.fluid.getHandlers()) {
+                    FluidStack stack = tank.getFluid();
+                    if (stack == null) throw new IllegalStateException("How is the fluid stack null? Please optimize fluid pool!");
+                    while (!test.isEmpty()) {
+                        FluidStack ingredient = test.remove(0);
+                        if (stack.containsFluid(ingredient)) {
+                            continue loop;
+                        }
+                        test.add(ingredient);
+                    }
+                }
+                if (!test.isEmpty()) return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
     public boolean checkOutputSpace(TileEntityBasin basin) {
-        if (this.fluidOut != null) {
-            FluidStack fluid = basin.tank3.getFluid();
-            if (fluid != null && fluid.amount + this.fluidOut.amount > 1000) return false;
+        if (basin == null) return false;
+        TileEntityBasin copy = basin.copyForTesting();
+        if (!this.removeRequiredInput(copy)) throw new IllegalStateException("Required input not available?");
+        for (ItemStack stack : this.itemOutputs) {
+            if (!basin.tryInsertItem(stack.copy()).isEmpty()) return false;
         }
-        if (!this.resultItems.isEmpty()) {
-            for (ItemStack stack : this.resultItems) {
-                for (ItemStack inv : basin.inventory) {
-                    if (ItemStack.areItemsEqual(stack, inv) && ItemStack.areItemStackTagsEqual(stack, inv)) {
-                        if (stack.getCount() + inv.getCount() > 16) return false;
-                    }
-                }
-            }
+        for (FluidStack stack : this.fluidOutputs) {
+            int amount = basin.fluid.fill(stack, true);
+            if (amount < stack.amount) return false;
         }
         return true;
     }
     public boolean removeRequiredInput(TileEntityBasin basin) {
-        if (this.requiredHeat > basin.getHeat()) return false;
-        FluidStack fluid1 = basin.tank1.getFluid();
-        FluidStack fluid2 = basin.tank2.getFluid();
-        boolean firstFluidFirst = true;
-        if (this.fluidIn1 != null) {
-            if (fluid1 == null || !fluid1.containsFluid(this.fluidIn1)) {
-                firstFluidFirst = false;
-                basin.tank2.drainInternal(this.fluidIn1, true);
-            } else {
-                basin.tank1.drainInternal(this.fluidIn1, true);
-            }
-        }
-        if (this.fluidIn2 != null) {
-            if (firstFluidFirst) {
-                basin.tank2.drainInternal(this.fluidIn2, true);
-            } else {
-                basin.tank1.drainInternal(this.fluidIn2, true);
-            }
-        }
-        if (!this.requiredItems.isEmpty()) {
-            for (ItemStack require : this.requiredItems) {
-                int c = require.getCount();
-                for (ItemStack stack : basin.inventory) {
-                    if (Utils.itemMatches(require, stack)) {
-                        int rem = stack.getCount();
-                        stack.shrink(Math.min(c, rem));
-                        c = Math.max(c - rem, 0);
+        if (!this.itemInputs.isEmpty()) {
+            List<Ingredient> test = new ArrayList<>(this.itemInputs);
+            loop:
+            for (ItemStack stack : basin.inventory) {
+                while (!test.isEmpty()) {
+                    Ingredient ingredient = test.remove(0);
+                    if (ingredient.matches(stack)) {
+                        stack.shrink(1);
+                        continue loop;
                     }
+                    test.add(ingredient);
                 }
             }
+            if (!test.isEmpty()) return false;
         }
-        basin.sync();
+        if (!this.fluidInputs.isEmpty()) {
+            List<FluidStack> test = new ArrayList<>(this.fluidInputs);
+            loop:
+            for (FluidTank tank : basin.fluid.getHandlers()) {
+                FluidStack stack = tank.getFluid();
+                if (stack == null) throw new IllegalStateException("How is the fluid stack null? Please optimize fluid pool!");
+                while (!test.isEmpty()) {
+                    FluidStack ingredient = test.remove(0);
+                    if (stack.containsFluid(ingredient)) {
+                        stack.amount -= ingredient.amount;
+                        continue loop;
+                    }
+                    test.add(ingredient);
+                }
+            }
+            if (!test.isEmpty()) return false;
+        }
+        basin.optimizeInventory();
         return true;
     }
 
@@ -127,54 +206,91 @@ public class MixingRecipe {
     }
 
     public static class Builder {
-        private FluidStack fluidIn1, fluidIn2;
-        private List<ItemStack> requiredItems = Collections.emptyList();
-        private FluidStack fluidOut;
-        private List<ItemStack> resultItems = Collections.emptyList();
+        private List<Ingredient> itemInputs = Collections.emptyList();
+        private List<FluidStack> fluidInputs = Collections.emptyList();
+        private List<ItemStack> itemOutputs = Collections.emptyList();
+        private List<FluidStack> fluidOutputs = Collections.emptyList();
         private int requiredHeat = 0;
-        private int recipeTime = 5120;
+        private int processingTime = 5120;
 
-        public MixingRecipe build(String recipeID) {
-            return new MixingRecipe(recipeID, this.fluidIn1, this.fluidIn2, this.requiredItems, this.fluidOut, this.resultItems, this.requiredHeat, this.recipeTime);
+        private Builder() {
+
         }
 
-        public Builder setInputFluids(FluidStack... fluids) {
-            if (fluids.length == 0) {
-                this.fluidIn1 = null;
-                this.fluidIn2 = null;
-                return this;
-            } else if (fluids.length == 1) {
-                this.fluidIn1 = fluids[0];
-                this.fluidIn2 = null;
-                return this;
-            } else {
-                this.fluidIn1 = fluids[0];
-                this.fluidIn2 = fluids[1];
-                return this;
+        public MixingRecipe build() {
+            return new MixingRecipe(this.itemInputs, this.fluidInputs, this.itemOutputs, this.fluidOutputs, this.requiredHeat, this.processingTime);
+        }
+
+        public Builder setItemInputs(Object... inputs) {
+            this.itemInputs = new ArrayList<>(inputs.length);
+            for (Object param : inputs) {
+                if (param instanceof Ingredient) {
+                    this.itemInputs.add((Ingredient) param);
+                } else if (param instanceof ItemStack) {
+                    ItemStack input = (ItemStack) param;
+                    if (input.isEmpty()) throw new IllegalArgumentException("ItemStack input cannot be empty");
+                    for (int i = 0; i < input.getCount(); i++) {
+                        this.itemInputs.add(Ingredient.of(input, false));
+                    }
+                } else if (param instanceof Item) {
+                    this.itemInputs.add(Ingredient.of(new ItemStack((Item) param, 1, OreDictionary.WILDCARD_VALUE), false));
+                } else if (param instanceof Block) {
+                    this.itemInputs.add(Ingredient.of(new ItemStack((Block) param, 1, OreDictionary.WILDCARD_VALUE), false));
+                } else if (param instanceof String) {
+                    this.itemInputs.add(Ingredient.of((String) param));
+                } else {
+                    throw new IllegalArgumentException("Invalid item input: " + param + " (" + param.getClass().getSimpleName() + ")");
+                }
             }
-        }
-        public Builder setInputItems(ItemStack... items) {
-            this.requiredItems = items.length > 0 ? Lists.newArrayList(items) : Collections.emptyList();
             return this;
         }
-        public Builder setOutputFluid(FluidStack fluid) {
-            this.fluidOut = fluid;
+        public Builder setFluidInputs(Object... inputs) {
+            this.fluidInputs = new ArrayList<>(inputs.length);
+            for (Object param : inputs) {
+                if (param instanceof FluidStack) {
+                    this.fluidInputs.add((FluidStack) param);
+                } else {
+                    throw new IllegalArgumentException("Invalid fluid input: " + param + " (" + param.getClass().getSimpleName() + ")");
+                }
+            }
             return this;
         }
-        public Builder setOutputItems(ItemStack... items) {
-            this.resultItems = items.length > 0 ? Lists.newArrayList(items) : Collections.emptyList();
+        public Builder setItemOutputs(Object... outputs) {
+            this.itemOutputs = new ArrayList<>(outputs.length);
+            for (Object param : outputs) {
+                if (param instanceof ItemStack) {
+                    this.itemOutputs.add((ItemStack) param);
+                } else if (param instanceof Item) {
+                    this.itemOutputs.add(new ItemStack((Item) param, 1, 0));
+                } else if (param instanceof Block) {
+                    this.itemOutputs.add(new ItemStack((Block) param, 1, 0));
+                } else {
+                    throw new IllegalArgumentException("Invalid item output: " + param + " (" + param.getClass().getSimpleName() + ")");
+                }
+            }
+            return this;
+        }
+        public Builder setFluidOutputs(Object... outputs) {
+            this.fluidOutputs = new ArrayList<>(outputs.length);
+            for (Object param : outputs) {
+                if (param instanceof FluidStack) {
+                    this.fluidOutputs.add((FluidStack) param);
+                } else {
+                    throw new IllegalArgumentException("Invalid fluid output: " + param + " (" + param.getClass().getSimpleName() + ")");
+                }
+            }
             return this;
         }
         public Builder setRequiredHeat(int heat) {
             this.requiredHeat = heat;
             return this;
         }
-        public Builder setRecipeTime(int ticks) {
-            this.recipeTime = ticks;
+        public Builder setProcessingTime(int ticks) {
+            this.processingTime = ticks;
             return this;
         }
-        public Builder setRecipeTime64RPM(int ticks) {
-            this.recipeTime = ticks * 64;
+        public Builder setProcessingTime64RPM(int ticks) {
+            this.processingTime = ticks * 64;
             return this;
         }
     }

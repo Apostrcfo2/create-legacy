@@ -1,6 +1,7 @@
 package nl.melonstudios.create.mixins;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.event.ForgeEventFactory;
 import nl.melonstudios.create.util.interfaces.IExcludeAttachingCapabilities;
@@ -11,6 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ForgeEventFactory.class)
 public class MixinForgeEventFactory {
+    @Inject(method = "gatherCapabilities(Lnet/minecraft/tileentity/TileEntity;)Lnet/minecraftforge/common/capabilities/CapabilityDispatcher;", at = @At("HEAD"), cancellable = true, remap = false)
+    private static void gatherCapabilities(TileEntity tileEntity, CallbackInfoReturnable<CapabilityDispatcher> cir) {
+        if (tileEntity instanceof IExcludeAttachingCapabilities) cir.setReturnValue(null);
+    }
+
     //Fix "Incompatibility with Deployer and DynamicSurrounding"
     //May need performance testing
     @Inject(method = "gatherCapabilities(Lnet/minecraft/entity/Entity;)Lnet/minecraftforge/common/capabilities/CapabilityDispatcher;", at = @At("HEAD"), cancellable = true, remap = false)

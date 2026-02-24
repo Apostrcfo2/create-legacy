@@ -530,128 +530,6 @@ public final class RecipeInit {
     }
     private static void mixing() {
         MixingRecipes recipes = MixingRecipes.instance;
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(Items.SUGAR),
-                                new ItemStack(Items.DYE, 1, 3)
-                        )
-                        .setInputFluids(
-                                new FluidStack(FluidInit.milk(), 250)
-                        )
-                        .setOutputItems()
-                        .setOutputFluid(
-                                new FluidStack(FluidInit.chocolate(), 250)
-                        )
-                        .build("create:chocolate")
-        );
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(Blocks.LEAVES, 1, OreDictionary.WILDCARD_VALUE)
-                        )
-                        .setInputFluids(
-                                new FluidStack(FluidRegistry.WATER, 250),
-                                new FluidStack(FluidInit.milk(), 250)
-                        )
-                        .setOutputItems()
-                        .setOutputFluid(
-                                new FluidStack(FluidInit.tea(), 500)
-                        )
-                        .build("create:tea")
-        );
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(Blocks.LEAVES2, 1, OreDictionary.WILDCARD_VALUE)
-                        )
-                        .setInputFluids(
-                                new FluidStack(FluidRegistry.WATER, 250),
-                                new FluidStack(FluidInit.milk(), 250)
-                        )
-                        .setOutputItems()
-                        .setOutputFluid(
-                                new FluidStack(FluidInit.tea(), 500)
-                        )
-                        .build("create:tea2")
-        );
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(Blocks.STONE, 1, 5),
-                                new ItemStack(Items.IRON_NUGGET)
-                        )
-                        .setOutputItems(
-                                new ItemStack(ItemInit.INGREDIENT, 1, 15)
-                        )
-                        .build("create:andesite_alloy")
-        );
-        int tracker = 0;
-        for (ItemStack stack : OreDictionary.getOres("nuggetZinc")) {
-            recipes.addRecipe(
-                    MixingRecipe.builder()
-                            .setInputItems(
-                                    new ItemStack(Blocks.STONE, 1, 5),
-                                    stack.copy()
-                            )
-                            .setOutputItems(
-                                    new ItemStack(ItemInit.INGREDIENT, 1, 15)
-                            )
-                            .build("create:andesite_alloy_zinc" + tracker++)
-            );
-        }
-        tracker = 0;
-        for (ItemStack zinc : OreDictionary.getOres("ingotZinc")) {
-            for (ItemStack copper : OreDictionary.getOres("ingotCopper")) {
-                recipes.addRecipe(
-                        MixingRecipe.builder()
-                                .setInputItems(
-                                        zinc.copy(),
-                                        copper.copy()
-                                )
-                                .setOutputItems(
-                                        new ItemStack(ItemInit.INGREDIENT, 2, 18)
-                                )
-                                .setRequiredHeat(1)
-                                .build("create:brass" + tracker++)
-                );
-            }
-        }
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(Blocks.SAPLING, 4, OreDictionary.WILDCARD_VALUE)
-                        )
-                        .setInputFluids(
-                                new FluidStack(FluidRegistry.WATER, 250)
-                        )
-                        .setOutputItems(
-                                new ItemStack(ItemInit.INGREDIENT, 1, 12)
-                        )
-                        .build("create:pulp")
-        );
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(ItemInit.INGREDIENT, 1, 0)
-                        )
-                        .setInputFluids(
-                                new FluidStack(FluidRegistry.WATER, 1000)
-                        )
-                        .setOutputItems(
-                                new ItemStack(ItemInit.INGREDIENT, 1, 1)
-                        )
-                        .build("create:dough")
-        );
-        recipes.addRecipe(
-                MixingRecipe.builder()
-                        .setInputItems(
-                                new ItemStack(Blocks.COBBLESTONE, 1, OreDictionary.WILDCARD_VALUE)
-                        )
-                        .setOutputFluid(new FluidStack(FluidRegistry.LAVA, 50))
-                        .setRequiredHeat(2)
-                        .build("create:cobblestone_melting")
-        );
     }
     private static void deploying() {
         DeployerRecipes recipes = DeployerRecipes.instance;
@@ -763,6 +641,9 @@ public final class RecipeInit {
     }
     public static IRecipeAccessor<CuttingRecipe> getCuttingRecipes() {
         return MelonLib.proxy.getRecipeAccessor("create:cutting");
+    }
+    public static IRecipeAccessor<MixingRecipe> getMixingRecipes() {
+        return RecipeRegistry.getRecipeAccessor("create:mixing");
     }
     public static IRecipeAccessor<DeployerRecipe> getDeployerRecipes() {
         return MelonLib.proxy.getRecipeAccessor("create:deploying");
