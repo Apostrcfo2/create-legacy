@@ -1,6 +1,7 @@
 package nl.melonstudios.create.util;
 
 import com.google.common.collect.ImmutableList;
+import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -182,13 +183,6 @@ public class Utils {
     }
 
     public static boolean itemMatches(ItemStack example, ItemStack input) {
-        if (example.isEmpty() != input.isEmpty()) return false;
-        if (example.getItem() == input.getItem()) {
-            if (example.getItem().getHasSubtypes()) {
-                return (example.getMetadata() == input.getMetadata()) || (example.getMetadata() == OreDictionary.WILDCARD_VALUE);
-            }
-            return true;
-        }
-        return false;
+        return StackUtil.itemMatches(example, input);
     }
 }

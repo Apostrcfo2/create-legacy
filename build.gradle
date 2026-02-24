@@ -61,8 +61,8 @@ minecraft {
 }
 
 configurations {
-    embed
-    compile.extendsFrom(embed)
+    //embed
+    //compile.extendsFrom(embed)
 }
 
 repositories {
@@ -113,11 +113,11 @@ dependencies {
     //runtimeOnly fg.deobf("curse.maven:ctm-${ctm_version}") // ConnectedTexturesMod (disabled in IDE)
 
     //mixins !!
-    embed('org.spongepowered:mixin:0.8.3-SNAPSHOT') {
-        exclude module: 'guava'
-        exclude module: 'commons-io'
-        exclude module: 'gson'
-    }
+    //embed('org.spongepowered:mixin:0.8.3-SNAPSHOT') {
+    //    exclude module: 'guava'
+    //    exclude module: 'commons-io'
+    //    exclude module: 'gson'
+    //}
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -134,11 +134,11 @@ jar {
         ])
     }
 
-    from {
-        configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
-    } {
-        exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
-    }
+    //from {
+    //    configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+    //} {
+    //    exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
+    //}
 
     manifest.attributes(
             'ForceLoadAsMod': 'true',

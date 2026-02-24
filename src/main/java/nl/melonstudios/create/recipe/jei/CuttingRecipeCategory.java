@@ -9,7 +9,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.util.ResourceLocation;
 
-public class CuttingRecipeCategory implements IRecipeCategory<CuttingRecipe> {
+public class CuttingRecipeCategory implements IRecipeCategory<JEICuttingRecipe> {
     private static final ResourceLocation TEXTURES =
             new ResourceLocation("create", "textures/gui/jei/cutting.png");
 
@@ -39,11 +39,11 @@ public class CuttingRecipeCategory implements IRecipeCategory<CuttingRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayout iRecipeLayout, CuttingRecipe cuttingRecipe, IIngredients iIngredients) {
-        IGuiItemStackGroup stacks = iRecipeLayout.getItemStacks();
+    public void setRecipe(IRecipeLayout layout, JEICuttingRecipe recipe, IIngredients ingredients) {
+        IGuiItemStackGroup stacks = layout.getItemStacks();
         stacks.init(input, true, 1, 7);
         stacks.init(output, false, 45, 7);
-        stacks.set(iIngredients);
+        stacks.set(ingredients);
     }
 
     public CuttingRecipeCategory(IGuiHelper helper) {

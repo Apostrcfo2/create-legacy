@@ -13,9 +13,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
-import nl.melonstudios.create.recipe.FlatteningRecipe;
-import nl.melonstudios.create.recipe.PressingRecipes;
+import nl.melonstudios.create.recipe.PressingRecipe;
+import nl.melonstudios.create.recipe.server.PressingRecipes;
 import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
 import nl.melonstudios.create.recipe.sequence.SequenceStep;
 import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
@@ -52,7 +53,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                 recipes:
                 {
                     {
-                        FlatteningRecipe recipe = PressingRecipes.instance.getRecipeForInput(stack);
+                        PressingRecipe recipe = PressingRecipes.getRecipeForInput(stack);
                         if (recipe != null) {
                             shouldMove = true;
                             if (this.lastProgress < 1000 && this.progress >= 1000) {
@@ -70,7 +71,8 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                         }
                     }
                     {
-                        SequenceRecipe recipe = SequencedRecipes.instance.getRecipe(stack);
+                        String recipeID = SequencedRecipes.getRecipeForInput(stack);
+                        SequenceRecipe recipe = recipeID != null ? RecipeInit.getSequenceRecipes().getRecipe(recipeID) : null;
                         if (recipe != null) {
                             SequenceStep first = recipe.getFirstStep();
                             if ("pressing".equals(first.name)) {
@@ -84,7 +86,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                                             depot
                                     );
                                     ItemStack processing = recipe.processing.copy();
-                                    SequenceRecipe.initialize(processing, recipe.recipeID);
+                                    SequenceRecipe.initialize(processing, recipeID);
                                     processing = SequenceRecipe.advance(processing);
                                     depot.decreasePresentedAndAddOutput(processing);
                                     flag = true;
@@ -123,7 +125,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                 if (!entityItems.isEmpty()) {
                     for (EntityItem entityItem : entityItems) {
                         ItemStack stack = entityItem.getItem();
-                        FlatteningRecipe recipe = PressingRecipes.instance.getRecipeForInput(stack);
+                        PressingRecipe recipe = PressingRecipes.getRecipeForInput(stack);
                         if (recipe != null) {
                             shouldMove = true;
                             if (this.lastProgress < 1000 && this.progress >= 1000) {
@@ -217,7 +219,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
 
     @Override
     public boolean shouldHaltItem(ItemStack stack) {
-        return PressingRecipes.instance.getRecipeForInput(stack) != null;
+        return PressingRecipes.getRecipeForInput(stack) != null;
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,25 +1,26 @@
 package nl.melonstudios.create.recipe.jei;
 
+import com.melonstudios.melonlib.recipe.Ingredient;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.recipe.*;
+import nl.melonstudios.create.recipe.client.CuttingRecipesClient;
+import nl.melonstudios.create.recipe.server.PressingRecipes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class RecipeMaker {
-    public static List<PressingRecipe> getPressingRecipes(IJeiHelpers helpers) {
+    public static List<JEIPressingRecipe> getPressingRecipes(IJeiHelpers helpers) {
         PressingRecipes instance = PressingRecipes.instance;
 
-        List<FlatteningRecipe> recipes = new ArrayList<>(instance.recipes.values());
-        List<PressingRecipe> recipeList = new ArrayList<>(recipes.size());
+        List<PressingRecipe> recipes = new ArrayList<>(instance.recipes.values());
+        List<JEIPressingRecipe> recipeList = new ArrayList<>(recipes.size());
 
-        for (FlatteningRecipe recipe : recipes) {
-            recipeList.add(new PressingRecipe(recipe.input, recipe.result));
+        for (PressingRecipe recipe : recipes) {
+            recipeList.add(new JEIPressingRecipe(recipe.input, recipe.result));
         }
 
         return recipeList;
@@ -39,40 +40,27 @@ public class RecipeMaker {
         return recipeList;
     }
 
-    public static List<CuttingRecipe> getCuttingRecipes(IJeiHelpers helpers) {
-        CuttingRecipes instance = CuttingRecipes.instance;
+    public static List<JEICuttingRecipe> getCuttingRecipes(IJeiHelpers helpers) {
+        CuttingRecipesClient instance = CuttingRecipesClient.instance;
 
-        List<SawingRecipe> recipes = new ArrayList<>(instance.recipes.values());
-        List<CuttingRecipe> recipeList = new ArrayList<>();
+        List<CuttingRecipe> recipes = new ArrayList<>(instance.getAllRecipes());
+        List<JEICuttingRecipe> recipeList = new ArrayList<>();
 
-        List<SawingRecipe> bin = new ArrayList<>();
+        List<CuttingRecipe> bin = new ArrayList<>();
         while (!recipes.isEmpty()) {
             bin.clear();
-            SawingRecipe example = recipes.remove(0);
-            ItemStack next = example.input;
+            CuttingRecipe example = recipes.remove(0);
+            Ingredient next = example.input;
             List<ItemStack> out = new ArrayList<>();
             out.add(example.result.copy());
-            for (SawingRecipe recipe : recipes) {
-                if (OreDictionary.itemMatches(next, recipe.input, false)) {
+            for (CuttingRecipe recipe : recipes) {
+                if (recipe.input.equals(next)) {
                     bin.add(recipe);
                     out.add(recipe.result.copy());
                 }
             }
             recipes.removeAll(bin);
-            recipeList.add(new CuttingRecipe(next, out));
-        }
-
-        return recipeList;
-    }
-
-    public static List<JEIDeployerRecipe> getDeployingRecipes(IJeiHelpers helpers) {
-        DeployingRecipes instance = DeployingRecipes.instance;
-
-        Collection<DeployerRecipe> recipes = instance.recipes.values();
-        List<JEIDeployerRecipe> recipeList = new ArrayList<>();
-
-        for (DeployerRecipe recipe : recipes) {
-            recipeList.add(new JEIDeployerRecipe(recipe.input, recipe.applied, recipe.result));
+            recipeList.add(new JEICuttingRecipe(next, out));
         }
 
         return recipeList;

@@ -1,6 +1,6 @@
 package nl.melonstudios.create;
 
-import net.minecraft.nbt.NBTTagCompound;
+import com.melonstudios.melonlib.recipe.RecipeRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -13,11 +13,9 @@ import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.proxy.CommonProxy;
 import nl.melonstudios.create.recipe.*;
-import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Random;
 
 import static nl.melonstudios.create.CreateLegacy.DEPENDENCIES;
@@ -28,15 +26,7 @@ public class CreateLegacy {
     public static final String MODID = "create";
     public static final String NAME = "Create Legacy";
     public static final String VERSION = "26w08a";
-    static final String DEPENDENCIES = "required-after:melonlib@[1.4,)" + (inIDE ? "" : ";required-after-client:ctm");
-
-    private static final HashMap<String, NBTDecodableRecipeType> DECODABLE_RECIPE_TYPE_MAP = new HashMap<>();
-    public static void addNBTDecodableRecipe(NBTDecodableRecipeType type) {
-        if (DECODABLE_RECIPE_TYPE_MAP.containsKey(type.getRecipeType())) {
-            throw new IllegalArgumentException("Duplicate recipe ID: " + type.getRecipeType());
-        }
-        DECODABLE_RECIPE_TYPE_MAP.put(type.getRecipeType(), type);
-    }
+    static final String DEPENDENCIES = "required-after:melonlib@[1.10.0,)" + (inIDE ? "" : ";required-after-client:ctm");
 
     private static SimpleNetworkWrapper network;
     public static SimpleNetworkWrapper getNetwork() {
@@ -71,26 +61,21 @@ public class CreateLegacy {
 
         SoundInit.init();
 
-        addNBTDecodableRecipe(PressingRecipes.instance);
-        addNBTDecodableRecipe(SandingRecipes.instance);
-        addNBTDecodableRecipe(MillingRecipes.instance);
-        addNBTDecodableRecipe(CuttingRecipes.instance);
-        addNBTDecodableRecipe(DeployingRecipes.instance);
-        addNBTDecodableRecipe(SequencedRecipes.instance);
-
         FluidInit.register();
+
+        proxy.registerRecipeTypes();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         CreateLegacy.proxy.initiatePonders();
+        OreDictInit.scanMetalTypes();
+        RecipeInit.init();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.pork();
-        OreDictInit.scanMetalTypes();
-        RecipeInit.init();
         BlockStressValues.initialize();
         Contraption.registerValidInventoryClasses();
     }
@@ -98,24 +83,6 @@ public class CreateLegacy {
     @EventHandler
     public void youGotMail(FMLInterModComms.IMCEvent event) {
         for (FMLInterModComms.IMCMessage message : event.getMessages()) {
-            if (message.isNBTMessage()) {
-                NBTTagCompound nbt = message.getNBTValue();
-
-                if ("addRecipe".equals(message.key)) {
-                    if (nbt.hasKey("RecipeData", 10)) {
-                        NBTTagCompound data = nbt.getCompoundTag("RecipeData");
-                        String recipeType = data.getString("type");
-                        NBTDecodableRecipeType type = DECODABLE_RECIPE_TYPE_MAP.get(recipeType);
-                        if (type != null) {
-                            CreateLegacy.logger.debug("Adding recipe of type {} (received from {})", recipeType, message.getSender());
-                            String recipeId = data.getString("id");
-                            type.decodeRecipe(recipeId, data);
-                        } else {
-                            CreateLegacy.logger.debug("Could not add recipe of unknown type {} (received from {})", recipeType, message.getSender());
-                        }
-                    }
-                }
-            }
             if (message.isStringMessage()) {
                 if ("addContraptionInventory".equals(message.key)) {
                     Contraption.addValidInventoryFromIMC(message);

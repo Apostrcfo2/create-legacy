@@ -1,5 +1,6 @@
 package nl.melonstudios.create.proxy;
 
+import com.melonstudios.melonlib.recipe.RecipeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleBreaking;
 import net.minecraft.client.particle.ParticleRedstone;
@@ -29,6 +30,10 @@ import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.entity.RenderContraptionBearing;
 import nl.melonstudios.create.entity.RenderGlue;
 import nl.melonstudios.create.init.SoundInit;
+import nl.melonstudios.create.recipe.client.CuttingRecipesClient;
+import nl.melonstudios.create.recipe.client.DeployingRecipesClient;
+import nl.melonstudios.create.recipe.client.PressingRecipesClient;
+import nl.melonstudios.create.recipe.client.SequencedRecipesClient;
 import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tesr.actor.*;
 import nl.melonstudios.create.tesr.generator.TESRBearingWindmill;
@@ -199,5 +204,14 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initiatePonders() {
         PonderRegistry.bootstrap();
+    }
+
+    @Override
+    public void registerRecipeTypes() {
+        super.registerRecipeTypes();
+        RecipeRegistry.registerClient("create:pressing", PressingRecipesClient.instance);
+        RecipeRegistry.registerClient("create:cutting", CuttingRecipesClient.instance);
+        RecipeRegistry.registerClient("create:deploying", DeployingRecipesClient.instance);
+        RecipeRegistry.registerClient("create:sequence", SequencedRecipesClient.instance);
     }
 }

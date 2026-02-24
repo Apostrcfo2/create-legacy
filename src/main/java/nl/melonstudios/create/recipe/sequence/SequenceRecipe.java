@@ -1,8 +1,11 @@
 package nl.melonstudios.create.recipe.sequence;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.MapMaker;
 import com.melonstudios.melonlib.misc.Localizer;
+import com.melonstudios.melonlib.recipe.Ingredient;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,17 +15,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentMap;
 
 public class SequenceRecipe {
-    public final String recipeID;
-    public final ItemStack input;
+    public final Ingredient input;
     public final ItemStack processing;
     public final List<SequenceStep> steps;
     public final int repetitions;
     public final SequenceResult result;
 
-    public SequenceRecipe(String recipeID, ItemStack input, ItemStack processing, List<SequenceStep> steps, int repetitions, SequenceResult result) {
-        this.recipeID = recipeID;
+    public SequenceRecipe(Ingredient input, ItemStack processing, List<SequenceStep> steps, int repetitions, SequenceResult result) {
         this.input = input;
         this.processing = processing;
         this.steps = steps;
@@ -31,9 +33,8 @@ public class SequenceRecipe {
         this.validate();
     }
 
-    public SequenceRecipe(String recipeID, NBTTagCompound nbt) {
-        this.recipeID = recipeID;
-        this.input = new ItemStack(nbt.getCompoundTag("Input"));
+    public SequenceRecipe(NBTTagCompound nbt) {
+        this.input = Ingredient.read(nbt.getCompoundTag("Input"));
         this.processing = new ItemStack(nbt.getCompoundTag("Processing"));
         NBTTagList stepsNBT = nbt.getTagList("Steps", 10);
         List<SequenceStep> list = new ArrayList<>();
@@ -102,6 +103,7 @@ public class SequenceRecipe {
         return processing;
     }
 
+    private static final ConcurrentMap<SequenceStep, Ingredient> STACK_DISPLAY_CACHE = new MapMaker().weakKeys().makeMap();
     private static final HashMap<String, Format> FORMATTERS = new HashMap<>();
     public static void registerFormat(String id, Format format) {
         FORMATTERS.put(id, format);
@@ -117,7 +119,11 @@ public class SequenceRecipe {
     static {
         registerFormat("pressing", (step) -> Localizer.translate("sequence.pressing"));
         registerFormat("deploying", (step) -> {
-            ItemStack applied = new ItemStack(step.data.getCompoundTag("Applied"));
+            Ingredient applied = STACK_DISPLAY_CACHE.get(step);
+            if (applied == null) {
+                applied = Ingredient.read(step.data.getCompoundTag("Applied"));
+                STACK_DISPLAY_CACHE.put(step, applied);
+            }
             return Localizer.translate("sequence.deploying", applied.getDisplayName());
         });
         registerFormat("cutting", (step) -> Localizer.translate("sequence.cutting"));

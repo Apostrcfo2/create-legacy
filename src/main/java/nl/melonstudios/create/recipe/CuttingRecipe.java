@@ -1,23 +1,21 @@
 package nl.melonstudios.create.recipe;
 
+import com.melonstudios.melonlib.recipe.Ingredient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class SawingRecipe {
-    public final String recipeID;
-    public final ItemStack input;
+public class CuttingRecipe {
+    public final Ingredient input;
     public final ItemStack result;
     public final int processingTime;
 
-    public SawingRecipe(String recipeID, ItemStack input, ItemStack result, int processingTime) {
-        this.recipeID = recipeID;
+    public CuttingRecipe(Ingredient input, ItemStack result, int processingTime) {
         this.input = input;
         this.result = result;
         this.processingTime = processingTime;
     }
-    public SawingRecipe(String recipeID, NBTTagCompound nbt) {
-        this.recipeID = recipeID;
-        this.input = new ItemStack(nbt.getCompoundTag("Input"));
+    public CuttingRecipe(NBTTagCompound nbt) {
+        this.input = Ingredient.read(nbt.getCompoundTag("Input"));
         this.result = new ItemStack(nbt.getCompoundTag("Result"));
         this.processingTime = nbt.getInteger("processingTime");
     }

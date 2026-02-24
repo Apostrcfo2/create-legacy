@@ -1,5 +1,6 @@
 package nl.melonstudios.create.proxy;
 
+import com.melonstudios.melonlib.recipe.RecipeRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,10 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import nl.melonstudios.create.recipe.server.CuttingRecipes;
+import nl.melonstudios.create.recipe.server.DeployerRecipes;
+import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
+import nl.melonstudios.create.recipe.server.PressingRecipes;
 import nl.melonstudios.create.tileentity.*;
 import nl.melonstudios.create.tileentity.actor.*;
 import nl.melonstudios.create.tileentity.generator.TileEntityBearingWindmill;
@@ -103,4 +108,11 @@ public class CommonProxy {
     }
 
     public void initiatePonders() {}
+
+    public void registerRecipeTypes() {
+        RecipeRegistry.registerServer("create:pressing", PressingRecipes.instance);
+        RecipeRegistry.registerServer("create:cutting", CuttingRecipes.instance);
+        RecipeRegistry.registerServer("create:deploying", DeployerRecipes.instance);
+        RecipeRegistry.registerServer("create:sequence", SequencedRecipes.instance);
+    }
 }

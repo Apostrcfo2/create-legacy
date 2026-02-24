@@ -7,7 +7,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.recipe.MixingRecipe;
-import nl.melonstudios.create.recipe.MixingRecipes;
+import nl.melonstudios.create.recipe.server.MixingRecipes;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.ISpeedRequirement;

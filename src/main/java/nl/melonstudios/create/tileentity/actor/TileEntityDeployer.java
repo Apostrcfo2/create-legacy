@@ -2,6 +2,7 @@ package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.recipe.Ingredient;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -22,13 +23,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import nl.melonstudios.create.block.actor.BlockDeployer;
+import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.item.ItemSandpaper;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.recipe.DeployerRecipe;
-import nl.melonstudios.create.recipe.DeployingRecipes;
+import nl.melonstudios.create.recipe.server.DeployerRecipes;
 import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
 import nl.melonstudios.create.recipe.sequence.SequenceStep;
 import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
@@ -106,7 +108,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                             recipes:
                             {
                                 {
-                                    DeployerRecipe recipe = DeployingRecipes.instance.getRecipeForInput(in, this.heldItem);
+                                    DeployerRecipe recipe = DeployerRecipes.instance.getRecipeForInput(in, this.heldItem);
                                     if (recipe != null) {
                                         ItemStack out = recipe.result.copy();
                                         depot.decreasePresentedAndAddOutput(out);
@@ -142,15 +144,16 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                                     }
                                 }
                                 {
-                                    SequenceRecipe recipe = SequencedRecipes.instance.getRecipe(in);
+                                    String recipeID = SequencedRecipes.getRecipeForInput(in);
+                                    SequenceRecipe recipe = recipeID != null ? RecipeInit.getSequenceRecipes().getRecipe(recipeID) : null;
                                     if (recipe != null) {
                                         SequenceStep first = recipe.getFirstStep();
                                         if ("deploying".equals(first.name)) {
-                                            ItemStack applied = new ItemStack(first.data.getCompoundTag("Applied"));
-                                            if (Utils.itemMatches(applied, this.heldItem)) {
+                                            Ingredient applied = Ingredient.read(first.data.getCompoundTag("Applied"));
+                                            if (applied.matches(this.heldItem)) {
                                                 DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(first.data.getString("inputType"));
                                                 ItemStack processing = recipe.processing.copy();
-                                                SequenceRecipe.initialize(processing, recipe.recipeID);
+                                                SequenceRecipe.initialize(processing, recipeID);
                                                 processing = SequenceRecipe.advance(processing);
                                                 depot.decreasePresentedAndAddOutput(processing);
                                                 switch (inputType) {
@@ -190,8 +193,8 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                                     if (SequenceRecipe.isInSequence(in)) {
                                         SequenceStep next = SequenceRecipe.getNextStep(in);
                                         if ("deploying".equals(next.name)) {
-                                            ItemStack applied = new ItemStack(next.data.getCompoundTag("Applied"));
-                                            if (Utils.itemMatches(applied, this.heldItem)) {
+                                            Ingredient applied = Ingredient.read(next.data.getCompoundTag("Applied"));
+                                            if (applied.matches(this.heldItem)) {
                                                 DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(next.data.getString("inputType"));
                                                 in = SequenceRecipe.advance(in).copy();
                                                 depot.decreasePresentedAndAddOutput(in);

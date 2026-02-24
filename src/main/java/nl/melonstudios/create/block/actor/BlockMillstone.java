@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticBase;
-import nl.melonstudios.create.recipe.MillingRecipes;
+import nl.melonstudios.create.recipe.server.MillingRecipes;
 import nl.melonstudios.create.tileentity.actor.TileEntityMillstone;
 import nl.melonstudios.create.util.TextBuilder;
 import nl.melonstudios.create.util.interfaces.ICogwheel;

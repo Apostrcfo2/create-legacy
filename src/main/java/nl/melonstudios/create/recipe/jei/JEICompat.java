@@ -47,7 +47,7 @@ public final class JEICompat implements IModPlugin {
         registry.addRecipes(RecipeMaker.getCuttingRecipes(jeiHelpers), "create.cutting");
         registry.addRecipeCatalyst(new ItemStack(BlockInit.SAW), "create.cutting");
 
-        registry.addRecipes(RecipeMaker.getDeployingRecipes(jeiHelpers), "create.deploying");
-        registry.addRecipeCatalyst(new ItemStack(BlockInit.DEPLOYER), "create.deploying");
+        //registry.addRecipes(RecipeMaker.getDeployingRecipes(jeiHelpers), "create.deploying");
+        //registry.addRecipeCatalyst(new ItemStack(BlockInit.DEPLOYER), "create.deploying");
     }
 }

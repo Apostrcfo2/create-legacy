@@ -9,7 +9,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.util.ResourceLocation;
 
-public class PressingRecipeCategory implements IRecipeCategory<PressingRecipe> {
+public class PressingRecipeCategory implements IRecipeCategory<JEIPressingRecipe> {
     private static final ResourceLocation TEXTURES =
             new ResourceLocation("create", "textures/gui/jei/press.png");
 
@@ -39,7 +39,7 @@ public class PressingRecipeCategory implements IRecipeCategory<PressingRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayout iRecipeLayout, PressingRecipe sandingRecipe, IIngredients iIngredients) {
+    public void setRecipe(IRecipeLayout iRecipeLayout, JEIPressingRecipe sandingRecipe, IIngredients iIngredients) {
         IGuiItemStackGroup stacks = iRecipeLayout.getItemStacks();
         stacks.init(input, true, 1, 7);
         stacks.init(output, false, 45, 7);

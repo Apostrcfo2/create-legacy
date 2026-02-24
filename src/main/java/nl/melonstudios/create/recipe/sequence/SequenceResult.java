@@ -1,10 +1,15 @@
 package nl.melonstudios.create.recipe.sequence;
 
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2FloatArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.PacketBuffer;
+
+import java.io.IOException;
 
 
 public class SequenceResult {
@@ -50,5 +55,56 @@ public class SequenceResult {
         } else {
             this.waste = null;
         }
+    }
+
+    public void write(ByteBuf buf) {
+        writeItemStack(this.expected, buf);
+        buf.writeFloat(this.chance);
+        if (this.chance < 1.0F) {
+            buf.writeInt(this.waste.size());
+            for (Object2FloatMap.Entry<ItemStack> entry : this.waste.object2FloatEntrySet()) {
+                writeItemStack(entry.getKey(), buf);
+                buf.writeFloat(entry.getFloatValue());
+            }
+        }
+    }
+    public static SequenceResult read(ByteBuf buf) throws IOException {
+        ItemStack expected = readItemStack(buf);
+        float chance = buf.readFloat();
+        if (chance < 1.0F) {
+            int size = buf.readInt();
+            Object2FloatMap<ItemStack> waste = new Object2FloatArrayMap<>(size);
+            for (int i = 0; i < size; i++) {
+                ItemStack wasteStack = readItemStack(buf);
+                float wasteChance = buf.readFloat();
+                waste.put(wasteStack, wasteChance);
+            }
+            return new SequenceResult(expected, chance, waste);
+        }
+        return new SequenceResult(expected);
+    }
+
+    private static void writeItemStack(ItemStack stack, ByteBuf buf) {
+        int itemID = Item.getIdFromItem(stack.getItem());
+        byte count = (byte)stack.getCount();
+        short damage = (short)stack.getItemDamage();
+        NBTTagCompound itemNBT = stack.getTagCompound();
+        buf.writeInt(itemID);
+        buf.writeByte(count);
+        buf.writeShort(damage);
+        if (itemNBT != null) {
+            buf.writeBoolean(true);
+            new PacketBuffer(buf).writeCompoundTag(itemNBT);
+        } else {
+            buf.writeBoolean(false);
+        }
+    }
+    private static ItemStack readItemStack(ByteBuf buf) throws IOException {
+        int itemID = buf.readInt();
+        int count = buf.readUnsignedByte();
+        int damage = buf.readUnsignedShort();
+        boolean hasNBT = buf.readBoolean();
+        NBTTagCompound itemNBT = hasNBT ? new PacketBuffer(buf).readCompoundTag() : null;
+        return new ItemStack(Item.getItemById(itemID), count, damage, itemNBT);
     }
 }

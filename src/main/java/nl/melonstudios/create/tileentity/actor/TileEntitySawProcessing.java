@@ -17,8 +17,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.recipe.CuttingRecipes;
-import nl.melonstudios.create.recipe.SawingRecipe;
+import nl.melonstudios.create.recipe.server.CuttingRecipes;
+import nl.melonstudios.create.recipe.CuttingRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
@@ -50,7 +50,8 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
 
     public ItemStack currentlyProcessing = ItemStack.EMPTY;
-    public SawingRecipe currentRecipe;
+    public String currentRecipeID;
+    public CuttingRecipe currentRecipe;
     public int progress;
     public int lastProgress;
     public ItemStack outputQueue = ItemStack.EMPTY;
@@ -98,6 +99,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
                     ItemStack result = this.currentRecipe.result.copy();
                     result.setCount(size * result.getCount());
                     this.outputQueue = result;
+                    this.currentRecipeID = null;
                     this.currentRecipe = null;
                     this.progress = 0;
                 }
@@ -105,6 +107,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
                 if (this.progress >= this.getProgressTick() * 10) {
                     this.outputQueue = this.currentlyProcessing.copy();
                     this.currentlyProcessing = ItemStack.EMPTY;
+                    this.currentRecipeID = null;
                     this.currentRecipe = null;
                     this.progress = 0;
                 }
@@ -175,7 +178,8 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
     public void setCurrentlyProcessing(ItemStack stack) {
         this.currentlyProcessing = stack;
-        this.currentRecipe = CuttingRecipes.instance.getRecipeForInput(this.currentlyProcessing, this.recipeFilter, 0);
+        this.currentRecipeID = CuttingRecipes.getRecipeForInput(this.currentlyProcessing, this.recipeFilter);
+        this.currentRecipe = this.currentRecipeID != null ? CuttingRecipes.instance.getRecipe(this.currentRecipeID) : null;
         this.progress = 0;
         this.sync();
     }
@@ -213,7 +217,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
 
         if (this.recipeFilter != null) nbt.setTag("Filter", this.recipeFilter.serialize(new NBTTagCompound()));
         if (!this.currentlyProcessing.isEmpty()) nbt.setTag("CurrentlyProcessing", this.currentlyProcessing.writeToNBT(new NBTTagCompound()));
-        if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipe.recipeID);
+        if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipeID);
         nbt.setInteger("progress", this.progress);
         if (!this.outputQueue.isEmpty()) nbt.setTag("OutputQueue", this.outputQueue.writeToNBT(new NBTTagCompound()));
 
@@ -225,7 +229,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
 
         if (this.recipeFilter != null) nbt.setTag("Filter", this.recipeFilter.serialize(new NBTTagCompound()));
         if (!this.currentlyProcessing.isEmpty()) nbt.setTag("CurrentlyProcessing", this.currentlyProcessing.writeToNBT(new NBTTagCompound()));
-        if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipe.recipeID);
+        if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipeID);
         if (this.progress != 0) nbt.setInteger("progress", this.progress);
         if (!this.outputQueue.isEmpty()) nbt.setTag("OutputQueue", this.outputQueue.writeToNBT(new NBTTagCompound()));
 
@@ -243,7 +247,8 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
             this.currentlyProcessing = new ItemStack(nbt.getCompoundTag("CurrentlyProcessing"));
         } else this.currentlyProcessing = ItemStack.EMPTY;
         if (nbt.hasKey("currentRecipe")) {
-            this.currentRecipe = CuttingRecipes.instance.getRecipe(nbt.getString("currentRecipe"));
+            this.currentRecipeID = nbt.getString("currentRecipe");
+            this.currentRecipe = CuttingRecipes.instance.getRecipe(this.currentRecipeID);
         } else this.currentRecipe = null;
         this.progress = nbt.getInteger("progress");
         if (nbt.hasKey("OutputQueue", 10)) {
@@ -261,7 +266,8 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
             this.currentlyProcessing = new ItemStack(nbt.getCompoundTag("CurrentlyProcessing"));
         } else this.currentlyProcessing = ItemStack.EMPTY;
         if (nbt.hasKey("currentRecipe")) {
-            this.currentRecipe = CuttingRecipes.instance.getRecipe(nbt.getString("currentRecipe"));
+            this.currentRecipeID = nbt.getString("currentRecipe");
+            this.currentRecipe = CuttingRecipes.instance.getRecipe(this.currentRecipeID);
         } else this.currentRecipe = null;
         this.progress = nbt.getInteger("progress");
         if (nbt.hasKey("OutputQueue", 10)) {
@@ -284,6 +290,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         this.setCurrentlyProcessing(copy);
         ItemStack ret = stack.copy();
         ret.shrink(1);
+        this.sync();
         return ret.isEmpty() ? ItemStack.EMPTY : ret;
     }
 
@@ -303,7 +310,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
         ItemStack ret = stack.copy();
         ItemStack split = ret.splitStack(1);
         if (simulate) return ret;
-        this.currentlyProcessing = split;
+        this.setCurrentlyProcessing(split);
         this.sync();
         return ret;
     }

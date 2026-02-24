@@ -1,5 +1,6 @@
-package nl.melonstudios.create.recipe;
+package nl.melonstudios.create.recipe.server;
 
+import nl.melonstudios.create.recipe.MixingRecipe;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 
 import java.util.HashMap;
