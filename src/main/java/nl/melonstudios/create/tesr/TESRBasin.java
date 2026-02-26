@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,6 +23,7 @@ import nl.melonstudios.create.util.Utils;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -33,53 +35,32 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
     protected final Minecraft mc;
 
+    protected final double[] level = new double[1];
     protected final double[] levels = new double[4];
 
     @Override
     public void render(TileEntityBasin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-        List<FluidStack> liquids = te.fluid.getHandlers().stream().map(FluidTank::getFluid).collect(Collectors.toList());
+        List<FluidStack> liquids = te.fluid.getHandlers().stream().map(FluidTank::getFluid).filter(Objects::nonNull).collect(Collectors.toList());
 
-        double level;
         int fluidAmount = 0;
         for (FluidStack liquid : liquids) fluidAmount += liquid.amount;
         fluidAmount = Math.min(fluidAmount, 1500);
-        level = 0.125 + ((fluidAmount / 1500.0) * 0.8);
+        this.level[0] = 0.125 + ((fluidAmount / 1500.0) * 0.8);
         if (!liquids.isEmpty()) {
             RenderUtils.prepare(x, y, z);
             GlStateManager.disableBlend(); //transparency is an issue at times
 
-            World world = te.getWorld();
-            long time = world.getTotalWorldTime() + Math.abs(te.hashCode() | ((long)te.getPos().hashCode() << 32));
-            double lvl1 = Math.sin(Math.toRadians(time % 360))*0.01+level;
-            double lvl2 = Math.sin(Math.toRadians((time+90) % 360))*0.01+level;
-            double lvl3 = Math.sin(Math.toRadians((time+180) % 360))*0.01+level;
-            double lvl4 = Math.sin(Math.toRadians((time+270) % 360))*0.01+level;
-            this.levels[0] = lvl1;
-            this.levels[1] = lvl2;
-            this.levels[2] = lvl3;
-            this.levels[3] = lvl4;
+            World world = this.getWorld();
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder renderer = tessellator.getBuffer();
             renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
             for (int i = 0; i < liquids.size(); i++) {
                 FluidStack liquid = liquids.get(i);
-                TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid.getFluid().getStill(liquid).toString());
-                int brightness = world.getCombinedLight(te.getPos(), liquid.getFluid().getLuminosity(liquid));
-                int l1 = brightness >> 0x10 & 0xFFFF;
-                int l2 = brightness & 0xFFFF;
-                int color = liquid.getFluid().getColor(liquid);
-                int a = color >> 24 & 0xFF;
-                int r = color >> 16 & 0xFF;
-                int g = color >> 8 & 0xFF;
-                int b = color & 0xFF;
-                RenderUtils.renderFluidSurface(renderer, sprite,
-                        0.1, 0.1, 0.9, 0.9,
-                        this.levels[i&3], this.levels[i+1&3], this.levels[i+2&3], this.levels[i+3&3],
-                        r, g, b, a, l1, l2
-                );
+                this.setLevels(world, te, liquid.hashCode());
+                this.renderLiquid(liquid, world, te.getPos(), i, renderer);
             }
 
             tessellator.draw();
@@ -116,7 +97,7 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
         if (!te.inventory.isEmpty()) {
             GlStateManager.pushMatrix();
             int count = te.inventory.size();
-            GlStateManager.translate(0.5, level, 0.5);
+            GlStateManager.translate(0.5, this.level[0], 0.5);
             float baseRot = Utils.clampedLerp(partialTicks, te.itemRotationOld, te.itemRotation);
             float spacing = 360.0F / count;
             Random rnd = new Random(te.hashCode());
@@ -143,5 +124,33 @@ public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
 
         SubInteractionBox.renderPotentialInteractionBoxes(this.mc.objectMouseOver, te);
         GlStateManager.popMatrix();
+    }
+
+    private void renderLiquid(FluidStack liquid, World world, BlockPos pos, int i, BufferBuilder renderer) {
+        TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(liquid.getFluid().getStill(liquid).toString());
+        int brightness = world.getCombinedLight(pos, liquid.getFluid().getLuminosity(liquid));
+        int l1 = brightness >> 0x10 & 0xFFFF;
+        int l2 = brightness & 0xFFFF;
+        int color = liquid.getFluid().getColor(liquid);
+        int a = color >> 24 & 0xFF;
+        int r = color >> 16 & 0xFF;
+        int g = color >> 8 & 0xFF;
+        int b = color & 0xFF;
+        RenderUtils.renderFluidSurface(renderer, sprite,
+                0.1, 0.1, 0.9, 0.9,
+                this.levels[i&3], this.levels[i+1&3], this.levels[i+2&3], this.levels[i+3&3],
+                r, g, b, a, l1, l2
+        );
+    }
+    private void setLevels(World world, TileEntityBasin te, int offset) {
+        long time = world.getTotalWorldTime() + Math.abs(te.hashCode() | ((long)te.getPos().hashCode() << 32));
+        double lvl1 = Math.sin(Math.toRadians((time+offset) % 360))*0.01+this.level[0];
+        double lvl2 = Math.sin(Math.toRadians((time+offset+90) % 360))*0.01+this.level[0];
+        double lvl3 = Math.sin(Math.toRadians((time+offset+180) % 360))*0.01+this.level[0];
+        double lvl4 = Math.sin(Math.toRadians((time+offset+270) % 360))*0.01+this.level[0];
+        this.levels[0] = lvl1;
+        this.levels[1] = lvl2;
+        this.levels[2] = lvl3;
+        this.levels[3] = lvl4;
     }
 }

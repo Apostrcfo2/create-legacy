@@ -38,7 +38,7 @@ public class BlockGearshift extends BlockEncasedShaftBase implements ITileEntity
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand)
-                .withProperty(POWERED, this.isPosPowered(world, pos));
+                .withProperty(POWERED, isPosPowered(world, pos));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BlockGearshift extends BlockEncasedShaftBase implements ITileEntity
         if (worldIn.isRemote) return;
 
         boolean lastPowered = state.getValue(POWERED);
-        if (lastPowered != this.isPosPowered(worldIn, pos)) {
+        if (lastPowered != isPosPowered(worldIn, pos)) {
             this.detachKinetics(worldIn, pos, true);
             worldIn.setBlockState(pos, state.cycleProperty(POWERED), 2);
         }

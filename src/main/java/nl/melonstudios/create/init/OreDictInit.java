@@ -46,6 +46,7 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.AUTO_FARM, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CONTRAPTION_INTERFACE, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.MILLSTONE, false);
+        BlockDictionary.registerOre("create:wrenchPickup", BlockInit.CRAFTER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BLAZE_BURNER, true);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.DEPOT, false);
         BlockDictionary.registerOre("create:wrenchPickup", BlockInit.BASIN, false);

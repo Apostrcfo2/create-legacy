@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "direction=down,facing=north": {
+      "model": "create:crafter_down"
+    },
+    "direction=left,facing=north": {
+      "model": "create:crafter_left"
+    },
+    "direction=up,facing=north": {
+      "model": "create:crafter_up"
+    },
+    "direction=right,facing=north": {
+      "model": "create:crafter_right"
+    },
+    "direction=down,facing=east": {
+      "model": "create:crafter_down",
+      "y": 90
+    },
+    "direction=left,facing=east": {
+      "model": "create:crafter_left",
+      "y": 90
+    },
+    "direction=up,facing=east": {
+      "model": "create:crafter_up",
+      "y": 90
+    },
+    "direction=right,facing=east": {
+      "model": "create:crafter_right",
+      "y": 90
+    },
+    "direction=down,facing=south": {
+      "model": "create:crafter_down",
+      "y": 180
+    },
+    "direction=left,facing=south": {
+      "model": "create:crafter_left",
+      "y": 180
+    },
+    "direction=up,facing=south": {
+      "model": "create:crafter_up",
+      "y": 180
+    },
+    "direction=right,facing=south": {
+      "model": "create:crafter_right",
+      "y": 180
+    },
+    "direction=down,facing=west": {
+      "model": "create:crafter_down",
+      "y": 270
+    },
+    "direction=left,facing=west": {
+      "model": "create:crafter_left",
+      "y": 270
+    },
+    "direction=up,facing=west": {
+      "model": "create:crafter_up",
+      "y": 270
+    },
+    "direction=right,facing=west": {
+      "model": "create:crafter_right",
+      "y": 270
+    }
+  }
+}

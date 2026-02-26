@@ -9,10 +9,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
+import javax.annotation.Nullable;
+
+@SuppressWarnings("deprecation")
 public abstract class BlockKineticHorizontalBase extends BlockKineticBase {
     public static final PropertyDirection FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -31,7 +36,8 @@ public abstract class BlockKineticHorizontalBase extends BlockKineticBase {
                 .withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
-    public EnumFacing getPreferredHorizontalFacing(World world, BlockPos pos) {
+    @Nullable
+    public EnumFacing getPreferredHorizontalFacing(World world, BlockPos pos, EnumFacing defaultFacing) {
         EnumFacing prefferedSide = null;
         for (EnumFacing side : EnumFacing.HORIZONTALS) {
             IBlockState blockState = world
@@ -49,5 +55,15 @@ public abstract class BlockKineticHorizontalBase extends BlockKineticBase {
             }
         }
         return prefferedSide;
+    }
+
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+        return state.withProperty(FACING, mirrorIn.mirror(state.getValue(FACING)));
     }
 }

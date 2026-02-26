@@ -530,6 +530,31 @@ public final class RecipeInit {
     }
     private static void mixing() {
         MixingRecipes recipes = MixingRecipes.instance;
+
+        recipes.addRecipe("create:andesite_alloy",
+                MixingRecipe.builder()
+                        .setItemInputs(
+                                "stoneAndesite",
+                                "nuggetIron"
+                        )
+                        .setItemOutputs(
+                                new ItemStack(ItemInit.INGREDIENT, 1, 15)
+                        )
+                        .setProcessingTime64RPM(40)
+                        .build()
+        );
+        recipes.addRecipe("create:andesite_alloy_zinc",
+                MixingRecipe.builder()
+                        .setItemInputs(
+                                "stoneAndesite",
+                                "nuggetZinc"
+                        )
+                        .setItemOutputs(
+                                new ItemStack(ItemInit.INGREDIENT, 1, 15)
+                        )
+                        .setProcessingTime64RPM(40)
+                        .build()
+        );
     }
     private static void deploying() {
         DeployerRecipes recipes = DeployerRecipes.instance;

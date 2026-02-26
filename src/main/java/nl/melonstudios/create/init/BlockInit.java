@@ -122,6 +122,10 @@ public final class BlockInit {
             registerBlockWithItem(new BlockMillstone(Material.ROCK, MapColor.STONE)
             .setRegistryName("millstone").setUnlocalizedName("create.millstone"));
 
+    public static final BlockCrafter CRAFTER = (BlockCrafter)
+            registerBlockWithItem(new BlockCrafter()
+            .setRegistryName("crafter").setUnlocalizedName("create.crafter"));
+
     public static final BlockBlazeBurner BLAZE_BURNER = (BlockBlazeBurner)
             registerBlockWithItem(new BlockBlazeBurner()
             .setRegistryName("blaze_burner").setUnlocalizedName("create.blaze_burner"), ItemBlockBlazeBurner::new);

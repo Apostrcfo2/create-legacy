@@ -50,7 +50,7 @@ public class TESRDeployer extends TESRKineticBase<TileEntityDeployer> {
             GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
             IBakedModel itemModel = this.mc.getRenderItem()
-                    .getItemModelWithOverrides(stack, te.getWorld(), null);
+                    .getItemModelWithOverrides(stack, this.getWorld(), null);
             GlStateManager.translate(0.5F, 0.5F, 0.5F);
             if (facing == EnumFacing.UP) {
                 GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);

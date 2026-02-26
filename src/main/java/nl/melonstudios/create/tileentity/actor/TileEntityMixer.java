@@ -45,7 +45,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
                 this.sync();
             }
         }
-        MixingRecipe recipe = this.getRecipe();
+        MixingRecipe recipe = this.currentRecipe != null ? this.getRecipe() : null;
         boolean process = recipe != null && recipe.checkOutputSpace(basin);
         if (process) {
             if (this.lowering < 20) this.lowering++;

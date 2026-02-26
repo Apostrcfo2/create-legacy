@@ -76,6 +76,11 @@ public enum EnumRenderPart implements IStringSerializable {
     BLAZE_SMOULDERING,
     BLAZE_KINDLED,
     BLAZE_SEETHING,
+
+    CRAFTER_COVER_NORTH,
+    CRAFTER_COVER_EAST,
+    CRAFTER_COVER_SOUTH,
+    CRAFTER_COVER_WEST,
     ;
 
     private final int id = this.ordinal();
@@ -100,6 +105,7 @@ public enum EnumRenderPart implements IStringSerializable {
     private static final EnumRenderPart[] DEPLOYERS = new EnumRenderPart[6];
     private static final EnumRenderPart[] DEPLOYER_HOLDINGS = new EnumRenderPart[6];
     private static final EnumRenderPart[] SHAFTLESS_COGS = new EnumRenderPart[3];
+    private static final EnumRenderPart[] CRAFTER_COVERS = new EnumRenderPart[4];
 
     public static EnumRenderPart byID(int id) {
         return values()[id % values().length];
@@ -162,6 +168,11 @@ public enum EnumRenderPart implements IStringSerializable {
         SHAFTLESS_COGS[0] = SHAFTLESS_COG_X;
         SHAFTLESS_COGS[1] = SHAFTLESS_COG_Y;
         SHAFTLESS_COGS[2] = SHAFTLESS_COG_Z;
+
+        CRAFTER_COVERS[0] = CRAFTER_COVER_SOUTH;
+        CRAFTER_COVERS[1] = CRAFTER_COVER_WEST;
+        CRAFTER_COVERS[2] = CRAFTER_COVER_NORTH;
+        CRAFTER_COVERS[3] = CRAFTER_COVER_EAST;
     }
 
     public static EnumRenderPart getSaw(EnumFacing.Axis axis) {
@@ -196,5 +207,8 @@ public enum EnumRenderPart implements IStringSerializable {
             default:
                 throw new IllegalArgumentException("Unexpected value: " + variant);
         }
+    }
+    public static EnumRenderPart getCraftingCover(EnumFacing facing) {
+        return CRAFTER_COVERS[facing.getHorizontalIndex()];
     }
 }

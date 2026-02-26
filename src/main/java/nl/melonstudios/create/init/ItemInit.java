@@ -33,6 +33,9 @@ public final class ItemInit {
     public static final ItemGlue SUPER_GLUE = (ItemGlue)
             registerItem(new ItemGlue(256)
             .setRegistryName("superglue").setUnlocalizedName("create.superglue"));
+    public static final Item CRAFTER_COVER = registerItem(new Item()
+            .setMaxStackSize(64).setCreativeTab(TAB_CREATE)
+            .setRegistryName("crafter_cover").setUnlocalizedName("create.crafter_cover"));
     public static final ItemAssembly ASSEMBLY = registerItem(new ItemAssembly());
     public static final ItemSceneWand SCENE_WAND = registerItem(new ItemSceneWand());
 
@@ -51,6 +54,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(SANDPAPER);
         CreateLegacy.proxy.setItemModel(TREE_FERTILIZER);
         CreateLegacy.proxy.setItemModel(SUPER_GLUE);
+        CreateLegacy.proxy.setItemModel(CRAFTER_COVER);
         CreateLegacy.proxy.setItemModel(SCENE_WAND);
         CreateLegacy.proxy.setItemModel(ASSEMBLY, 0, "assembly/" + ItemAssembly.NAME_LOOKUP[0]);
         CreateLegacy.proxy.setItemModel(ASSEMBLY, 1, "assembly/" + ItemAssembly.NAME_LOOKUP[1]);
@@ -96,6 +100,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.CONTRAPTION_INTERFACE, 0, "interface_storage");
         CreateLegacy.proxy.setItemModel(BlockInit.CONTRAPTION_INTERFACE, 1, "interface_fluid");
         CreateLegacy.proxy.setItemModel(BlockInit.MILLSTONE);
+        CreateLegacy.proxy.setItemModel(BlockInit.CRAFTER);
         CreateLegacy.proxy.setItemModel(BlockInit.BLAZE_BURNER, 0, "blaze_burner_empty");
         CreateLegacy.proxy.setItemModel(BlockInit.BLAZE_BURNER, 1, "blaze_burner");
         CreateLegacy.proxy.setItemModel(BlockInit.DEPOT);

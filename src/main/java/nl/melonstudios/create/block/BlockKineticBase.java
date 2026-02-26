@@ -56,7 +56,7 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
         super.onBlockAdded(worldIn, pos, state);
     }
 
-    public boolean isPosPowered(World world, BlockPos pos) {
+    public static boolean isPosPowered(World world, BlockPos pos) {
         return world.isBlockPowered(pos) || world.isBlockIndirectlyGettingPowered(pos) > 0;
     }
 

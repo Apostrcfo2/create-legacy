@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "gearbox",
   "pattern": [
     " B ",
     "B#B",

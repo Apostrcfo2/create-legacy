@@ -49,6 +49,7 @@ tile.create.harvester.name=Harvester
 tile.create.interface_storage.name=Portable Storage Interface
 tile.create.interface_fluid.name=Portable Fluid Interface
 tile.create.millstone.name=Millstone
+tile.create.crafter.name=Mechanical Crafter
 
 tile.create.blaze_burner_empty.name=Empty Blaze Burner
 tile.create.blaze_burner.name=Blaze Burner
@@ -159,6 +160,7 @@ item.create.tree_fertilizer.name=Tree Fertilizer
 item.create.superglue.name=Super Glue
 item.create.superglue.desc1=R-Click to apply Glue to surface
 item.create.superglue.desc2=Shift-R-Click to remove Glue from surface
+item.create.crafter_cover.name=Crafting Slot Cover
 
 item.create.assembly_precision_mechanism.name=Incomplete Precision Mechanism
 item.create.assembly_plate_obsidian.name=Unprocessed Sturdy Sheet

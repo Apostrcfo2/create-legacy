@@ -209,6 +209,21 @@
     },
     "render_part=blaze_seething": {
       "model": "create:render/blaze_seething"
+    },
+    "render_part=crafter_cover_north": {
+      "model": "create:render/crafter_cover"
+    },
+    "render_part=crafter_cover_east": {
+      "model": "create:render/crafter_cover",
+      "y": 90
+    },
+    "render_part=crafter_cover_south": {
+      "model": "create:render/crafter_cover",
+      "y": 180
+    },
+    "render_part=crafter_cover_west": {
+      "model": "create:render/crafter_cover",
+      "y": 270
     }
   }
 }

@@ -38,14 +38,17 @@ public class FluidHandlerBasin implements IFluidHandler {
     public int fill(FluidStack resource, boolean doFill) {
         if (resource == null || resource.amount <= 0) return 0;
         FluidTank tank = null;
-        for (FluidTank ft : this.handlers) {
-            if (resource.isFluidEqual(ft.getFluid())) {
-                tank = ft;
-                break;
+        synchronized (this.handlers) {
+            for (FluidTank ft : this.handlers) {
+                if (resource.isFluidEqual(ft.getFluid())) {
+                    tank = ft;
+                    break;
+                }
             }
-        }
-        if (tank == null) {
-            tank = new FluidTankFiltered(null, 1000, resource.getFluid());
+            if (tank == null) {
+                tank = new FluidTankFiltered(null, 1000, resource.getFluid());
+                this.handlers.add(tank);
+            }
         }
         return tank.fill(resource, doFill);
     }
@@ -54,8 +57,10 @@ public class FluidHandlerBasin implements IFluidHandler {
     @Override
     public FluidStack drain(FluidStack resource, boolean doDrain) {
         if (resource == null || resource.amount <= 0) return null;
-        for (FluidTank tank : this.handlers) {
-            if (resource.isFluidEqual(tank.getFluid())) return tank.drain(resource, doDrain);
+        synchronized (this.handlers) {
+            for (FluidTank tank : this.handlers) {
+                if (resource.isFluidEqual(tank.getFluid())) return tank.drain(resource, doDrain);
+            }
         }
         return null;
     }
@@ -64,9 +69,11 @@ public class FluidHandlerBasin implements IFluidHandler {
     @Override
     public FluidStack drain(int maxDrain, boolean doDrain) {
         if (maxDrain <= 0) return null;
-        for (FluidTank tank : this.handlers) {
-            FluidStack drain = tank.drain(maxDrain, doDrain);
-            if (drain != null) return drain;
+        synchronized (this.handlers) {
+            for (FluidTank tank : this.handlers) {
+                FluidStack drain = tank.drain(maxDrain, doDrain);
+                if (drain != null) return drain;
+            }
         }
         return null;
     }
@@ -77,26 +84,30 @@ public class FluidHandlerBasin implements IFluidHandler {
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        this.optimize();
-        if (!this.handlers.isEmpty()) {
-            NBTTagList tanksNBT = new NBTTagList();
-            for (FluidTank tank : this.handlers) {
-                tanksNBT.appendTag(tank.writeToNBT(new NBTTagCompound()));
+        synchronized (this.handlers) {
+            this.optimize();
+            if (!this.handlers.isEmpty()) {
+                NBTTagList tanksNBT = new NBTTagList();
+                for (FluidTank tank : this.handlers) {
+                    tanksNBT.appendTag(tank.writeToNBT(new NBTTagCompound()));
+                }
+                nbt.setTag("Tanks", tanksNBT);
             }
-            nbt.setTag("Tanks", tanksNBT);
         }
         return nbt;
     }
     public FluidHandlerBasin readFromNBT(NBTTagCompound nbt) {
-        this.handlers.clear();
-        if (nbt.hasKey("Tanks")) {
-            NBTTagList tanksNBT = nbt.getTagList("Tanks", 10);
-            for (int i = 0; i < tanksNBT.tagCount(); i++) {
-                NBTTagCompound tankNBT = tanksNBT.getCompoundTagAt(i);
-                FluidStack stack = FluidStack.loadFluidStackFromNBT(tankNBT);
-                if (stack == null || stack.amount <= 0) continue;
-                FluidTank tank = new FluidTankFiltered(stack, 1000, stack.getFluid());
-                this.handlers.add(tank);
+        synchronized (this.handlers) {
+            this.handlers.clear();
+            if (nbt.hasKey("Tanks", 9)) {
+                NBTTagList tanksNBT = nbt.getTagList("Tanks", 10);
+                for (int i = 0; i < tanksNBT.tagCount(); i++) {
+                    NBTTagCompound tankNBT = tanksNBT.getCompoundTagAt(i);
+                    FluidStack stack = FluidStack.loadFluidStackFromNBT(tankNBT);
+                    if (stack == null || stack.amount <= 0) continue;
+                    FluidTank tank = new FluidTankFiltered(stack, 1000, stack.getFluid());
+                    this.handlers.add(tank);
+                }
             }
         }
         return this;

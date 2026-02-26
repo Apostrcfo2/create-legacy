@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.model.BakedItemModel;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.block.actor.BlockSaw;
 import nl.melonstudios.create.block.state.EnumSawRotation;
@@ -94,7 +95,11 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
             }
             GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.translate(0.0F, -0.5F+movement, 0.0F);
+            if (model instanceof BakedItemModel) {
+                GlStateManager.scale(0.5, 0.5, 0.5);
+            } else {
             GlStateManager.scale(0.25, 0.25, 0.25);
+            }
             this.mc.getRenderItem().renderItem(stack, model);
 
             GlStateManager.disableRescaleNormal();
