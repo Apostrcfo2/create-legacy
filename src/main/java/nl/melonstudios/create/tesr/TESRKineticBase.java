@@ -11,14 +11,18 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockRender;
+import nl.melonstudios.create.cfg.ClientConfig;
 import nl.melonstudios.create.init.BlockInit;
+import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.PerFrameDebugInfo;
@@ -27,6 +31,7 @@ import nl.melonstudios.create.util.Utils;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -127,7 +132,18 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         return ((time * 0.3F * te.getSpeed() * m) % 360) + (addOffset ? te.getAxisShift(axis) : 0.0F);
     }
 
+    private static final HashSet<Class<?>> VIOLATORS = new HashSet<>();
     protected final void renderBakedModel(float brightness, IBakedModel model, @Nullable IBlockState state) {
+        if (ClientConfig.fastKineticRendering) {
+            if (state != null) {
+                FastStateRendering.INSTANCE.renderFast(state);
+                return;
+            } else {
+                if (VIOLATORS.add(this.getClass())) {
+                    CreateLegacy.logger.error("{} tried to fast render model but state was null", this.getClass().getName());
+                }
+            }
+        }
         for (EnumFacing facing : EnumFacing.VALUES) this.renderBakedQuads(brightness, model.getQuads(state, facing, 0));
         this.renderBakedQuads(brightness, model.getQuads(state, null, 0));
     }
@@ -135,6 +151,7 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         for (BakedQuad quad : quads) {
+            //TODO: improve performance
             builder.begin(7, DefaultVertexFormats.ITEM);
             builder.addVertexData(quad.getVertexData());
             builder.putColorRGB_F4(brightness, brightness, brightness);
