@@ -22,7 +22,7 @@ import java.util.*;
 
 public class MixingRecipe {
     public final List<Ingredient> itemInputs;
-    public final List<FluidStack> fluidInputs;
+    public final List<FluidIngredient> fluidInputs;
     public final List<ItemStack> itemOutputs;
     public final List<FluidStack> fluidOutputs;
     public final int requiredHeat;
@@ -30,7 +30,7 @@ public class MixingRecipe {
 
     public MixingRecipe(
             List<Ingredient> itemInputs,
-            List<FluidStack> fluidInputs,
+            List<FluidIngredient> fluidInputs,
             List<ItemStack> itemOutputs,
             List<FluidStack> fluidOutputs,
             int requiredHeat,
@@ -70,7 +70,7 @@ public class MixingRecipe {
         buf.writeInt(this.itemInputs.size());
         for (Ingredient input : this.itemInputs) input.serialize(buf);
         buf.writeInt(this.fluidInputs.size());
-        for (FluidStack input : this.fluidInputs) FluidIngredient.of(input).serialize(buf);
+        for (FluidIngredient input : this.fluidInputs) input.serialize(buf);
         buf.writeInt(this.itemOutputs.size());
         for (ItemStack stack : this.itemOutputs) StackUtil.writeItemStack(stack, buf, true, true);
         buf.writeInt(this.fluidOutputs.size());
@@ -85,9 +85,9 @@ public class MixingRecipe {
             itemInputs.add(Ingredient.read(buf));
         }
         int fluidInputsLen = buf.readInt();
-        List<FluidStack> fluidInputs = new ArrayList<>(fluidInputsLen);
+        List<FluidIngredient> fluidInputs = new ArrayList<>(fluidInputsLen);
         for (int i = 0; i < fluidInputsLen; i++) {
-            fluidInputs.add(readFluid(buf));
+            fluidInputs.add(FluidIngredient.read(buf));
         }
         int itemOutputsLen = buf.readInt();
         List<ItemStack> itemOutputs = new ArrayList<>(itemOutputsLen);
@@ -132,14 +132,14 @@ public class MixingRecipe {
                 if (!test.isEmpty()) return false;
             }
             if (!this.fluidInputs.isEmpty()) {
-                List<FluidStack> test = new ArrayList<>(this.fluidInputs);
+                List<FluidIngredient> test = new ArrayList<>(this.fluidInputs);
                 loop:
                 for (FluidTank tank : basin.fluid.getHandlers()) {
                     FluidStack stack = tank.getFluid();
                     if (stack == null) throw new IllegalStateException("How is the fluid stack null? Please optimize fluid pool!");
                     while (!test.isEmpty()) {
-                        FluidStack ingredient = test.remove(0);
-                        if (stack.containsFluid(ingredient)) {
+                        FluidIngredient ingredient = test.remove(0);
+                        if (ingredient.matches(stack)) {
                             continue loop;
                         }
                         test.add(ingredient);
@@ -181,15 +181,15 @@ public class MixingRecipe {
             if (!test.isEmpty()) return false;
         }
         if (!this.fluidInputs.isEmpty()) {
-            List<FluidStack> test = new ArrayList<>(this.fluidInputs);
+            List<FluidIngredient> test = new ArrayList<>(this.fluidInputs);
             loop:
             for (FluidTank tank : basin.fluid.getHandlers()) {
                 FluidStack stack = tank.getFluid();
                 if (stack == null) throw new IllegalStateException("How is the fluid stack null? Please optimize fluid pool!");
                 while (!test.isEmpty()) {
-                    FluidStack ingredient = test.remove(0);
-                    if (stack.containsFluid(ingredient)) {
-                        stack.amount -= ingredient.amount;
+                    FluidIngredient ingredient = test.remove(0);
+                    if (ingredient.matches(stack)) {
+                        stack.amount -= ingredient.getDisplayFluids().get(0).amount;
                         continue loop;
                     }
                     test.add(ingredient);
@@ -207,7 +207,7 @@ public class MixingRecipe {
 
     public static class Builder {
         private List<Ingredient> itemInputs = Collections.emptyList();
-        private List<FluidStack> fluidInputs = Collections.emptyList();
+        private List<FluidIngredient> fluidInputs = Collections.emptyList();
         private List<ItemStack> itemOutputs = Collections.emptyList();
         private List<FluidStack> fluidOutputs = Collections.emptyList();
         private int requiredHeat = 0;
@@ -247,8 +247,10 @@ public class MixingRecipe {
         public Builder setFluidInputs(Object... inputs) {
             this.fluidInputs = new ArrayList<>(inputs.length);
             for (Object param : inputs) {
-                if (param instanceof FluidStack) {
-                    this.fluidInputs.add((FluidStack) param);
+                if (param instanceof FluidIngredient) {
+                    this.fluidInputs.add((FluidIngredient) param);
+                } else if (param instanceof FluidStack) {
+                    this.fluidInputs.add(FluidIngredient.of((FluidStack) param));
                 } else {
                     throw new IllegalArgumentException("Invalid fluid input: " + param + " (" + param.getClass().getSimpleName() + ")");
                 }

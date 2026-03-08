@@ -11,7 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import nl.melonstudios.create.util.interfaces.ISail;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Collection;
 
@@ -146,31 +147,31 @@ public class BlockRotationHelper {
         }
     }
 
-    public static void rotateNormal(Vector3f vec, EnumFacing.Axis axis, float angle, Vector3f store) {
+    public static void rotateNormal(Vector3fc vec, EnumFacing.Axis axis, float angle, Vector3f store) {
         if (angle == 0.0F) {
-            store.set(vec.getX(), vec.getY(), vec.getZ());
+            store.set(vec.x(), vec.y(), vec.z());
             return;
         }
         angle *= RADIANS;
         float x, y, z;
         switch (axis) {
             case X:
-                y = vec.getY();
-                z = vec.getZ();
-                store.set(vec.getX(), y*MathHelper.cos(angle)-z*MathHelper.sin(angle), y*MathHelper.sin(angle)+z*MathHelper.cos(angle));
+                y = vec.y();
+                z = vec.z();
+                store.set(vec.x(), y*MathHelper.cos(angle)-z*MathHelper.sin(angle), y*MathHelper.sin(angle)+z*MathHelper.cos(angle));
                 break;
             case Y:
-                x = vec.getX();
-                z = vec.getZ();
-                store.set(x*MathHelper.cos(-angle)-z*MathHelper.sin(-angle), vec.getY(), x*MathHelper.sin(-angle)+z*MathHelper.cos(-angle));
+                x = vec.x();
+                z = vec.z();
+                store.set(x*MathHelper.cos(-angle)-z*MathHelper.sin(-angle), vec.y(), x*MathHelper.sin(-angle)+z*MathHelper.cos(-angle));
                 break;
             case Z:
-                x = vec.getX();
-                y = vec.getY();
-                store.set(x*MathHelper.cos(angle)-y*MathHelper.sin(angle), x*MathHelper.sin(angle)+y*MathHelper.cos(angle), vec.getZ());
+                x = vec.x();
+                y = vec.y();
+                store.set(x*MathHelper.cos(angle)-y*MathHelper.sin(angle), x*MathHelper.sin(angle)+y*MathHelper.cos(angle), vec.z());
                 break;
             default:
-                store.set(vec.getX(), vec.getY(), vec.getZ());
+                store.set(vec.x(), vec.y(), vec.z());
         }
     }
 }

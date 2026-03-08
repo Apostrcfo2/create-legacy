@@ -118,6 +118,8 @@ dependencies {
     //    exclude module: 'commons-io'
     //    exclude module: 'gson'
     //}
+
+    compile 'org.joml:joml:1.10.8' // adds joml to the dev env
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

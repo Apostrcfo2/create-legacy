@@ -11,7 +11,8 @@ import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.util.Utils;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public abstract class TileEntityContraptionInterfaceBase extends TileEntityOptimizedBase implements IContraptionActor {
     public TileEntityContraptionInterfaceBase() {
@@ -94,7 +95,7 @@ public abstract class TileEntityContraptionInterfaceBase extends TileEntityOptim
     }
 
     @Override
-    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3fc position, BlockPos blockPosition, boolean moved, Vector3fc movement) {
         this.wasConnected = this.isConnected();
         EnumFacing facing = this.getFacing();
         contraption.getNormal(facing, this.contraptionFacing);

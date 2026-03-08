@@ -15,7 +15,8 @@ import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityBreakBlockBase;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +152,7 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
     }
 
     @Override
-    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3fc position, BlockPos blockPosition, boolean moved, Vector3fc movement) {
         if (this._tick(contraption, world, position, blockPosition, moved, movement)) {
             contraption.pauseContraption();
         }
@@ -160,12 +161,12 @@ public class TileEntitySaw extends TileEntityBreakBlockBase implements IContrapt
     protected void getBreakingPosVec(Vector3f store) {
         store.set(this.pos.getX(), this.pos.getY(), this.pos.getZ());
         EnumFacing facing = this.getState().getValue(BlockSaw.FACING).getToEnumFacing();
-        store.translate(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
+        store.add(facing.getFrontOffsetX(), facing.getFrontOffsetY(), facing.getFrontOffsetZ());
     }
 
     private final BlockPos.MutableBlockPos lastBreakingPos = new BlockPos.MutableBlockPos();
     private final Vector3f breakingPosVec = new Vector3f();
-    private boolean _tick(IContraptionAccessor contraption,  World world, Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+    private boolean _tick(IContraptionAccessor contraption,  World world, Vector3fc position, BlockPos blockPosition, boolean moved, Vector3fc movement) {
         if (this.breakingPos != null) this.lastBreakingPos.setPos(this.breakingPos);
         this.getBreakingPosVec(this.breakingPosVec);
         this.breakingPos = contraption.getWorldPos(this.breakingPosVec);

@@ -14,8 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.block.state.EnumDirection;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -28,6 +26,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TileEntityCrafter extends TileEntityKinetic implements IItemHandler {
+    public static final boolean SKIP_ANIMATION = true;
+
     public TileEntityCrafter() {
 
     }
@@ -46,6 +46,7 @@ public class TileEntityCrafter extends TileEntityKinetic implements IItemHandler
     public void tick() {
         super.tick();
 
+        //TODO: fix
         if (this.crafterContext != null) {
             if (this.crafterContext.currentPattern != null) {
                 this.crafterContext.addProgress(Math.abs(this.getSpeed()) * 0.015625F);

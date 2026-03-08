@@ -5,7 +5,8 @@ import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.util.BlockRotationHelper;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public class CAccessorBearing implements IContraptionAccessor {
     private final EntityContraptionBearing entity;
@@ -22,22 +23,22 @@ public class CAccessorBearing implements IContraptionAccessor {
     }
 
     @Override
-    public BlockPos getWorldPos(Vector3f localPos) {
+    public BlockPos getWorldPos(Vector3fc localPos) {
         Vector3f vec = new Vector3f();
         this.getWorldPos(localPos, vec);
         return new BlockPos(vec.x, vec.y, vec.z);
     }
 
     @Override
-    public void getWorldPos(Vector3f localPos, Vector3f store) {
+    public void getWorldPos(Vector3fc localPos, Vector3f store) {
         BlockRotationHelper.rotateNormal(localPos, this.entity.cachedAxis, this.entity.cachedAngle, store);
-        store.translate((float) this.entity.posX, (float) this.entity.posY, (float) this.entity.posZ);
+        store.add((float) this.entity.posX, (float) this.entity.posY, (float) this.entity.posZ);
     }
 
     @Override
     public void getWorldPos(BlockPos localPos, Vector3f store) {
         BlockRotationHelper.rotateNormal(localPos, this.entity.cachedAxis, this.entity.cachedAngle, store);
-        store.translate((float) this.entity.posX, (float) this.entity.posY, (float) this.entity.posZ);
+        store.add((float) this.entity.posX, (float) this.entity.posY, (float) this.entity.posZ);
     }
     @Override
     public void getNormal(EnumFacing facing, Vector3f store) {

@@ -22,7 +22,7 @@ import nl.melonstudios.create.tileentity.actor.TileEntitySpeedometer;
 import nl.melonstudios.create.tileentity.actor.TileEntityStressometer;
 import nl.melonstudios.create.util.Color;
 import nl.melonstudios.create.util.TextBuilder;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;

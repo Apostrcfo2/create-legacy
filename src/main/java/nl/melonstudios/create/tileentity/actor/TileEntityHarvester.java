@@ -12,7 +12,8 @@ import net.minecraft.world.World;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class TileEntityHarvester extends TileEntity implements IContraptionActor
     }
 
     @Override
-    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3fc position, BlockPos blockPosition, boolean moved, Vector3fc movement) {
         this.rotationOld = this.rotation;
         this.rotation += movement.length();
         if (moved && !world.isRemote) {

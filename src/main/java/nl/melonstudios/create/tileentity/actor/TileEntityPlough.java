@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3fc;
 
 public class TileEntityPlough extends TileEntity implements IContraptionActor {
     public TileEntityPlough() {
@@ -28,7 +28,7 @@ public class TileEntityPlough extends TileEntity implements IContraptionActor {
     }
 
     @Override
-    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+    public void contraptionTick(IContraptionAccessor contraption, World world, Vector3fc position, BlockPos blockPosition, boolean moved, Vector3fc movement) {
         if (moved && !world.isRemote) {
             BlockPos soilPos = blockPosition.down();
             IBlockState soilState = world.getBlockState(soilPos);

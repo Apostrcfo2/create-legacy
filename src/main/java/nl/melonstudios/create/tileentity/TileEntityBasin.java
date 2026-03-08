@@ -40,6 +40,8 @@ import java.util.*;
 public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEntityWithSubInteractions, ITopOpenInventory, IItemHandler {
     public final FluidHandlerBasin fluid = new FluidHandlerBasin();
     public final NonNullList<ItemStack> inventory = NonNullList.create();
+    public final NonNullList<FluidStack> fluidQueue = NonNullList.create();
+    public final NonNullList<ItemStack> inventoryQueue = NonNullList.create();
     public IItemFilter recipeFilter = null;
 
     public TileEntityBasin() {
@@ -67,6 +69,7 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
         }
     }
     public TileEntityBasin copyForTesting() {
+        if (this.flag()) throw new IllegalStateException("Cannot copy for testing a copied basin");
         NBTTagCompound nbt = this.writePacket();
         TileEntityBasin te = new ForTesting();
         te.readPacket(nbt);

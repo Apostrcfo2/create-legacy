@@ -4,7 +4,7 @@ import com.google.common.hash.Hashing;
 import com.melonstudios.melonlib.math.ITuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import java.util.function.UnaryOperator;

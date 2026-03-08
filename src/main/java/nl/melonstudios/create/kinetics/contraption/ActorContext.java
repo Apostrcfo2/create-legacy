@@ -1,7 +1,7 @@
 package nl.melonstudios.create.kinetics.contraption;
 
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 public class ActorContext {
     public final BlockPos pos;

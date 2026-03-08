@@ -18,7 +18,7 @@ import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.util.BlockRotationHelper;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -118,7 +118,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             for (ActorContext context : this.contraption.actors) {
                 vec.set(context.worldPos);
                 BlockRotationHelper.rotateNormal(context.pos, this.cachedAxis, this.cachedAngle, context.worldPos);
-                context.worldPos.translate(0.5F, 0.5F, 0.5F);
+                context.worldPos.add(0.5F, 0.5F, 0.5F);
                 int oldX = context.actorWorldPos.getX();
                 int oldY = context.actorWorldPos.getY();
                 int oldZ = context.actorWorldPos.getZ();
@@ -128,7 +128,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                         context.worldPos.z + anchor.getZ()
                 );
                 movement.set(context.worldPos);
-                Vector3f.sub(movement, vec, movement);
+                movement.sub(vec);
                 context.actor.contraptionTick(
                         this.contraptionAccessor, this.world,
                         context.worldPos, context.actorWorldPos,

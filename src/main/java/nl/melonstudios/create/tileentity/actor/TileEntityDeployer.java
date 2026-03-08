@@ -43,7 +43,8 @@ import nl.melonstudios.create.util.SubInteractionBox;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.filter.IItemFilter;
 import nl.melonstudios.create.util.filter.ItemFilterExact;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -289,13 +290,13 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
 
     @Override
     public void contraptionTick(IContraptionAccessor contraption, World world,
-                                Vector3f position, BlockPos blockPosition, boolean moved, Vector3f movement) {
+                                Vector3fc position, BlockPos blockPosition, boolean moved, Vector3fc movement) {
         this.progressOld = this.progress;
         this.progress += (int) Math.abs(this.speed);
         if (this.progress > 2000) this.progress = 0;
         if (world.isRemote) return;
 
-        this.player.setPosition(position.x, position.y, position.z);
+        this.player.setPosition(position.x(), position.y(), position.z());
         ContraptionInventory inventory = contraption.getInventory();
 
         this.itemUsePosOld.set(this.itemUsePos);
@@ -308,7 +309,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
             }
             Vector3f facingVec = new Vector3f();
             contraption.getNormal(facing, facingVec);
-            facingVec.normalise();
+            facingVec.normalize();
             final EnumFacing vecFacing = getFacingFromVector3f(facingVec);
             if (!this.heldItem.isEmpty()) {
                 if (this.heldItem.getItem() instanceof ItemBlock) {
