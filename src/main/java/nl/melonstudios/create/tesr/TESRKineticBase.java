@@ -100,6 +100,7 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         GlStateManager.popMatrix();
     }
     protected final void glRotate(float angle, EnumFacing.Axis axis) {
+        if (angle == 0.0F) return; //small optimization
         GlStateManager.translate(0.5F, 0.5F, 0.5F);
         GlStateManager.rotate(angle,
                 axis == EnumFacing.Axis.X ? 1 : 0,
@@ -134,9 +135,11 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
 
     private static final HashSet<Class<?>> VIOLATORS = new HashSet<>();
     protected final void renderBakedModel(float brightness, IBakedModel model, @Nullable IBlockState state) {
+        long start = System.nanoTime();
         if (ClientConfig.fastKineticRendering) {
             if (state != null) {
                 FastStateRendering.INSTANCE.renderFast(state);
+                PerFrameDebugInfo.renderTimeNs += (System.nanoTime() - start);
                 return;
             } else {
                 if (VIOLATORS.add(this.getClass())) {
@@ -146,12 +149,12 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         }
         for (EnumFacing facing : EnumFacing.VALUES) this.renderBakedQuads(brightness, model.getQuads(state, facing, 0));
         this.renderBakedQuads(brightness, model.getQuads(state, null, 0));
+        PerFrameDebugInfo.renderTimeNs += (System.nanoTime() - start);
     }
     protected final void renderBakedQuads(float brightness, List<BakedQuad> quads) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         for (BakedQuad quad : quads) {
-            //TODO: improve performance
             builder.begin(7, DefaultVertexFormats.ITEM);
             builder.addVertexData(quad.getVertexData());
             builder.putColorRGB_F4(brightness, brightness, brightness);

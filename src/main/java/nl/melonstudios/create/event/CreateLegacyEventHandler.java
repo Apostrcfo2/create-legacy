@@ -35,6 +35,7 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.cfg.ClientConfig;
 import nl.melonstudios.create.entity.EntityContraptionBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
@@ -216,6 +217,10 @@ public class CreateLegacyEventHandler {
                 font.drawStringWithShadow("Skipped contraptions (by layer): " +
                                 ContraptionRendering.formatList(PerFrameDebugInfo.contraptionsSkipped),
                         2, 41, -1);
+                font.drawStringWithShadow("Model render time ms: " + (PerFrameDebugInfo.renderTimeMs()),
+                        2, 51, -1);
+                font.drawStringWithShadow("Fast model renderer: " + ClientConfig.fastKineticRendering,
+                        2, 60, -1);
                 PerFrameDebugInfo.reset();
             }
         }
