@@ -30,7 +30,7 @@ public final class FastStateRendering implements ISelectiveResourceReloadListene
     public static final FastStateRendering INSTANCE = new FastStateRendering();
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
-    private final BlockRendererDispatcher renderer = minecraft.getBlockRendererDispatcher();
+    private final BlockRendererDispatcher renderer = this.minecraft.getBlockRendererDispatcher();
     private final Tessellator tessellator = Tessellator.getInstance();
     private final Object2IntMap<IBlockState> renderLists = new Object2IntOpenHashMap<>();
 

@@ -19,6 +19,7 @@ import nl.melonstudios.create.block.generator.BlockHandCrank;
 import nl.melonstudios.create.block.generator.BlockSail;
 import nl.melonstudios.create.block.generator.BlockWaterWheel;
 import nl.melonstudios.create.item.ItemBlockBlazeBurner;
+import nl.melonstudios.create.item.ItemBlockDepotActor;
 import nl.melonstudios.create.item.ItemBlockSail;
 
 import javax.annotation.Nonnull;
@@ -96,10 +97,12 @@ public final class BlockInit {
 
     public static final BlockPress PRESS = (BlockPress)
             registerBlockWithItem(new BlockPress(MapColor.WOOD, SoundType.METAL)
-            .setRegistryName("press").setUnlocalizedName("create.press"));
+            .setRegistryName("press").setUnlocalizedName("create.press"),
+            ItemBlockDepotActor::new);
     public static final BlockMixer MIXER = (BlockMixer)
             registerBlockWithItem(new BlockMixer()
-            .setRegistryName("mixer").setUnlocalizedName("create.mixer"));
+            .setRegistryName("mixer").setUnlocalizedName("create.mixer"),
+            ItemBlockDepotActor::new);
 
     public static final BlockDrill DRILL = (BlockDrill)
             registerBlockWithItem(new BlockDrill(MapColor.STONE, SoundType.METAL)
@@ -109,7 +112,8 @@ public final class BlockInit {
             .setRegistryName("saw").setUnlocalizedName("create.saw"));
     public static final BlockDeployer DEPLOYER = (BlockDeployer)
             registerBlockWithItem(new BlockDeployer(MapColor.STONE, SoundType.WOOD)
-            .setRegistryName("deployer").setUnlocalizedName("create.deployer"));
+            .setRegistryName("deployer").setUnlocalizedName("create.deployer"),
+            ItemBlockDepotActor::new);
 
     public static final BlockAutoFarm AUTO_FARM = (BlockAutoFarm)
             registerBlockWithItem(new BlockAutoFarm()
@@ -128,7 +132,8 @@ public final class BlockInit {
 
     public static final BlockBlazeBurner BLAZE_BURNER = (BlockBlazeBurner)
             registerBlockWithItem(new BlockBlazeBurner()
-            .setRegistryName("blaze_burner").setUnlocalizedName("create.blaze_burner"), ItemBlockBlazeBurner::new);
+            .setRegistryName("blaze_burner").setUnlocalizedName("create.blaze_burner"),
+            ItemBlockBlazeBurner::new);
 
     public static final BlockDepot DEPOT = (BlockDepot)
             registerBlockWithItem(new BlockDepot()
@@ -139,6 +144,10 @@ public final class BlockInit {
     public static final BlockChute CHUTE = (BlockChute)
             registerBlockWithItem(new BlockChute()
             .setRegistryName("chute").setUnlocalizedName("create.chute"));
+
+    public static final BlockBeltStraight BELT_STRAIGHT = (BlockBeltStraight)
+            registerBlock(new BlockBeltStraight()
+            .setRegistryName("belt_straight").setUnlocalizedName("create.belt"));
 
     public static final BlockItemDrain ITEM_DRAIN = (BlockItemDrain)
             registerBlockWithItem(new BlockItemDrain()

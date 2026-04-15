@@ -122,6 +122,10 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:sail", BlockInit.SAIL_EAST, true);
         //endregion
 
+        BlockDictionary.registerOre("create:depotActorCompatible", BlockInit.DEPOT, false);
+        BlockDictionary.registerOre("create:depotActorCompatible", BlockInit.BASIN, true);
+        BlockDictionary.registerOre("create:depotActorCompatible", BlockInit.BELT_STRAIGHT, true);
+
         BlockDictionary.registerOre("create:sticksToSelf", BlockInit.CHASSIS_LINEAR, true);
         BlockDictionary.registerOre("create:autoAttachToChassisRadial", BlockInit.SAIL_DOWN, true);
         BlockDictionary.registerOre("create:autoAttachToChassisRadial", BlockInit.SAIL_UP, true);
