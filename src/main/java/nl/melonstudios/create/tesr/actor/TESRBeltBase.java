@@ -29,43 +29,45 @@ public class TESRBeltBase<T extends TileEntityBeltBase> extends TESRKineticBase<
         }
 
         if (block.isFunctional(state)) {
-            if (te.transport.isEmpty() && te.queue.isEmpty()) return;
+            if (te.left.isEmpty() && te.right.isEmpty()) return;
             GlStateManager.enableRescaleNormal();
             GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
             EnumFacing facing = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, block.getTransportAxis(state));
-            if (!te.transport.isEmpty()) {
-                double pos = te.getTransportPos(pt);
+
+            if (!te.left.isEmpty()) {
+                double pos = te.getLeftPos(pt);
                 GlStateManager.pushMatrix();
-                IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(te.transport, this.getWorld(), null);
+                IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(te.left, this.getWorld(), null);
                 boolean isFlat = model instanceof BakedItemModel;
-                GlStateManager.translate(0.5F + facing.getFrontOffsetX() * pos, 0.75F, 0.5F + facing.getFrontOffsetZ() * pos);
+                GlStateManager.translate(0.5 + facing.getFrontOffsetX() * pos, 0.75, 0.5 + facing.getFrontOffsetZ() * pos);
 
                 if (isFlat) {
-                    if (this.upright(te.transport)) {
-                        this.renderUprightItem(model, te.transport);
+                    if (this.upright(te.left)) {
+                        this.renderUprightItem(model, te.left);
                     } else {
-                        this.renderFlatItem(model, te.transport);
+                        this.renderFlatItem(model, te.left);
                     }
-                } else this.renderCubeItem(model, te.transport);
+                } else this.renderCubeItem(model, te.left);
                 GlStateManager.popMatrix();
             }
-            if (!te.queue.isEmpty()) {
-                double pos = te.getQueuePos(pt);
+
+            if (!te.right.isEmpty()) {
+                double pos = te.getRightPos(pt);
                 GlStateManager.pushMatrix();
-                IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(te.queue, this.getWorld(), null);
+                IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(te.right, this.getWorld(), null);
                 boolean isFlat = model instanceof BakedItemModel;
-                GlStateManager.translate(0.5F + facing.getFrontOffsetX() * pos, 0.75F, 0.5F + facing.getFrontOffsetZ() * pos);
+                GlStateManager.translate(0.5 + facing.getFrontOffsetX() * pos, 0.75, 0.5 + facing.getFrontOffsetZ() * pos);
 
                 if (isFlat) {
-                    if (this.upright(te.queue)) {
-                        this.renderUprightItem(model, te.queue);
+                    if (this.upright(te.right)) {
+                        this.renderUprightItem(model, te.right);
                     } else {
-                        this.renderFlatItem(model, te.queue);
+                        this.renderFlatItem(model, te.right);
                     }
-                } else this.renderCubeItem(model, te.queue);
+                } else this.renderCubeItem(model, te.right);
                 GlStateManager.popMatrix();
             }
 

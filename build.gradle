@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.joml:joml:1.10.8'
     }
 }
         
@@ -61,8 +62,8 @@ minecraft {
 }
 
 configurations {
-    //embed
-    //compile.extendsFrom(embed)
+    embed
+    compile.extendsFrom(embed)
 }
 
 repositories {
@@ -119,6 +120,10 @@ dependencies {
     //    exclude module: 'gson'
     //}
 
+    embed('org.joml:joml:1.10.8') {
+
+    }
+
     compile 'org.joml:joml:1.10.8' // adds joml to the dev env
 }
 
@@ -136,11 +141,11 @@ jar {
         ])
     }
 
-    //from {
-    //    configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
-    //} {
-    //    exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
-    //}
+    from {
+        configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
+    }
 
     manifest.attributes(
             'ForceLoadAsMod': 'true',

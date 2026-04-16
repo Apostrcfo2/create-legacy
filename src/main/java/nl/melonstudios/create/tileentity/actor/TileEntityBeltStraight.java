@@ -1,5 +1,6 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -10,8 +11,15 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IDepot;
 
 public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot {
+    public Boolean lastRotatory = null;
+
     public TileEntityBeltStraight() {
         super();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
     }
 
     @Override
@@ -44,17 +52,30 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
         return 0.0F;
     }
 
+    @Override
+    protected boolean flipped() {
+        return this.getState().getValue(BlockBeltStraight.AXIS) == EnumFacing.Axis.X;
+    }
+
     //TODO: Redo the inventory so this will work
 
     @Override
     public ItemStack getPresentedItem() {
-        return this.transport;
+        if (this.getSpeed() == 0.0F) return ItemStack.EMPTY;
+        return this.getFlag() ? this.left : this.right;
     }
 
     @Override
     public void decreasePresentedAndAddOutput(ItemStack output) {
-        this.transport.shrink(1);
-        this.queue = output;
+        if (this.getSpeed() == 0.0F) throw new UnsupportedOperationException("How did this even happen?");
+        if (this.getFlag()) {
+            this.left.shrink(1);
+            if (this.right.isEmpty()) this.right = output.copy();
+            else if (ItemStack.areItemsEqual(this.right, output) && ItemStack.areItemStackTagsEqual(this.right, output)) this.right.grow(output.getCount());
+            else StackUtil.spawnItemWithVelocity(this.world,
+                        this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
+                        output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
+        }
         this.sync();
     }
 
@@ -70,7 +91,8 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
 
     @Override
     public ItemStack takePresented(int count) {
+        if (this.getSpeed() == 0.0F) return ItemStack.EMPTY;
         this.sync();
-        return this.transport.splitStack(count);
+        return this.getFlag() ? this.left.splitStack(count) : this.right.splitStack(count);
     }
 }

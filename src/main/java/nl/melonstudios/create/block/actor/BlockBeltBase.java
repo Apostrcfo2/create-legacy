@@ -1,5 +1,6 @@
 package nl.melonstudios.create.block.actor;
 
+import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -114,15 +116,58 @@ public abstract class BlockBeltBase extends BlockKineticBase implements ITileEnt
                     TileEntityBeltBase belt = (TileEntityBeltBase) te;
                     EntityItem item = (EntityItem) entityIn;
 
-                    if (belt.queue.isEmpty()) {
-                        item.setDead();
-                        belt.queue = item.getItem();
-                        belt.queuePos = 0.0F;
-                        belt.sync();
+                    if (belt.getSpeed() != 0.0F) {
+                        if (belt.getFlag()) {
+                            if (belt.left.isEmpty()) {
+                                item.setDead();
+                                belt.left = item.getItem().copy();
+                                belt.leftPos = 0.5;
+                                belt.sync();
+                            }
+                        } else {
+                            if (belt.right.isEmpty()) {
+                                item.setDead();
+                                belt.right = item.getItem().copy();
+                                belt.rightPos = 0.5;
+                                belt.sync();
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (facing == EnumFacing.UP) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te instanceof TileEntityBeltBase) {
+                if (!worldIn.isRemote) {
+                    TileEntityBeltBase belt = (TileEntityBeltBase) te;
+                    if (!belt.left.isEmpty()) {
+                        ItemStack stack = belt.left.copy();
+                        belt.left = ItemStack.EMPTY;
+                        belt.sync();
+                        if (!playerIn.addItemStackToInventory(stack) && !stack.isEmpty()) {
+                            StackUtil.spawnItemWithVelocity(worldIn, playerIn.posX, playerIn.posY + 0.5, playerIn.posZ,
+                                    stack.copy(), 0.0, 0.2, 0.0);
+                        }
+                    }
+                    if (!belt.right.isEmpty()) {
+                        ItemStack stack = belt.right.copy();
+                        belt.right = ItemStack.EMPTY;
+                        belt.sync();
+                        if (!playerIn.addItemStackToInventory(stack) && !stack.isEmpty()) {
+                            StackUtil.spawnItemWithVelocity(worldIn, playerIn.posX, playerIn.posY + 0.5, playerIn.posZ,
+                                    stack.copy(), 0.0, 0.2, 0.0);
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

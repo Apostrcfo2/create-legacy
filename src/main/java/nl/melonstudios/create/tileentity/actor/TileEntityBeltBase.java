@@ -22,13 +22,23 @@ import javax.annotation.Nullable;
 public abstract class TileEntityBeltBase extends TileEntityKinetic implements ITopOpenInventory {
     private final InventoryManager[] inventories = new InventoryManager[7];
 
+    @Deprecated
     public ItemStack queue = ItemStack.EMPTY;
+    @Deprecated
     public ItemStack transport = ItemStack.EMPTY;
+
+    public ItemStack left = ItemStack.EMPTY;
+    public ItemStack right = ItemStack.EMPTY;
 
     public float queuePos = 0.0F;
     public float transportPos = 0.0F;
     public float queuePosOld = 0.0F;
     public float transportPosOld = 0.0F;
+
+    public double leftPos = 0.0;
+    public double rightPos = 0.0;
+    public double leftPosOld = 0.0;
+    public double rightPosOld = 0.0;
 
     public TileEntityBeltBase() {
         for (EnumFacing side : EnumFacing.VALUES) {
@@ -45,77 +55,107 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     public void tick() {
         super.tick();
 
-        this.transportPosOld = this.transportPos;
-        this.queuePosOld = this.queuePos;
-        float speed = this.getSpeed() * 0.0625F * 0.05F;
-        if (speed != 0.0F) {
+        this.leftPosOld = this.leftPos;
+        this.rightPosOld = this.rightPos;
+        double speed = this.getSpeed() * 0.0625 * 0.05;
+        if (speed != 0.0) {
+            this.markDirty();
             EnumFacing.Axis transportAxis = this.block().getTransportAxis(this.getState());
             if (transportAxis == EnumFacing.Axis.X) speed *= -1;
             EnumFacing positive = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, transportAxis);
             EnumFacing negative = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, transportAxis);
 
-            if (!this.transport.isEmpty()) {
-                this.transportPos += speed;
-                if (this.transportPos >= 1.0F) {
-                    this.transportPos = 1.0F;
-                    if (!this.world.isRemote) {
-                        BlockPos pos = this.getOffsetPosition(this.pos, positive);
-                        TileEntity te = this.world.getTileEntity(pos);
-                        if (te instanceof ITopOpenInventory) {
-                            ITopOpenInventory inv = (ITopOpenInventory) te;
-                            this.transport = inv.tryInsertItem(this.transport.copy(), negative);
-                            this.sync();
-                        } else {
-                            IBlockState state = this.world.getBlockState(pos);
-                            if (state.getMaterial().isReplaceable()) {
+            if (speed > 0.0) { //update positive first
+                if (this.rightPos < 1.0) this.rightPos += speed;
+                if (this.rightPos >= 1.0) {
+                    BlockPos pos = this.getOffsetPosition(this.pos, positive);
+                    TileEntity te = this.world.getTileEntity(pos);
+                    if (te instanceof TileEntityBeltBase && this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.END) {
+                        TileEntityBeltBase belt = (TileEntityBeltBase) te;
+                        if (belt.left.isEmpty()) {
+                            belt.left = this.right;
+                            this.right = ItemStack.EMPTY;
+                            belt.leftPosOld = this.leftPosOld - 1.0;
+                            belt.leftPos = this.leftPos - 1.0;
+                        }
+                    } else if (te instanceof ITopOpenInventory) {
+                        ITopOpenInventory inv = (ITopOpenInventory) te;
+                        this.right = inv.tryInsertItem(this.right, negative);
+                        this.rightPos = 1.0;
+                        if (this.right.isEmpty()) this.sync();
+                    } else {
+                        this.rightPos = 1.0;
+                        IBlockState state = this.world.getBlockState(pos);
+                        if (state.getMaterial().isReplaceable()) {
+                            if (!this.world.isRemote) {
                                 double dx = this.pos.getX() + 0.5 + positive.getFrontOffsetX() * 0.6;
                                 double dy = this.pos.getY() + 0.85;
                                 double dz = this.pos.getZ() + 0.5 + positive.getFrontOffsetZ() * 0.6;
-                                StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.transport.copy(),
+                                StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.right.copy(),
                                         positive.getFrontOffsetX() * Math.abs(speed),
                                         0.2,
                                         positive.getFrontOffsetZ() * Math.abs(speed)
                                 );
-                                this.transport = ItemStack.EMPTY;
-                                this.transportPos = 0.0F;
-                                this.sync();
                             }
+                            this.right = ItemStack.EMPTY;
+                            this.sync();
                         }
                     }
-                } else if (this.transportPos <= -1.0F) {
-                    this.transportPos = -1.0F;
-                    if (!this.world.isRemote) {
-                        BlockPos pos = this.getOffsetPosition(this.pos, negative);
-                        TileEntity te = this.world.getTileEntity(pos);
-                        if (te instanceof ITopOpenInventory) {
-                            ITopOpenInventory inv = (ITopOpenInventory) te;
-                            this.transport = inv.tryInsertItem(this.transport, positive);
-                            this.sync();
-                        } else {
-                            IBlockState state = this.world.getBlockState(pos);
-                            if (state.getMaterial().isReplaceable()) {
+                }
+                if (this.leftPos < 1.0) this.leftPos += speed;
+                if (this.leftPos >= 1.0) {
+                    if (this.right.isEmpty()) {
+                        this.right = this.left;
+                        this.rightPosOld = this.leftPosOld - 1.0;
+                        this.rightPos = this.leftPos - 1.0;
+                        this.left = ItemStack.EMPTY;
+                    }
+                }
+            } else { //update negative first
+                if (this.leftPos > 0.0) this.leftPos += speed;
+                if (this.leftPos <= 0.0) {
+                    BlockPos pos = this.getOffsetPosition(this.pos, negative);
+                    TileEntity te = this.world.getTileEntity(pos);
+                    if (te instanceof TileEntityBeltBase && this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.START) {
+                        TileEntityBeltBase belt = (TileEntityBeltBase) te;
+                        if (belt.right.isEmpty()) {
+                            belt.right = this.left;
+                            this.left = ItemStack.EMPTY;
+                            belt.rightPosOld = this.leftPosOld + 1.0;
+                            belt.rightPos = this.leftPos + 1.0;
+                        }
+                    } else if (te instanceof ITopOpenInventory) {
+                        ITopOpenInventory inv = (ITopOpenInventory) te;
+                        this.left = inv.tryInsertItem(this.left, positive);
+                        this.leftPos = 0.0;
+                        if (this.left.isEmpty()) this.sync();
+                    } else {
+                        this.leftPos = 0.0;
+                        IBlockState state = this.world.getBlockState(pos);
+                        if (state.getMaterial().isReplaceable()) {
+                            if (!this.world.isRemote) {
                                 double dx = this.pos.getX() + 0.5 + negative.getFrontOffsetX() * 0.6;
                                 double dy = this.pos.getY() + 0.85;
                                 double dz = this.pos.getZ() + 0.5 + negative.getFrontOffsetZ() * 0.6;
-                                StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.transport.copy(),
+                                StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.left.copy(),
                                         negative.getFrontOffsetX() * Math.abs(speed),
                                         0.2,
                                         negative.getFrontOffsetZ() * Math.abs(speed)
                                 );
-                                this.transport = ItemStack.EMPTY;
-                                this.transportPos = 0.0F;
-                                this.sync();
                             }
+                            this.left = ItemStack.EMPTY;
+                            this.sync();
                         }
                     }
                 }
-            } else if (!this.queue.isEmpty()) {
-                if (!this.world.isRemote) {
-                    this.transport = this.queue;
-                    this.queue = ItemStack.EMPTY;
-                    this.transportPos = this.queuePos;
-                    this.queuePos = 0.0F;
-                    this.sync();
+                if (this.rightPos > 0.0) this.rightPos += speed;
+                if (this.rightPos <= 0.0) {
+                    if (this.left.isEmpty()) {
+                        this.left = this.right;
+                        this.leftPosOld = this.rightPosOld + 1.0;
+                        this.leftPos = this.rightPos + 1.0;
+                        this.right = ItemStack.EMPTY;
+                    }
                 }
             }
         }
@@ -123,7 +163,7 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
 
     @Override
     public void destroy() {
-        StackUtil.dropItemsAt(this.world, this.pos, this.transport, this.queue);
+        StackUtil.dropItemsAt(this.world, this.pos, this.left, this.right);
         if (this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.MIDDLE) {
             StackUtil.dropItemsAt(this.world, this.pos, new ItemStack(BlockInit.SHAFT)); //TODO: simply have it place the original shaft
         }
@@ -147,13 +187,17 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        if (!this.transport.isEmpty()) {
-            nbt.setFloat("transportPos", this.transportPos);
-            nbt.setTag("Transport", this.transport.serializeNBT());
+        if (!this.left.isEmpty()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setDouble("pos", this.leftPos);
+            this.left.writeToNBT(tag);
+            nbt.setTag("LeftItem", tag);
         }
-        if (!this.queue.isEmpty()) {
-            nbt.setFloat("queuePos", this.queuePos);
-            nbt.setTag("Queue", this.queue.serializeNBT());
+        if (!this.right.isEmpty()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setDouble("pos", this.rightPos);
+            this.right.writeToNBT(tag);
+            nbt.setTag("RightItem", tag);
         }
 
         return nbt;
@@ -163,27 +207,33 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        if (nbt.hasKey("Transport", 10)) {
-            this.transportPosOld = this.transportPos = nbt.getFloat("transportPos");
-            this.transport = new ItemStack(nbt.getCompoundTag("Transport"));
-        } else this.transport = ItemStack.EMPTY;
-        if (nbt.hasKey("Queue", 10)) {
-            this.queuePosOld = this.queuePos = nbt.getFloat("queuePos");
-            this.queue = new ItemStack(nbt.getCompoundTag("Queue"));
-        } else this.queue = ItemStack.EMPTY;
+        if (nbt.hasKey("LeftItem", 10)) {
+            NBTTagCompound tag = nbt.getCompoundTag("LeftItem");
+            this.leftPosOld = this.leftPos = tag.getDouble("pos");
+            this.left = new ItemStack(tag);
+        } else this.left = ItemStack.EMPTY;
+        if (nbt.hasKey("RightItem", 10)) {
+            NBTTagCompound tag = nbt.getCompoundTag("RightItem");
+            this.rightPosOld = this.rightPos = tag.getDouble("pos");
+            this.right = new ItemStack(tag);
+        } else this.right = ItemStack.EMPTY;
     }
 
     @Override
     public NBTTagCompound writePacket() {
         NBTTagCompound nbt = super.writePacket();
 
-        if (!this.transport.isEmpty()) {
-            nbt.setFloat("transportPos", this.transportPos);
-            nbt.setTag("Transport", this.transport.serializeNBT());
+        if (!this.left.isEmpty()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setDouble("pos", this.leftPos);
+            this.left.writeToNBT(tag);
+            nbt.setTag("LeftItem", tag);
         }
-        if (!this.queue.isEmpty()) {
-            nbt.setFloat("queuePos", this.queuePos);
-            nbt.setTag("Queue", this.queue.serializeNBT());
+        if (!this.right.isEmpty()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setDouble("pos", this.rightPos);
+            this.right.writeToNBT(tag);
+            nbt.setTag("RightItem", tag);
         }
 
         return nbt;
@@ -193,30 +243,42 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     public void readPacket(NBTTagCompound nbt) {
         super.readPacket(nbt);
 
-        if (nbt.hasKey("Transport", 10)) {
-            this.transportPosOld = this.transportPos = nbt.getFloat("transportPos");
-            this.transport = new ItemStack(nbt.getCompoundTag("Transport"));
-        } else this.transport = ItemStack.EMPTY;
-        if (nbt.hasKey("Queue", 10)) {
-            this.queuePosOld = this.queuePos = nbt.getFloat("queuePos");
-            this.queue = new ItemStack(nbt.getCompoundTag("Queue"));
-        } else this.queue = ItemStack.EMPTY;
+        if (nbt.hasKey("LeftItem", 10)) {
+            NBTTagCompound tag = nbt.getCompoundTag("LeftItem");
+            this.leftPosOld = this.leftPos = tag.getDouble("pos");
+            this.left = new ItemStack(tag);
+        } else this.left = ItemStack.EMPTY;
+        if (nbt.hasKey("RightItem", 10)) {
+            NBTTagCompound tag = nbt.getCompoundTag("RightItem");
+            this.rightPosOld = this.rightPos = tag.getDouble("pos");
+            this.right = new ItemStack(tag);
+        } else this.right = ItemStack.EMPTY;
+    }
+
+    protected boolean flipped() {
+        return false;
+    }
+    public final boolean getFlag() {
+        return this.getSpeed() > 0.0F != this.flipped();
     }
 
     @Override
     public ItemStack tryInsertItem(ItemStack stack) {
-        if (this.block().isFunctional(this.getState())) {
-            //if (this.transport.isEmpty()) {
-            //    this.transport = stack;
-            //    this.transportPosOld = this.transportPos = 0.0F;
-            //    this.sync();
-            //    return ItemStack.EMPTY;
-            //}
-            if (this.queue.isEmpty()) {
-                this.queue = stack;
-                this.queuePosOld = this.queuePos = 0.0F;
-                this.sync();
-                return ItemStack.EMPTY;
+        if (this.block().isFunctional(this.getState()) && this.getSpeed() != 0.0F) {
+            if (this.getFlag()) {
+                if (this.left.isEmpty()) {
+                    this.left = stack.copy();
+                    this.leftPosOld = this.leftPos = 0.5;
+                    this.sync();
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if (this.right.isEmpty()) {
+                    this.right = stack.copy();
+                    this.rightPosOld = this.rightPos = 0.5;
+                    this.sync();
+                    return ItemStack.EMPTY;
+                }
             }
         }
         return stack;
@@ -224,37 +286,41 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
 
     @Override
     public ItemStack tryInsertItem(ItemStack stack, @Nullable EnumFacing side) {
-        if (this.block().isFunctional(this.getState())) {
-            //if (side == null || side.getAxis() == EnumFacing.Axis.Y) return this.tryInsertItem(stack);
-            EnumFacing.Axis axis = this.block().getTransportAxis(this.getState());
-            float position = (side == null || side.getAxis() == EnumFacing.Axis.Y || side.getAxis() != axis) ? 0.0F : side.getAxisDirection().getOffset();
-            //if (this.transport.isEmpty()) {
-            //    this.transport = stack;
-            //    this.transportPosOld = this.transportPos = position;
-            //    this.sync();
-            //    return ItemStack.EMPTY;
-            //}
-            if (this.queue.isEmpty()) {
-                this.queue = stack;
-                this.queuePosOld = this.queuePos = position;
-                this.sync();
-                return ItemStack.EMPTY;
+        if (this.getSpeed() != 0.0F && side != null && this.block().isFunctional(this.getState())) {
+            if (EnumFacing.getFacingFromAxis(this.getFlag() ? EnumFacing.AxisDirection.NEGATIVE : EnumFacing.AxisDirection.POSITIVE,
+                    this.block().getTransportAxis(this.getState())) == side) {
+                if (this.getFlag()) {
+                    if (this.left.isEmpty()) {
+                        this.left = stack.copy();
+                        this.leftPosOld = this.leftPos = 0.0;
+                        this.sync();
+                        return ItemStack.EMPTY;
+                    }
+                } else {
+                    if (this.right.isEmpty()) {
+                        this.right = stack.copy();
+                        this.rightPosOld = this.rightPos = 1.0;
+                        this.sync();
+                        return ItemStack.EMPTY;
+                    }
+                }
             }
         }
-        return stack;
+        return this.tryInsertItem(stack);
     }
 
     protected BlockPos getOffsetPosition(BlockPos pos, EnumFacing side) {
         return pos.offset(side);
     }
 
-    public double getTransportPos(float delta) {
-        return MathHelper.clampedLerp(this.transportPosOld, this.transportPos, delta) * 0.5;
+    public double getLeftPos(double delta) {
+        return MathHelper.clampedLerp(this.leftPosOld, this.leftPos, delta) * 0.5 - 0.5;
     }
-    public double getQueuePos(float delta) {
-        return MathHelper.clampedLerp(this.queuePosOld, this.queuePos, delta) * 0.5;
+    public double getRightPos(double delta) {
+        return MathHelper.clampedLerp(this.rightPosOld, this.rightPos, delta) * 0.5;
     }
 
+    //TODO: rewrite this
     private class InventoryManager implements IItemHandler {
         private final EnumFacing side;
         private InventoryManager(@Nullable EnumFacing side) {
@@ -264,32 +330,63 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
         private TileEntityBeltBase self() {
             return TileEntityBeltBase.this;
         }
+        private boolean flag() {
+            return self().getFlag();
+        }
 
         @Override
         public int getSlots() {
-            return 2;
+            return 1;
         }
 
         @Override
         public ItemStack getStackInSlot(int slot) {
-            return slot == 0 ? self().queue : self().transport;
+            if (self().getSpeed() == 0.0F) return ItemStack.EMPTY;
+            return this.flag() ? self().left : self().right;
         }
 
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (slot == 1 || stack.isEmpty() || !self().queue.isEmpty()) return stack;
-            return simulate ? ItemStack.EMPTY : self().tryInsertItem(stack, this.side);
+            if (self().getSpeed() == 0.0F) return stack;
+            if (stack.isEmpty()) return ItemStack.EMPTY;
+            if (this.flag()) {
+                if (self().left.isEmpty()) {
+                    if (simulate) return ItemStack.EMPTY;
+                    self().left = stack.copy();
+                    self().sync();
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if (self().right.isEmpty()) {
+                    if (simulate) return ItemStack.EMPTY;
+                    self().right = stack.copy();
+                    self().sync();
+                    return ItemStack.EMPTY;
+                }
+            }
+            return stack;
         }
 
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (slot == 0 || amount <= 0 || self().transport.isEmpty()) return ItemStack.EMPTY;
-            ItemStack stack = self().transport.copy();
-            ItemStack split = stack.splitStack(amount);
-            if (simulate) return split;
-            self().transport = stack;
-            self().sync();
-            return split;
+            if (self().getSpeed() == 0.0F || amount <= 0) return ItemStack.EMPTY;
+            if (this.flag()) {
+                if (self().right.isEmpty()) return ItemStack.EMPTY;
+                ItemStack copy = self().right.copy();
+                ItemStack ret = copy.splitStack(amount);
+                if (simulate) return ret;
+                self().right = copy;
+                self().sync();
+                return ret;
+            } else {
+                if (self().left.isEmpty()) return ItemStack.EMPTY;
+                ItemStack copy = self().left.copy();
+                ItemStack ret = copy.splitStack(amount);
+                if (simulate) return ret;
+                self().left = copy;
+                self().sync();
+                return ret;
+            }
         }
 
         @Override
