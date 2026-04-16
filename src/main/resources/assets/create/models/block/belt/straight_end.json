@@ -1,0 +1,38 @@
+{
+	"textures": {
+		"belt": "create:block/belt",
+		"particle": "create:block/belt"
+	},
+	"elements": [
+		{
+			"from": [0, 4, 1],
+			"to": [16, 6, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 4, 1]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 16], "rotation": 90, "texture": "#belt"},
+				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#belt"},
+				"up": {"uv": [1, 0, 15, 16], "rotation": 90, "texture": "#belt"}
+			}
+		},
+		{
+			"from": [0, 10, 1],
+			"to": [16, 12, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 10, 1]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 16], "rotation": 90, "texture": "#belt"},
+				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#belt"},
+				"down": {"uv": [1, 0, 15, 16], "rotation": 90, "texture": "#belt"}
+			}
+		},
+		{
+			"from": [14, 6, 1],
+			"to": [16, 10, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [14, 6, 1]},
+			"faces": {
+				"north": {"uv": [0, 6, 1, 10], "texture": "#belt"},
+				"south": {"uv": [15, 6, 16, 10], "texture": "#belt"},
+				"west": {"uv": [1, 6, 15, 10], "texture": "#belt"}
+			}
+		}
+	]
+}

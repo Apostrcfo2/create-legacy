@@ -29,8 +29,11 @@ import java.util.function.Predicate;
 public final class FastStateRendering implements ISelectiveResourceReloadListener {
     public static final FastStateRendering INSTANCE = new FastStateRendering();
 
+    public static void load() {
+
+    }
+
     private final Minecraft minecraft = Minecraft.getMinecraft();
-    private final BlockRendererDispatcher renderer = this.minecraft.getBlockRendererDispatcher();
     private final Tessellator tessellator = Tessellator.getInstance();
     private final Object2IntMap<IBlockState> renderLists = new Object2IntOpenHashMap<>();
 
@@ -39,11 +42,12 @@ public final class FastStateRendering implements ISelectiveResourceReloadListene
     }
 
     public void renderFast(IBlockState state) {
+        BlockRendererDispatcher renderer = this.minecraft.getBlockRendererDispatcher();
         synchronized (this.renderLists) {
             if (!this.renderLists.containsKey(state)) {
                 CreateLegacy.logger.debug("Creating fast model list for {}", state);
                 BufferBuilder buffer = this.tessellator.getBuffer();
-                IBakedModel model = this.renderer.getModelForState(state);
+                IBakedModel model = renderer.getModelForState(state);
 
                 int list = GlStateManager.glGenLists(1);
 
@@ -89,7 +93,6 @@ public final class FastStateRendering implements ISelectiveResourceReloadListene
     @Override
     public void onResourceManagerReload(@Nonnull IResourceManager manager, Predicate<IResourceType> predicate) {
         if (predicate.test(VanillaResourceType.MODELS) || predicate.test(VanillaResourceType.TEXTURES)) {
-            CreateLegacy.logger.debug("Clearing fast model lists");
             this.cleanup();
         }
     }

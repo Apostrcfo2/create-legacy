@@ -6,6 +6,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -85,6 +86,31 @@ public class BlockBeltStraight extends BlockBeltBase {
 
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        return EnumBlockRenderType.MODEL;
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        super.breakBlock(worldIn, pos, state);
+
+        EnumFacing.Axis axis = state.getValue(AXIS);
+        EnumFacing p = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis);
+        EnumFacing n = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axis);
+        EnumBeltPart part = state.getValue(PART);
+
+        if (part != EnumBeltPart.END) {
+            BlockPos off = pos.offset(p);
+            IBlockState old = worldIn.getBlockState(off);
+            if (old.getBlock() == this) {
+                worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+            }
+        }
+        if (part != EnumBeltPart.START) {
+            BlockPos off = pos.offset(n);
+            IBlockState old = worldIn.getBlockState(off);
+            if (old.getBlock() == this) {
+                worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+            }
+        }
     }
 }

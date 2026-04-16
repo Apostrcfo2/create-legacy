@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import nl.melonstudios.create.init.*;
 import nl.melonstudios.create.kinetics.BlockStressValues;
+import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.proxy.CommonProxy;
 import nl.melonstudios.create.recipe.*;
@@ -53,6 +54,8 @@ public class CreateLegacy {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        proxy.clientPreInit(event);
+
         network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
         logger = event.getModLog();
@@ -68,6 +71,8 @@ public class CreateLegacy {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        proxy.clientInit(event);
+
         CreateLegacy.proxy.initiatePonders();
         OreDictInit.scanMetalTypes();
         RecipeInit.init();
@@ -75,6 +80,8 @@ public class CreateLegacy {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        proxy.clientPostInit(event);
+
         proxy.pork();
         BlockStressValues.initialize();
         Contraption.registerValidInventoryClasses();

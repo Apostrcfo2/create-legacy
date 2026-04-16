@@ -27,6 +27,9 @@ public final class ItemInit {
     public static final ItemIngredient INGREDIENT = registerItem(new ItemIngredient());
     public static final ItemGoggles GOGGLES = registerItem(new ItemGoggles());
     public static final ItemSandpaper SANDPAPER = registerItem(new ItemSandpaper());
+    public static final ItemBeltConnector BELT_CONNECTOR = (ItemBeltConnector)
+            registerItem(new ItemBeltConnector()
+            .setRegistryName("belt_connector").setUnlocalizedName("create.belt_connector"));
     public static final ItemTreeFertilizer TREE_FERTILIZER = (ItemTreeFertilizer)
             registerItem(new ItemTreeFertilizer()
             .setRegistryName("tree_fertilizer").setUnlocalizedName("create.tree_fertilizer"));
@@ -52,6 +55,7 @@ public final class ItemInit {
         }
         CreateLegacy.proxy.setItemModel(GOGGLES);
         CreateLegacy.proxy.setItemModel(SANDPAPER);
+        CreateLegacy.proxy.setItemModel(BELT_CONNECTOR);
         CreateLegacy.proxy.setItemModel(TREE_FERTILIZER);
         CreateLegacy.proxy.setItemModel(SUPER_GLUE);
         CreateLegacy.proxy.setItemModel(CRAFTER_COVER);

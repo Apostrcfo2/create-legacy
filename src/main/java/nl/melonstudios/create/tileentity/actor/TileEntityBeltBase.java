@@ -47,9 +47,10 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
 
         this.transportPosOld = this.transportPos;
         this.queuePosOld = this.queuePos;
-        float speed = this.getSpeed() * 0.0625F * -0.05F;
+        float speed = this.getSpeed() * 0.0625F * 0.05F;
         if (speed != 0.0F) {
             EnumFacing.Axis transportAxis = this.block().getTransportAxis(this.getState());
+            if (transportAxis == EnumFacing.Axis.X) speed *= -1;
             EnumFacing positive = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, transportAxis);
             EnumFacing negative = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, transportAxis);
 

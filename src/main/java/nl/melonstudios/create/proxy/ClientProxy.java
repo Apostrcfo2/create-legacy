@@ -22,8 +22,10 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.actor.BlockGauge;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
@@ -31,6 +33,7 @@ import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.entity.RenderContraptionBearing;
 import nl.melonstudios.create.entity.RenderGlue;
 import nl.melonstudios.create.init.SoundInit;
+import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.recipe.client.*;
 import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tesr.actor.*;
@@ -52,6 +55,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@SideOnly(Side.CLIENT)
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
     @Override
@@ -63,6 +67,11 @@ public class ClientProxy extends CommonProxy {
     public void setItemModel(Item item, int meta, String file) {
         ModelLoader.setCustomModelResourceLocation(item, meta,
                 new ModelResourceLocation(new ResourceLocation("create", file), "inventory"));
+    }
+
+    @Override
+    public void clientPreInit(FMLPreInitializationEvent event) {
+        FastStateRendering.load();
     }
 
     @Override

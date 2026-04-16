@@ -48,7 +48,7 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TileEntityOptimizedBase) ((TileEntityOptimizedBase)te).destroy();
-        if (this.hasTileEntity(state)) worldIn.removeTileEntity(pos);
+        if (this.hasTileEntity(state) || te != null) worldIn.removeTileEntity(pos);
     }
 
     @Override
