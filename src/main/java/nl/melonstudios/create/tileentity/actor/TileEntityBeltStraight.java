@@ -1,13 +1,15 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.block.actor.BlockBeltStraight;
 import nl.melonstudios.create.block.state.EnumBeltPart;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.tileentity.marker.IDepot;
 
-public class TileEntityBeltStraight extends TileEntityBeltBase {
+public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot {
     public TileEntityBeltStraight() {
         super();
     }
@@ -40,5 +42,35 @@ public class TileEntityBeltStraight extends TileEntityBeltBase {
             }
         }
         return 0.0F;
+    }
+
+    //TODO: Redo the inventory so this will work
+
+    @Override
+    public ItemStack getPresentedItem() {
+        return this.transport;
+    }
+
+    @Override
+    public void decreasePresentedAndAddOutput(ItemStack output) {
+        this.transport.shrink(1);
+        this.queue = output;
+        this.sync();
+    }
+
+    @Override
+    public double getItemHeight() {
+        return 0.75;
+    }
+
+    @Override
+    public boolean isWool() {
+        return true;
+    }
+
+    @Override
+    public ItemStack takePresented(int count) {
+        this.sync();
+        return this.transport.splitStack(count);
     }
 }

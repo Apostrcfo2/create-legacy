@@ -6,11 +6,16 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.state.EnumBeltPart;
@@ -55,7 +60,7 @@ public class BlockBeltStraight extends BlockBeltBase {
 
     @Override
     public boolean isFunctional(IBlockState state) {
-        return state.getValue(AXIS) != EnumFacing.Axis.Y;
+        return !state.getValue(VERTICAL);
     }
 
     @Override
@@ -90,26 +95,65 @@ public class BlockBeltStraight extends BlockBeltBase {
     }
 
     @Override
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if (!this.isFunctional(state)) return;
+        super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
+
+        if (entityIn.onGround && entityIn.isEntityAlive() && !entityIn.isSneaking() && !(entityIn instanceof EntityItem)) {
+            if (entityIn.posY > 0.7 + pos.getY() && entityIn.posY < 0.8 + pos.getY()) {
+                TileEntity te = worldIn.getTileEntity(pos);
+                if (te instanceof TileEntityBeltBase) {
+                    TileEntityBeltBase belt = (TileEntityBeltBase) te;
+                    double speed = belt.getSpeed() * 0.0625 * 0.025;
+                    if (speed != 0.0) {
+                        EnumFacing.Axis axis = state.getValue(AXIS);
+                        EnumFacing facing = axis == EnumFacing.Axis.X ? EnumFacing.WEST : EnumFacing.SOUTH;
+                        entityIn.move(MoverType.SHULKER_BOX, facing.getFrontOffsetX() * speed, 0.0, facing.getFrontOffsetZ() * speed);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         super.breakBlock(worldIn, pos, state);
 
-        EnumFacing.Axis axis = state.getValue(AXIS);
-        EnumFacing p = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis);
-        EnumFacing n = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axis);
         EnumBeltPart part = state.getValue(PART);
 
-        if (part != EnumBeltPart.END) {
-            BlockPos off = pos.offset(p);
-            IBlockState old = worldIn.getBlockState(off);
-            if (old.getBlock() == this) {
-                worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+        if (state.getValue(VERTICAL)) {
+            if (part != EnumBeltPart.END) {
+                BlockPos off = pos.up();
+                IBlockState old = worldIn.getBlockState(off);
+                if (old.getBlock() == this) {
+                    worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+                }
             }
-        }
-        if (part != EnumBeltPart.START) {
-            BlockPos off = pos.offset(n);
-            IBlockState old = worldIn.getBlockState(off);
-            if (old.getBlock() == this) {
-                worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+            if (part != EnumBeltPart.START) {
+                BlockPos off = pos.down();
+                IBlockState old = worldIn.getBlockState(off);
+                if (old.getBlock() == this) {
+                    worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+                }
+            }
+        } else {
+            EnumFacing.Axis axis = state.getValue(AXIS);
+            EnumFacing p = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis);
+            EnumFacing n = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axis);
+
+            if (part != EnumBeltPart.END) {
+                BlockPos off = pos.offset(p);
+                IBlockState old = worldIn.getBlockState(off);
+                if (old.getBlock() == this) {
+                    worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+                }
+            }
+            if (part != EnumBeltPart.START) {
+                BlockPos off = pos.offset(n);
+                IBlockState old = worldIn.getBlockState(off);
+                if (old.getBlock() == this) {
+                    worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
+                }
             }
         }
     }

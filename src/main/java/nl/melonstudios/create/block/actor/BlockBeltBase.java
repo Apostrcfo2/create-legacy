@@ -14,14 +14,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.block.state.EnumBeltPart;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.actor.TileEntityBeltBase;
+import nl.melonstudios.create.util.BlockProperties;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -33,6 +36,11 @@ public abstract class BlockBeltBase extends BlockKineticBase implements ITileEnt
     public BlockBeltBase() {
         super(Material.ROCK, MapColor.BLACK);
         this.blockSoundType = SoundType.CLOTH;
+
+        this.blockHardness = BlockProperties.WOOL_HARDNESS;
+        this.blockResistance = BlockProperties.WOOL_RESISTANCE;
+
+        this.setHarvestLevel(null, -1);
     }
 
     @Override
@@ -60,8 +68,39 @@ public abstract class BlockBeltBase extends BlockKineticBase implements ITileEnt
     }
 
     @Override
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+        return new ItemStack(ItemInit.BELT_CONNECTOR);
+    }
+
+    @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(ItemInit.BELT_CONNECTOR);
+    }
+
+    @Override
+    protected ItemStack getSilkTouchDrop(IBlockState state) {
+        return new ItemStack(ItemInit.BELT_CONNECTOR);
+    }
+
+    @Override
+    public boolean isToolEffective(String type, IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public String getHarvestTool(IBlockState state) {
+        return null;
+    }
+
+    @Override
+    public int getHarvestLevel(IBlockState state) {
+        return -1;
     }
 
     @Override

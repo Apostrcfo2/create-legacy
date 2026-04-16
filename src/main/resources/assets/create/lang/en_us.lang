@@ -56,6 +56,7 @@ tile.create.blaze_burner.name=Blaze Burner
 tile.create.depot.name=Depot
 tile.create.basin.name=Basin
 tile.create.chute.name=Chute
+tile.create.belt.name=Mechanical Belt
 
 tile.create.item_drain.name=Item Drain
 
@@ -156,6 +157,7 @@ item.create.blazecake.name=Blazecake
 
 item.create.goggles.name=Engineer's Goggles
 item.create.sandpaper.name=Sandpaper
+item.create.belt_connector.name=Mechanical Belt
 item.create.tree_fertilizer.name=Tree Fertilizer
 item.create.superglue.name=Super Glue
 item.create.superglue.desc1=R-Click to apply Glue to surface

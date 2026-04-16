@@ -16,6 +16,9 @@ public class BlockProperties {
     public static final float IRON_HARDNESS = 5.0F;
     public static final float IRON_RESISTANCE = 6.0F;
 
+    public static final float WOOL_HARDNESS = 0.8F;
+    public static final float WOOL_RESISTANCE = 4.0F;
+
     public static final AxisAlignedBB SHAFT_X_AABB = AABB.create(0, 5, 5, 16, 11, 11);
     public static final AxisAlignedBB SHAFT_Y_AABB = AABB.create(5, 0, 5, 11, 16, 11);
     public static final AxisAlignedBB SHAFT_Z_AABB = AABB.create(5, 5, 0, 11, 11, 16);

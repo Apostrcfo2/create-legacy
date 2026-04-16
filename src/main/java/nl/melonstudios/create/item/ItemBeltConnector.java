@@ -4,14 +4,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
@@ -45,6 +43,7 @@ public class ItemBeltConnector extends Item {
         if (nbt != null && nbt.hasKey("LastPos", 10)) {
             BlockPos last = NBTUtil.getPosFromTag(nbt.getCompoundTag("LastPos"));
             nbt.removeTag("LastPos");
+            if (nbt.getSize() == 0) stack.setTagCompound(null);
 
             IBlockState shaftFrom = worldIn.getBlockState(last);
             IBlockState shaftTo = worldIn.getBlockState(pos);
@@ -68,20 +67,28 @@ public class ItemBeltConnector extends Item {
                 if (shaftFrom.getValue(BlockShaft.AXIS) != EnumFacing.Axis.Z) {
                     return this.failed(player, "Invalid shaft orientation", !worldIn.isRemote);
                 }
-                final BlockPos from = last.getX() < pos.getX() ? last : pos;
-                final BlockPos to = pos.getX() < last.getX() ? last : pos;
-                IBlockState state = BlockInit.BELT_STRAIGHT.getDefaultState()
-                        .withProperty(BlockBeltStraight.AXIS, EnumFacing.Axis.X)
-                        .withProperty(BlockBeltStraight.VERTICAL, false)
-                        .withProperty(BlockBeltStraight.PART, EnumBeltPart.MIDDLE);
-                for (BlockPos bp : BlockPos.getAllInBox(from, to)) {
-                    final IBlockState placed;
-                    if (from.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.START);
-                    else if (to.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.END);
-                    else if (worldIn.getBlockState(bp) == shaftFrom) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.PULLEY);
-                    else placed = state;
+                if (!worldIn.isRemote) {
+                    final BlockPos from = last.getX() < pos.getX() ? last : pos;
+                    final BlockPos to = pos.getX() < last.getX() ? last : pos;
+                    IBlockState state = BlockInit.BELT_STRAIGHT.getDefaultState()
+                            .withProperty(BlockBeltStraight.AXIS, EnumFacing.Axis.X)
+                            .withProperty(BlockBeltStraight.VERTICAL, false)
+                            .withProperty(BlockBeltStraight.PART, EnumBeltPart.MIDDLE);
+                    for (BlockPos bp : BlockPos.getAllInBox(from, to)) {
+                        final IBlockState placed;
+                        if (from.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.START);
+                        else if (to.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.END);
+                        else if (worldIn.getBlockState(bp) == shaftFrom)
+                            placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.PULLEY);
+                        else placed = state;
 
-                    worldIn.setBlockState(bp, placed);
+                        worldIn.setBlockState(bp, placed);
+                    }
+                    if (!player.isCreative()) stack.shrink(1);
+                    worldIn.playSound(null, pos,
+                            SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS,
+                            1.0F, 0.9F + worldIn.rand.nextFloat() * 0.2F
+                    );
                 }
                 return EnumActionResult.SUCCESS;
             }
@@ -89,20 +96,28 @@ public class ItemBeltConnector extends Item {
                 if (shaftFrom.getValue(BlockShaft.AXIS) != EnumFacing.Axis.X) {
                     return this.failed(player, "Invalid shaft orientation", !worldIn.isRemote);
                 }
-                final BlockPos from = last.getZ() < pos.getZ() ? last : pos;
-                final BlockPos to = pos.getZ() < last.getZ() ? last : pos;
-                IBlockState state = BlockInit.BELT_STRAIGHT.getDefaultState()
-                        .withProperty(BlockBeltStraight.AXIS, EnumFacing.Axis.Z)
-                        .withProperty(BlockBeltStraight.VERTICAL, false)
-                        .withProperty(BlockBeltStraight.PART, EnumBeltPart.MIDDLE);
-                for (BlockPos bp : BlockPos.getAllInBox(from, to)) {
-                    final IBlockState placed;
-                    if (from.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.START);
-                    else if (to.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.END);
-                    else if (worldIn.getBlockState(bp) == shaftFrom) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.PULLEY);
-                    else placed = state;
+                if (!worldIn.isRemote) {
+                    final BlockPos from = last.getZ() < pos.getZ() ? last : pos;
+                    final BlockPos to = pos.getZ() < last.getZ() ? last : pos;
+                    IBlockState state = BlockInit.BELT_STRAIGHT.getDefaultState()
+                            .withProperty(BlockBeltStraight.AXIS, EnumFacing.Axis.Z)
+                            .withProperty(BlockBeltStraight.VERTICAL, false)
+                            .withProperty(BlockBeltStraight.PART, EnumBeltPart.MIDDLE);
+                    for (BlockPos bp : BlockPos.getAllInBox(from, to)) {
+                        final IBlockState placed;
+                        if (from.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.START);
+                        else if (to.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.END);
+                        else if (worldIn.getBlockState(bp) == shaftFrom)
+                            placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.PULLEY);
+                        else placed = state;
 
-                    worldIn.setBlockState(bp, placed);
+                        worldIn.setBlockState(bp, placed);
+                    }
+                    if (!player.isCreative()) stack.shrink(1);
+                    worldIn.playSound(null, pos,
+                            SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS,
+                            1.0F, 0.9F + worldIn.rand.nextFloat() * 0.2F
+                    );
                 }
                 return EnumActionResult.SUCCESS;
             }
@@ -110,20 +125,28 @@ public class ItemBeltConnector extends Item {
                 if (shaftFrom.getValue(BlockShaft.AXIS) == EnumFacing.Axis.Y) {
                     return this.failed(player, "Invalid shaft orientation", !worldIn.isRemote);
                 }
-                final BlockPos from = last.getY() < pos.getY() ? last : pos;
-                final BlockPos to = pos.getY() < last.getY() ? last : pos;
-                IBlockState state = BlockInit.BELT_STRAIGHT.getDefaultState()
-                        .withProperty(BlockBeltStraight.AXIS, shaftFrom.getValue(BlockShaft.AXIS) == EnumFacing.Axis.X ? EnumFacing.Axis.Z : EnumFacing.Axis.X)
-                        .withProperty(BlockBeltStraight.VERTICAL, true)
-                        .withProperty(BlockBeltStraight.PART, EnumBeltPart.MIDDLE);
-                for (BlockPos bp : BlockPos.getAllInBox(from, to)) {
-                    final IBlockState placed;
-                    if (from.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.START);
-                    else if (to.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.END);
-                    else if (worldIn.getBlockState(bp) == shaftFrom) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.PULLEY);
-                    else placed = state;
+                if (!worldIn.isRemote) {
+                    final BlockPos from = last.getY() < pos.getY() ? last : pos;
+                    final BlockPos to = pos.getY() < last.getY() ? last : pos;
+                    IBlockState state = BlockInit.BELT_STRAIGHT.getDefaultState()
+                            .withProperty(BlockBeltStraight.AXIS, shaftFrom.getValue(BlockShaft.AXIS) == EnumFacing.Axis.X ? EnumFacing.Axis.Z : EnumFacing.Axis.X)
+                            .withProperty(BlockBeltStraight.VERTICAL, true)
+                            .withProperty(BlockBeltStraight.PART, EnumBeltPart.MIDDLE);
+                    for (BlockPos bp : BlockPos.getAllInBox(from, to)) {
+                        final IBlockState placed;
+                        if (from.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.START);
+                        else if (to.equals(bp)) placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.END);
+                        else if (worldIn.getBlockState(bp) == shaftFrom)
+                            placed = state.withProperty(BlockBeltStraight.PART, EnumBeltPart.PULLEY);
+                        else placed = state;
 
-                    worldIn.setBlockState(bp, placed);
+                        worldIn.setBlockState(bp, placed);
+                    }
+                    if (!player.isCreative()) stack.shrink(1);
+                    worldIn.playSound(null, pos,
+                            SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS,
+                            1.0F, 0.9F + worldIn.rand.nextFloat() * 0.2F
+                    );
                 }
                 return EnumActionResult.SUCCESS;
             }
@@ -131,6 +154,12 @@ public class ItemBeltConnector extends Item {
         } else {
             stack.setTagCompound(nbt != null ? nbt : new NBTTagCompound());
             stack.getTagCompound().setTag("LastPos", NBTUtil.createPosTag(pos));
+            if (!worldIn.isRemote) {
+                worldIn.playSound(null, pos,
+                        SoundEvents.BLOCK_CLOTH_PLACE, SoundCategory.BLOCKS,
+                        1.0F, 0.9F + worldIn.rand.nextFloat() * 0.2F
+                );
+            }
         }
         return EnumActionResult.SUCCESS;
     }

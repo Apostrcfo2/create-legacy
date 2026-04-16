@@ -108,6 +108,8 @@ public class CreateLegacyEventHandler {
             map.registerSprite(new ResourceLocation("create:fluid/chocolate_flowing"));
             map.registerSprite(new ResourceLocation("create:fluid/tea_still"));
             map.registerSprite(new ResourceLocation("create:fluid/tea_flowing"));
+            CreateLegacy.logger.info("Adding scrolling belt textures to texture atlas");
+            map.registerSprite(new ResourceLocation("create:block/belt_scroll"));
         }
     }
 
