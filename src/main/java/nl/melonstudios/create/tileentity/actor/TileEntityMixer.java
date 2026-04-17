@@ -39,7 +39,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         TileEntityBasin basin = this.getBasin();
         if (basin == null) this.currentRecipe = null;
         if (this.currentRecipe != null) {
-            MixingRecipe recipe = RecipeInit.getMixingRecipes().getRecipe(this.currentRecipe);
+            MixingRecipe recipe = RecipeInit.getMixingRecipes(this.world.isRemote).getRecipe(this.currentRecipe);
             if (recipe == null || !recipe.matches(basin)) {
                 this.currentRecipe = null;
                 this.sync();
@@ -74,7 +74,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         }
     }
     private void searchRecipe(TileEntityBasin basin) {
-        this.currentRecipe = MixingRecipes.getRecipeForInput(basin);
+        this.currentRecipe = MixingRecipes.getRecipeForInput(basin, this.world.isRemote);
     }
 
     private void recipeFX(TileEntityBasin basin, double x, double y, double z) {
@@ -95,7 +95,7 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
     }
     @Nullable
     public MixingRecipe getRecipe() {
-        return RecipeInit.getMixingRecipes().getRecipe(this.currentRecipe);
+        return RecipeInit.getMixingRecipes(this.world.isRemote).getRecipe(this.currentRecipe);
     }
 
     @Override

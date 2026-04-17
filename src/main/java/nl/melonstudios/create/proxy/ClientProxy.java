@@ -38,14 +38,12 @@ import nl.melonstudios.create.recipe.client.*;
 import nl.melonstudios.create.tesr.*;
 import nl.melonstudios.create.tesr.actor.*;
 import nl.melonstudios.create.tesr.generator.TESRBearingWindmill;
+import nl.melonstudios.create.tesr.generator.TESRCreativeMotor;
 import nl.melonstudios.create.tesr.generator.TESRHandCrank;
 import nl.melonstudios.create.tesr.generator.TESRWaterWheel;
 import nl.melonstudios.create.tileentity.*;
 import nl.melonstudios.create.tileentity.actor.*;
-import nl.melonstudios.create.tileentity.generator.TileEntityBearingWindmill;
-import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
-import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
-import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
+import nl.melonstudios.create.tileentity.generator.*;
 import nl.melonstudios.ponder.PonderRegistry;
 
 import javax.annotation.Nullable;
@@ -84,6 +82,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityHandCrank.class, "hand_crank", new TESRHandCrank());
         this.registerTESR(TileEntityWaterWheel.class, "water_wheel", new TESRWaterWheel());
         this.registerTESR(TileEntityWaterWheelTemp.class, "water_wheel_temp", null);
+        this.registerTESR(TileEntityCreativeMotor.class, "creative_motor", new TESRCreativeMotor());
         this.registerTESR(TileEntityTurntable.class, "turntable", new TESRTurntable());
         this.registerTESR(TileEntityBearing.class, "bearing", new TESRBearing<>());
         this.registerTESR(TileEntityBearingWindmill.class, "bearing_windmill", new TESRBearingWindmill<>());

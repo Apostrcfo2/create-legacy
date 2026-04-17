@@ -10,6 +10,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.block.BlockKineticBase;
 import nl.melonstudios.create.block.state.EnumBeltPart;
 import nl.melonstudios.create.init.ItemInit;
@@ -34,6 +37,24 @@ import java.util.Random;
 @SuppressWarnings("deprecation")
 public abstract class BlockBeltBase extends BlockKineticBase implements ITileEntityProvider {
     public static final PropertyEnum<EnumBeltPart> PART = PropertyEnum.create("part", EnumBeltPart.class);
+    private static final String[] dyes = {
+            "dyeBlack",
+            "dyeRed",
+            "dyeGreen",
+            "dyeBrown",
+            "dyeBlue",
+            "dyePurple",
+            "dyeCyan",
+            "dyeLightGray",
+            "dyeGray",
+            "dyePink",
+            "dyeLime",
+            "dyeYellow",
+            "dyeLightBlue",
+            "dyeMagenta",
+            "dyeOrange",
+            "dyeWhite"
+    };
 
     public BlockBeltBase() {
         super(Material.ROCK, MapColor.BLACK);
@@ -140,11 +161,12 @@ public abstract class BlockBeltBase extends BlockKineticBase implements ITileEnt
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (facing == EnumFacing.UP) {
-            TileEntity te = worldIn.getTileEntity(pos);
-            if (te instanceof TileEntityBeltBase) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof TileEntityBeltBase) {
+            TileEntityBeltBase belt = (TileEntityBeltBase) te;
+            ItemStack held = playerIn.getHeldItem(hand);
+            if (facing == EnumFacing.UP && held.isEmpty()) {
                 if (!worldIn.isRemote) {
-                    TileEntityBeltBase belt = (TileEntityBeltBase) te;
                     if (!belt.left.isEmpty()) {
                         ItemStack stack = belt.left.copy();
                         belt.left = ItemStack.EMPTY;
@@ -165,6 +187,22 @@ public abstract class BlockBeltBase extends BlockKineticBase implements ITileEnt
                     }
                 }
                 return true;
+            } else {
+                if (!held.isEmpty() && hand == EnumHand.MAIN_HAND) {
+                    if (held.getItem() == Items.WATER_BUCKET) {
+                        if (!worldIn.isRemote) belt.applyColor(null);
+                        return true;
+                    } else {
+                        for (int i = 0; i < 16; i++) {
+                            EnumDyeColor color = EnumDyeColor.byMetadata(i);
+                            String ore = dyes[15 - i];
+                            if (OreDictionary.getOres(ore).stream().anyMatch(prd -> prd.isItemEqual(held))) {
+                                if (!worldIn.isRemote) belt.applyColor(color);
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
         }
         return false;

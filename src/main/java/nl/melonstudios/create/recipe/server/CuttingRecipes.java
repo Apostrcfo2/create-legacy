@@ -80,8 +80,8 @@ public class CuttingRecipes implements ISyncedRecipeType<CuttingRecipe> {
         }
     }
 
-    public static String getRecipeForInput(ItemStack input, @Nullable IItemFilter recipeFilter) {
-        IRecipeAccessor<CuttingRecipe> accessor = RecipeInit.getCuttingRecipes();
+    public static String getRecipeForInput(ItemStack input, @Nullable IItemFilter recipeFilter, boolean client) {
+        IRecipeAccessor<CuttingRecipe> accessor = RecipeInit.getCuttingRecipes(client);
         List<String> candidates = new ArrayList<>();
         for (String recipeID : accessor.getAllRecipeIDs()) {
             CuttingRecipe recipe = accessor.getRecipe(recipeID);

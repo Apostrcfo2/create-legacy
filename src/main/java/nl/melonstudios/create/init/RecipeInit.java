@@ -661,19 +661,19 @@ public final class RecipeInit {
         throw new AssertionError("no");
     }
 
-    public static IRecipeAccessor<PressingRecipe> getPressingRecipes() {
-        return RecipeRegistry.getRecipeAccessor("create:pressing");
+    public static IRecipeAccessor<PressingRecipe> getPressingRecipes(boolean client) {
+        return client ? RecipeRegistry.getRecipeAccessor("create:pressing") : RecipeRegistry.getRecipeType("create:pressing");
     }
-    public static IRecipeAccessor<CuttingRecipe> getCuttingRecipes() {
-        return MelonLib.proxy.getRecipeAccessor("create:cutting");
+    public static IRecipeAccessor<CuttingRecipe> getCuttingRecipes(boolean client) {
+        return client ? RecipeRegistry.getRecipeAccessor("create:cutting") : RecipeRegistry.getRecipeType("create:cutting");
     }
-    public static IRecipeAccessor<MixingRecipe> getMixingRecipes() {
-        return RecipeRegistry.getRecipeAccessor("create:mixing");
+    public static IRecipeAccessor<MixingRecipe> getMixingRecipes(boolean client) {
+        return client ? RecipeRegistry.getRecipeAccessor("create:mixing") : RecipeRegistry.getRecipeType("create:mixing");
     }
-    public static IRecipeAccessor<DeployerRecipe> getDeployerRecipes() {
-        return MelonLib.proxy.getRecipeAccessor("create:deploying");
+    public static IRecipeAccessor<DeployerRecipe> getDeployerRecipes(boolean client) {
+        return client ? RecipeRegistry.getRecipeAccessor("create:deploying") : RecipeRegistry.getRecipeType("create:deploying");
     }
-    public static IRecipeAccessor<SequenceRecipe> getSequenceRecipes() {
-        return MelonLib.proxy.getRecipeAccessor("create:sequence");
+    public static IRecipeAccessor<SequenceRecipe> getSequenceRecipes(boolean client) {
+        return client ? RecipeRegistry.getRecipeAccessor("create:sequence") : RecipeRegistry.getRecipeType("create:sequence");
     }
 }

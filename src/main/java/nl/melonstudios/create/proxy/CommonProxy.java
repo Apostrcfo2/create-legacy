@@ -18,10 +18,7 @@ import nl.melonstudios.create.recipe.server.MixingRecipes;
 import nl.melonstudios.create.recipe.server.PressingRecipes;
 import nl.melonstudios.create.tileentity.*;
 import nl.melonstudios.create.tileentity.actor.*;
-import nl.melonstudios.create.tileentity.generator.TileEntityBearingWindmill;
-import nl.melonstudios.create.tileentity.generator.TileEntityHandCrank;
-import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheel;
-import nl.melonstudios.create.tileentity.generator.TileEntityWaterWheelTemp;
+import nl.melonstudios.create.tileentity.generator.*;
 
 public class CommonProxy {
     public Side getSide() {
@@ -62,6 +59,7 @@ public class CommonProxy {
         this.registerTE(TileEntityHandCrank.class, "hand_crank");
         this.registerTE(TileEntityWaterWheel.class, "water_wheel");
         this.registerTE(TileEntityWaterWheelTemp.class, "water_wheel_temp");
+        this.registerTE(TileEntityCreativeMotor.class, "creative_motor");
         this.registerTE(TileEntityTurntable.class, "turntable");
         this.registerTE(TileEntityBearing.class, "bearing");
         this.registerTE(TileEntityBearingWindmill.class, "bearing_windmill");

@@ -3,16 +3,16 @@ package nl.melonstudios.create.tileentity.actor;
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.block.actor.BlockBeltStraight;
 import nl.melonstudios.create.block.state.EnumBeltPart;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.IDepot;
+import nl.melonstudios.create.tileentity.marker.IHaltBeltContents;
 
 public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot {
-    public Boolean lastRotatory = null;
-
     public TileEntityBeltStraight() {
         super();
     }
@@ -57,6 +57,22 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
         return this.getState().getValue(BlockBeltStraight.AXIS) == EnumFacing.Axis.X;
     }
 
+    protected final BlockPos.MutableBlockPos actorPos = new BlockPos.MutableBlockPos();
+    protected TileEntity actor = null;
+    @Override
+    protected boolean allowItemToPass(ItemStack stack) {
+        if (this.actor == null || this.actor.isInvalid() || !this.actorPos.equals(this.actor.getPos())) {
+            this.actorPos.setPos(this.pos.getX(), this.pos.getY() + 2, this.pos.getZ());
+            this.actor = this.world.getTileEntity(this.actorPos);
+            if (!this.world.isBlockLoaded(this.actorPos, false)) return false;
+        }
+        if (this.actor instanceof IHaltBeltContents) {
+            IHaltBeltContents halt = (IHaltBeltContents) this.actor;
+            return !halt.shouldHaltItem(stack);
+        }
+        return true;
+    }
+
     //TODO: Redo the inventory so this will work
 
     @Override
@@ -72,6 +88,13 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
             this.left.shrink(1);
             if (this.right.isEmpty()) this.right = output.copy();
             else if (ItemStack.areItemsEqual(this.right, output) && ItemStack.areItemStackTagsEqual(this.right, output)) this.right.grow(output.getCount());
+            else StackUtil.spawnItemWithVelocity(this.world,
+                        this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
+                        output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
+        } else {
+            this.right.shrink(1);
+            if (this.left.isEmpty()) this.left = output.copy();
+            else if (ItemStack.areItemsEqual(this.left, output) && ItemStack.areItemStackTagsEqual(this.left, output)) this.left.grow(output.getCount());
             else StackUtil.spawnItemWithVelocity(this.world,
                         this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
                         output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());

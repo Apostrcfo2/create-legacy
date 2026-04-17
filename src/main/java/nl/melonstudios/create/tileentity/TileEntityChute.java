@@ -11,13 +11,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class TileEntityChute extends TileEntityOptimizedBase implements IItemHandler {
+public class TileEntityChute extends TileEntityOptimizedBase implements IItemHandler, ITopOpenInventory {
     public float randomizedItemRotation;
     public TileEntityChute() {
         super();
@@ -197,5 +198,23 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IItemHan
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public ItemStack tryInsertItem(ItemStack stack) {
+        if (this.stack.isEmpty()) {
+            this.stack = stack.splitStack(16);
+            this.sync();
+            return stack.isEmpty() ? ItemStack.EMPTY : stack;
+        } else if (ItemStack.areItemsEqual(this.stack, stack) && ItemStack.areItemStackTagsEqual(this.stack, stack)) {
+            int space = this.getSlotLimit(16) - this.stack.getCount();
+            if (space > 0) {
+                int rem = Math.min(space, stack.getCount());
+                stack.shrink(rem);
+                this.stack.grow(rem);
+                this.sync();
+                return stack.isEmpty() ? ItemStack.EMPTY : stack;
+            } else return stack;
+        } else return stack;
     }
 }

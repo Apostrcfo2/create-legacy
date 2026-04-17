@@ -106,126 +106,128 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                     if (facing == EnumFacing.DOWN && depot != null) {
                         if (!this.world.isRemote && !this.heldItem.isEmpty()) {
                             ItemStack in = depot.getPresentedItem();
-                            recipes:
-                            {
+                            if (!in.isEmpty()) {
+                                recipes:
                                 {
-                                    DeployerRecipe recipe = DeployerRecipes.instance.getRecipeForInput(in, this.heldItem);
-                                    if (recipe != null) {
-                                        ItemStack out = recipe.result.copy();
-                                        depot.decreasePresentedAndAddOutput(out);
-                                        switch (recipe.inputType) {
-                                            case CONSUME:
-                                                this.heldItem.shrink(1);
-                                                break;
-                                            case DAMAGE:
-                                                this.heldItem.damageItem(1, this.player);
-                                                if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
-                                                    this.heldItem = ItemStack.EMPTY;
-                                                }
-                                                break;
-                                        }
-                                        if (recipe.inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
-                                            this.world.playSound(null,
-                                                    use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                    SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                            );
-                                        } else {
-                                            this.world.playSound(null,
-                                                    use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                    SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                            );
-                                        }
-                                        if (this.heldItem.isEmpty()) {
-                                            this.world.playSound(null,
-                                                    use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                    SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                            );
-                                        }
-                                        break recipes;
-                                    }
-                                }
-                                {
-                                    String recipeID = SequencedRecipes.getRecipeForInput(in);
-                                    SequenceRecipe recipe = recipeID != null ? RecipeInit.getSequenceRecipes().getRecipe(recipeID) : null;
-                                    if (recipe != null) {
-                                        SequenceStep first = recipe.getFirstStep();
-                                        if ("deploying".equals(first.name)) {
-                                            Ingredient applied = Ingredient.read(first.data.getCompoundTag("Applied"));
-                                            if (applied.matches(this.heldItem)) {
-                                                DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(first.data.getString("inputType"));
-                                                ItemStack processing = recipe.processing.copy();
-                                                SequenceRecipe.initialize(processing, recipeID);
-                                                processing = SequenceRecipe.advance(processing);
-                                                depot.decreasePresentedAndAddOutput(processing);
-                                                switch (inputType) {
-                                                    case CONSUME:
-                                                        this.heldItem.shrink(1);
-                                                        break;
-                                                    case DAMAGE:
-                                                        this.heldItem.damageItem(1, this.player);
-                                                        if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
-                                                            this.heldItem = ItemStack.EMPTY;
-                                                        }
-                                                        break;
-                                                }
-                                                if (inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
-                                                    this.world.playSound(null,
-                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                            SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                                    );
-                                                } else {
-                                                    this.world.playSound(null,
-                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                            SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                                    );
-                                                }
-                                                if (this.heldItem.isEmpty()) {
-                                                    this.world.playSound(null,
-                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                            SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                                    );
-                                                }
+                                    {
+                                        DeployerRecipe recipe = DeployerRecipes.instance.getRecipeForInput(in, this.heldItem);
+                                        if (recipe != null) {
+                                            ItemStack out = recipe.result.copy();
+                                            depot.decreasePresentedAndAddOutput(out);
+                                            switch (recipe.inputType) {
+                                                case CONSUME:
+                                                    this.heldItem.shrink(1);
+                                                    break;
+                                                case DAMAGE:
+                                                    this.heldItem.damageItem(1, this.player);
+                                                    if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                                        this.heldItem = ItemStack.EMPTY;
+                                                    }
+                                                    break;
+                                            }
+                                            if (recipe.inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                                this.world.playSound(null,
+                                                        use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                        SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                );
+                                            } else {
+                                                this.world.playSound(null,
+                                                        use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                        SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                );
+                                            }
+                                            if (this.heldItem.isEmpty()) {
+                                                this.world.playSound(null,
+                                                        use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                        SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                );
                                             }
                                             break recipes;
                                         }
                                     }
-                                }
-                                {
-                                    if (SequenceRecipe.isInSequence(in)) {
-                                        SequenceStep next = SequenceRecipe.getNextStep(in);
-                                        if ("deploying".equals(next.name)) {
-                                            Ingredient applied = Ingredient.read(next.data.getCompoundTag("Applied"));
-                                            if (applied.matches(this.heldItem)) {
-                                                DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(next.data.getString("inputType"));
-                                                in = SequenceRecipe.advance(in).copy();
-                                                depot.decreasePresentedAndAddOutput(in);
-                                                switch (inputType) {
-                                                    case CONSUME:
-                                                        this.heldItem.shrink(1);
-                                                        break;
-                                                    case DAMAGE:
-                                                        this.heldItem.damageItem(1, this.player);
-                                                        if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
-                                                            this.heldItem = ItemStack.EMPTY;
-                                                        }
-                                                        break;
+                                    {
+                                        String recipeID = SequencedRecipes.getRecipeForInput(in, this.world.isRemote);
+                                        SequenceRecipe recipe = recipeID != null ? RecipeInit.getSequenceRecipes(this.world.isRemote).getRecipe(recipeID) : null;
+                                        if (recipe != null) {
+                                            SequenceStep first = recipe.getFirstStep();
+                                            if ("deploying".equals(first.name)) {
+                                                Ingredient applied = Ingredient.read(first.data.getCompoundTag("Applied"));
+                                                if (applied.matches(this.heldItem)) {
+                                                    DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(first.data.getString("inputType"));
+                                                    ItemStack processing = recipe.processing.copy();
+                                                    SequenceRecipe.initialize(processing, recipeID);
+                                                    processing = SequenceRecipe.advance(processing);
+                                                    depot.decreasePresentedAndAddOutput(processing);
+                                                    switch (inputType) {
+                                                        case CONSUME:
+                                                            this.heldItem.shrink(1);
+                                                            break;
+                                                        case DAMAGE:
+                                                            this.heldItem.damageItem(1, this.player);
+                                                            if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                                                this.heldItem = ItemStack.EMPTY;
+                                                            }
+                                                            break;
+                                                    }
+                                                    if (inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                                        this.world.playSound(null,
+                                                                use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                                SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                        );
+                                                    } else {
+                                                        this.world.playSound(null,
+                                                                use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                                SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                        );
+                                                    }
+                                                    if (this.heldItem.isEmpty()) {
+                                                        this.world.playSound(null,
+                                                                use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                                SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                        );
+                                                    }
                                                 }
-                                                if (inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
-                                                    this.world.playSound(null,
-                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                            SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                                    );
-                                                } else {
-                                                    this.world.playSound(null,
-                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                            SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                                    );
-                                                }
-                                                if (this.heldItem.isEmpty()) {
-                                                    this.world.playSound(null,
-                                                            use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
-                                                            SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
-                                                    );
+                                                break recipes;
+                                            }
+                                        }
+                                    }
+                                    {
+                                        if (SequenceRecipe.isInSequence(in)) {
+                                            SequenceStep next = SequenceRecipe.getNextStep(in);
+                                            if ("deploying".equals(next.name)) {
+                                                Ingredient applied = Ingredient.read(next.data.getCompoundTag("Applied"));
+                                                if (applied.matches(this.heldItem)) {
+                                                    DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(next.data.getString("inputType"));
+                                                    in = SequenceRecipe.advance(in).copy();
+                                                    depot.decreasePresentedAndAddOutput(in);
+                                                    switch (inputType) {
+                                                        case CONSUME:
+                                                            this.heldItem.shrink(1);
+                                                            break;
+                                                        case DAMAGE:
+                                                            this.heldItem.damageItem(1, this.player);
+                                                            if (this.heldItem.getItemDamage() >= this.heldItem.getMaxDamage()) {
+                                                                this.heldItem = ItemStack.EMPTY;
+                                                            }
+                                                            break;
+                                                    }
+                                                    if (inputType != DeployerRecipe.InputType.CONSUME && this.heldItem.getItem() instanceof ItemSandpaper) {
+                                                        this.world.playSound(null,
+                                                                use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                                SoundInit.item_sandpaper_used, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                        );
+                                                    } else {
+                                                        this.world.playSound(null,
+                                                                use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                                SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                        );
+                                                    }
+                                                    if (this.heldItem.isEmpty()) {
+                                                        this.world.playSound(null,
+                                                                use.getX() + 0.5F, use.getY() + depot.getItemHeight(), use.getZ() + 0.5F,
+                                                                SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F
+                                                        );
+                                                    }
                                                 }
                                             }
                                         }

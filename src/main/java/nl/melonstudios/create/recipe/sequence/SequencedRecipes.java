@@ -47,8 +47,8 @@ public class SequencedRecipes implements ISyncedRecipeType<SequenceRecipe> {
         throw new RecipeException("Sequenced recipes do not support universal recipes");
     }
 
-    public static String getRecipeForInput(ItemStack stack) {
-        IRecipeAccessor<SequenceRecipe> accessor = RecipeInit.getSequenceRecipes();
+    public static String getRecipeForInput(ItemStack stack, boolean client) {
+        IRecipeAccessor<SequenceRecipe> accessor = RecipeInit.getSequenceRecipes(client);
         for (String recipeID : accessor.getAllRecipeIDs()) {
             SequenceRecipe recipe = accessor.getRecipe(recipeID);
             if (recipe == null) continue;

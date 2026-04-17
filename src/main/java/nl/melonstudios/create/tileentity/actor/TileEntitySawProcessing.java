@@ -178,7 +178,7 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
     public void setCurrentlyProcessing(ItemStack stack) {
         this.currentlyProcessing = stack;
-        this.currentRecipeID = CuttingRecipes.getRecipeForInput(this.currentlyProcessing, this.recipeFilter);
+        this.currentRecipeID = CuttingRecipes.getRecipeForInput(this.currentlyProcessing, this.recipeFilter, this.world.isRemote);
         this.currentRecipe = this.currentRecipeID != null ? CuttingRecipes.instance.getRecipe(this.currentRecipeID) : null;
         this.progress = 0;
         this.sync();

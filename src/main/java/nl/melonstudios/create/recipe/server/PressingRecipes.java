@@ -42,8 +42,8 @@ public class PressingRecipes implements ISyncedRecipeType<PressingRecipe> {
         this.addRecipe(recipeID, new PressingRecipe(input, result));
     }
 
-    public static PressingRecipe getRecipeForInput(ItemStack input) {
-        IRecipeAccessor<PressingRecipe> accessor = RecipeInit.getPressingRecipes();
+    public static PressingRecipe getRecipeForInput(ItemStack input, boolean client) {
+        IRecipeAccessor<PressingRecipe> accessor = RecipeInit.getPressingRecipes(client);
 
         for (String recipeID : accessor.getAllRecipeIDs()) {
             PressingRecipe recipe = accessor.getRecipe(recipeID);

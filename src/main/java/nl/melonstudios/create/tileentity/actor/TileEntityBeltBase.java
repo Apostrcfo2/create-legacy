@@ -2,6 +2,7 @@ package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.block.actor.BlockBeltBase;
+import nl.melonstudios.create.block.actor.BlockBeltStraight;
 import nl.melonstudios.create.block.state.EnumBeltPart;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -20,6 +22,59 @@ import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import javax.annotation.Nullable;
 
 public abstract class TileEntityBeltBase extends TileEntityKinetic implements ITopOpenInventory {
+    public EnumDyeColor color = null;
+
+    public void applyColor(@Nullable EnumDyeColor color) {
+        this.applyColorInternal(color, this.pos);
+    }
+
+    private void applyColorInternal(@Nullable EnumDyeColor color, BlockPos src) {
+        this.color = color;
+        this.sync();
+        EnumBeltPart part = this.getState().getValue(BlockBeltBase.PART);
+        if (this.block() instanceof BlockBeltStraight && this.getState().getValue(BlockBeltStraight.VERTICAL)) {
+            if (part != EnumBeltPart.END) {
+                BlockPos p = this.pos.up();
+                if (!src.equals(p)) {
+                    TileEntity te = this.world.getTileEntity(p);
+                    if (te instanceof TileEntityBeltBase) {
+                        ((TileEntityBeltBase) te).applyColorInternal(color, this.pos);
+                    }
+                }
+            }
+            if (part != EnumBeltPart.START) {
+                BlockPos n = this.pos.down();
+                if (!src.equals(n)) {
+                    TileEntity te = this.world.getTileEntity(n);
+                    if (te instanceof TileEntityBeltBase) {
+                        ((TileEntityBeltBase) te).applyColorInternal(color, this.pos);
+                    }
+                }
+            }
+        } else {
+            EnumFacing.Axis axis = this.block().getTransportAxis(this.getState());
+            if (part != EnumBeltPart.END) {
+                BlockPos p = this.getOffsetPosition(this.pos, EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis));
+                if (!src.equals(p)) {
+                    TileEntity te = this.world.getTileEntity(p);
+                    if (te instanceof TileEntityBeltBase) {
+                        ((TileEntityBeltBase) te).applyColorInternal(color, this.pos);
+                    }
+                }
+            }
+            if (part != EnumBeltPart.START) {
+                BlockPos n = this.getOffsetPosition(this.pos, EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axis));
+                if (!src.equals(n)) {
+                    TileEntity te = this.world.getTileEntity(n);
+                    if (te instanceof TileEntityBeltBase) {
+                        ((TileEntityBeltBase) te).applyColorInternal(color, this.pos);
+                    }
+                }
+            }
+        }
+    }
+
+    @Deprecated //Only one is enough
     private final InventoryManager[] inventories = new InventoryManager[7];
 
     @Deprecated
@@ -66,95 +121,117 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
             EnumFacing negative = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, transportAxis);
 
             if (speed > 0.0) { //update positive first
-                if (this.rightPos < 1.0) this.rightPos += speed;
-                if (this.rightPos >= 1.0) {
-                    BlockPos pos = this.getOffsetPosition(this.pos, positive);
-                    TileEntity te = this.world.getTileEntity(pos);
-                    if (te instanceof TileEntityBeltBase && this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.END) {
-                        TileEntityBeltBase belt = (TileEntityBeltBase) te;
-                        if (belt.left.isEmpty()) {
-                            belt.left = this.right;
-                            this.right = ItemStack.EMPTY;
-                            belt.leftPosOld = this.leftPosOld - 1.0;
-                            belt.leftPos = this.leftPos - 1.0;
-                        }
-                    } else if (te instanceof ITopOpenInventory) {
-                        ITopOpenInventory inv = (ITopOpenInventory) te;
-                        this.right = inv.tryInsertItem(this.right, negative);
-                        this.rightPos = 1.0;
-                        if (this.right.isEmpty()) this.sync();
-                    } else {
-                        this.rightPos = 1.0;
-                        IBlockState state = this.world.getBlockState(pos);
-                        if (state.getMaterial().isReplaceable()) {
-                            if (!this.world.isRemote) {
-                                double dx = this.pos.getX() + 0.5 + positive.getFrontOffsetX() * 0.6;
-                                double dy = this.pos.getY() + 0.85;
-                                double dz = this.pos.getZ() + 0.5 + positive.getFrontOffsetZ() * 0.6;
-                                StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.right.copy(),
-                                        positive.getFrontOffsetX() * Math.abs(speed),
-                                        0.2,
-                                        positive.getFrontOffsetZ() * Math.abs(speed)
-                                );
+                if (!this.right.isEmpty()) {
+                    if (this.rightPos < 1.0) this.rightPos += speed;
+                    if (this.rightPos >= 1.0) {
+                        BlockPos pos = this.getOffsetPosition(this.pos, positive);
+                        TileEntity te = this.world.getTileEntity(pos);
+                        if (te instanceof TileEntityBeltBase && this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.END) {
+                            TileEntityBeltBase belt = (TileEntityBeltBase) te;
+                            if (belt.left.isEmpty()) {
+                                belt.left = this.right;
+                                this.right = ItemStack.EMPTY;
+                                belt.leftPosOld = this.rightPosOld - 1.0;
+                                belt.leftPos = this.rightPos - 1.0;
+                            } else {
+                                this.rightPos = 1.0;
                             }
-                            this.right = ItemStack.EMPTY;
-                            this.sync();
+                        } else if (te instanceof ITopOpenInventory) {
+                            ITopOpenInventory inv = (ITopOpenInventory) te;
+                            this.right = inv.tryInsertItem(this.right, negative);
+                            this.rightPos = 1.0;
+                            if (this.right.isEmpty()) {
+                                this.right = ItemStack.EMPTY;
+                                this.sync();
+                            }
+                        } else {
+                            this.rightPos = 1.0;
+                            IBlockState state = this.world.getBlockState(pos);
+                            if (state.getMaterial().isReplaceable()) {
+                                if (!this.world.isRemote) {
+                                    double dx = this.pos.getX() + 0.5 + positive.getFrontOffsetX() * 0.6;
+                                    double dy = this.pos.getY() + 0.85;
+                                    double dz = this.pos.getZ() + 0.5 + positive.getFrontOffsetZ() * 0.6;
+                                    StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.right.copy(),
+                                            positive.getFrontOffsetX() * Math.abs(speed),
+                                            0.2,
+                                            positive.getFrontOffsetZ() * Math.abs(speed)
+                                    );
+                                }
+                                this.right = ItemStack.EMPTY;
+                                this.sync();
+                            }
                         }
                     }
                 }
-                if (this.leftPos < 1.0) this.leftPos += speed;
-                if (this.leftPos >= 1.0) {
-                    if (this.right.isEmpty()) {
-                        this.right = this.left;
-                        this.rightPosOld = this.leftPosOld - 1.0;
-                        this.rightPos = this.leftPos - 1.0;
-                        this.left = ItemStack.EMPTY;
+                if (!this.left.isEmpty()) {
+                    if (this.leftPos < 1.0) this.leftPos += speed;
+                    if (this.leftPos >= 1.0) {
+                        if (this.right.isEmpty() && this.allowItemToPass(this.left)) {
+                            this.right = this.left;
+                            this.rightPosOld = this.leftPosOld - 1.0;
+                            this.rightPos = this.leftPos - 1.0;
+                            this.left = ItemStack.EMPTY;
+                        } else {
+                            this.leftPos = 1.0;
+                        }
                     }
                 }
             } else { //update negative first
-                if (this.leftPos > 0.0) this.leftPos += speed;
-                if (this.leftPos <= 0.0) {
-                    BlockPos pos = this.getOffsetPosition(this.pos, negative);
-                    TileEntity te = this.world.getTileEntity(pos);
-                    if (te instanceof TileEntityBeltBase && this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.START) {
-                        TileEntityBeltBase belt = (TileEntityBeltBase) te;
-                        if (belt.right.isEmpty()) {
-                            belt.right = this.left;
-                            this.left = ItemStack.EMPTY;
-                            belt.rightPosOld = this.leftPosOld + 1.0;
-                            belt.rightPos = this.leftPos + 1.0;
-                        }
-                    } else if (te instanceof ITopOpenInventory) {
-                        ITopOpenInventory inv = (ITopOpenInventory) te;
-                        this.left = inv.tryInsertItem(this.left, positive);
-                        this.leftPos = 0.0;
-                        if (this.left.isEmpty()) this.sync();
-                    } else {
-                        this.leftPos = 0.0;
-                        IBlockState state = this.world.getBlockState(pos);
-                        if (state.getMaterial().isReplaceable()) {
-                            if (!this.world.isRemote) {
-                                double dx = this.pos.getX() + 0.5 + negative.getFrontOffsetX() * 0.6;
-                                double dy = this.pos.getY() + 0.85;
-                                double dz = this.pos.getZ() + 0.5 + negative.getFrontOffsetZ() * 0.6;
-                                StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.left.copy(),
-                                        negative.getFrontOffsetX() * Math.abs(speed),
-                                        0.2,
-                                        negative.getFrontOffsetZ() * Math.abs(speed)
-                                );
+                if (!this.left.isEmpty()) {
+                    if (this.leftPos > 0.0) this.leftPos += speed;
+                    if (this.leftPos <= 0.0) {
+                        BlockPos pos = this.getOffsetPosition(this.pos, negative);
+                        TileEntity te = this.world.getTileEntity(pos);
+                        if (te instanceof TileEntityBeltBase && this.getState().getValue(BlockBeltBase.PART) != EnumBeltPart.START) {
+                            TileEntityBeltBase belt = (TileEntityBeltBase) te;
+                            if (belt.right.isEmpty()) {
+                                belt.right = this.left;
+                                this.left = ItemStack.EMPTY;
+                                belt.rightPosOld = this.leftPosOld + 1.0;
+                                belt.rightPos = this.leftPos + 1.0;
+                            } else {
+                                this.leftPos = 0.0;
                             }
-                            this.left = ItemStack.EMPTY;
-                            this.sync();
+                        } else if (te instanceof ITopOpenInventory) {
+                            ITopOpenInventory inv = (ITopOpenInventory) te;
+                            this.left = inv.tryInsertItem(this.left, positive);
+                            this.leftPos = 0.0;
+                            if (this.left.isEmpty()) {
+                                this.left = ItemStack.EMPTY;
+                                this.sync();
+                            }
+                        } else {
+                            this.leftPos = 0.0;
+                            IBlockState state = this.world.getBlockState(pos);
+                            if (state.getMaterial().isReplaceable()) {
+                                if (!this.world.isRemote) {
+                                    double dx = this.pos.getX() + 0.5 + negative.getFrontOffsetX() * 0.6;
+                                    double dy = this.pos.getY() + 0.85;
+                                    double dz = this.pos.getZ() + 0.5 + negative.getFrontOffsetZ() * 0.6;
+                                    StackUtil.spawnItemWithVelocity(this.world, dx, dy, dz, this.left.copy(),
+                                            negative.getFrontOffsetX() * Math.abs(speed),
+                                            0.2,
+                                            negative.getFrontOffsetZ() * Math.abs(speed)
+                                    );
+                                }
+                                this.left = ItemStack.EMPTY;
+                                this.sync();
+                            }
                         }
                     }
                 }
-                if (this.rightPos > 0.0) this.rightPos += speed;
-                if (this.rightPos <= 0.0) {
-                    if (this.left.isEmpty()) {
-                        this.left = this.right;
-                        this.leftPosOld = this.rightPosOld + 1.0;
-                        this.leftPos = this.rightPos + 1.0;
-                        this.right = ItemStack.EMPTY;
+                if (!this.right.isEmpty()) {
+                    if (this.rightPos > 0.0) this.rightPos += speed;
+                    if (this.rightPos <= 0.0) {
+                        if (this.left.isEmpty() && this.allowItemToPass(this.right)) {
+                            this.left = this.right;
+                            this.leftPosOld = this.rightPosOld + 1.0;
+                            this.leftPos = this.rightPos + 1.0;
+                            this.right = ItemStack.EMPTY;
+                        } else {
+                            this.rightPos = 0.0;
+                        }
                     }
                 }
             }
@@ -171,7 +248,7 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return this.block().isFunctional(this.getState());
         return super.hasCapability(capability, facing);
     }
 
@@ -179,7 +256,9 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)(facing == null ? this.inventories[6] : this.inventories[facing.getIndex()]);
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && this.block().isFunctional(this.getState())) {
+            return (T)(facing == null ? this.inventories[6] : this.inventories[facing.getIndex()]);
+        }
         return super.getCapability(capability, facing);
     }
 
@@ -200,6 +279,10 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
             nbt.setTag("RightItem", tag);
         }
 
+        if (this.color != null) {
+            nbt.setInteger("color", this.color.getMetadata());
+        }
+
         return nbt;
     }
 
@@ -217,6 +300,9 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
             this.rightPosOld = this.rightPos = tag.getDouble("pos");
             this.right = new ItemStack(tag);
         } else this.right = ItemStack.EMPTY;
+
+        if (nbt.hasKey("color")) this.color = EnumDyeColor.byMetadata(nbt.getInteger("color"));
+        else this.color = null;
     }
 
     @Override
@@ -236,6 +322,10 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
             nbt.setTag("RightItem", tag);
         }
 
+        if (this.color != null) {
+            nbt.setInteger("color", this.color.getMetadata());
+        }
+
         return nbt;
     }
 
@@ -253,6 +343,9 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
             this.rightPosOld = this.rightPos = tag.getDouble("pos");
             this.right = new ItemStack(tag);
         } else this.right = ItemStack.EMPTY;
+
+        if (nbt.hasKey("color")) this.color = EnumDyeColor.byMetadata(nbt.getInteger("color"));
+        else this.color = null;
     }
 
     protected boolean flipped() {
@@ -318,6 +411,10 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     }
     public double getRightPos(double delta) {
         return MathHelper.clampedLerp(this.rightPosOld, this.rightPos, delta) * 0.5;
+    }
+
+    protected boolean allowItemToPass(ItemStack stack) {
+        return true;
     }
 
     //TODO: rewrite this

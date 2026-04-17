@@ -53,7 +53,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                 recipes:
                 {
                     {
-                        PressingRecipe recipe = PressingRecipes.getRecipeForInput(stack);
+                        PressingRecipe recipe = PressingRecipes.getRecipeForInput(stack, this.world.isRemote);
                         if (recipe != null) {
                             shouldMove = true;
                             if (this.lastProgress < 1000 && this.progress >= 1000) {
@@ -71,8 +71,8 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                         }
                     }
                     {
-                        String recipeID = SequencedRecipes.getRecipeForInput(stack);
-                        SequenceRecipe recipe = recipeID != null ? RecipeInit.getSequenceRecipes().getRecipe(recipeID) : null;
+                        String recipeID = SequencedRecipes.getRecipeForInput(stack, this.world.isRemote);
+                        SequenceRecipe recipe = recipeID != null ? RecipeInit.getSequenceRecipes(this.world.isRemote).getRecipe(recipeID) : null;
                         if (recipe != null) {
                             SequenceStep first = recipe.getFirstStep();
                             if ("pressing".equals(first.name)) {
@@ -125,7 +125,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
                 if (!entityItems.isEmpty()) {
                     for (EntityItem entityItem : entityItems) {
                         ItemStack stack = entityItem.getItem();
-                        PressingRecipe recipe = PressingRecipes.getRecipeForInput(stack);
+                        PressingRecipe recipe = PressingRecipes.getRecipeForInput(stack, this.world.isRemote);
                         if (recipe != null) {
                             shouldMove = true;
                             if (this.lastProgress < 1000 && this.progress >= 1000) {
@@ -219,7 +219,7 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
 
     @Override
     public boolean shouldHaltItem(ItemStack stack) {
-        return PressingRecipes.getRecipeForInput(stack) != null;
+        return PressingRecipes.getRecipeForInput(stack, this.world.isRemote) != null;
     }
 
     @SideOnly(Side.CLIENT)

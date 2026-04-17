@@ -36,9 +36,9 @@ public class MixingRecipes implements ISyncedRecipeType<MixingRecipe> {
         throw new RecipeException("unsupported");
     }
 
-    public static String getRecipeForInput(TileEntityBasin basin) {
+    public static String getRecipeForInput(TileEntityBasin basin, boolean client) {
         if (basin == null) return null;
-        IRecipeAccessor<MixingRecipe> accessor = RecipeInit.getMixingRecipes();
+        IRecipeAccessor<MixingRecipe> accessor = RecipeInit.getMixingRecipes(client);
         for (String recipeID : accessor.getAllRecipeIDs()) {
             MixingRecipe recipe = accessor.getRecipe(recipeID);
             if (recipe == null) continue;

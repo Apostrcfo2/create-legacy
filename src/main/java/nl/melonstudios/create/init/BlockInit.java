@@ -14,10 +14,7 @@ import nl.melonstudios.create.block.*;
 import nl.melonstudios.create.block.actor.*;
 import nl.melonstudios.create.block.deco.BlockOrestone;
 import nl.melonstudios.create.block.deco.BlockOrestonePillar;
-import nl.melonstudios.create.block.generator.BlockBearingWindmill;
-import nl.melonstudios.create.block.generator.BlockHandCrank;
-import nl.melonstudios.create.block.generator.BlockSail;
-import nl.melonstudios.create.block.generator.BlockWaterWheel;
+import nl.melonstudios.create.block.generator.*;
 import nl.melonstudios.create.item.ItemBlockBlazeBurner;
 import nl.melonstudios.create.item.ItemBlockDepotActor;
 import nl.melonstudios.create.item.ItemBlockSail;
@@ -52,6 +49,9 @@ public final class BlockInit {
 
     public static final BlockHandCrank HAND_CRANK = registerBlockWithItem(new BlockHandCrank(MapColor.WOOD, SoundType.WOOD));
     public static final BlockWaterWheel WATER_WHEEL = registerBlockWithItem(new BlockWaterWheel(MapColor.WOOD, SoundType.WOOD));
+    public static final BlockCreativeMotor CREATIVE_MOTOR = (BlockCreativeMotor)
+            registerBlockWithItem(new BlockCreativeMotor()
+            .setRegistryName("creative_motor").setUnlocalizedName("create.creative_motor"));
 
     public static final BlockTurntable TURNTABLE = (BlockTurntable)
             registerBlockWithItem(new BlockTurntable(MapColor.WOOD, SoundType.WOOD)
