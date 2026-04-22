@@ -1,4 +1,4 @@
-package nl.melonstudios.create.recipe.jei;
+package nl.melonstudios.create.compat.jei;
 
 import com.melonstudios.melonlib.misc.Localizer;
 import mezz.jei.api.IGuiHelper;
@@ -9,9 +9,9 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.util.ResourceLocation;
 
-public class SandingRecipeCategory implements IRecipeCategory<SandingRecipe> {
+public class CuttingRecipeCategory implements IRecipeCategory<JEICuttingRecipe> {
     private static final ResourceLocation TEXTURES =
-            new ResourceLocation("create", "textures/gui/jei/sandpaper.png");
+            new ResourceLocation("create", "textures/gui/jei/cutting.png");
 
     protected static final int input = 0;
     protected static final int output = 1;
@@ -20,12 +20,12 @@ public class SandingRecipeCategory implements IRecipeCategory<SandingRecipe> {
 
     @Override
     public String getUid() {
-        return "create.sanding";
+        return "create.cutting";
     }
 
     @Override
     public String getTitle() {
-        return Localizer.translate("recipe.create.sanding");
+        return Localizer.translate("recipe.create.cutting");
     }
 
     @Override
@@ -39,14 +39,14 @@ public class SandingRecipeCategory implements IRecipeCategory<SandingRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayout iRecipeLayout, SandingRecipe sandingRecipe, IIngredients iIngredients) {
-        IGuiItemStackGroup stacks = iRecipeLayout.getItemStacks();
+    public void setRecipe(IRecipeLayout layout, JEICuttingRecipe recipe, IIngredients ingredients) {
+        IGuiItemStackGroup stacks = layout.getItemStacks();
         stacks.init(input, true, 1, 7);
         stacks.init(output, false, 45, 7);
-        stacks.set(iIngredients);
+        stacks.set(ingredients);
     }
 
-    public SandingRecipeCategory(IGuiHelper helper) {
+    public CuttingRecipeCategory(IGuiHelper helper) {
         this.background = helper.drawableBuilder(TEXTURES, 0, 0, 64, 32).setTextureSize(64, 32).build();
     }
 }

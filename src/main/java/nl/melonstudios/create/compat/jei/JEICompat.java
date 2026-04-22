@@ -1,4 +1,4 @@
-package nl.melonstudios.create.recipe.jei;
+package nl.melonstudios.create.compat.jei;
 
 import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.*;

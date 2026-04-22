@@ -1,4 +1,4 @@
-package nl.melonstudios.create.recipe.jei;
+package nl.melonstudios.create.compat.jei;
 
 import com.melonstudios.melonlib.recipe.Ingredient;
 import mezz.jei.api.ingredients.IIngredients;
@@ -7,20 +7,19 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
-import java.util.List;
 
-public class JEICuttingRecipe implements IRecipeWrapper {
+public class JEIPressingRecipe implements IRecipeWrapper {
     public final Ingredient input;
-    public final List<ItemStack> results;
+    public final ItemStack result;
 
-    public JEICuttingRecipe(Ingredient input, List<ItemStack> results) {
+    public JEIPressingRecipe(Ingredient input, ItemStack result) {
         this.input = input;
-        this.results = results;
+        this.result = result;
     }
 
     @Override
     public void getIngredients(IIngredients iIngredients) {
         iIngredients.setInputLists(VanillaTypes.ITEM, Collections.singletonList(this.input.getDisplayItems()));
-        iIngredients.setOutputLists(VanillaTypes.ITEM, Collections.singletonList(this.results));
+        iIngredients.setOutput(VanillaTypes.ITEM, this.result);
     }
 }

@@ -1,4 +1,4 @@
-package nl.melonstudios.create.recipe.jei;
+package nl.melonstudios.create.compat.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
