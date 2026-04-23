@@ -527,6 +527,27 @@ public final class RecipeInit {
                 400
         );
         //endregion
+
+        recipes.addRecipe("create:framed_glass",
+                Ingredient.of("blockGlassColorless"),
+                new ItemStack(BlockInit.FRAMED_GLASS, 1, 0),
+                100
+        );
+        recipes.addRecipe("create:framed_glass_horizontal",
+                Ingredient.of("blockGlassColorless"),
+                new ItemStack(BlockInit.FRAMED_GLASS, 1, 1),
+                100
+        );
+        recipes.addRecipe("create:framed_glass_vertical",
+                Ingredient.of("blockGlassColorless"),
+                new ItemStack(BlockInit.FRAMED_GLASS, 1, 2),
+                100
+        );
+        recipes.addRecipe("create:framed_glass_tiles",
+                Ingredient.of("blockGlassColorless"),
+                new ItemStack(BlockInit.FRAMED_GLASS, 1, 3),
+                100
+        );
     }
     private static void mixing() {
         MixingRecipes recipes = MixingRecipes.instance;
