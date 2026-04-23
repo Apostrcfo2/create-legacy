@@ -104,12 +104,17 @@ repositories {
         url 'https://maven.cleanroommc.com'
     }
     maven { url = 'https://repo.spongepowered.org/maven' }
+    maven {
+        name = "Jared's Maven"
+        url = 'http://maven.blamejared.com'
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
 
     compileOnly fg.deobf("mezz.jei:jei_${mc_version}:${jei_version}:api") // JEI
+    compileOnly "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
     implementation fg.deobf("curse.maven:melonlib-${melonlib_version}") // MelonLib
     //runtimeOnly fg.deobf("curse.maven:ctm-${ctm_version}") // ConnectedTexturesMod (disabled in IDE)
 
