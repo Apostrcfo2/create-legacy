@@ -61,8 +61,18 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                         scroll, false, false
                 );
                 RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.75-0.125, 0.0, 0.0625, -0.75, 1.0, 0.875, EnumFacing.WEST,
+                        255, 255, 255, 255, l1, l2,
+                        scroll, false, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
                         0.25, 0.0, 0.0625, 0.5, 1.0, 0.875, EnumFacing.WEST,
                         r, g, b, 255, l1, l2,
+                        ascroll, false, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.25, 0.0, 0.0625, 0.125, 1.0, 0.875, EnumFacing.EAST,
+                        255, 255, 255, 255, l1, l2,
                         ascroll, false, false
                 );
                 if (part == EnumBeltPart.END) {
@@ -71,12 +81,22 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                             r, g, b, 255, l1, l2,
                             ascroll, true, false
                     );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.25, 0.875, 0.0625, 0.5, -0.75, 0.875, EnumFacing.DOWN,
+                            255, 255, 255, 255, l1, l2,
+                            scroll, true, false
+                    );
                 }
                 if (part == EnumBeltPart.START) {
                     RenderUtils.renderScrollingQuad(renderer, sprite,
                             0.25, 0.0, 0.0625, 0.5, 1.0, 0.875, EnumFacing.DOWN,
                             r, g, b, 255, l1, l2,
                             ascroll, true, false
+                    );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.25, 0.875, 0.0625, 0.5, -0.75, 0.875, EnumFacing.UP,
+                            255, 255, 255, 255, l1, l2,
+                            scroll, true, false
                     );
                 }
             } else {
@@ -86,8 +106,18 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                         scroll, false, false
                 );
                 RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.0625, 0.0, 0.25, 0.875, 1.0, 0.125, EnumFacing.SOUTH,
+                        255, 255, 255, 255, l1, l2,
+                        scroll, false, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
                         0.0625, 0.0, 0.25, 0.875, 1.0, 0.5, EnumFacing.SOUTH,
                         r, g, b, 255, l1, l2,
+                        ascroll, false, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.0625, 0.0, 0.75-0.125, 0.875, 1.0, 0.125, EnumFacing.NORTH,
+                        255, 255, 255, 255, l1, l2,
                         ascroll, false, false
                 );
                 if (part == EnumBeltPart.END) {
@@ -96,11 +126,21 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                             r, g, b, 255, l1, l2,
                             ascroll, false, false
                     );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.0625, 0.875, 0.25, 0.875, -0.75, 0.5, EnumFacing.DOWN,
+                            255, 255, 255, 255, l1, l2,
+                            ascroll, false, false
+                    );
                 }
                 if (part == EnumBeltPart.START) {
                     RenderUtils.renderScrollingQuad(renderer, sprite,
                             0.0625, 0.0, 0.25, 0.875, 1.0, 0.5, EnumFacing.DOWN,
                             r, g, b, 255, l1, l2,
+                            scroll, false, false
+                    );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.0625, 0.875, 0.25, 0.875, -0.75, 0.5, EnumFacing.UP,
+                            255, 255, 255, 255, l1, l2,
                             scroll, false, false
                     );
                 }
@@ -113,9 +153,19 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                         ascroll, true, false
                 );
                 RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.0, 0.75-0.125, 0.0625, 1.0, 0.125, 0.875, EnumFacing.DOWN,
+                        255, 255, 255, 255, l1, l2,
+                        scroll, true, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
                         0.0, 0.25, 0.0625, 1.0, 0.5, 0.875, EnumFacing.DOWN,
                         r, g, b, 255, l1, l2,
                         ascroll, true, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.0, 0.25, 0.0625, 1.0, 0.125, 0.875, EnumFacing.UP,
+                        255, 255, 255, 255, l1, l2,
+                        scroll, true, false
                 );
                 if (part == EnumBeltPart.START) {
                     RenderUtils.renderScrollingQuad(renderer, sprite,
@@ -123,11 +173,21 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                             r, g, b, 255, l1, l2,
                             ascroll, false, false
                     );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.875, 0.25, 0.0625, -0.75, 0.5, 0.875, EnumFacing.EAST,
+                            255, 255, 255, 255, l1, l2,
+                            ascroll, false, false
+                    );
                 }
                 if (part == EnumBeltPart.END) {
                     RenderUtils.renderScrollingQuad(renderer, sprite,
                             0.0, 0.25, 0.0625, 1.0, 0.5, 0.875, EnumFacing.EAST,
                             r, g, b, 255, l1, l2,
+                            scroll, false, false
+                    );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.875, 0.25, 0.0625, -0.75, 0.5, 0.875, EnumFacing.WEST,
+                            255, 255, 255, 255, l1, l2,
                             scroll, false, false
                     );
                 }
@@ -138,8 +198,18 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                         ascroll, false, false
                 );
                 RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.0625, 0.75-0.125, 0.0, 0.875, 0.125, 1.0, EnumFacing.DOWN,
+                        255, 255, 255, 255, l1, l2,
+                        ascroll, false, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
                         0.0625, 0.25, 0.0, 0.875, 0.5, 1.0, EnumFacing.DOWN,
                         r, g, b, 255, l1, l2,
+                        scroll, false, false
+                );
+                RenderUtils.renderScrollingQuad(renderer, sprite,
+                        0.0625, 0.25, 0.0, 0.875, 0.125, 1.0, EnumFacing.UP,
+                        255, 255, 255, 255, l1, l2,
                         scroll, false, false
                 );
                 if (part == EnumBeltPart.START) {
@@ -148,11 +218,21 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
                             r, g, b, 255, l1, l2,
                             scroll, false, false
                     );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.0625, 0.25, 0.875, 0.875, 0.5, -0.75, EnumFacing.SOUTH,
+                            255, 255, 255, 255, l1, l2,
+                            scroll, false, false
+                    );
                 }
                 if (part == EnumBeltPart.END) {
                     RenderUtils.renderScrollingQuad(renderer, sprite,
                             0.0625, 0.25, 0.0, 0.875, 0.5, 1.0, EnumFacing.SOUTH,
                             r, g, b, 255, l1, l2,
+                            ascroll, false, false
+                    );
+                    RenderUtils.renderScrollingQuad(renderer, sprite,
+                            0.0625, 0.25, 0.875, 0.875, 0.5, -0.75, EnumFacing.NORTH,
+                            255, 255, 255, 255, l1, l2,
                             ascroll, false, false
                     );
                 }

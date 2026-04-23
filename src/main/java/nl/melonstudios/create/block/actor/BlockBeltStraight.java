@@ -19,13 +19,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nl.melonstudios.create.block.state.EnumBeltPart;
+import nl.melonstudios.create.extensions.IExtensionBlock;
 import nl.melonstudios.create.tileentity.actor.TileEntityBeltBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityBeltStraight;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
-public class BlockBeltStraight extends BlockBeltBase {
+public class BlockBeltStraight extends BlockBeltBase implements IExtensionBlock {
     private static final AxisAlignedBB DEFAULT_AABB = AABB.create(0, 4, 0, 16, 12, 16);
     private static final AxisAlignedBB VERTICAL_X_AABB = AABB.create(4, 0, 0, 12, 16, 16);
     private static final AxisAlignedBB VERTICAL_Z_AABB = AABB.create(0, 0, 4, 16, 16, 12);
@@ -154,6 +156,24 @@ public class BlockBeltStraight extends BlockBeltBase {
                 if (old.getBlock() == this) {
                     worldIn.setBlockState(off, Blocks.AIR.getDefaultState());
                 }
+            }
+        }
+    }
+
+    @Override
+    public void create$addStickyLocations(World world, BlockPos pos, IBlockState state, List<BlockPos> positions) {
+        EnumBeltPart part = state.getValue(PART);
+
+        if (state.getValue(VERTICAL)) {
+            if (part != EnumBeltPart.END) positions.add(pos.add(0, 1, 0));
+            if (part != EnumBeltPart.START) positions.add(pos.add(0, -1, 0));
+        } else {
+            if (state.getValue(AXIS) == EnumFacing.Axis.X) {
+                if (part != EnumBeltPart.END) positions.add(pos.add(1, 0, 0));
+                if (part != EnumBeltPart.START) positions.add(pos.add(-1, 0, 0));
+            } else {
+                if (part != EnumBeltPart.END) positions.add(pos.add(0, 0, 1));
+                if (part != EnumBeltPart.START) positions.add(pos.add(0, 0, -1));
             }
         }
     }

@@ -290,8 +290,14 @@ public class Contraption implements IBlockAccess {
                 }
             }
 
+            //world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);
+        }
+
+        for (BlockPos blockPos : positions) {
+            if (blockPos.equals(exclude)) continue;
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);
         }
+
         contraption.setTileEntityBlockData();
         for (EntityGlue entityGlue : glues) {
             GluedSurface surface = entityGlue.getSurface();

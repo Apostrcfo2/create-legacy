@@ -1,4 +1,6 @@
 {
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
 	"textures": {
 		"particle": "create:block/belt",
 		"belt": "create:block/belt"
@@ -10,8 +12,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 4, 1]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 16], "rotation": 90, "texture": "#belt"},
-				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#belt"},
-				"up": {"uv": [1, 0, 15, 16], "rotation": 90, "texture": "#belt"}
+				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#belt"}
 			}
 		},
 		{
@@ -20,8 +21,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 10, 1]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 16], "rotation": 90, "texture": "#belt"},
-				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#belt"},
-				"down": {"uv": [1, 0, 15, 16], "rotation": 90, "texture": "#belt"}
+				"south": {"uv": [15, 0, 16, 16], "rotation": 90, "texture": "#belt"}
 			}
 		}
 	]
