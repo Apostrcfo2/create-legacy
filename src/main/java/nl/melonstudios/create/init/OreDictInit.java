@@ -147,6 +147,11 @@ public final class OreDictInit {
         registerOreBlockItem("blockZinc", BlockInit.METAL, 2);
         registerOreBlockItem("blockBrass", BlockInit.METAL, 3);
 
+        for (int i = 0; i < 4; i++) {
+            registerOreBlockItem("blockGlass", BlockInit.FRAMED_GLASS, i);
+            registerOreBlockItem("blockGlassColorless", BlockInit.FRAMED_GLASS, i);
+        }
+
         registerOre("dustWheat", ItemInit.INGREDIENT, 0);
         registerOre("dough", ItemInit.INGREDIENT, 1);
         registerOre("dustNetherrack", ItemInit.INGREDIENT, 2);

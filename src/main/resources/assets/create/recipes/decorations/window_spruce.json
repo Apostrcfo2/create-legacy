@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "#G#"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlassColorless"
+    },
+    "#": {
+      "item": "minecraft:planks",
+      "data": 1
+    }
+  },
+  "result": {
+    "item": "create:window_wood",
+    "count": 2,
+    "data": 1
+  }
+}
