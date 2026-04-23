@@ -77,18 +77,8 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     @Deprecated //Only one is enough
     private final InventoryManager[] inventories = new InventoryManager[7];
 
-    @Deprecated
-    public ItemStack queue = ItemStack.EMPTY;
-    @Deprecated
-    public ItemStack transport = ItemStack.EMPTY;
-
     public ItemStack left = ItemStack.EMPTY;
     public ItemStack right = ItemStack.EMPTY;
-
-    public float queuePos = 0.0F;
-    public float transportPos = 0.0F;
-    public float queuePosOld = 0.0F;
-    public float transportPosOld = 0.0F;
 
     public double leftPos = 0.0;
     public double rightPos = 0.0;

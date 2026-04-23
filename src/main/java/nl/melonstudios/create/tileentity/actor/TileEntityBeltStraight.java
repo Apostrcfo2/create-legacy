@@ -78,7 +78,11 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
     @Override
     public ItemStack getPresentedItem() {
         if (this.getSpeed() == 0.0F) return ItemStack.EMPTY;
-        return this.getFlag() ? this.left : this.right;
+        if (this.getFlag()) {
+            return this.leftPos == 1.0 ? this.left : ItemStack.EMPTY;
+        } else {
+            return this.rightPos == 0.0 ? this.right : ItemStack.EMPTY;
+        }
     }
 
     @Override
@@ -86,6 +90,7 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
         if (this.getSpeed() == 0.0F) throw new UnsupportedOperationException("How did this even happen?");
         if (this.getFlag()) {
             this.left.shrink(1);
+            if (this.left.isEmpty()) this.left = ItemStack.EMPTY;
             if (this.right.isEmpty()) this.right = output.copy();
             else if (ItemStack.areItemsEqual(this.right, output) && ItemStack.areItemStackTagsEqual(this.right, output)) this.right.grow(output.getCount());
             else StackUtil.spawnItemWithVelocity(this.world,
@@ -93,6 +98,7 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
                         output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
         } else {
             this.right.shrink(1);
+            if (this.right.isEmpty()) this.right = ItemStack.EMPTY;
             if (this.left.isEmpty()) this.left = output.copy();
             else if (ItemStack.areItemsEqual(this.left, output) && ItemStack.areItemStackTagsEqual(this.left, output)) this.left.grow(output.getCount());
             else StackUtil.spawnItemWithVelocity(this.world,

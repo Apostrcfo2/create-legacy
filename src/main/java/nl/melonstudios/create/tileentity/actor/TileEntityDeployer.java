@@ -198,7 +198,7 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
                                                 Ingredient applied = Ingredient.read(next.data.getCompoundTag("Applied"));
                                                 if (applied.matches(this.heldItem)) {
                                                     DeployerRecipe.InputType inputType = DeployerRecipe.InputType.get(next.data.getString("inputType"));
-                                                    in = SequenceRecipe.advance(in).copy();
+                                                    in = SequenceRecipe.advance(in.copy());
                                                     depot.decreasePresentedAndAddOutput(in);
                                                     switch (inputType) {
                                                         case CONSUME:
