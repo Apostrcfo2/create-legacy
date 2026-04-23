@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -110,6 +111,9 @@ public class CreateLegacyEventHandler {
             map.registerSprite(new ResourceLocation("create:fluid/tea_flowing"));
             CreateLegacy.logger.info("Adding scrolling belt textures to texture atlas");
             map.registerSprite(new ResourceLocation("create:block/belt_scroll"));
+            for (EnumDyeColor color : EnumDyeColor.values()) {
+                map.registerSprite(new ResourceLocation("create:block/belt_scroll_" + color.getDyeColorName()));
+            }
         }
     }
 

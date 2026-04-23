@@ -34,12 +34,12 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
         BufferBuilder renderer = tessellator.getBuffer();
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
-        TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite("create:block/belt_scroll");
+        TextureAtlasSprite sprite = this.mc.getTextureMapBlocks()
+                .getAtlasSprite("create:block/belt_scroll" + (te.color != null ? "_" + te.color.getDyeColorName() : ""));
 
-        int color = te.color != null ? te.color.getColorValue() : -1;
-        int r = (color >> 16) & 255;
-        int g = (color >> 8) & 255;
-        int b = (color) & 255;
+        final int r = 255;
+        final int g = 255;
+        final int b = 255;
         
         int brightness = this.getWorld().getCombinedLight(te.getPos(), 0);
         int l1 = brightness >> 0x10 & 0xFFFF;
