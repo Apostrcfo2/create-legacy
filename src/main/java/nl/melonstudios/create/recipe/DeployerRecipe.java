@@ -29,7 +29,7 @@ public class DeployerRecipe {
         CONSUME, DAMAGE, KEEP;
 
         public static InputType get(String name) {
-            if (name.isEmpty()) return CONSUME;
+            if (name == null || name.isEmpty()) return CONSUME;
             if ("consume".equalsIgnoreCase(name)) return CONSUME;
             if ("damage".equalsIgnoreCase(name)) return DAMAGE;
             if ("keep".equalsIgnoreCase(name)) return KEEP;

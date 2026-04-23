@@ -9,6 +9,7 @@ import crafttweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.recipe.PressingRecipe;
 import nl.melonstudios.create.recipe.server.PressingRecipes;
+import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -42,35 +43,13 @@ public class CTPressingRecipes {
     }
 
     @ZenMethod
-    public static void add(String recipeID, IIngredient input, IItemStack result) {
-        List<IItemStack> results = result.getItems();
-        if (!results.isEmpty()) {
-            if (results.size() > 1) return;
-            List<IItemStack> inputs = input.getItems();
-            if (!inputs.isEmpty()) {
-                if (inputs.size() > 1) {
-                    for (int i = 0; i < inputs.size(); i++) {
-                        CraftTweakerAPI.apply(new Add(recipeID + i,
-                                Ingredient.of((ItemStack) inputs.get(i).getInternal(), false),
-                                (ItemStack) results.get(0).getInternal()));
-                    }
-                } else {
-                    CraftTweakerAPI.apply(new Add(recipeID,
-                            Ingredient.of((ItemStack) inputs.get(0).getInternal(), false),
-                            (ItemStack) results.get(0).getInternal()));
-                }
-            }
-        }
+    public static void add(String recipeID, IItemStack input, IItemStack result, @Optional boolean respectNBT) {
+        CraftTweakerAPI.apply(new Add(recipeID, Ingredient.of((ItemStack) input.getInternal(), respectNBT), (ItemStack) result.getInternal()));
     }
 
     @ZenMethod
     public static void add(String recipeID, String oredict, IItemStack result) {
-        List<IItemStack> results = result.getItems();
-        if (!results.isEmpty()) {
-            if (results.size() == 1) {
-                CraftTweakerAPI.apply(new Add(recipeID, Ingredient.of(oredict), (ItemStack) results.get(0).getInternal()));
-            }
-        }
+        CraftTweakerAPI.apply(new Add(recipeID, Ingredient.of(oredict), (ItemStack) result.getInternal()));
     }
 
     private static class Remove implements IAction {
