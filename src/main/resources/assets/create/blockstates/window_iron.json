@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "variant=iron": {
+      "model": "create:window_iron"
+    },
+    "variant=industrial": {
+      "model": "create:window_industrial"
+    },
+    "variant=industrial_rusty": {
+      "model": "create:window_industrial_rusty"
+    }
+  }
+}

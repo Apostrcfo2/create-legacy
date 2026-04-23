@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "variant=oak": {
+      "model": "create:window_oak"
+    },
+    "variant=spruce": {
+      "model": "create:window_spruce"
+    },
+    "variant=birch": {
+      "model": "create:window_birch"
+    },
+    "variant=jungle": {
+      "model": "create:window_jungle"
+    },
+    "variant=acacia": {
+      "model": "create:window_acacia"
+    },
+    "variant=dark_oak": {
+      "model": "create:window_dark_oak"
+    }
+  }
+}

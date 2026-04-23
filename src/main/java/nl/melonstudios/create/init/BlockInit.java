@@ -12,8 +12,7 @@ import net.minecraftforge.registries.GameData;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.*;
 import nl.melonstudios.create.block.actor.*;
-import nl.melonstudios.create.block.deco.BlockOrestone;
-import nl.melonstudios.create.block.deco.BlockOrestonePillar;
+import nl.melonstudios.create.block.deco.*;
 import nl.melonstudios.create.block.generator.*;
 import nl.melonstudios.create.item.ItemBlockBlazeBurner;
 import nl.melonstudios.create.item.ItemBlockDepotActor;
@@ -155,6 +154,10 @@ public final class BlockInit {
     //endregion
 
     //region Decorations
+    public static final BlockFramedGlass FRAMED_GLASS = registerBlockWithItem(new BlockFramedGlass(), true);
+    public static final BlockWindowWood WINDOW_WOOD = registerBlockWithItem(new BlockWindowWood(), true);
+    public static final BlockWindowIron WINDOW_IRON = registerBlockWithItem(new BlockWindowIron(), true);
+
     public static final BlockOrestone ORESTONE = registerBlockWithItem(new BlockOrestone("natural"), true);
     public static final BlockOrestone ORESTONE_CUT = registerBlockWithItem(new BlockOrestone("cut"), true);
     public static final BlockOrestone ORESTONE_POLISHED = registerBlockWithItem(new BlockOrestone("polished"), true);

@@ -61,6 +61,22 @@ tile.create.belt.name=Mechanical Belt
 tile.create.item_drain.name=Item Drain
 
 ## Create's Decorations ##
+tile.create.window_oak.name=Oak Window
+tile.create.window_spruce.name=Spruce Window
+tile.create.window_birch.name=Birch Window
+tile.create.window_jungle.name=Jungle Window
+tile.create.window_acacia.name=Acacia Window
+tile.create.window_dark_oak.name=Dark Oak Window
+
+tile.create.window_iron.name=Ornate Iron Window
+tile.create.window_industrial.name=Industrial Iron Window
+tile.create.window_industrial_rusty.name=Rusty Industrial Iron Window
+
+tile.create.framed_glass_default.name=Framed Glass
+tile.create.framed_glass_horizontal.name=Horizontal Framed Glass
+tile.create.framed_glass_vertical.name=Vertical Framed Glass
+tile.create.framed_glass_tiles.name=Tiled Framed Glass
+
 tile.create.natural_asurine.name=Asurine
 tile.create.natural_crimsite.name=Crimsite
 tile.create.natural_limestone.name=Limestone

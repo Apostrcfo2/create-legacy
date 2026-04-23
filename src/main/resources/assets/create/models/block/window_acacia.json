@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "minecraft:blocks/planks_acacia",
+    "side": "create:block/glass/window_acacia"
+  }
+}

@@ -6,6 +6,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockCasing;
+import nl.melonstudios.create.block.deco.BlockFramedGlass;
+import nl.melonstudios.create.block.deco.BlockWindowIron;
+import nl.melonstudios.create.block.deco.BlockWindowWood;
 import nl.melonstudios.create.block.state.EnumOrestoneVariant;
 import nl.melonstudios.create.item.*;
 import nl.melonstudios.create.util.ModTabs;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 @MethodsReturnNonnullByDefault
 public final class ItemInit {
     public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));
-    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> new ItemStack(BlockInit.ORESTONE));
+    public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> new ItemStack(BlockInit.WINDOW_IRON));
 
     public static final ArrayList<Item> ITEMS = new ArrayList<>();
 
@@ -112,6 +115,19 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.BASIN);
         CreateLegacy.proxy.setItemModel(BlockInit.CHUTE);
         CreateLegacy.proxy.setItemModel(BlockInit.ITEM_DRAIN);
+
+        for (int i = 0; i < 4; i++) {
+            String type = BlockFramedGlass.Variant.byId(i).getName();
+            CreateLegacy.proxy.setItemModel(BlockInit.FRAMED_GLASS, i, i != 0 ? "framed_glass_" + type : "framed_glass");
+        }
+        for (int i = 0; i < 6; i++) {
+            String type = BlockWindowWood.Variant.byId(i).getName();
+            CreateLegacy.proxy.setItemModel(BlockInit.WINDOW_WOOD, i, "window_" + type);
+        }
+        for (int i = 0; i < 3; i++) {
+            String type = BlockWindowIron.Variant.byId(i).getName();
+            CreateLegacy.proxy.setItemModel(BlockInit.WINDOW_IRON, i, "window_" + type);
+        }
 
         for (int i = 0; i < 7; i++) {
             String type = EnumOrestoneVariant.byId(i).getName();
