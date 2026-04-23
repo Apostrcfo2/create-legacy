@@ -4,7 +4,7 @@
     "type":"CTM",
     "layer":"CUTOUT",
     "textures":[
-      "create:block/palettes/framed_glass_horizontal_ctm"
+      "create:block/glass/framed_glass_horizontal_ctm"
     ]
   }
 }

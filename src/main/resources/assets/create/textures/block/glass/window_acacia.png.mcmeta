@@ -4,7 +4,7 @@
     "type":"CTM",
     "layer":"CUTOUT",
     "textures":[
-      "create:block/palettes/window_acacia_ctm"
+      "create:block/glass/window_acacia_ctm"
     ]
   }
 }
