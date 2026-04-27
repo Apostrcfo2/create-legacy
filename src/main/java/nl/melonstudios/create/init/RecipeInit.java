@@ -531,22 +531,22 @@ public final class RecipeInit {
         recipes.addRecipe("create:framed_glass",
                 Ingredient.of("blockGlassColorless"),
                 new ItemStack(BlockInit.FRAMED_GLASS, 1, 0),
-                100
+                200
         );
         recipes.addRecipe("create:framed_glass_horizontal",
                 Ingredient.of("blockGlassColorless"),
                 new ItemStack(BlockInit.FRAMED_GLASS, 1, 1),
-                100
+                200
         );
         recipes.addRecipe("create:framed_glass_vertical",
                 Ingredient.of("blockGlassColorless"),
                 new ItemStack(BlockInit.FRAMED_GLASS, 1, 2),
-                100
+                200
         );
         recipes.addRecipe("create:framed_glass_tiles",
                 Ingredient.of("blockGlassColorless"),
                 new ItemStack(BlockInit.FRAMED_GLASS, 1, 3),
-                100
+                200
         );
     }
     private static void mixing() {

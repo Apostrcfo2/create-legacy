@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.generator;
 
 import com.melonstudios.melonlib.misc.BlockStateProperties;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,6 +19,7 @@ import nl.melonstudios.create.tileentity.TileEntityKineticGeneratorBase;
 import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
+import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -141,21 +144,16 @@ public class TileEntityWaterWheel extends TileEntityKineticGeneratorBase {
         return compound;
     }
 
-
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
-
-        this.flowScore = nbt.getInteger("flow");
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
+        buf.writeInt(this.flowScore);
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
-
-        nbt.setInteger("flow", this.flowScore);
-
-        return nbt;
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+        this.flowScore = buf.readInt();
     }
 
     @Override

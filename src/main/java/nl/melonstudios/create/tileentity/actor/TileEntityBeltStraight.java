@@ -96,6 +96,7 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
             else StackUtil.spawnItemWithVelocity(this.world,
                         this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
                         output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
+            this.rightPos = this.rightPosOld = 0.0;
         } else {
             this.right.shrink(1);
             if (this.right.isEmpty()) this.right = ItemStack.EMPTY;
@@ -104,6 +105,7 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
             else StackUtil.spawnItemWithVelocity(this.world,
                         this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
                         output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
+            this.leftPos = this.leftPosOld = 1.0;
         }
         this.sync();
     }

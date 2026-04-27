@@ -1,5 +1,7 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -13,6 +15,8 @@ import nl.melonstudios.create.tileentity.TileEntityOptimizedBase;
 import nl.melonstudios.create.util.Utils;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
+
+import java.io.IOException;
 
 public abstract class TileEntityContraptionInterfaceBase extends TileEntityOptimizedBase implements IContraptionActor {
     public TileEntityContraptionInterfaceBase() {
@@ -40,15 +44,13 @@ public abstract class TileEntityContraptionInterfaceBase extends TileEntityOptim
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        if (this.disconnectionTimer > 0) nbt.setInteger("disconnect", this.disconnectionTimer);
-        return nbt;
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        buf.writeInt(this.disconnectionTimer);
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        this.disconnectionTimer = nbt.getInteger("disconnect");
+    public void readPacket(ByteBuf buf) throws IOException {
+        this.disconnectionTimer = buf.readInt();
     }
 
     public EnumFacing getFacing() {

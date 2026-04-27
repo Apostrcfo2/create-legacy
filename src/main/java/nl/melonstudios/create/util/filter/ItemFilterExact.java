@@ -1,5 +1,7 @@
 package nl.melonstudios.create.util.filter;
 
+import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -25,6 +27,12 @@ public class ItemFilterExact implements IItemFilter {
         nbt.setByte("type", (byte)0);
         nbt.setTag("ExampleItem", this.example.writeToNBT(new NBTTagCompound()));
         return nbt;
+    }
+
+    @Override
+    public void serialize(TrackedByteBuf buf) {
+        buf.writeByte(0);
+        StackUtil.writeItemStack(this.example, buf, false, true);
     }
 
     @Override

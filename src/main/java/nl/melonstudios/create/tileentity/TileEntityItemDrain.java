@@ -1,6 +1,10 @@
 package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import com.melonstudios.melonlib.recipe.FluidIngredient;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -11,10 +15,13 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+import java.io.IOException;
 
 public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITopOpenInventory {
     public TileEntityItemDrain() {
@@ -118,6 +125,20 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
         if (nbt.hasKey("Draining", 10)) {
             this.draining = new ItemStack(nbt.getCompoundTag("Draining"));
         } else this.draining = ItemStack.EMPTY;
+    }
+
+    @OverridingMethodsMustInvokeSuper
+    @Override
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        ByteBuf temp = Unpooled.buffer();
+        ByteBufUtils.writeTag(temp, this.writePacket());
+        buf.writeBytes(temp);
+    }
+
+    @OverridingMethodsMustInvokeSuper
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        this.readPacket(ByteBufUtils.readTag(buf));
     }
 
     @Override

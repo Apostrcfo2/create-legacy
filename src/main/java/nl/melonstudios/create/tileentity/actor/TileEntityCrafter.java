@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.item.ItemStack;
@@ -22,6 +24,7 @@ import nl.melonstudios.create.util.InventoryCrafter;
 import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -233,17 +236,22 @@ public class TileEntityCrafter extends TileEntityKinetic implements IItemHandler
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
 
         if (!this.containedItem.isEmpty()) {
-            nbt.setTag("ContainedItem", this.containedItem.writeToNBT(new NBTTagCompound()));
-        }
-        if (this.crafterContext != null) {
-            nbt.setTag("CrafterContext", this.crafterContext.serializeNBT());
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.containedItem, buf, true, true);
+        } else {
+            buf.writeBoolean(false);
         }
 
-        return nbt;
+        if (this.crafterContext != null) {
+            buf.writeBoolean(true);
+            this.crafterContext.serialize(buf);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
 
     @Override
@@ -260,15 +268,16 @@ public class TileEntityCrafter extends TileEntityKinetic implements IItemHandler
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
 
-        if (nbt.hasKey("ContainedItem", 10)) {
-            this.containedItem = new ItemStack(nbt.getCompoundTag("ContainedItem"));
+        if (buf.readBoolean()) {
+            this.containedItem = StackUtil.readItemStack(buf, true, true);
         } else this.containedItem = ItemStack.EMPTY;
-        if (nbt.hasKey("CrafterContext")) {
+
+        if (buf.readBoolean()) {
             this.crafterContext = new CrafterContext();
-            this.crafterContext.deserializeNBT(nbt.getCompoundTag("CrafterContext"));
+            this.crafterContext.deserialize(buf);
         } else this.crafterContext = null;
     }
 

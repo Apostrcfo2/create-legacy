@@ -27,7 +27,7 @@ public class CreateLegacy {
     public static final String MODID = "create";
     public static final String NAME = "Create Legacy";
     public static final String VERSION = "26w16a";
-    static final String DEPENDENCIES = "required-after:melonlib@[1.10.1,)" + (inIDE ? "" : ";required-after-client:ctm");
+    static final String DEPENDENCIES = "required-after:melonlib@[1.11.2,)" + (inIDE ? "" : ";required-after-client:ctm");
 
     private static SimpleNetworkWrapper network;
     public static SimpleNetworkWrapper getNetwork() {

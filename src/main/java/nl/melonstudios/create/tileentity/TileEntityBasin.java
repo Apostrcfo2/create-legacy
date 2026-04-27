@@ -2,6 +2,9 @@ package nl.melonstudios.create.tileentity;
 
 import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -22,6 +25,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerFluidMap;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.capability.fluid.FluidHandlerBasin;
@@ -164,6 +168,18 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
             }
         }
         this.optimizeInventory();
+    }
+
+    @Override
+    public void writePacket(TrackedByteBuf buf) {
+        ByteBuf temp = Unpooled.buffer();
+        ByteBufUtils.writeTag(temp, this.writePacket());
+        buf.writeBytes(temp);
+    }
+
+    @Override
+    public void readPacket(ByteBuf buf) {
+        this.readPacket(ByteBufUtils.readTag(buf));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package nl.melonstudios.create.tileentity;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import nl.melonstudios.create.block.BlockBlazeBurner;
@@ -60,16 +62,12 @@ public class TileEntityBlazeBurner extends TileEntityOptimizedBase {
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-
-        if (this.fuelTicks > 0) nbt.setShort("fuelTicks", (short)this.fuelTicks);
-
-        return nbt;
+    public void writePacket(TrackedByteBuf buf) {
+        buf.writeShort(this.fuelTicks);
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        this.fuelTicks = Short.toUnsignedInt(nbt.getShort("fuelTicks"));
+    public void readPacket(ByteBuf buf) {
+        this.fuelTicks = buf.readUnsignedShort();
     }
 }

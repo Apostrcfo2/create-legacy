@@ -1,12 +1,16 @@
 package nl.melonstudios.create.tileentity;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.SubInteractionBox;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -53,18 +57,16 @@ public class TileEntityDistanceController extends TileEntityOptimizedBase implem
         super.readFromNBT(nbt);
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-
-        nbt.setInteger("dist", this.setDistance);
-
-        return nbt;
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        buf.writeByte(this.setDistance);
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        this.setDistance = nbt.getInteger("dist");
+    public void readPacket(ByteBuf buf) throws IOException {
+        this.setDistance = buf.readUnsignedByte();
     }
 
     private final ArrayList<SubInteractionBox> subInteractionBoxes = new ArrayList<>();

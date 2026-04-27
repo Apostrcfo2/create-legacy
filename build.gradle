@@ -6,14 +6,11 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-        classpath 'org.joml:joml:1.10.8'
     }
 }
         
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
@@ -46,7 +43,9 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            arg '-torg.spongepowered.asm.launch.MixinTweaker'
+
+            //load my coremod pretty please
+            property 'fml.coreMods.load', 'nl.melonstudios.create.asm.CreateLegacyCoreMod'
         }
 
         server {
@@ -56,14 +55,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            arg '-torg.spongepowered.asm.launch.MixinTweaker'
+
+            property 'fml.coreMods.load', 'nl.melonstudios.create.asm.CreateLegacyCoreMod'
         }
     }
-}
-
-configurations {
-    embed
-    compile.extendsFrom(embed)
 }
 
 repositories {
@@ -108,14 +103,23 @@ repositories {
         name = "Jared's Maven"
         url = 'http://maven.blamejared.com'
     }
+    maven {
+        url 'https://maven.cleanroommc.com'
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2859'
 
     compileOnly fg.deobf("mezz.jei:jei_${mc_version}:${jei_version}:api") // JEI
+    //runtimeOnly fg.deobf("mezz.jei:jei_${mc_version}:${jei_version}") // JEI
     compileOnly "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
-    implementation fg.deobf("curse.maven:melonlib-${melonlib_version}") // MelonLib
+    //implementation "curse.maven:melonlib-${melonlib_version}" // MelonLib
+    compileOnly fg.deobf("maven.modrinth:melonlib:${melonlib_version_mr}")
     //runtimeOnly fg.deobf("curse.maven:ctm-${ctm_version}") // ConnectedTexturesMod (disabled in IDE)
 
     //mixins !!
@@ -125,39 +129,37 @@ dependencies {
     //    exclude module: 'gson'
     //}
 
-    embed('org.joml:joml:1.10.8') {
+    //compile 'org.joml:joml:1.10.8' // adds joml to the dev env
 
+    // Common:
+    annotationProcessor 'org.ow2.asm:asm-debug-all:5.2'
+    annotationProcessor 'com.google.guava:guava:32.1.2-jre'
+    annotationProcessor 'com.google.code.gson:gson:2.8.9'
+
+    // ForgeGradle:
+    implementation ('zone.rong:mixinbooter:10.7') {
+        transitive = false
+    }
+    annotationProcessor ('zone.rong:mixinbooter:10.7') {
+        transitive = false
     }
 
-    compile 'org.joml:joml:1.10.8' // adds joml to the dev env
+    runtimeOnly('zone.rong:mixinbooter:10.7')
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
-        attributes([
-            "Specification-Title": "create",
-            "Specification-Vendor": "melonstudios",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"melonstudios",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+        attributes "FMLCorePlugin": "nl.melonstudios.create.asm.CreateLegacyCoreMod"
+        attributes "FMLCorePluginContainsMod": true
     }
 
-    from {
-        configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
-    } {
-        exclude 'LICENSE.txt', 'META-INF/MANIFSET.MF', 'META-INF/maven/**', 'META-INF/*.RSA', 'META-INF/*.SF'
-    }
-
-    manifest.attributes(
-            'ForceLoadAsMod': 'true',
-            'FMLCorePluginContainsFMLMod': 'true',
-            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
-            'TweakOrder': '0'
-    )
+    //manifest.attributes(
+    //        'ForceLoadAsMod': 'true',
+    //        'FMLCorePluginContainsFMLMod': 'true',
+    //        'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+    //        'TweakOrder': '0'
+    //)
 }
 
 // Example configuration to allow publishing using the maven-publish task
@@ -182,10 +184,6 @@ publishing {
 sourceSets {
     main {
         output.resourcesDir = output.classesDir
-        refMap = create_mixin_refmap
+//        refMap = create_mixin_refmap
     }
-}
-
-mixin {
-    config create_mixin_configs
 }

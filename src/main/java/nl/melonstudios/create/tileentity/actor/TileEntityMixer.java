@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.AABB;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -15,6 +17,9 @@ import nl.melonstudios.create.tileentity.marker.ISpeedRequirement;
 import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirement {
     public TileEntityMixer() {
@@ -124,25 +129,35 @@ public class TileEntityMixer extends TileEntityKinetic implements ISpeedRequirem
         else this.currentRecipe = null;
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
 
-        if (this.lowering != 0) nbt.setInteger("lower", this.lowering);
-        if (this.progress != 0) nbt.setInteger("progress", this.progress);
-        if (this.currentRecipe != null) nbt.setString("recipe", this.currentRecipe);
+        buf.writeInt(this.lowering);
+        buf.writeInt(this.progress);
 
-        return nbt;
+        if (this.currentRecipe != null) {
+            buf.writeInt(this.currentRecipe.length());
+            buf.internal().writeCharSequence(this.currentRecipe, StandardCharsets.UTF_8);
+            buf.append(this.currentRecipe.length());
+        } else {
+            buf.writeInt(0);
+        }
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
 
-        this.lowering = nbt.getInteger("lower");
-        this.progress = nbt.getInteger("progress");
-        if (nbt.hasKey("recipe")) this.currentRecipe = nbt.getString("recipe");
-        else this.currentRecipe = null;
+        this.lowering = buf.readInt();
+        this.progress = buf.readInt();
+
+        int len = buf.readInt();
+        if (len > 0) {
+            this.currentRecipe = buf.readCharSequence(len, StandardCharsets.UTF_8).toString();
+        } else this.currentRecipe = null;
     }
 
     @Override

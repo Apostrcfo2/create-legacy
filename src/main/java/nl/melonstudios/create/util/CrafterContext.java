@@ -1,5 +1,8 @@
 package nl.melonstudios.create.util;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.item.ItemStack;
@@ -10,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import nl.melonstudios.create.tileentity.actor.TileEntityCrafter;
 
 import java.util.ArrayList;
@@ -34,6 +38,15 @@ public class CrafterContext implements INBTSerializable<NBTTagCompound> {
     }
     public CrafterContext() {
         this(new ArrayList<BlockPos>());
+    }
+
+    public void serialize(TrackedByteBuf buf) {
+        ByteBuf temp = Unpooled.buffer();
+        ByteBufUtils.writeTag(temp, this.serializeNBT());
+        buf.writeBytes(temp);
+    }
+    public void deserialize(ByteBuf buf) {
+        this.deserializeNBT(ByteBufUtils.readTag(buf));
     }
 
     @Override

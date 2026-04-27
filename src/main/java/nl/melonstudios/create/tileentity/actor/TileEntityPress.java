@@ -3,6 +3,8 @@ package nl.melonstudios.create.tileentity.actor;
 import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -25,6 +27,7 @@ import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.IHaltBeltContents;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -200,21 +203,15 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt =  super.writePacket();
-
-        nbt.setFloat("prgO", this.lastProgress);
-        nbt.setFloat("prg", this.progress);
-
-        return nbt;
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
+        buf.writeFloat(this.progress);
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
-
-        this.lastProgress = nbt.getFloat("prgO");
-        this.progress = nbt.getFloat("prg");
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+        this.progress = buf.readFloat();
     }
 
     @Override

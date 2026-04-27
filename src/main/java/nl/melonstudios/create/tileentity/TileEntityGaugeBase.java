@@ -1,6 +1,11 @@
 package nl.melonstudios.create.tileentity;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+import java.io.IOException;
 
 public abstract class TileEntityGaugeBase extends TileEntityKinetic {
     public float dialTarget;
@@ -25,21 +30,22 @@ public abstract class TileEntityGaugeBase extends TileEntityKinetic {
         this.color = compound.getInteger("dialColor");
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
 
-        nbt.setFloat("value", this.dialTarget);
-        nbt.setInteger("color", this.color);
-
-        return nbt;
+        buf.writeFloat(this.dialTarget);
+        buf.writeInt(this.color);
     }
-    @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
 
-        this.dialTarget = nbt.getFloat("value");
-        this.color = nbt.getInteger("color");
+    @OverridingMethodsMustInvokeSuper
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+
+        this.dialTarget = buf.readFloat();
+        this.color = buf.readInt();
     }
 
     @Override

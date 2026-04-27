@@ -1,5 +1,7 @@
 package nl.melonstudios.create.tileentity.actor;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -13,6 +15,8 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
@@ -180,16 +184,6 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
-
-        if (this.angle != 0.0F) nbt.setFloat("angle", this.angle);
-        if (this.lastFailure != null) nbt.setString("fail", this.lastFailure.error);
-
-        return nbt;
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
@@ -197,12 +191,27 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
+        buf.writeFloat(this.angle);
+        if (this.lastFailure != null) {
+            String err = this.lastFailure.error;
+            buf.writeInt(err.length());
+            buf.internal().writeCharSequence(err, StandardCharsets.UTF_8);
+            buf.append(err.length());
+        } else {
+            buf.writeInt(0);
+        }
+    }
 
-        this.angle = nbt.getFloat("angle");
-        if (nbt.hasKey("fail", 8)) this.lastFailure = new ContraptionResult.AssemblyFailure(nbt.getString("fail"));
-        else this.lastFailure = null;
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+        this.angle = buf.readFloat();
+        int len = buf.readInt();
+        if (len > 0) {
+            this.lastFailure = new ContraptionResult.AssemblyFailure(buf.readCharSequence(len, StandardCharsets.UTF_8).toString());
+        } else this.lastFailure = null;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.generator;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +23,7 @@ import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.SubInteractionBox;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -152,17 +155,15 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
-        if (this.flipped) nbt.setBoolean("flip", true);
-        return nbt;
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
+        buf.writeBoolean(this.flipped);
     }
-    @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
-        this.flipped = nbt.getBoolean("flip");
 
-        this.syncNextTick();
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+        this.flipped = buf.readBoolean();
     }
 
     @Override

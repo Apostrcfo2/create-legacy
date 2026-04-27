@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -20,6 +22,7 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 
 public abstract class TileEntityBeltBase extends TileEntityKinetic implements ITopOpenInventory {
     public EnumDyeColor color = null;
@@ -296,46 +299,42 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
 
         if (!this.left.isEmpty()) {
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setDouble("pos", this.leftPos);
-            this.left.writeToNBT(tag);
-            nbt.setTag("LeftItem", tag);
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.left, buf, true, true);
+            buf.writeDouble(this.leftPos);
+        } else {
+            buf.writeBoolean(false);
         }
         if (!this.right.isEmpty()) {
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setDouble("pos", this.rightPos);
-            this.right.writeToNBT(tag);
-            nbt.setTag("RightItem", tag);
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.right, buf, true, true);
+            buf.writeDouble(this.rightPos);
+        } else {
+            buf.writeBoolean(false);
         }
 
-        if (this.color != null) {
-            nbt.setInteger("color", this.color.getMetadata());
-        }
-
-        return nbt;
+        buf.writeByte(this.color != null ? this.color.getMetadata() : -1);
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
 
-        if (nbt.hasKey("LeftItem", 10)) {
-            NBTTagCompound tag = nbt.getCompoundTag("LeftItem");
-            this.leftPosOld = this.leftPos = tag.getDouble("pos");
-            this.left = new ItemStack(tag);
+        if (buf.readBoolean()) {
+            this.left = StackUtil.readItemStack(buf, true, true);
+            this.leftPos = buf.readDouble();
         } else this.left = ItemStack.EMPTY;
-        if (nbt.hasKey("RightItem", 10)) {
-            NBTTagCompound tag = nbt.getCompoundTag("RightItem");
-            this.rightPosOld = this.rightPos = tag.getDouble("pos");
-            this.right = new ItemStack(tag);
+        if (buf.readBoolean()) {
+            this.right = StackUtil.readItemStack(buf, true, true);
+            this.rightPos = buf.readDouble();
         } else this.right = ItemStack.EMPTY;
 
-        if (nbt.hasKey("color")) this.color = EnumDyeColor.byMetadata(nbt.getInteger("color"));
-        else this.color = null;
+        byte color = buf.readByte();
+        this.color = color == -1 ? null : EnumDyeColor.byMetadata(color);
     }
 
     protected boolean flipped() {

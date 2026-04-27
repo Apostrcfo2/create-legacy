@@ -2,7 +2,9 @@ package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.AABB;
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
 import com.melonstudios.melonlib.recipe.Ingredient;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -48,6 +50,7 @@ import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -387,37 +390,50 @@ public class TileEntityDeployer extends TileEntityKinetic implements IContraptio
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
 
         if (this.filter != null) {
-            nbt.setTag("Filter", this.filter.serialize(new NBTTagCompound()));
+            buf.writeBoolean(true);
+            this.filter.serialize(buf);
+        } else {
+            buf.writeBoolean(false);
         }
-        if (!this.heldItem.isEmpty()) {
-            nbt.setTag("Held", this.heldItem.writeToNBT(new NBTTagCompound()));
-        }
-        if (!this.cloggedItem.isEmpty()) {
-            nbt.setTag("Clogged", this.cloggedItem.writeToNBT(new NBTTagCompound()));
-        }
-        if (this.progress != 0) nbt.setInteger("progress", this.progress);
 
-        return nbt;
+        if (!this.heldItem.isEmpty()) {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.heldItem, buf, true, true);
+        } else {
+            buf.writeBoolean(false);
+        }
+
+        if (!this.cloggedItem.isEmpty()) {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.cloggedItem, buf, true, true);
+        } else {
+            buf.writeBoolean(false);
+        }
+
+        buf.writeInt(this.progress);
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
 
-        if (nbt.hasKey("Filter", 10)) {
-            this.filter = IItemFilter.deserialize(nbt.getCompoundTag("Filter"));
+        if (buf.readBoolean()) {
+            this.filter = IItemFilter.deserialize(buf);
         } else this.filter = null;
-        if (nbt.hasKey("Held", 10)) {
-            this.heldItem = new ItemStack(nbt.getCompoundTag("Held"));
+
+        if (buf.readBoolean()) {
+            this.heldItem = StackUtil.readItemStack(buf, true, true);
         } else this.heldItem = ItemStack.EMPTY;
-        if (nbt.hasKey("Clogged", 10)) {
-            this.cloggedItem = new ItemStack(nbt.getCompoundTag("Clogged"));
+
+        if (buf.readBoolean()) {
+            this.cloggedItem = StackUtil.readItemStack(buf, true, true);
         } else this.cloggedItem = ItemStack.EMPTY;
-        this.progress = nbt.getInteger("progress");
+
+        this.progress = buf.readInt();
     }
 
     public void setFilter(ItemStack stack) {

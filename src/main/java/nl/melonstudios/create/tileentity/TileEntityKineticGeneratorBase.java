@@ -1,9 +1,13 @@
 package nl.melonstudios.create.tileentity;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.kinetics.KineticNetwork;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+import java.io.IOException;
 
 public abstract class TileEntityKineticGeneratorBase extends TileEntityKinetic {
     public boolean reactivateSource;
@@ -102,9 +106,10 @@ public abstract class TileEntityKineticGeneratorBase extends TileEntityKinetic {
         this.attachKinetics();
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
 
         this.syncNextTick();
     }

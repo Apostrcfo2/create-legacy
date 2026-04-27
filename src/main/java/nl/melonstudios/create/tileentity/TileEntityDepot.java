@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +16,7 @@ import nl.melonstudios.create.tileentity.marker.IDepot;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.List;
 
 public class TileEntityDepot extends TileEntityOptimizedBase implements ITopOpenInventory, IDepot, IItemHandler {
@@ -91,6 +94,32 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ITopOpen
                 this.additionalItems[i] = new ItemStack(nbt.getCompoundTag("AdditionalItem" + i));
             } else this.additionalItems[i] = ItemStack.EMPTY;
         }
+    }
+
+    @Override
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        if (this.mainItem.isEmpty()) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.mainItem, buf, true, true);
+        }
+
+        for (int i = 0; i < 8; i++) {
+            if (this.additionalItems[i].isEmpty()) {
+                buf.writeBoolean(false);
+            } else {
+                buf.writeBoolean(true);
+                StackUtil.writeItemStack(this.additionalItems[i], buf, true, true);
+            }
+        }
+    }
+
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException  {
+        if (buf.readBoolean()) {
+            this.mainItem = StackUtil.readItemStack(buf, true, true);
+        } else this.mainItem = ItemStack.EMPTY;
     }
 
     @Override

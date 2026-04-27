@@ -1,5 +1,7 @@
 package nl.melonstudios.create.tileentity;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +22,8 @@ import nl.melonstudios.create.util.interfaces.ICogwheel;
 import nl.melonstudios.create.util.interfaces.IRotate;
 
 import javax.annotation.Nullable;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class TileEntityKinetic extends TileEntityOptimizedBase implements IAssemblyBehavior {
@@ -164,41 +168,48 @@ public class TileEntityKinetic extends TileEntityOptimizedBase implements IAssem
         super.readFromNBT(compound);
     }
 
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-
-        nbt.setFloat("speed", this.speed);
-        if (this.source != null) nbt.setLong("source", this.source.toLong());
-        if (this.hasNetwork()) {
-            nbt.setBoolean("hasNetwork", true);
-
-            nbt.setLong("networkID", this.networkID);
-            nbt.setFloat("stress", this.stress);
-            nbt.setFloat("capacity", this.capacity);
-            nbt.setInteger("size", this.networkSize);
-
-            if (this.lastStressApplied != 0.0F) nbt.setFloat("addedStress", this.lastStressApplied);
-            if (this.lastCapacityProvided != 0.0F) nbt.setFloat("addedCapacity", this.lastCapacityProvided);
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        buf.writeFloat(this.speed);
+        if (this.source != null) {
+            buf.writeBoolean(true);
+            buf.writeLong(this.source.toLong());
+        } else {
+            buf.writeBoolean(false);
         }
 
-        return nbt;
+        if (this.hasNetwork()) {
+            buf.writeBoolean(true);
+            buf.writeLong(this.networkID);
+            buf.writeFloat(this.stress);
+            buf.writeFloat(this.capacity);
+            buf.writeInt(this.networkSize);
+            buf.writeFloat(this.lastStressApplied);
+            buf.writeFloat(this.lastCapacityProvided);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
+
+    @OverridingMethodsMustInvokeSuper
     @Override
-    public void readPacket(NBTTagCompound nbt) {
+    public void readPacket(ByteBuf buf) throws IOException {
         this.clearKineticInformation();
 
-        this.speed = nbt.getFloat("speed");
-        if (nbt.hasKey("source")) this.source = BlockPos.fromLong(nbt.getLong("source"));
+        this.speed = buf.readFloat();
+        if (buf.readBoolean()) {
+            this.source = BlockPos.fromLong(buf.readLong());
+        } else this.source = null;
 
-        if (nbt.getBoolean("hasNetwork")) {
-            this.networkID = nbt.getLong("networkID");
-            this.stress = nbt.getFloat("stress");
-            this.capacity = nbt.getFloat("capacity");
-            this.networkSize = nbt.getInteger("size");
+        if (buf.readBoolean()) {
+            this.networkID = buf.readLong();
+            this.stress = buf.readFloat();
+            this.capacity = buf.readFloat();
+            this.networkSize = buf.readInt();
 
-            this.lastStressApplied = nbt.getFloat("addedStress");
-            this.lastCapacityProvided = nbt.getFloat("addedCapacity");
+            this.lastStressApplied = buf.readFloat();
+            this.lastCapacityProvided = buf.readFloat();
 
             this.overstressed = this.capacity < this.stress;
         }

@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.recipe.server.CuttingRecipes;
 import nl.melonstudios.create.recipe.CuttingRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -28,6 +31,8 @@ import nl.melonstudios.create.util.filter.ItemFilterExact;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -223,18 +228,6 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
 
         return nbt;
     }
-    @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
-
-        if (this.recipeFilter != null) nbt.setTag("Filter", this.recipeFilter.serialize(new NBTTagCompound()));
-        if (!this.currentlyProcessing.isEmpty()) nbt.setTag("CurrentlyProcessing", this.currentlyProcessing.writeToNBT(new NBTTagCompound()));
-        if (this.currentRecipe != null) nbt.setString("currentRecipe", this.currentRecipeID);
-        if (this.progress != 0) nbt.setInteger("progress", this.progress);
-        if (!this.outputQueue.isEmpty()) nbt.setTag("OutputQueue", this.outputQueue.writeToNBT(new NBTTagCompound()));
-
-        return nbt;
-    }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
@@ -255,23 +248,53 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
             this.outputQueue = new ItemStack(nbt.getCompoundTag("OutputQueue"));
         } else this.outputQueue = ItemStack.EMPTY;
     }
-    @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
 
-        if (nbt.hasKey("Filter", 10)) {
-            this.recipeFilter = IItemFilter.deserialize(nbt.getCompoundTag("Filter"));
+    @Override
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
+
+        if (this.recipeFilter != null) {
+            buf.writeBoolean(true);
+            this.recipeFilter.serialize(buf);
+        } else buf.writeBoolean(false);
+        if (!this.currentlyProcessing.isEmpty()) {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.currentlyProcessing, buf, false, true);
+        } else buf.writeBoolean(false);
+        if (this.currentRecipe != null) {
+            buf.writeBoolean(true);
+            buf.writeInt(this.currentRecipeID.length());
+            buf.internal().writeCharSequence(this.currentRecipeID, StandardCharsets.UTF_8);
+            buf.append(this.currentRecipeID.length());
+        } else buf.writeBoolean(false);
+        buf.writeShort(this.progress);
+        if (!this.outputQueue.isEmpty()) {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.outputQueue, buf, true, true);
+        } else buf.writeBoolean(false);
+    }
+
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+
+        if (buf.readBoolean()) {
+            this.recipeFilter = IItemFilter.deserialize(buf);
         } else this.recipeFilter = null;
-        if (nbt.hasKey("CurrentlyProcessing", 10)) {
-            this.currentlyProcessing = new ItemStack(nbt.getCompoundTag("CurrentlyProcessing"));
+        if (buf.readBoolean()) {
+            this.currentlyProcessing = StackUtil.readItemStack(buf, false, true);
         } else this.currentlyProcessing = ItemStack.EMPTY;
-        if (nbt.hasKey("currentRecipe")) {
-            this.currentRecipeID = nbt.getString("currentRecipe");
-            this.currentRecipe = CuttingRecipes.instance.getRecipe(this.currentRecipeID);
-        } else this.currentRecipe = null;
-        this.progress = nbt.getInteger("progress");
-        if (nbt.hasKey("OutputQueue", 10)) {
-            this.outputQueue = new ItemStack(nbt.getCompoundTag("OutputQueue"));
+        if (buf.readBoolean()) {
+            int len = buf.readInt();
+            this.currentRecipeID = buf.readCharSequence(len, StandardCharsets.UTF_8).toString();
+            this.currentRecipe = RecipeInit.getCuttingRecipes(true).getRecipe(this.currentRecipeID);
+        } else {
+            this.currentRecipeID = null;
+            this.currentRecipe = null;
+        }
+        this.progress = buf.readUnsignedShort();
+        if (buf.readBoolean()) {
+            this.outputQueue = StackUtil.readItemStack(buf, true, true);
         } else this.outputQueue = ItemStack.EMPTY;
     }
 

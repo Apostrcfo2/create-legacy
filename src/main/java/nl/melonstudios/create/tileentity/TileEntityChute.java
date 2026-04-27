@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +17,7 @@ import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -110,23 +113,22 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IItemHan
     }
 
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-
-        if (!this.stack.isEmpty()) {
-            nbt.setTag("Stack", this.stack.writeToNBT(new NBTTagCompound()));
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        if (this.stack.isEmpty()) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.stack, buf, true, true);
         }
-        if (this.itemLocked) nbt.setBoolean("itemLocked", true);
-
-        return nbt;
+        buf.writeBoolean(this.itemLocked);
     }
 
     @Override
-    public void readPacket(NBTTagCompound nbt) {
-        if (nbt.hasKey("Stack", 10)) {
-            this.stack = new ItemStack(nbt.getCompoundTag("Stack"));
-        }
-        this.itemLocked = nbt.getBoolean("itemLocked");
+    public void readPacket(ByteBuf buf) throws IOException {
+        if (buf.readBoolean()) {
+            this.stack = StackUtil.readItemStack(buf, true, true);
+        } else this.stack = ItemStack.EMPTY;
+        this.itemLocked = buf.readBoolean();
     }
 
     @Override

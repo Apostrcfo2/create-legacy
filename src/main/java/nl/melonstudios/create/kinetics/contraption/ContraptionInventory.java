@@ -169,7 +169,7 @@ public class ContraptionInventory {
         public ItemStack getStackInSlot(int slot) {
             for (IItemHandler inventory : this.inventories) {
                 int s = inventory.getSlots();
-                if (slot < s) return inventory.getStackInSlot(s);
+                if (slot < s) return inventory.getStackInSlot(slot);
                 slot -= s;
             }
             throw new IndexOutOfBoundsException(slot + " out of bounds for " + this.size);
@@ -179,7 +179,7 @@ public class ContraptionInventory {
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             for (IItemHandler inventory : this.inventories) {
                 int s = inventory.getSlots();
-                if (slot < s) return inventory.insertItem(s, stack, simulate);
+                if (slot < s) return inventory.insertItem(slot, stack, simulate);
                 slot -= s;
             }
             throw new IndexOutOfBoundsException(slot + " out of bounds for " + this.size);
@@ -189,7 +189,7 @@ public class ContraptionInventory {
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             for (IItemHandler inventory : this.inventories) {
                 int s = inventory.getSlots();
-                if (slot < s) return inventory.extractItem(s, amount, simulate);
+                if (slot < s) return inventory.extractItem(slot, amount, simulate);
                 slot -= s;
             }
             throw new IndexOutOfBoundsException(slot + " out of bounds for " + this.size);
@@ -199,7 +199,7 @@ public class ContraptionInventory {
         public int getSlotLimit(int slot) {
             for (IItemHandler inventory : this.inventories) {
                 int s = inventory.getSlots();
-                if (slot < s) return inventory.getSlotLimit(s);
+                if (slot < s) return inventory.getSlotLimit(slot);
                 slot -= s;
             }
             throw new IndexOutOfBoundsException(slot + " out of bounds for " + this.size);
@@ -209,7 +209,7 @@ public class ContraptionInventory {
         public boolean isItemValid(int slot, ItemStack stack) {
             for (IItemHandler inventory : this.inventories) {
                 int s = inventory.getSlots();
-                if (slot < s) return inventory.isItemValid(s, stack);
+                if (slot < s) return inventory.isItemValid(slot, stack);
                 slot -= s;
             }
             throw new IndexOutOfBoundsException(slot + " out of bounds for " + this.size);

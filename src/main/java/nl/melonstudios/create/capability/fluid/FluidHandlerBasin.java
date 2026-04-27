@@ -1,11 +1,15 @@
 package nl.melonstudios.create.capability.fluid;
 
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -111,6 +115,23 @@ public class FluidHandlerBasin implements IFluidHandler {
             }
         }
         return this;
+    }
+
+    public void serialize(TrackedByteBuf buf) {
+        synchronized (this.handlers) {
+            this.optimize();
+            if (!this.handlers.isEmpty()) {
+                NBTTagList tanksNBT = new NBTTagList();
+                for (FluidTank tank : this.handlers) {
+                    tanksNBT.appendTag(tank.writeToNBT(new NBTTagCompound()));
+                }
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setTag("", tanksNBT);
+                ByteBuf temp = Unpooled.buffer();
+                ByteBufUtils.writeTag(temp, nbt);
+                buf.writeBytes(temp);
+            }
+        }
     }
 
     public boolean containsFluid(FluidStack resource) {
