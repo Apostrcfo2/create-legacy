@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.BakedItemModel;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.tileentity.TileEntityChute;
 import org.lwjgl.opengl.GL11;
 
@@ -26,7 +27,7 @@ public class TESRChute extends TileEntitySpecialRenderer<TileEntityChute> {
         if (te.stack.isEmpty()) return;
         GlStateManager.pushMatrix();
         GlStateManager.translate(x+0.5, y+0.5, z+0.5);
-        GlStateManager.rotate(te.randomizedItemRotation + ((te.getWorld().getTotalWorldTime() + partialTicks) % 120) * 3,
+        GlStateManager.rotate(te.randomizedItemRotation + ((CreateLegacy.getRenderTimeF(partialTicks)) % 120) * 3,
                 0.0F, 1.0F, 0.0F);
         this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         GlStateManager.enableRescaleNormal();

@@ -62,6 +62,11 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         }
     }
 
+    private static final boolean USE_LOCAL_TIME = true;
+    protected final float getAdjustedTime(float pt) {
+        return USE_LOCAL_TIME ? CreateLegacy.getRenderTimeF(pt) : this.getWorld().getTotalWorldTime() + pt;
+    }
+
     protected final Minecraft mc;
     protected final IBlockState shaftX, shaftY, shaftZ;
     protected final IBlockState[] halfShafts = new IBlockState[6];
@@ -122,13 +127,13 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
 
     protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float speed) {
         if (speed == 0) return te.getAxisShift(axis);
-        float time = this.getWorld().getTotalWorldTime() + pt;
+        float time = this.getAdjustedTime(pt);
 
         return ((time * 0.3F * speed) % 360) + te.getAxisShift(axis);
     }
     protected final float calculateAngle(TileEntityKinetic te, EnumFacing.Axis axis, float pt, float m, boolean addOffset) {
         if (te.getSpeed() == 0) return addOffset ? te.getAxisShift(axis) : 0.0F;
-        float time = this.getWorld().getTotalWorldTime() + pt;
+        float time = this.getAdjustedTime(pt);
 
         return ((time * 0.3F * te.getSpeed() * m) % 360) + (addOffset ? te.getAxisShift(axis) : 0.0F);
     }

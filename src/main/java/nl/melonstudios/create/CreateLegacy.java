@@ -1,6 +1,7 @@
 package nl.melonstudios.create;
 
 import com.melonstudios.melonlib.recipe.RecipeRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -8,10 +9,14 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.extensions.IExtensionEntityRenderer;
 import nl.melonstudios.create.init.*;
 import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
+import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.proxy.CommonProxy;
 import nl.melonstudios.create.recipe.*;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
@@ -101,5 +106,14 @@ public class CreateLegacy {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         CommandInit.addCreateCommand(event);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static float getRenderTimeF(float pt) {
+        return (float)IExtensionEntityRenderer.getRendererUpdateCount(Minecraft.getMinecraft().entityRenderer) + pt;
+    }
+    @SideOnly(Side.CLIENT)
+    public static double getRenderTimeD(double pt) {
+        return (double)IExtensionEntityRenderer.getRendererUpdateCount(Minecraft.getMinecraft().entityRenderer) + pt;
     }
 }

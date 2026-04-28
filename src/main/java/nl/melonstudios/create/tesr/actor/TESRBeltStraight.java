@@ -45,11 +45,11 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
         int l1 = brightness >> 0x10 & 0xFFFF;
         int l2 = brightness & 0xFFFF;
 
-        double scroll = ((te.getSpeed() * 0.0625 * 0.025) * (this.getWorld().getTotalWorldTime() + pt));
+        double scroll = ((te.getSpeed() * 0.0625 * 0.025) * (this.getAdjustedTime(pt)));
         scroll = scroll - Math.floor(scroll);
         if (scroll < 0) scroll += 1;
 
-        double ascroll = ((te.getSpeed() * 0.0625 * -0.025) * (this.getWorld().getTotalWorldTime() + pt));
+        double ascroll = ((te.getSpeed() * 0.0625 * -0.025) * (this.getAdjustedTime(pt)));
         ascroll = ascroll - Math.floor(ascroll);
         if (ascroll < 0) ascroll += 1;
 
