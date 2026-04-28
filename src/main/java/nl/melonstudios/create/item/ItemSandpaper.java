@@ -15,6 +15,7 @@ import nl.melonstudios.create.recipe.SandingRecipes;
 public class ItemSandpaper extends Item {
     public ItemSandpaper() {
         super();
+        this.setMaxStackSize(1);
         this.setRegistryName("sandpaper");
         this.setUnlocalizedName("create.sandpaper");
         this.setMaxDamage(8);
@@ -24,6 +25,16 @@ public class ItemSandpaper extends Item {
 
     @Override
     public int getItemEnchantability() {
+        return 1;
+    }
+
+    @Override
+    public int getItemStackLimit() {
+        return 1;
+    }
+
+    @Override
+    public int getItemStackLimit(ItemStack stack) {
         return 1;
     }
 

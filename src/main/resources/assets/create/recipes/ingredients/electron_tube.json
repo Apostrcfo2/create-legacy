@@ -7,7 +7,7 @@
   "key": {
     "#": {
       "type": "forge:ore_dict",
-      "ore": "gemRoseQuartzPolished"
+      "ore": "gemPolishedRoseQuartz"
     },
     "n": {
       "type": "forge:ore_dict",

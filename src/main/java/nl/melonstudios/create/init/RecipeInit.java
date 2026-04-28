@@ -606,6 +606,12 @@ public final class RecipeInit {
                 new ItemStack(ItemInit.INGREDIENT, 1, 4),
                 DeployerRecipe.InputType.DAMAGE
         );
+        recipes.addRecipe("create:electron_tube",
+                Ingredient.of("plateIron"),
+                Ingredient.of("gemPolishedRoseQuartz"),
+                new ItemStack(ItemInit.INGREDIENT, 1, 10),
+                DeployerRecipe.InputType.CONSUME
+        );
     }
     private static void sequences() {
         SequencedRecipes recipes = SequencedRecipes.instance;

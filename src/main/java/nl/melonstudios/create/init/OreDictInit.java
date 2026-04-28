@@ -156,12 +156,13 @@ public final class OreDictInit {
         registerOre("dough", ItemInit.INGREDIENT, 1);
         registerOre("dustNetherrack", ItemInit.INGREDIENT, 2);
         registerOre("gemRoseQuartz", ItemInit.INGREDIENT, 3);
-        registerOre("gemRoseQuartzPolished", ItemInit.INGREDIENT, 4);
+        registerOre("gemPolishedRoseQuartz", ItemInit.INGREDIENT, 4);
         registerOre("dustObsidian", ItemInit.INGREDIENT, 5);
         registerOre("plateObsidian", ItemInit.INGREDIENT, 6);
         registerOre("propeller", ItemInit.INGREDIENT, 7);
         registerOre("whisk", ItemInit.INGREDIENT, 8);
         registerOre("electronTube", ItemInit.INGREDIENT, 10);
+        registerOre("cardboard", ItemInit.INGREDIENT, 13);
         registerOre("ingotCopper", ItemInit.INGREDIENT, 16);
         registerOre("ingotZinc", ItemInit.INGREDIENT, 17);
         registerOre("ingotBrass", ItemInit.INGREDIENT, 18);

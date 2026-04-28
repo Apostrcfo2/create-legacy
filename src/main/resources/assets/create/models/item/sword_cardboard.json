@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": "create:item/sword_cardboard"
+}

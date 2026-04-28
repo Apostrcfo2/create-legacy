@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class ItemGoggles extends ItemArmor {
     public ItemGoggles() {
-        super(ArmorMaterial.GOLD, 1, EntityEquipmentSlot.HEAD);
+        super(ArmorMaterial.GOLD, 0, EntityEquipmentSlot.HEAD);
         this.setRegistryName("goggles");
         this.setUnlocalizedName("create.goggles");
         this.setMaxStackSize(1);

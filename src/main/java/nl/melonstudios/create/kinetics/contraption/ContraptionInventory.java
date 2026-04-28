@@ -3,6 +3,8 @@ package nl.melonstudios.create.kinetics.contraption;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.util.filter.IItemFilter;
@@ -14,13 +16,22 @@ import java.util.List;
 public class ContraptionInventory {
     private final List<IItemHandler> inventories = new ArrayList<>();
     private IItemHandler inventoryRepresentation = new InventoryRepresentation(this.inventories);
+    private final List<IFluidHandler> tanks = new ArrayList<>();
+    private IFluidHandler tankRepresentation = null;
 
     public void reindex(Contraption contraption) {
         this.inventories.clear();
+        this.tanks.clear();
         for (TileEntity te : contraption.tileEntities.values()) {
-            if (Contraption.isValidInventory(te) && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-                IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-                this.inventories.add(handler);
+            if (Contraption.isValidInventory(te)) {
+                if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+                    IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+                    this.inventories.add(handler);
+                }
+                if (te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                    IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                    this.tanks.add(handler);
+                }
             }
         }
         this.inventoryRepresentation = new InventoryRepresentation(this.inventories);

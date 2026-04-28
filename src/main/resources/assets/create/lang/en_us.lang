@@ -180,6 +180,11 @@ item.create.superglue.desc1=R-Click to apply Glue to surface
 item.create.superglue.desc2=Shift-R-Click to remove Glue from surface
 item.create.crafter_cover.name=Crafting Slot Cover
 
+item.create.helmet_cardboard.name=Cardboard Helmet
+item.create.chestplate_cardboard.name=Cardboard Chestplate
+item.create.leggings_cardboard.name=Cardboard Leggings
+item.create.boots_cardboard.name=Cardboard Boots
+
 item.create.assembly_precision_mechanism.name=Incomplete Precision Mechanism
 item.create.assembly_plate_obsidian.name=Unprocessed Sturdy Sheet
 

@@ -31,7 +31,12 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
     public int roll = 0;
     public EnumFacing rollingDirection = null;
     public ItemStack draining = ItemStack.EMPTY;
-    public final FluidTank tank = new FluidTank(1500);
+    public final FluidTank tank = new FluidTank(1500) {
+        @Override
+        protected void onContentsChanged() {
+            TileEntityItemDrain.this.sync();
+        }
+    };
 
     @Override
     public void tick() {

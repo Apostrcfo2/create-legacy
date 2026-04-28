@@ -20,7 +20,7 @@ public class CreateLegacyCoreMod implements IFMLLoadingPlugin, IEarlyMixinLoader
 
     @Override
     public String getModContainerClass() {
-        return "nl.melonstudios.create.asm.CreateLegacyCoreModContainer";
+        return null;
     }
 
     @Nullable

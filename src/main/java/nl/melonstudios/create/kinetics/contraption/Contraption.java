@@ -295,7 +295,7 @@ public class Contraption implements IBlockAccess {
 
         for (BlockPos blockPos : positions) {
             if (blockPos.equals(exclude)) continue;
-            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b10010);
+            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 0b11010);
         }
 
         contraption.setTileEntityBlockData();

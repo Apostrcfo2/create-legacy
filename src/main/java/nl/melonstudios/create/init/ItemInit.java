@@ -2,6 +2,7 @@ package nl.melonstudios.create.init;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import nl.melonstudios.create.CreateLegacy;
@@ -42,6 +43,10 @@ public final class ItemInit {
     public static final Item CRAFTER_COVER = registerItem(new Item()
             .setMaxStackSize(64).setCreativeTab(TAB_CREATE)
             .setRegistryName("crafter_cover").setUnlocalizedName("create.crafter_cover"));
+    public static final ItemArmorCardboard HELMET_CARDBOARD = registerItem(new ItemArmorCardboard(EntityEquipmentSlot.HEAD, "helmet"));
+    public static final ItemArmorCardboard CHESTPLATE_CARDBOARD = registerItem(new ItemArmorCardboard(EntityEquipmentSlot.CHEST, "chestplate"));
+    public static final ItemArmorCardboard LEGGINGS_CARDBOARD = registerItem(new ItemArmorCardboard(EntityEquipmentSlot.LEGS, "leggings"));
+    public static final ItemArmorCardboard BOOTS_CARDBOARD = registerItem(new ItemArmorCardboard(EntityEquipmentSlot.FEET, "boots"));
     public static final ItemAssembly ASSEMBLY = registerItem(new ItemAssembly());
     public static final ItemSceneWand SCENE_WAND = registerItem(new ItemSceneWand());
 
@@ -62,6 +67,10 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(TREE_FERTILIZER);
         CreateLegacy.proxy.setItemModel(SUPER_GLUE);
         CreateLegacy.proxy.setItemModel(CRAFTER_COVER);
+        CreateLegacy.proxy.setItemModel(HELMET_CARDBOARD);
+        CreateLegacy.proxy.setItemModel(CHESTPLATE_CARDBOARD);
+        CreateLegacy.proxy.setItemModel(LEGGINGS_CARDBOARD);
+        CreateLegacy.proxy.setItemModel(BOOTS_CARDBOARD);
         CreateLegacy.proxy.setItemModel(SCENE_WAND);
         CreateLegacy.proxy.setItemModel(ASSEMBLY, 0, "assembly/" + ItemAssembly.NAME_LOOKUP[0]);
         CreateLegacy.proxy.setItemModel(ASSEMBLY, 1, "assembly/" + ItemAssembly.NAME_LOOKUP[1]);

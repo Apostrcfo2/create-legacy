@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -230,6 +232,25 @@ public class CreateLegacyEventHandler {
                         2, 60, -1);
                 PerFrameDebugInfo.reset();
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void renderCardboardPlayer(RenderPlayerEvent.Pre event) {
+        EntityPlayer player = event.getEntityPlayer();
+        if (player.isSneaking()) {
+            ItemStack boots = player.inventory.armorInventory.get(0);
+            ItemStack leggings = player.inventory.armorInventory.get(1);
+            ItemStack chestplate = player.inventory.armorInventory.get(2);
+            ItemStack helmet = player.inventory.armorInventory.get(3);
+            if (boots.isEmpty() || boots.getItem() != ItemInit.BOOTS_CARDBOARD) return;
+            if (leggings.isEmpty() || leggings.getItem() != ItemInit.LEGGINGS_CARDBOARD) return;
+            if (chestplate.isEmpty() || chestplate.getItem() != ItemInit.CHESTPLATE_CARDBOARD) return;
+            if (helmet.isEmpty() || helmet.getItem() != ItemInit.HELMET_CARDBOARD) return;
+            event.setCanceled(true);
+
+            //TODO: render cardboard buddy
         }
     }
 

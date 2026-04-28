@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
@@ -166,11 +167,13 @@ public class TileEntityPress extends TileEntityKinetic implements IHaltBeltConte
 
     private void squishParticles(ItemStack stack, double x, double y, double z, @Nullable IDepot depot) {
         if (!this.world.isRemote) {
+            float scaled = MathHelper.log2((int) Math.abs(this.getSpeed())) / 8.0F;
+            float pitch = (float) MathHelper.clampedLerp(0.7F, 1.0F, scaled);
             if (depot != null && depot.isWool()) {
-                this.world.playSound(null, x, y, z, SoundInit.block_press_activate, SoundCategory.BLOCKS, 0.5F, 1.0F);
-                this.world.playSound(null, x, y, z, SoundEvents.BLOCK_CLOTH_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound(null, x, y, z, SoundInit.block_press_activate, SoundCategory.BLOCKS, 0.5F, pitch);
+                this.world.playSound(null, x, y, z, SoundEvents.BLOCK_CLOTH_FALL, SoundCategory.BLOCKS, 1.0F, pitch);
             } else {
-                this.world.playSound(null, x, y, z, SoundInit.block_press_activate, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                this.world.playSound(null, x, y, z, SoundInit.block_press_activate, SoundCategory.BLOCKS, 1.0F, pitch);
             }
         } else {
             Random rnd = this.world.rand;
