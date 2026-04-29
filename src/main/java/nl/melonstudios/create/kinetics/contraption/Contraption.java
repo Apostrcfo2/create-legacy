@@ -157,6 +157,7 @@ public class Contraption implements IBlockAccess {
         return nbt;
     }
 
+    public boolean invalidated = false;
     public boolean isRendering = false;
     public final IContraptionHolder holder;
     public final HashMap<BlockPos, IBlockState> blocks = new HashMap<>();

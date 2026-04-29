@@ -36,7 +36,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
 
     @Override //horrible code, but it is rendering so it should be horrible yes
     public void doRender(EntityContraptionBearing entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        if (entity.bearing == null || entity.isDead) return;
+        if (entity.bearing == null || entity.isDead || entity.contraption == null) return;
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.translate(x, y, z);
@@ -51,7 +51,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
 
         if (entity.contraption.renderContraption == null) {
             entity.contraption.renderContraption = new RenderContraption(
-                    () -> entity.bearing != null,
+                    () -> entity.bearing != null && entity.isEntityAlive(),
                     () -> {
                         GlStateManager.translate(entity.posX, entity.posY, entity.posZ);
                         EnumFacing facing$0 = entity.bearing.getFacing();

@@ -25,10 +25,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public abstract class EntityContraptionBase extends Entity implements IContraptionHolder, IEntityAdditionalSpawnData {
     public EntityContraptionBase(World worldIn) {
         super(worldIn);
-
-        if (worldIn.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
-            ContraptionRendering.CONTRAPTIONS_TO_RENDER.add(this);
-        }
     }
 
     private static final double HALF_SQRT_2 = 0.5 * MathHelper.SQRT_2;
@@ -38,6 +34,24 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     }
     protected RotationPossibility getRotationPossibility() {
         return RotationPossibility.NONE;
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+
+        if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+            ContraptionRendering.CONTRAPTIONS_TO_RENDER.add(this);
+        }
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+
+        if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+            ContraptionRendering.CONTRAPTIONS_TO_RENDER.remove(this);
+        }
     }
 
     @Override
@@ -188,7 +202,7 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
-        if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+        if (this.world != null && this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
             Contraption ctr = this.attachedContraption();
             if (ctr != null)
                 ContraptionRendering.contraptionFinalized(ctr);
@@ -202,7 +216,11 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
     @Override
     public void readSpawnData(ByteBuf buf) {
-
+        if (this.world != null && this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+            Contraption ctr = this.attachedContraption();
+            if (ctr != null)
+                ContraptionRendering.contraptionFinalized(ctr);
+        }
     }
 
     @Override

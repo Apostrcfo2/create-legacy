@@ -66,7 +66,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
                 (e) -> e.bearing.getPos().equals(this.pos)
         );
         for (EntityContraptionBearing bearing : bearings) {
-            this.world.removeEntityDangerously(bearing);
+            this.world.removeEntity(bearing);
         }
         this.preventNextRemoval();
         this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, false));
@@ -104,6 +104,12 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.world.playSound(null, this.pos, SoundInit.contraption_assemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
         this.world.playSound(null, this.pos, SoundInit.contraption_assemble_compound, SoundCategory.BLOCKS, 0.25F, 1.1F);
         return true;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (this.isAssembled()) this.disassemble();
     }
 
     protected ContraptionResult assembleContraption(IContraptionHolder holder) {
