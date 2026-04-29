@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/pouf/base",
+  "textures": {
+    "pouf": "create:block/pouf/pouf_light_blue"
+  }
+}

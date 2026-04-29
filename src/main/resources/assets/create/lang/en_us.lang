@@ -77,6 +77,23 @@ tile.create.framed_glass_horizontal.name=Horizontal Framed Glass
 tile.create.framed_glass_vertical.name=Vertical Framed Glass
 tile.create.framed_glass_tiles.name=Tiled Framed Glass
 
+tile.create.pouf_white.name=White Pouf
+tile.create.pouf_orange.name=Orange Pouf
+tile.create.pouf_magenta.name=Magenta Pouf
+tile.create.pouf_lightBlue.name=Light Blue Pouf
+tile.create.pouf_yellow.name=Yellow Pouf
+tile.create.pouf_lime.name=Lime Pouf
+tile.create.pouf_pink.name=Pink Pouf
+tile.create.pouf_gray.name=Gray Pouf
+tile.create.pouf_silver.name=Light Gray Pouf
+tile.create.pouf_cyan.name=Cyan Pouf
+tile.create.pouf_purple.name=Purple Pouf
+tile.create.pouf_blue.name=Blue Pouf
+tile.create.pouf_brown.name=Brown Pouf
+tile.create.pouf_green.name=Green Pouf
+tile.create.pouf_red.name=Red Pouf
+tile.create.pouf_black.name=Black Pouf
+
 tile.create.natural_asurine.name=Asurine
 tile.create.natural_crimsite.name=Crimsite
 tile.create.natural_limestone.name=Limestone

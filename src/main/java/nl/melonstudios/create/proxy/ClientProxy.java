@@ -28,10 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.actor.BlockGauge;
-import nl.melonstudios.create.entity.EntityContraptionBearing;
-import nl.melonstudios.create.entity.EntityGlue;
-import nl.melonstudios.create.entity.RenderContraptionBearing;
-import nl.melonstudios.create.entity.RenderGlue;
+import nl.melonstudios.create.entity.*;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.recipe.client.*;
@@ -112,6 +109,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerEntityRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(EntityGlue.class, RenderGlue::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityPouf.class, RenderNone::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityContraptionBearing.class, RenderContraptionBearing::new);
     }
 

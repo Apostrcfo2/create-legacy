@@ -158,6 +158,10 @@ public final class BlockInit {
     public static final BlockWindowWood WINDOW_WOOD = registerBlockWithItem(new BlockWindowWood(), true);
     public static final BlockWindowIron WINDOW_IRON = registerBlockWithItem(new BlockWindowIron(), true);
 
+    public static final BlockPouf POUF = (BlockPouf)
+            registerBlockWithItem(new BlockPouf()
+            .setRegistryName("pouf").setUnlocalizedName("create.pouf"), true);
+
     public static final BlockOrestone ORESTONE = registerBlockWithItem(new BlockOrestone("natural"), true);
     public static final BlockOrestone ORESTONE_CUT = registerBlockWithItem(new BlockOrestone("cut"), true);
     public static final BlockOrestone ORESTONE_POLISHED = registerBlockWithItem(new BlockOrestone("polished"), true);

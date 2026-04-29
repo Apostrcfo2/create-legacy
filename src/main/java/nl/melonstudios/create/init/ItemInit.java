@@ -3,8 +3,11 @@ package nl.melonstudios.create.init;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.BlockCasing;
 import nl.melonstudios.create.block.deco.BlockFramedGlass;
@@ -55,6 +58,7 @@ public final class ItemInit {
         return item;
     }
 
+    @SideOnly(Side.CLIENT)
     public static void setItemModels() {
         // items
         CreateLegacy.proxy.setItemModel(WRENCH);
@@ -136,6 +140,11 @@ public final class ItemInit {
         for (int i = 0; i < 3; i++) {
             String type = BlockWindowIron.Variant.byId(i).getName();
             CreateLegacy.proxy.setItemModel(BlockInit.WINDOW_IRON, i, "window_" + type);
+        }
+
+        for (int i = 0; i < 16; i++) {
+            EnumDyeColor color = EnumDyeColor.byMetadata(i);
+            CreateLegacy.proxy.setItemModel(BlockInit.POUF, i, "pouf/" + color.getDyeColorName());
         }
 
         for (int i = 0; i < 7; i++) {

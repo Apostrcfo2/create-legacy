@@ -42,6 +42,7 @@ import nl.melonstudios.create.cfg.ClientConfig;
 import nl.melonstudios.create.entity.EntityContraptionBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
+import nl.melonstudios.create.entity.EntityPouf;
 import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
@@ -67,6 +68,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = "create")
 public class CreateLegacyEventHandler {
     //Registration
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void registerItemModels(ModelRegistryEvent event) {
         ItemInit.setItemModels();
@@ -87,8 +89,11 @@ public class CreateLegacyEventHandler {
         event.getRegistry().register(EntityEntryBuilder.create().entity(EntityGlue.class)
                 .factory(EntityGlue::new).id("create:glue", 0).name("create.glue")
                 .tracker(64, 10, false).build());
+        event.getRegistry().register(EntityEntryBuilder.create().entity(EntityPouf.class)
+                .factory(EntityPouf::new).id("create:pouf", 1).name("create.pouf")
+                .tracker(16, 20, false).build());
         event.getRegistry().register(EntityEntryBuilder.create().entity(EntityContraptionBearing.class)
-                .factory(EntityContraptionBearing::new).id("create:contraption_bearing", 1).name("create.contraption")
+                .factory(EntityContraptionBearing::new).id("create:contraption_bearing", 10).name("create.contraption")
                 .tracker(256, 10, false).build());
         CreateLegacy.proxy.registerEntityRenderers();
     }
