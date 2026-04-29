@@ -10,6 +10,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.network.CreateLegacyPacketManager;
+import nl.melonstudios.create.network.CreateLegacySPackets;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.SubInteractionBox;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,6 +44,7 @@ public abstract class MixinInventoryPlayer {
                 for (SubInteractionBox box : boxes) {
                     if (box.isInside(hitX, hitY, hitZ) && box.getInteraction() instanceof SubInteractionBox.ScrollInteraction) {
                         SubInteractionBox.ScrollInteraction interaction = (SubInteractionBox.ScrollInteraction) box.getInteraction();
+                        CreateLegacyPacketManager.sendToServer(CreateLegacySPackets.SCROLL_INTERACTION.create(pos, hitX, hitY, hitZ, direction));
                         if (interaction.scroll(this.player, this.player.isSneaking(), this.player.getHeldItem(EnumHand.MAIN_HAND), direction)) {
                             ci.cancel();
                         }

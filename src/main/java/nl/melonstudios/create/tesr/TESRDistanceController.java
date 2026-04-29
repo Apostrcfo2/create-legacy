@@ -6,6 +6,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.TileEntityDistanceController;
 import nl.melonstudios.create.util.SubInteractionBox;
 
@@ -24,6 +27,8 @@ public class TESRDistanceController extends TileEntitySpecialRenderer<TileEntity
     public void render(TileEntityDistanceController te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         Minecraft mc = Minecraft.getMinecraft();
         if (!mc.gameSettings.hideGUI) {
+            ItemStack held = mc.player.getHeldItem(EnumHand.MAIN_HAND);
+            if (held.isEmpty() || held.getItem() != ItemInit.WRENCH) return;
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
             this.setLightmapDisabled(true);

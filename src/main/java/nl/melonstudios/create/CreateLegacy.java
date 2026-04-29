@@ -17,6 +17,7 @@ import nl.melonstudios.create.kinetics.BlockStressValues;
 import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
+import nl.melonstudios.create.network.CreateLegacyPacketManager;
 import nl.melonstudios.create.proxy.CommonProxy;
 import nl.melonstudios.create.recipe.*;
 import nl.melonstudios.create.worldgen.CreateWorldGen;
@@ -33,15 +34,6 @@ public class CreateLegacy {
     public static final String NAME = "Create Legacy";
     public static final String VERSION = "26w16a";
     static final String DEPENDENCIES = "required-after:melonlib@[1.11.2,)" + (inIDE ? "" : ";required-after-client:ctm");
-
-    private static SimpleNetworkWrapper network;
-    public static SimpleNetworkWrapper getNetwork() {
-        return network;
-    }
-    private static int networkId = 0;
-    private static int nextNetworkDiscriminator() {
-        return networkId++;
-    }
 
     @SidedProxy(
             serverSide = "nl.melonstudios.create.proxy.CommonProxy",
@@ -61,7 +53,8 @@ public class CreateLegacy {
     public void preInit(FMLPreInitializationEvent event) {
         proxy.clientPreInit(event);
 
-        network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+        CreateLegacyPacketManager.bus = NetworkRegistry.INSTANCE.newEventDrivenChannel(CreateLegacyPacketManager.CHANNEL);
+        CreateLegacyPacketManager.bus.register(new CreateLegacyPacketManager());
 
         logger = event.getModLog();
 

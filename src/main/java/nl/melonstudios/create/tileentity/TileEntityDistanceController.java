@@ -5,6 +5,8 @@ import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
+import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.SubInteractionBox;
 
@@ -24,10 +26,10 @@ public class TileEntityDistanceController extends TileEntityOptimizedBase implem
     public TileEntityDistanceController() {
         super();
 
-        SubInteractionBox.Interaction interaction = (player, sneaking, held) -> {
-            if (!held.isEmpty()) return false;
-            this.setDistance = Math.min(MAX_DISTANCE, Math.max(MIN_DISTANCE, this.setDistance + (sneaking ? -1 : 1)));
-            this.sync();
+        SubInteractionBox.ScrollInteraction interaction = (player, sneaking, held, direction) -> {
+            if (held.isEmpty() || held.getItem() != ItemInit.WRENCH) return false;
+            if (sneaking) return false;
+            this.setDistance = Math.min(MAX_DISTANCE, Math.max(MIN_DISTANCE, this.setDistance + (int)Math.signum(direction)));
             return true;
         };
         for (EnumFacing side : EnumFacing.VALUES) {
