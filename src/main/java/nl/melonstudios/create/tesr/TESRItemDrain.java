@@ -13,10 +13,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.tileentity.TileEntityItemDrain;
 import nl.melonstudios.create.util.RenderUtils;
 import org.lwjgl.opengl.GL11;
 
+@SideOnly(Side.CLIENT)
 public class TESRItemDrain extends TileEntitySpecialRenderer<TileEntityItemDrain> {
     public TESRItemDrain() {
         this.rendererDispatcher = TileEntityRendererDispatcher.instance;

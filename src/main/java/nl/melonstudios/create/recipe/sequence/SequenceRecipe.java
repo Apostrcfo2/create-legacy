@@ -5,7 +5,6 @@ import com.google.common.collect.MapMaker;
 import com.melonstudios.melonlib.misc.Localizer;
 import com.melonstudios.melonlib.recipe.Ingredient;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

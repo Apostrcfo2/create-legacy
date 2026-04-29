@@ -2,7 +2,6 @@ package nl.melonstudios.create.tileentity;
 
 import com.melonstudios.melonlib.misc.StackUtil;
 import com.melonstudios.melonlib.network.TrackedByteBuf;
-import com.melonstudios.melonlib.recipe.FluidIngredient;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.item.ItemStack;

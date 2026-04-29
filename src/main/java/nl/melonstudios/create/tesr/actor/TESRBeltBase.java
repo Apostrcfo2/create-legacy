@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.block.actor.BlockBeltBase;
 import nl.melonstudios.create.block.state.EnumBeltPart;
@@ -15,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
+@SideOnly(Side.CLIENT)
 public class TESRBeltBase<T extends TileEntityBeltBase> extends TESRKineticBase<T> {
     public TESRBeltBase() {
 

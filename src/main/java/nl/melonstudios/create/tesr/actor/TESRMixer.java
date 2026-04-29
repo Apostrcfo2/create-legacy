@@ -4,12 +4,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityMixer;
 import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.Utils;
 
+@SideOnly(Side.CLIENT)
 public class TESRMixer extends TESRKineticBase<TileEntityMixer> {
     @Override
     protected void render(TileEntityMixer te, float pt, float alpha) {

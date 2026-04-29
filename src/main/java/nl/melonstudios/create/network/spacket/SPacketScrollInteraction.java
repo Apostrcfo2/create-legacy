@@ -1,8 +1,5 @@
 package nl.melonstudios.create.network.spacket;
 
-import com.melonstudios.melonlib.network.nt.MelonLibPacketManager;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;

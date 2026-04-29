@@ -1,6 +1,7 @@
 package nl.melonstudios.create.asm;
 
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.ModMetadata;
 
 import java.util.Collections;
 

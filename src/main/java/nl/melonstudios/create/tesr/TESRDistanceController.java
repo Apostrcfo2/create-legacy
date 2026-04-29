@@ -8,7 +8,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import nl.melonstudios.create.init.ItemInit;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.tileentity.TileEntityDistanceController;
 import nl.melonstudios.create.util.SubInteractionBox;
 
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@SideOnly(Side.CLIENT)
 public class TESRDistanceController extends TileEntitySpecialRenderer<TileEntityDistanceController> {
     public TESRDistanceController() {
         super();

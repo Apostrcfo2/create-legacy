@@ -18,7 +18,9 @@ import nl.melonstudios.create.util.filter.IItemFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MixingRecipe {
     public final List<Ingredient> itemInputs;

@@ -8,7 +8,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentString;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
-import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.EnumMovementType;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.create.util.SubInteractionBox;
@@ -16,7 +15,6 @@ import nl.melonstudios.create.util.SubInteractionBox;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 public class TileEntityBearing extends TileEntityBearingBase implements ITileEntityWithSubInteractions {
     public EnumMovementType movementType = EnumMovementType.PLACE_WHEN_STOPPED;

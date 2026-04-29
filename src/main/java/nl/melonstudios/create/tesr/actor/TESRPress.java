@@ -5,12 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.tesr.TESRKineticBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityPress;
 import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.Utils;
 
+@SideOnly(Side.CLIENT)
 public class TESRPress<T extends TileEntityPress> extends TESRKineticBase<T> {
     @Override
     protected void render(T te, float pt, float alpha) {

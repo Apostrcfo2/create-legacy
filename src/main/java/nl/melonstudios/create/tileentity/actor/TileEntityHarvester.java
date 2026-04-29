@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import nl.melonstudios.create.kinetics.contraption.ContraptionInventory;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import java.util.ArrayList;

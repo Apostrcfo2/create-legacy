@@ -17,7 +17,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import nl.melonstudios.create.block.generator.BlockSail;
 import nl.melonstudios.create.entity.EntityPouf;
 import nl.melonstudios.create.init.ItemInit;
 

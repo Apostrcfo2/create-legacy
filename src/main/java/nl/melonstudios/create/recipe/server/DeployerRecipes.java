@@ -12,7 +12,10 @@ import nl.melonstudios.create.recipe.DeployerRecipe;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DeployerRecipes implements ISyncedRecipeType<DeployerRecipe> {
     public static final DeployerRecipes instance = new DeployerRecipes();

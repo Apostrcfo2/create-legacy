@@ -5,12 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearing;
 import nl.melonstudios.create.util.SubInteractionBox;
 
 import java.util.Objects;
 
+@SideOnly(Side.CLIENT)
 public class TESRBearing extends TESRBearingBase<TileEntityBearing> {
     @Override
     protected void render(TileEntityBearing te, float pt, float alpha) {

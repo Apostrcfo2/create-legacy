@@ -1,19 +1,11 @@
 package nl.melonstudios.create.recipe.server;
 
 import com.google.common.collect.ImmutableList;
-import com.melonstudios.melonlib.misc.MetaItem;
-import com.melonstudios.melonlib.predicates.StackPredicate;
-import com.melonstudios.melonlib.predicates.StackPredicateItem;
-import com.melonstudios.melonlib.predicates.StackPredicateMetaItem;
-import com.melonstudios.melonlib.predicates.StackPredicateOreDict;
 import com.melonstudios.melonlib.recipe.ISyncedRecipeType;
 import com.melonstudios.melonlib.recipe.Ingredient;
 import com.melonstudios.melonlib.recipe.RecipeException;
 import com.melonstudios.melonlib.recipe.UniversalRecipe;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tuple;
 import nl.melonstudios.create.recipe.PulverizationRecipe;

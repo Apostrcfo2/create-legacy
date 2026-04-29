@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.block.actor.BlockSaw;
 import nl.melonstudios.create.block.state.EnumSawRotation;
@@ -16,6 +18,7 @@ import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.SubInteractionBox;
 import org.lwjgl.opengl.GL11;
 
+@SideOnly(Side.CLIENT)
 public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> {
     @Override
     protected void render(TileEntitySawProcessing te, float pt, float alpha) {

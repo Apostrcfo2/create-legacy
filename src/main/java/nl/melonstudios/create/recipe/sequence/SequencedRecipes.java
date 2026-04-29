@@ -1,23 +1,17 @@
 package nl.melonstudios.create.recipe.sequence;
 
-import com.google.common.collect.ImmutableList;
 import com.melonstudios.melonlib.misc.StackUtil;
 import com.melonstudios.melonlib.recipe.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import nl.melonstudios.create.init.BlockInit;
-import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.init.RecipeInit;
-import nl.melonstudios.create.recipe.NBTDecodableRecipeType;
-import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SequencedRecipes implements ISyncedRecipeType<SequenceRecipe> {
     public static final SequencedRecipes instance = new SequencedRecipes();

@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.tileentity.TileEntityBasin;
 import nl.melonstudios.create.util.RenderUtils;
 import nl.melonstudios.create.util.SubInteractionBox;
@@ -27,6 +29,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@SideOnly(Side.CLIENT)
 public class TESRBasin extends TileEntitySpecialRenderer<TileEntityBasin> {
     public TESRBasin() {
         this.rendererDispatcher = TileEntityRendererDispatcher.instance;

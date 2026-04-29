@@ -11,8 +11,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
-import nl.melonstudios.create.recipe.server.MillingRecipes;
 import nl.melonstudios.create.recipe.PulverizationRecipe;
+import nl.melonstudios.create.recipe.server.MillingRecipes;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.Utils;
 

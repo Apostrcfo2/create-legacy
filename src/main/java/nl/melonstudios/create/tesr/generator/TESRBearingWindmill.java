@@ -1,20 +1,16 @@
 package nl.melonstudios.create.tesr.generator;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.tesr.actor.TESRBearingBase;
 import nl.melonstudios.create.tileentity.generator.TileEntityBearingWindmill;
-import nl.melonstudios.create.util.EnumRenderPart;
 import nl.melonstudios.create.util.SubInteractionBox;
 
 import javax.annotation.ParametersAreNonnullByDefault;

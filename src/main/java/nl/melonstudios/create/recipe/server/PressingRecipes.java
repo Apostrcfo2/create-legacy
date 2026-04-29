@@ -4,7 +4,6 @@ import com.melonstudios.melonlib.misc.StackUtil;
 import com.melonstudios.melonlib.recipe.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.init.RecipeInit;
 import nl.melonstudios.create.recipe.PressingRecipe;
 

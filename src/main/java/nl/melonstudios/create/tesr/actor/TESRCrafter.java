@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
 import nl.melonstudios.create.block.state.EnumDirection;
 import nl.melonstudios.create.tesr.TESRKineticBase;
@@ -13,8 +15,7 @@ import nl.melonstudios.create.tileentity.actor.TileEntityCrafter;
 import nl.melonstudios.create.util.EnumRenderPart;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Objects;
-
+@SideOnly(Side.CLIENT)
 public class TESRCrafter extends TESRKineticBase<TileEntityCrafter> {
     private static short unpackX(int packed) {
         return (short) (packed & 0xFFFF);

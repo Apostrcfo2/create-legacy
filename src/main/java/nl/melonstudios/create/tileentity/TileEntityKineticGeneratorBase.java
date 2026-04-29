@@ -1,7 +1,6 @@
 package nl.melonstudios.create.tileentity;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.kinetics.KineticNetwork;

@@ -8,12 +8,15 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import nl.melonstudios.create.tileentity.TileEntityDepot;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
+@SideOnly(Side.CLIENT)
 public class TESRDepot extends TileEntitySpecialRenderer<TileEntityDepot> {
     public TESRDepot() {
         this.rendererDispatcher = TileEntityRendererDispatcher.instance;

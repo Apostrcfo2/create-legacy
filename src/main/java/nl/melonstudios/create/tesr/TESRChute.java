@@ -8,12 +8,15 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.tileentity.TileEntityChute;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
+@SideOnly(Side.CLIENT)
 public class TESRChute extends TileEntitySpecialRenderer<TileEntityChute> {
     public TESRChute() {
         this.rendererDispatcher = TileEntityRendererDispatcher.instance;

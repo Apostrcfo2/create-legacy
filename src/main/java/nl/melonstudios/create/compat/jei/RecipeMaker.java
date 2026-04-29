@@ -4,7 +4,9 @@ import com.melonstudios.melonlib.recipe.Ingredient;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
-import nl.melonstudios.create.recipe.*;
+import nl.melonstudios.create.recipe.CuttingRecipe;
+import nl.melonstudios.create.recipe.PressingRecipe;
+import nl.melonstudios.create.recipe.SandingRecipes;
 import nl.melonstudios.create.recipe.client.CuttingRecipesClient;
 import nl.melonstudios.create.recipe.server.PressingRecipes;
 
