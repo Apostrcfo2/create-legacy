@@ -5,7 +5,10 @@ import com.melonstudios.melonlib.network.TrackedByteBuf;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.recipe.server.MillingRecipes;
@@ -13,6 +16,7 @@ import nl.melonstudios.create.recipe.PulverizationRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.Utils;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class TileEntityMillstone extends TileEntityKinetic implements IItemHandler {
@@ -38,7 +42,8 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
 
         if (this.getSpeed() == 0) return;
         for (ItemStack stack : this.output) {
-            if (stack.getCount() == stack.getMaxStackSize()) return;
+            if (stack.getCount() < stack.getMaxStackSize()) continue;
+            return;
         }
 
         if (this.timer > 0) {
@@ -94,16 +99,18 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
         this.input.shrink(1);
         stacks:
         for (ItemStack stack : Utils.rollChancedResults(this.lastMillingRecipe.results)) {
+            if (stack.isEmpty()) continue;
             for (int i = 0; i < this.output.length; i++) {
                 if (this.output[i].isEmpty()) {
                     this.output[i] = stack;
                     continue stacks;
                 }
-                if (ItemStack.areItemStacksEqual(this.output[i], stack)) {
+                if (ItemStack.areItemsEqual(this.output[i], stack) && ItemStack.areItemStackTagsEqual(this.output[i], stack)) {
                     int space = this.output[i].getMaxStackSize() - this.output[i].getCount();
+                    if (space <= 0) continue;
                     space = Math.min(space, stack.getCount());
                     this.output[i].grow(space);
-                    stack.shrink(i);
+                    stack.shrink(space);
                     if (stack.isEmpty()) continue stacks;
                 }
             }
@@ -158,7 +165,7 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
             buf.writeBoolean(true);
             StackUtil.writeItemStack(this.input, buf, true, true);
         } else buf.writeBoolean(false);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < this.output.length; i++) {
             if (!this.output[i].isEmpty()) {
                 buf.writeBoolean(true);
                 StackUtil.writeItemStack(this.output[i], buf, true, true);
@@ -173,7 +180,7 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
         if (buf.readBoolean()) {
             this.input = StackUtil.readItemStack(buf, true, true);
         } else this.input = ItemStack.EMPTY;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < this.output.length; i++) {
             if (buf.readBoolean()) {
                 this.output[i] = StackUtil.readItemStack(buf, true, true);
             } else this.output[i] = ItemStack.EMPTY;
@@ -183,7 +190,7 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
 
     @Override
     public int getSlots() {
-        return 10;
+        return this.output.length + 1;
     }
 
     @Override
@@ -216,5 +223,19 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         return slot == 0 && MillingRecipes.instance.getRecipeForInput(stack) != null;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
+        return super.hasCapability(capability, facing);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T)this;
+        return super.getCapability(capability, facing);
     }
 }

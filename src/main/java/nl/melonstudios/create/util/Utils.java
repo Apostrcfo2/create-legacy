@@ -144,10 +144,12 @@ public class Utils {
             } else {
                 ItemStack stack = tuple.getFirst().copy();
                 int size = stack.getCount();
-                stack.setCount(0);
+                int count = 0;
                 for (int j = 0; j < size; j++) {
-                    if (rnd.nextFloat() < chance) stack.grow(1);
+                    if (rnd.nextFloat() < chance) count++;
                 }
+                stack.setCount(count);
+                list.add(stack);
             }
         }
         return list;

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import nl.melonstudios.create.block.generator.BlockSail;
 
 import java.util.HashSet;
 
@@ -153,6 +154,9 @@ public final class OreDictInit {
             registerOreBlockItem("blockGlass", BlockInit.FRAMED_GLASS, i);
             registerOreBlockItem("blockGlassColorless", BlockInit.FRAMED_GLASS, i);
         }
+
+        registerOre("terracotta", Item.getItemFromBlock(Blocks.HARDENED_CLAY), 0);
+        registerOre("terracotta", Item.getItemFromBlock(Blocks.STAINED_HARDENED_CLAY), OreDictionary.WILDCARD_VALUE);
 
         registerOre("dustWheat", ItemInit.INGREDIENT, 0);
         registerOre("dough", ItemInit.INGREDIENT, 1);

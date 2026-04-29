@@ -11,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -19,10 +20,7 @@ import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
 import nl.melonstudios.create.recipe.sequence.SequenceResult;
 import nl.melonstudios.create.recipe.sequence.SequenceStep;
 import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
-import nl.melonstudios.create.recipe.server.CuttingRecipes;
-import nl.melonstudios.create.recipe.server.DeployerRecipes;
-import nl.melonstudios.create.recipe.server.MixingRecipes;
-import nl.melonstudios.create.recipe.server.PressingRecipes;
+import nl.melonstudios.create.recipe.server.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,6 +73,7 @@ public final class RecipeInit {
         mixing();
         deploying();
         sequences();
+        milling();
     }
 
     private static void pressing() {
@@ -641,6 +640,145 @@ public final class RecipeInit {
                         new ItemStack(Items.IRON_INGOT), 0.7F,
                         new ItemStack(Items.CLOCK), 0.7F
                 )
+        );
+    }
+    private static void milling() {
+        MillingRecipes recipes = MillingRecipes.instance;
+
+        recipes.addRecipe("create:allium", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 2), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 13), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 5), 0.1F),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 9), 0.1F)
+        );
+        recipes.addRecipe("create:andesite", Ingredient.of("stoneAndesite"),
+                new Tuple<>(new ItemStack(Blocks.COBBLESTONE), 1.0F)
+        );
+        recipes.addRecipe("create:azure_bluet", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 3), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 0.1F)
+        );
+        recipes.addRecipe("create:beetroot", Ingredient.of(new ItemStack(Items.BEETROOT), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 1), 1.0F),
+                new Tuple<>(new ItemStack(Items.BEETROOT_SEEDS), 0.1F)
+        );
+        recipes.addRecipe("create:blue_orchid", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 1), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 12), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 0.05F)
+        );
+        recipes.addRecipe("create:bone", Ingredient.of(new ItemStack(Items.BONE), false),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 15), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 7), 0.25F),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 15), 0.25F)
+        );
+        recipes.addRecipe("create:bone_meal", Ingredient.of(new ItemStack(Items.DYE, 1, 15), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 0.1F)
+        );
+        recipes.addRecipe("create:cactus", Ingredient.of(new ItemStack(Blocks.CACTUS), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 2), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 2), 0.1F)
+        );
+        recipes.addRecipe("create:clay", Ingredient.of(new ItemStack(Blocks.CLAY), false),
+                new Tuple<>(new ItemStack(Items.CLAY_BALL, 3), 1.0F),
+                new Tuple<>(new ItemStack(Items.CLAY_BALL, 1), 0.5F)
+        );
+        recipes.addRecipe("create:coal", Ingredient.of(new ItemStack(Items.COAL, 1, OreDictionary.WILDCARD_VALUE), false),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 8), 1.0F)
+        );
+        recipes.addRecipe("create:cobblestone", Ingredient.of(new ItemStack(Blocks.COBBLESTONE), false),
+                new Tuple<>(new ItemStack(Blocks.GRAVEL), 1.0F)
+        );
+        recipes.addRecipe("create:dandelion", Ingredient.of(new ItemStack(Blocks.YELLOW_FLOWER, 1, 0), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 11), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 11), 0.05F)
+        );
+        recipes.addRecipe("create:fern", Ingredient.of(new ItemStack(Blocks.TALLGRASS, 1, 2), false),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 2), 1.0F),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS, 1), 0.1F)
+        );
+        recipes.addRecipe("create:granite", Ingredient.of("stoneGranite"),
+                new Tuple<>(new ItemStack(Blocks.SAND, 1, 1), 1.0F)
+        );
+        recipes.addRecipe("create:grass", Ingredient.of(new ItemStack(Blocks.TALLGRASS, 1, 1), false),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS), 0.25F)
+        );
+        recipes.addRecipe("create:gravel", Ingredient.of(new ItemStack(Blocks.GRAVEL), false),
+                new Tuple<>(new ItemStack(Items.FLINT), 1.0F)
+        );
+        recipes.addRecipe("create:ink_sac", Ingredient.of(new ItemStack(Items.DYE, 1, 0), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 8), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 8), 0.1F)
+        );
+        recipes.addRecipe("create:large_fern", Ingredient.of(new ItemStack(Blocks.DOUBLE_PLANT, 1, 3), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 2), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 2), 0.5F),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS), 0.1F)
+        );
+        recipes.addRecipe("create:lilac", Ingredient.of(new ItemStack(Blocks.DOUBLE_PLANT, 1, 1), false),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 13), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 13), 0.25F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 5), 0.25F)
+        );
+        recipes.addRecipe("create:orange_tulip", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 5), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 14), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 10), 0.1F)
+        );
+        recipes.addRecipe("create:oxeye_daisy", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 8), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 7), 0.2F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 11), 0.05F)
+        );
+        recipes.addRecipe("create:peony", Ingredient.of(new ItemStack(Blocks.DOUBLE_PLANT, 1, 5), false),
+                new Tuple<>(new ItemStack(Items.DYE,3, 9), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE,3, 13), 0.25F),
+                new Tuple<>(new ItemStack(Items.DYE,1, 9), 0.25F)
+        );
+        recipes.addRecipe("create:pink_tulip", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 7), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 9), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 10), 0.1F)
+        );
+        recipes.addRecipe("create:poppy", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 0), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 1), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 2), 0.05F)
+        );
+        recipes.addRecipe("create:red_tulip", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 4), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 1), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 10), 0.1F)
+        );
+        recipes.addRecipe("create:rose_bush", Ingredient.of(new ItemStack(Blocks.DOUBLE_PLANT, 1, 4), false),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 1), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 2), 0.05F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 1), 0.25F)
+        );
+        recipes.addRecipe("create:saddle", Ingredient.of(new ItemStack(Items.SADDLE, 1), false),
+                new Tuple<>(new ItemStack(Items.LEATHER, 2), 1.0F),
+                new Tuple<>(new ItemStack(Items.LEATHER, 2), 0.5F)
+        );
+        recipes.addRecipe("create:sandstone", Ingredient.of(new ItemStack(Blocks.SANDSTONE, 1, 0), false),
+                new Tuple<>(new ItemStack(Blocks.SAND, 1, 0), 1.0F)
+        );
+        recipes.addRecipe("create:sunflower", Ingredient.of(new ItemStack(Blocks.DOUBLE_PLANT, 1, 0), false),
+                new Tuple<>(new ItemStack(Items.DYE, 3, 11), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 14), 0.25F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 11), 0.25F)
+        );
+        recipes.addRecipe("create:double_tallgrass", Ingredient.of(new ItemStack(Blocks.DOUBLE_PLANT, 1, 2), false),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS, 1), 0.5F)
+        );
+        recipes.addRecipe("create:terracotta", Ingredient.of("terracotta"),
+                new Tuple<>(new ItemStack(Blocks.SAND, 1, 1), 1.0F)
+        );
+        recipes.addRecipe("create:wheat", Ingredient.of("cropWheat"),
+                new Tuple<>(new ItemStack(ItemInit.INGREDIENT, 1, 0), 1.0F),
+                new Tuple<>(new ItemStack(ItemInit.INGREDIENT, 2, 0), 0.25F),
+                new Tuple<>(new ItemStack(Items.WHEAT_SEEDS, 1), 0.25F)
+        );
+        recipes.addRecipe("create:white_tulip", Ingredient.of(new ItemStack(Blocks.RED_FLOWER, 1, 1), false),
+                new Tuple<>(new ItemStack(Items.DYE, 2, 7), 1.0F),
+                new Tuple<>(new ItemStack(Items.DYE, 1, 10), 0.1F)
+        );
+        recipes.addRecipe("create:wool", Ingredient.of("wool"),
+                new Tuple<>(new ItemStack(Items.STRING), 1.0F)
         );
     }
 
