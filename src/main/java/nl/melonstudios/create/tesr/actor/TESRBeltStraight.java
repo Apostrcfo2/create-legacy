@@ -30,6 +30,8 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
         IBlockState state = te.getState();
         EnumBeltPart part = state.getValue(BlockBeltStraight.PART);
 
+        GlStateManager.disableBlend();
+        GlStateManager.disableAlpha();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder renderer = tessellator.getBuffer();
         renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
@@ -240,5 +242,6 @@ public class TESRBeltStraight extends TESRBeltBase<TileEntityBeltStraight> {
         }
         tessellator.draw();
         RenderUtils.finish();
+        GlStateManager.enableAlpha();
     }
 }

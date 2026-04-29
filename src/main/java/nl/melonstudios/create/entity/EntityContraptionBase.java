@@ -49,45 +49,52 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     protected void resetBB() {
         Contraption contraption = this.attachedContraption();
         if (contraption != null) {
+            double minX = 0;
+            double minY = 0;
+            double minZ = 0;
             double maxX = 0;
             double maxY = 0;
             double maxZ = 0;
             for (BlockPos pos : contraption.blocks.keySet()) {
-                maxX = Math.max(maxX, Math.abs(pos.getX()));
-                maxY = Math.max(maxY, Math.abs(pos.getY()));
-                maxZ = Math.max(maxZ, Math.abs(pos.getZ()));
+                minX = Math.min(minX, pos.getX());
+                minY = Math.min(minY, pos.getY());
+                minZ = Math.min(minZ, pos.getZ());
+                maxX = Math.max(maxX, pos.getX());
+                maxY = Math.max(maxY, pos.getY());
+                maxZ = Math.max(maxZ, pos.getZ());
             }
 
             RotationPossibility possibility = this.getRotationPossibility();
 
             double adjust = ROTATION_BOX_ADJUSTMENT;
-            if (possibility == RotationPossibility.NONE) {
-                maxX++;
-                maxY++;
-                maxZ++;
-            } else if (possibility == RotationPossibility.X) {
-                maxX++;
-                maxY = Math.max(maxY , maxZ) * adjust;
-                maxZ = maxY;
+            minX -= 0.5;
+            minY -= 0.5;
+            minZ -= 0.5;
+            maxX += 0.5;
+            maxY += 0.5;
+            maxZ += 0.5;
+            if (possibility == RotationPossibility.X) {
+                double extents = Math.max(Math.abs(Math.min(minY, minZ)), Math.abs(Math.max(maxY, maxZ))) * adjust;
+                minY = minZ = -extents;
+                maxY = maxZ = extents;
             } else if (possibility == RotationPossibility.Y) {
-                maxX = Math.max(maxX, maxZ) * adjust;
-                maxY++;
-                maxZ = maxX;
+                double extents = Math.max(Math.abs(Math.min(minX, minZ)), Math.abs(Math.max(maxX, maxZ))) * adjust;
+                minX = minZ = -extents;
+                maxX = maxZ = extents;
             } else if (possibility == RotationPossibility.Z) {
-                maxX = Math.max(maxX, maxY) * adjust;
-                maxY = maxX;
-                maxZ++;
+                double extents = Math.max(Math.abs(Math.min(minX, minY)), Math.abs(Math.max(maxX, maxY))) * adjust;
+                minX = minY = -extents;
+                maxX = maxY = extents;
             } else if (possibility == RotationPossibility.ALL) {
-                maxX = Math.max(maxX, Math.max(maxY, maxZ)) * adjust;
-                maxY = maxX;
-                maxZ = maxY;
+                double extents = Math.max(Math.abs(Math.min(minX, Math.min(minY, minZ))), Math.abs(Math.max(maxX, Math.max(maxY, maxZ)))) * adjust;
+                minX = minY = minZ = -extents;
+                maxX = maxY = maxZ = extents;
             }
 
-
             this.contraptionBB = new AxisAlignedBB(
-                    this.posX - maxX,
-                    this.posY - maxY,
-                    this.posZ - maxZ,
+                    this.posX + minX,
+                    this.posY + minY,
+                    this.posZ + minZ,
                     this.posX + maxX,
                     this.posY + maxY,
                     this.posZ + maxZ

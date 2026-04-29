@@ -89,23 +89,29 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
     public void decreasePresentedAndAddOutput(ItemStack output) {
         if (this.getSpeed() == 0.0F) throw new UnsupportedOperationException("How did this even happen?");
         if (this.getFlag()) {
+            boolean flag = true;
             this.left.shrink(1);
             if (this.left.isEmpty()) this.left = ItemStack.EMPTY;
             if (this.right.isEmpty()) this.right = output.copy();
-            else if (ItemStack.areItemsEqual(this.right, output) && ItemStack.areItemStackTagsEqual(this.right, output)) this.right.grow(output.getCount());
-            else StackUtil.spawnItemWithVelocity(this.world,
-                        this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
-                        output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
-            this.rightPos = this.rightPosOld = 0.0;
+            else if (ItemStack.areItemsEqual(this.right, output) && ItemStack.areItemStackTagsEqual(this.right, output)) {
+                this.right.grow(output.getCount());
+                flag = false;
+            } else StackUtil.spawnItemWithVelocity(this.world,
+                    this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
+                    output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
+            if (flag) this.rightPos = this.rightPosOld = 0.0;
         } else {
+            boolean flag = true;
             this.right.shrink(1);
             if (this.right.isEmpty()) this.right = ItemStack.EMPTY;
             if (this.left.isEmpty()) this.left = output.copy();
-            else if (ItemStack.areItemsEqual(this.left, output) && ItemStack.areItemStackTagsEqual(this.left, output)) this.left.grow(output.getCount());
-            else StackUtil.spawnItemWithVelocity(this.world,
-                        this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
-                        output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
-            this.leftPos = this.leftPosOld = 1.0;
+            else if (ItemStack.areItemsEqual(this.left, output) && ItemStack.areItemStackTagsEqual(this.left, output)) {
+                this.left.grow(output.getCount());
+                flag = false;
+            } else StackUtil.spawnItemWithVelocity(this.world,
+                    this.pos.getX() + 0.5, this.pos.getY() + 1.0, this.pos.getZ() + 0.5,
+                    output, this.world.rand.nextGaussian(), 0.4, this.world.rand.nextGaussian());
+            if (flag) this.leftPos = this.leftPosOld = 1.0;
         }
         this.sync();
     }

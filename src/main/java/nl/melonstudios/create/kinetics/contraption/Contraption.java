@@ -1,5 +1,6 @@
 package nl.melonstudios.create.kinetics.contraption;
 
+import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -22,18 +23,18 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.entity.EntityGlue;
+import nl.melonstudios.create.entity.EntityPouf;
 import nl.melonstudios.create.event.RegisterContraptionInventoriesEvent;
 import nl.melonstudios.create.extensions.IExtensionTileEntity;
 import nl.melonstudios.create.tileentity.TileEntityDepot;
 import nl.melonstudios.create.tileentity.marker.IAssemblyBehavior;
 import nl.melonstudios.create.util.Utils;
+import org.joml.*;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.Math;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
@@ -58,6 +59,7 @@ public class Contraption implements IBlockAccess {
         this.blocks.clear();
         this.tileEntities.clear();
         this.gluedSurfaces.clear();
+        this.poufs.clear();
         this.actors.clear();
 
         NBTTagList blockList = nbt.getTagList("Blocks", 10);
@@ -96,6 +98,16 @@ public class Contraption implements IBlockAccess {
             this.gluedSurfaces.add(new GluedSurface(pos, side));
         }
 
+        NBTTagList poufsList = nbt.getTagList("Poufs", 10);
+        for (int i = 0; i < poufsList.tagCount(); i++) {
+            NBTTagCompound compound = poufsList.getCompoundTagAt(i);
+
+            BlockPos pos = NBTUtil.getPosFromTag(compound.getCompoundTag("Pos"));
+            UUID uuid = compound.getUniqueId("UUID");
+
+            if (uuid != null) this.poufs.add(new TrackedPouf(pos, uuid));
+        }
+
         this.setTileEntityBlockData();
         this.inventory.reindex(this);
 
@@ -131,6 +143,17 @@ public class Contraption implements IBlockAccess {
         }
         nbt.setTag("GluedSurfaces", gluedSurfacesList);
 
+        NBTTagList poufsList = new NBTTagList();
+        for (TrackedPouf pouf : this.poufs) {
+            NBTTagCompound compound = new NBTTagCompound();
+
+            compound.setTag("Pos", NBTUtil.createPosTag(pouf.localPos));
+            compound.setUniqueId("UUID", pouf.entityUUID);
+
+            poufsList.appendTag(compound);
+        }
+        nbt.setTag("Poufs", poufsList);
+
         return nbt;
     }
 
@@ -139,6 +162,7 @@ public class Contraption implements IBlockAccess {
     public final HashMap<BlockPos, IBlockState> blocks = new HashMap<>();
     public final HashMap<BlockPos, TileEntity> tileEntities = new HashMap<>();
     public final HashSet<GluedSurface> gluedSurfaces = new HashSet<>();
+    public final HashSet<TrackedPouf> poufs = new HashSet<>();
     public final HashSet<TileEntity> blacklistedForRendering = new HashSet<>();
     public final Object2IntOpenHashMap<BlockPos> lightSources = new Object2IntOpenHashMap<>();
     public final HashSet<ActorContext> actors = new HashSet<>();
@@ -201,6 +225,24 @@ public class Contraption implements IBlockAccess {
         return this.getBlockState(pos).isSideSolid(this, pos, side);
     }
 
+    public static final Matrix3dc IDENTITY = new Matrix3d().identity();
+    public void updatePoufs(World world, double x, double y, double z, Matrix3dc transforms) {
+        Vector3d vec = new Vector3d();
+        for (TrackedPouf pouf : this.poufs) {
+            if (pouf.entity == null) {
+                List<EntityPouf> list = world.getEntities(EntityPouf.class, e -> e.getPersistentID().equals(pouf.entityUUID));
+                if (list.isEmpty()) {
+                    continue; //it will probably appear later
+                } else {
+                    pouf.entity = list.get(0);
+                }
+            }
+            vec.set(pouf.localPos.getX(), pouf.localPos.getY(), pouf.localPos.getZ());
+            vec.mul(transforms);
+            pouf.entity.setPositionAndUpdate(x + vec.x, y + vec.y - 0.4, z + vec.z);
+        }
+    }
+
     @Nullable
     public static Contraption assemble(IContraptionHolder holder, BlockPos pos, @Nullable BlockPos exclude) {
         World world = holder.getWorld();
@@ -219,6 +261,11 @@ public class Contraption implements IBlockAccess {
             TileEntity te = world.getTileEntity(blockPos);
             BlockPos adjusted = blockPos.subtract(pos);
             contraption.blocks.put(adjusted, state);
+            if (!world.isRemote) {
+                if (BlockDictionary.isBlockTagged(state, "create:pouf")) {
+                    contraption.poufs.add(new TrackedPouf(adjusted, new EntityPouf(world)));
+                }
+            }
             if (te != null) {
                 te.validate();
                 if (te instanceof IAssemblyBehavior) {
@@ -244,6 +291,16 @@ public class Contraption implements IBlockAccess {
             contraption.gluedSurfaces.add(new GluedSurface(surface.pos.subtract(pos), surface.side));
         }
         glues.forEach(world::removeEntity);
+        if (!world.isRemote) {
+            for (TrackedPouf pouf : contraption.poufs) {
+                pouf.entity.setPosition(
+                        pos.getX() + pouf.localPos.getX() + 0.5,
+                        pos.getY() + pouf.localPos.getY() - 0.4,
+                        pos.getZ() + pouf.localPos.getZ() + 0.5
+                );
+                world.spawnEntity(pouf.entity);
+            }
+        }
 
         contraption.inventory.reindex(contraption);
         contraption.compileLight();
@@ -273,6 +330,11 @@ public class Contraption implements IBlockAccess {
             TileEntity te = world.getTileEntity(blockPos);
             BlockPos adjusted = blockPos.subtract(pos);
             contraption.blocks.put(adjusted, state);
+            if (!world.isRemote) {
+                if (BlockDictionary.isBlockTagged(state, "create:pouf")) {
+                    contraption.poufs.add(new TrackedPouf(adjusted, new EntityPouf(holder.getWorld())));
+                }
+            }
             if (te != null) {
                 te.validate();
                 if (te instanceof IAssemblyBehavior) {
@@ -304,6 +366,16 @@ public class Contraption implements IBlockAccess {
             contraption.gluedSurfaces.add(new GluedSurface(surface.pos.subtract(pos), surface.side));
         }
         glues.forEach(world::removeEntity);
+        if (!world.isRemote) {
+            for (TrackedPouf pouf : contraption.poufs) {
+                pouf.entity.setPosition(
+                        pos.getX() + pouf.localPos.getX() + 0.5,
+                        pos.getY() + pouf.localPos.getY() - 0.4,
+                        pos.getZ() + pouf.localPos.getZ() + 0.5
+                );
+                world.spawnEntity(pouf.entity);
+            }
+        }
 
         contraption.inventory.reindex(contraption);
         contraption.compileLight();

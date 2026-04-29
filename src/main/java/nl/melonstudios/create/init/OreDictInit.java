@@ -140,6 +140,8 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:plowable", Blocks.GRASS, true);
         BlockDictionary.registerOre("create:plowable", Blocks.GRASS_PATH, true);
 
+        for (int i = 0; i < 16; i++) registerOreBlockItem("create:pouf", BlockInit.POUF, i);
+
         registerOreBlockItem("oreCopper", BlockInit.ORE, 0);
         registerOreBlockItem("oreZinc", BlockInit.ORE, 1);
 

@@ -13,6 +13,7 @@ import net.minecraft.world.WorldServer;
 import nl.melonstudios.create.entity.EntityContraptionBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.entity.EntityGlue;
+import nl.melonstudios.create.entity.EntityPouf;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.StickinessPropagator;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
@@ -83,13 +84,17 @@ public class CommandCreate extends CommandBase {
             for (EntityContraptionBase con : contraptionBases) {
                 sender.sendMessage(new TextComponentString("> " + con.getClass().getSimpleName() + " at " + con.getPositionVector()));
             }
+        } else if ("poufPurge".equals(type)) {
+            World world = sender.getEntityWorld();
+            List<EntityPouf> poufs = world.getEntities(EntityPouf.class, Entity::isEntityAlive);
+            for (EntityPouf pouf : poufs) world.removeEntity(pouf);
         } else throw new WrongUsageException("Invalid command argument '" + type + "'!");
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, "goggles", "tryFixKinetics", "testGlue", "listContraptions");
+            return getListOfStringsMatchingLastWord(args, "goggles", "tryFixKinetics", "testGlue", "listContraptions", "poufPurge");
         }
         if (args.length == 2) {
             if ("testGlue".equals(args[0])) {

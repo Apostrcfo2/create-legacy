@@ -52,6 +52,22 @@ public class EntityPouf extends Entity implements IEntityAdditionalSpawnData {
     }
 
     @Override
+    public void onUpdate() {
+        this.setFire(0);
+
+        if (this.rideCooldown > 0) {
+            this.rideCooldown--;
+        }
+
+        this.prevDistanceWalkedModified = this.distanceWalkedModified;
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
+        this.prevRotationPitch = this.rotationPitch;
+        this.prevRotationYaw = this.rotationYaw;
+    }
+
+    @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
         compound.setBoolean("blockBased", this.blockBased);
     }

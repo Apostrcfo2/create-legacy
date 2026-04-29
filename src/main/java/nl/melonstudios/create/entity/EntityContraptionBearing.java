@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import nl.melonstudios.create.kinetics.contraption.*;
@@ -18,6 +19,7 @@ import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.util.BlockRotationHelper;
+import org.joml.Matrix3d;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -78,6 +80,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this.cachedAngle = this.bearing.angle;
     }
 
+    private static final Matrix3d TRANSFORMS = new Matrix3d();
     public BlockPos bearingPos;
     public TileEntityBearingBase bearing;
     public Contraption contraption;
@@ -138,6 +141,23 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                         movement
                 );
             }
+        }
+        if (!this.contraption.poufs.isEmpty()) {
+            Matrix3d mat = TRANSFORMS.identity();
+            EnumFacing.Axis axis = this.cachedAxis;
+            double angle = this.cachedAngle * (double)BlockRotationHelper.RADIANS;
+            switch (axis) {
+                case X:
+                    mat.rotateX(angle);
+                    break;
+                case Y:
+                    mat.rotateY(angle);
+                    break;
+                case Z:
+                    mat.rotateZ(angle);
+                    break;
+            }
+            this.contraption.updatePoufs(this.world, this.posX, this.posY, this.posZ, mat);
         }
     }
 
@@ -200,6 +220,9 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, BlockRotationHelper.rotate(surface.side, axis, rotation)));
                 entityGlue.wasCovered = true;
                 this.world.spawnEntity(entityGlue);
+            }
+            for (TrackedPouf pouf : this.contraption.poufs) {
+                if (pouf.entity != null) this.world.removeEntity(pouf.entity);
             }
 
             for (TileEntityKinetic te : attachables) {
