@@ -99,8 +99,11 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
         return (BlockBeltBase) this.getBlockType();
     }
 
+    public long lastUpdateTick = -1;
     @Override
     public void tick() {
+        this.lastUpdateTick = this.world.getTotalWorldTime();
+
         super.tick();
 
         this.leftPosOld = this.leftPos;
@@ -126,6 +129,10 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
                                 this.right = ItemStack.EMPTY;
                                 belt.leftPosOld = this.rightPosOld - 1.0;
                                 belt.leftPos = this.rightPos - 1.0;
+                                if (belt.lastUpdateTick != this.lastUpdateTick) {
+                                    belt.leftPosOld -= speed;
+                                    belt.leftPos -= speed;
+                                }
                             } else {
                                 this.rightPos = 1.0;
                             }
@@ -183,6 +190,10 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
                                 this.left = ItemStack.EMPTY;
                                 belt.rightPosOld = this.leftPosOld + 1.0;
                                 belt.rightPos = this.leftPos + 1.0;
+                                if (belt.lastUpdateTick != this.lastUpdateTick) {
+                                    belt.rightPosOld -= speed;
+                                    belt.rightPos -= speed;
+                                }
                             } else {
                                 this.leftPos = 0.0;
                             }

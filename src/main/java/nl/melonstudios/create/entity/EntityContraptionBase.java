@@ -143,6 +143,10 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
         super.setPosition(x, y, z);
         this.resetBB();
     }
+    public void setPositionAndUpdateInternal(double x, double y, double z) {
+        super.setPositionAndUpdate(x, y, z);
+        this.resetBB();
+    }
 
     @Override
     public AxisAlignedBB getEntityBoundingBox() {
@@ -152,6 +156,11 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
     @Override
     public void move(MoverType type, double x, double y, double z) {
 
+    }
+
+    @Override
+    public void resetPositionToBB() {
+        if (this.isAddedToWorld() && !this.world.isRemote) this.world.updateEntityWithOptionalForce(this, false);
     }
 
     @Nullable
@@ -179,7 +188,11 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
-
+        if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+            Contraption ctr = this.attachedContraption();
+            if (ctr != null)
+                ContraptionRendering.contraptionFinalized(ctr);
+        }
     }
 
     @Override
