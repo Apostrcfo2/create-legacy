@@ -13,6 +13,7 @@ import nl.melonstudios.create.tileentity.TileEntityDistanceController;
 import nl.melonstudios.create.util.SubInteractionBox;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -28,12 +29,11 @@ public class TESRDistanceController extends TileEntitySpecialRenderer<TileEntity
         Minecraft mc = Minecraft.getMinecraft();
         if (!mc.gameSettings.hideGUI) {
             ItemStack held = mc.player.getHeldItem(EnumHand.MAIN_HAND);
-            if (held.isEmpty() || held.getItem() != ItemInit.WRENCH) return;
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x, y, z);
-            this.setLightmapDisabled(true);
-            boolean flag = SubInteractionBox.renderPotentialInteractionBoxes(mc.objectMouseOver, te);
-            if (flag) {
+            if (SubInteractionBox.Helper.basicScrollRequirements(held, mc.player.isSneaking())
+                    && Objects.equals(mc.objectMouseOver.getBlockPos(), te.getPos())) {
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(x, y, z);
+                this.setLightmapDisabled(true);
                 drawNumber(mc.fontRenderer, String.valueOf(te.setDistance), 0.5F, 0.5F, -0.01F, 0.0F, 0.0F);
                 drawNumber(mc.fontRenderer, String.valueOf(te.setDistance), 1.01F, 0.5F, 0.5F, 90.0F, 0.0F);
                 drawNumber(mc.fontRenderer, String.valueOf(te.setDistance), 0.5F, 0.5F, 1.01F, 180.0F, 0.0F);
@@ -41,9 +41,10 @@ public class TESRDistanceController extends TileEntitySpecialRenderer<TileEntity
                 float approxYaw = mc.player != null ? Math.round(mc.player.cameraYaw / 90.0F) * 90.0F : 0.0F;
                 drawNumber(mc.fontRenderer, String.valueOf(te.setDistance), 0.5F, 1.01F, 0.5F, approxYaw, 90.0F);
                 drawNumber(mc.fontRenderer, String.valueOf(te.setDistance), 0.5F, -0.01F, 0.5F, approxYaw, -90.0F);
+                SubInteractionBox.renderPotentialInteractionBoxes(mc.objectMouseOver, te);
+                this.setLightmapDisabled(false);
+                GlStateManager.popMatrix();
             }
-            this.setLightmapDisabled(false);
-            GlStateManager.popMatrix();
         }
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.kinetics.contraption.IContraptionActor;
 import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
 import nl.melonstudios.ponder.IVirtualizable;
@@ -171,8 +172,59 @@ public final class SubInteractionBox {
             Objects.requireNonNull(interaction, "Interaction cannot be null!");
             return new SubInteractionBox(x-0.125F, y-0.125F, z-0.125F, 0.25F, interaction);
         }
+        public static SubInteractionBox createDefaultAt(float x, float y, float z, ScrollInteraction interaction) {
+            Objects.requireNonNull(interaction, "Interaction cannot be null!");
+            return new SubInteractionBox(x-0.125F, y-0.125F, z-0.125F, 0.25F, interaction);
+        }
 
         public static SubInteractionBox createCenteredSide(@Nullable EnumFacing side, float size, Interaction interaction) {
+            Objects.requireNonNull(interaction, "Interaction cannot be null!");
+            float halfSize = size * 0.5F;
+            if (side == null) {
+                return new SubInteractionBox(
+                        0.5F - halfSize, 0.5F - halfSize, 0.5F - halfSize,
+                        size, interaction
+                );
+            }
+            switch (side) {
+                case DOWN:
+                    return new SubInteractionBox(
+                            0.5F - halfSize, -halfSize, 0.5F - halfSize,
+                            size, interaction
+                    );
+                case UP:
+                    return new SubInteractionBox(
+                            0.5F - halfSize, 1.0F - halfSize, 0.5F - halfSize,
+                            size, interaction
+                    );
+                case NORTH:
+                    return new SubInteractionBox(
+                            0.5F - halfSize, 0.5F - halfSize, -halfSize,
+                            size, interaction
+                    );
+                case SOUTH:
+                    return new SubInteractionBox(
+                            0.5F - halfSize, 0.5F - halfSize, 1.0F - halfSize,
+                            size, interaction
+                    );
+                case WEST:
+                    return new SubInteractionBox(
+                            -halfSize, 0.5F - halfSize, 0.5F - halfSize,
+                            size, interaction
+                    );
+                case EAST:
+                    return new SubInteractionBox(
+                            1.0F - halfSize, 0.5F - halfSize, 0.5F - halfSize,
+                            size, interaction
+                    );
+                default:
+                    return new SubInteractionBox(
+                            0.5F - halfSize, 0.5F - halfSize, 0.5F - halfSize,
+                            size, interaction
+                    );
+            }
+        }
+        public static SubInteractionBox createCenteredSide(@Nullable EnumFacing side, float size, ScrollInteraction interaction) {
             Objects.requireNonNull(interaction, "Interaction cannot be null!");
             float halfSize = size * 0.5F;
             if (side == null) {
@@ -229,6 +281,10 @@ public final class SubInteractionBox {
             switch (side) {
                 default:throw new IllegalArgumentException("???");
             }
+        }
+
+        public static boolean basicScrollRequirements(ItemStack held, boolean sneaking) {
+            return !sneaking && !held.isEmpty() && held.getItem() == ItemInit.WRENCH;
         }
     }
 }

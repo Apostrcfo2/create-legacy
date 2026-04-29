@@ -13,7 +13,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import nl.melonstudios.create.block.actor.BlockBearingBase;
 import nl.melonstudios.create.entity.EntityContraptionBearing;
-import nl.melonstudios.create.item.ItemWrench;
 import nl.melonstudios.create.kinetics.KineticNetwork;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionAssemblyChecker;
@@ -213,43 +212,57 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
         return this.generatedSpeed;
     }
 
-    private final List<SubInteractionBox> subInteractionBoxes = new ArrayList<>();
-    private void addInteractions() {
-        for (EnumFacing side : EnumFacing.VALUES) {
-            if (side.getAxis() != this.getState().getValue(BlockBearingBase.FACING).getAxis()) {
-                this.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(side, 0.375F, this.new Interaction()));
-            }
-        }
-    }
-    private class Interaction implements SubInteractionBox.ScrollInteraction {
-        @Override
-        public boolean scroll(EntityPlayer player, boolean sneaking, ItemStack held, int direction) {
-            if (held.getItem() instanceof ItemWrench) {
-                flipped = !flipped;
-                generatedSpeed = null;
-                sync();
-                return true;
-            }
-            return false;
+    private static void addSubInteractionBoxes(EnumFacing.Axis axis, TileEntityBearingWindmill te) {
+        switch (axis) {
+            case X:
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.DOWN, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.UP, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.NORTH, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.SOUTH, 0.25F, te::setMovementType));
+                break;
+            case Y:
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.NORTH, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.SOUTH, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.WEST, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.EAST, 0.25F, te::setMovementType));
+                break;
+            case Z:
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.DOWN, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.UP, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.WEST, 0.25F, te::setMovementType));
+                te.subInteractionBoxes.add(SubInteractionBox.Helper.createCenteredSide(EnumFacing.EAST, 0.25F, te::setMovementType));
+                break;
         }
     }
 
+    private final List<SubInteractionBox> subInteractionBoxes = new ArrayList<>();
     @Override
     public Collection<SubInteractionBox> getSubInteractionBoxes() {
         return this.subInteractionBoxes;
     }
 
+    public boolean setMovementType(EntityPlayer player, boolean sneaking, ItemStack held, int direction) {
+        if (SubInteractionBox.Helper.basicScrollRequirements(held, sneaking)) {
+            this.flipped = !this.flipped;
+            this.generatedSpeed = null;
+            if (!this.world.isRemote) {
+                this.reactivateSource = true;
+                this.updateGeneratedRotation();
+            }
+            this.sync();
+            return true;
+        } return false;
+    }
+
     @Override
     public void initialize() {
         super.initialize();
-
-        //this.addInteractions();
+        addSubInteractionBoxes(this.getState().getValue(BlockBearingBase.FACING).getAxis(), this);
     }
 
     @Override
     public void initializeClient() {
         super.initializeClient();
-
-        //this.addInteractions();
+        addSubInteractionBoxes(this.getState().getValue(BlockBearingBase.FACING).getAxis(), this);
     }
 }

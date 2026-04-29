@@ -30,6 +30,7 @@ public class TileEntityDistanceController extends TileEntityOptimizedBase implem
             if (held.isEmpty() || held.getItem() != ItemInit.WRENCH) return false;
             if (sneaking) return false;
             this.setDistance = Math.min(MAX_DISTANCE, Math.max(MIN_DISTANCE, this.setDistance + (int)Math.signum(direction)));
+            this.sync();
             return true;
         };
         for (EnumFacing side : EnumFacing.VALUES) {

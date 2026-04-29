@@ -44,7 +44,6 @@ import nl.melonstudios.create.tileentity.generator.*;
 import nl.melonstudios.ponder.PonderRegistry;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -81,7 +80,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityWaterWheelTemp.class, "water_wheel_temp", null);
         this.registerTESR(TileEntityCreativeMotor.class, "creative_motor", new TESRCreativeMotor());
         this.registerTESR(TileEntityTurntable.class, "turntable", new TESRTurntable());
-        this.registerTESR(TileEntityBearing.class, "bearing", new TESRBearing<>());
+        this.registerTESR(TileEntityBearing.class, "bearing", new TESRBearing());
         this.registerTESR(TileEntityBearingWindmill.class, "bearing_windmill", new TESRBearingWindmill<>());
         this.registerTESR(TileEntityDistanceController.class, "distance_controller", new TESRDistanceController());
         this.registerTESR(TileEntitySpeedometer.class, "speedometer", new TESRGauge<>(BlockGauge.Type.SPEED));
