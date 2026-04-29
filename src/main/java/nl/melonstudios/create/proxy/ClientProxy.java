@@ -94,7 +94,7 @@ public class ClientProxy extends CommonProxy {
         this.registerTESR(TileEntityPlough.class, "plough", null);
         this.registerTESR(TileEntityHarvester.class, "harvester", new TESRHarvester());
         this.registerTESR(TileEntityStorageInterface.class, "storage_interface", new TESRContraptionInterface<>());
-        this.registerTESR(TileEntityMillstone.class, "millstone", null);
+        this.registerTESR(TileEntityMillstone.class, "millstone", new TESRMillstone());
         this.registerTESR(TileEntityCrafter.class, "crafter", new TESRCrafter());
         this.registerTESR(TileEntityBlazeBurner.class, "blaze_burner", new TESRBlazeBurner());
         this.registerTESR(TileEntityDepot.class, "depot", new TESRDepot());

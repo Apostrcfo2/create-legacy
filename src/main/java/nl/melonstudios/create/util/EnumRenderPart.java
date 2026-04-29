@@ -81,6 +81,8 @@ public enum EnumRenderPart implements IStringSerializable {
     CRAFTER_COVER_EAST,
     CRAFTER_COVER_SOUTH,
     CRAFTER_COVER_WEST,
+
+    MILLSTONE,
     ;
 
     private final int id = this.ordinal();

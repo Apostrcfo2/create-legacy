@@ -32,8 +32,9 @@ public class TESRBearingWindmill<T extends TileEntityBearingWindmill> extends TE
             ItemStack held = this.mc.player.getHeldItem(EnumHand.MAIN_HAND);
             if (SubInteractionBox.Helper.basicScrollRequirements(held, this.mc.player.isSneaking()) &&
                     Objects.equals(this.mc.objectMouseOver.getBlockPos(), te.getPos())) {
-                EnumFacing.Axis axis = te.getState().getValue(BlockBearingBase.FACING).getAxis();
-                String str = te.flipped ? "\u21BB" : "\u21BA";
+                EnumFacing facing = te.getState().getValue(BlockBearingBase.FACING);
+                EnumFacing.Axis axis = facing.getAxis();
+                String str = te.flipped != (facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE) ? "\u21BB" : "\u21BA";
                 if (axis != EnumFacing.Axis.Z) {
                     drawNumber(mc.fontRenderer, str, 0.5F, 0.5F, -0.01F, 0.0F, 0.0F);
                     drawNumber(mc.fontRenderer, str, 0.5F, 0.5F, 1.01F, 180.0F, 0.0F);

@@ -58,6 +58,16 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         if (this.isAssembled()) this.disassemble();
     }
 
+    public void emergencyDisassemble() {
+        List<EntityContraptionBearing> bearings = this.world.getEntities(
+                EntityContraptionBearing.class,
+                (e) -> e.bearing.getPos().equals(this.pos)
+        );
+        for (EntityContraptionBearing bearing : bearings) {
+            this.world.removeEntity(bearing);
+        }
+        this.world.playSound(null, this.pos, SoundInit.contraption_disassemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
+    }
     public boolean disassemble() {
         if (this.assemblyChanged) return false;
         this.assemblyChanged = true;
@@ -109,7 +119,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     @Override
     public void destroy() {
         super.destroy();
-        if (this.isAssembled()) this.disassemble();
+        this.assemblyChanged = false;
+        if (this.isAssembled()) this.emergencyDisassemble();
     }
 
     protected ContraptionResult assembleContraption(IContraptionHolder holder) {

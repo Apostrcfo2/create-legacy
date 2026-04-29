@@ -173,7 +173,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     protected void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
         compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
-        compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearing.getPos()));
+        compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearingPos));
     }
 
     @Override

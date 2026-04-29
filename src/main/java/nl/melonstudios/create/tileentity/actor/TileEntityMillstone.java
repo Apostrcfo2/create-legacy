@@ -1,6 +1,8 @@
 package nl.melonstudios.create.tileentity.actor;
 
 import com.melonstudios.melonlib.misc.StackUtil;
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
@@ -10,6 +12,8 @@ import nl.melonstudios.create.recipe.server.MillingRecipes;
 import nl.melonstudios.create.recipe.PulverizationRecipe;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.util.Utils;
+
+import java.io.IOException;
 
 public class TileEntityMillstone extends TileEntityKinetic implements IItemHandler {
     public ItemStack input = ItemStack.EMPTY;
@@ -132,24 +136,6 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
         return nbt;
     }
     @Override
-    public NBTTagCompound writePacket() {
-        NBTTagCompound nbt = super.writePacket();
-
-        if (!this.input.isEmpty()) {
-            nbt.setTag("In", this.input.writeToNBT(new NBTTagCompound()));
-        }
-        for (int i = 0; i < this.output.length; i++) {
-            ItemStack out = this.output[i];
-            if (!out.isEmpty()) {
-                nbt.setTag("Out" + i, out.writeToNBT(new NBTTagCompound()));
-            }
-        }
-        nbt.setInteger("timer", this.timer);
-
-        return nbt;
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
@@ -163,19 +149,36 @@ public class TileEntityMillstone extends TileEntityKinetic implements IItemHandl
         }
         this.timer = compound.getInteger("timer");
     }
-    @Override
-    public void readPacket(NBTTagCompound nbt) {
-        super.readPacket(nbt);
 
-        if (nbt.hasKey("In", 10)) {
-            this.input = new ItemStack(nbt.getCompoundTag("In"));
-        } else this.input = ItemStack.EMPTY;
-        for (int i = 0; i < this.output.length; i++) {
-            if (nbt.hasKey("Out" + i, 10)) {
-                this.output[i] = new ItemStack(nbt.getCompoundTag("Out" + i));
-            }
+    @Override
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        super.writePacket(buf);
+
+        if (!this.input.isEmpty()) {
+            buf.writeBoolean(true);
+            StackUtil.writeItemStack(this.input, buf, true, true);
+        } else buf.writeBoolean(false);
+        for (int i = 0; i < 8; i++) {
+            if (!this.output[i].isEmpty()) {
+                buf.writeBoolean(true);
+                StackUtil.writeItemStack(this.output[i], buf, true, true);
+            } else buf.writeBoolean(false);
         }
-        this.timer = nbt.getInteger("timer");
+        buf.writeInt(this.timer);
+    }
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        super.readPacket(buf);
+
+        if (buf.readBoolean()) {
+            this.input = StackUtil.readItemStack(buf, true, true);
+        } else this.input = ItemStack.EMPTY;
+        for (int i = 0; i < 8; i++) {
+            if (buf.readBoolean()) {
+                this.output[i] = StackUtil.readItemStack(buf, true, true);
+            } else this.output[i] = ItemStack.EMPTY;
+        }
+        this.timer = buf.readInt();
     }
 
     @Override

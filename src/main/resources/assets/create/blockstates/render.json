@@ -224,6 +224,9 @@
     "render_part=crafter_cover_west": {
       "model": "create:render/crafter_cover",
       "y": 270
+    },
+    "render_part=millstone": {
+      "model": "create:render/millstone"
     }
   }
 }
