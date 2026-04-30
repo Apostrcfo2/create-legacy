@@ -11,6 +11,6 @@
   "credits": "The Create Team for 'creating' such an amazing mod",
   "logoFile": "assets/create/logo.png",
   "screenshots": [],
-  "dependencies": ["melonlib", "ctm"]
+  "dependencies": ["melonlib", "ctm", "mixinbooter"]
 }
 ]
