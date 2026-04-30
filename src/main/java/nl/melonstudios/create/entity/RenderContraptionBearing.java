@@ -36,6 +36,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
 
     @Override //horrible code, but it is rendering so it should be horrible yes
     public void doRender(EntityContraptionBearing entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        /*
         if (entity.bearing == null || entity.isDead || entity.contraption == null) return;
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -49,6 +50,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
         this.bindEntityTexture(entity);
         GlStateManager.translate(-0.5, -0.5, -0.5);
 
+        /*
         if (entity.contraption.renderContraption == null) {
             entity.contraption.renderContraption = new RenderContraption(
                     () -> entity.bearing != null && entity.isEntityAlive(),
@@ -67,7 +69,9 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
             );
         }
         ContraptionRendering.addRenderContraption(entity.contraption.renderContraption);
+        */
 
+        /*
         for (TileEntity te : entity.contraption.tileEntities.values()) {
             if (entity.contraption.blacklistedForRendering.contains(te)) continue;
             TileEntitySpecialRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
@@ -83,6 +87,7 @@ public class RenderContraptionBearing extends Render<EntityContraptionBearing> {
             }
         }
         GlStateManager.popMatrix();
+        */
     }
 
     @Nullable

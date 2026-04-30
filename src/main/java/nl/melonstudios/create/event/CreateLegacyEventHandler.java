@@ -267,16 +267,7 @@ public class CreateLegacyEventHandler {
             for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
                 Contraption contraption = entity.attachedContraption();
                 if (contraption != null && !ContraptionRendering.available(contraption)) {
-                    boolean allow = false;
-                    for (RenderContraption render : ContraptionRendering.getRenderContraptions()) {
-                        if (render.contraption == contraption) {
-                            allow = true;
-                            break;
-                        }
-                    }
-                    if (allow) {
-                        ContraptionRendering.getList(contraption);
-                    }
+                    ContraptionRendering.getList(contraption);
                 }
             }
         }

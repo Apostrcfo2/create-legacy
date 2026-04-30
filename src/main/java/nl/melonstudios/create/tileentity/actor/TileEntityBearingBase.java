@@ -70,6 +70,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
     public boolean disassemble() {
         if (this.assemblyChanged) return false;
+        if (this.world.isRemote) return true;
         this.assemblyChanged = true;
         List<EntityContraptionBearing> bearings = this.world.getEntities(
                 EntityContraptionBearing.class,
@@ -89,6 +90,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
     protected boolean assemble() {
         if (this.assemblyChanged) return false;
+        if (this.world.isRemote) return true;
         this.assemblyChanged = true;
         //EntityContraptionBearing bearing = new EntityContraptionBearing(this, null, this.pos);
         //if (bearing.contraption == null) return false;
@@ -98,6 +100,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         EntityContraptionBearing bearing = new EntityContraptionBearing(this);
         ContraptionResult result = this.assembleContraption(bearing);
         if (result.hasFailed()) {
+            bearing.setDead();
             this.lastFailure = result.getError();
             this.sync();
             return true;

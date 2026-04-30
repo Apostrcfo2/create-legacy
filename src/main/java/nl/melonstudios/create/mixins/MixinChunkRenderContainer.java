@@ -23,4 +23,9 @@ public class MixinChunkRenderContainer implements IExtensionChunkRenderContainer
             renderContraption.preRenderLogic.run();
         }
     }
+
+    @Override
+    public void create$resetPositionToZero() {
+        GlStateManager.translate(-this.viewEntityX, -this.viewEntityY, -this.viewEntityZ);
+    }
 }

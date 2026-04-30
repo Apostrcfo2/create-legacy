@@ -3,6 +3,7 @@ package nl.melonstudios.create.entity;
 import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
@@ -10,8 +11,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.kinetics.contraption.*;
 import nl.melonstudios.create.kinetics.contraption.accessor.CAccessorBearing;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
@@ -160,19 +165,51 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void applyRenderTransforms(float pt) {
+        GlStateManager.translate(
+                MathHelper.clampedLerp(this.prevPosX, this.posX, pt),
+                MathHelper.clampedLerp(this.prevPosY, this.posY, pt),
+                MathHelper.clampedLerp(this.prevPosZ, this.posZ, pt)
+        );
+        if (this.bearing != null) this.cachedAxis = this.bearing.getFacing().getAxis();
+        if (this.cachedAxis != null) {
+            float angle = (this.bearing != null ? ((float)MathHelper.clampedLerp(this.bearing.angleOld, this.bearing.angle, pt)) : this.cachedAngle);
+            this.cachedAngle = angle;
+            switch (this.cachedAxis) {
+                case X:
+                    GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
+                    break;
+                case Y:
+                    GlStateManager.rotate(angle, 0.0F, 1.0F, 0.0F);
+                    break;
+                case Z:
+                    GlStateManager.rotate(angle, 0.0F, 0.0F, 1.0F);
+                    break;
+            }
+        }
+        GlStateManager.translate(-0.5F, -0.5F, -0.5F);
+    }
+
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        this.contraption = new Contraption(this);
-        this.contraption.loadNBT(compound.getCompoundTag("Contraption"));
+        if (compound.hasKey("Contraption", 10)) {
+            this.contraption = new Contraption(this);
+            this.contraption.loadNBT(compound.getCompoundTag("Contraption"));
+        } else throw new IllegalStateException("No contraption data (this should not happen)");
 
-        this.bearingPos = NBTUtil.getPosFromTag(compound.getCompoundTag("BearingPos"));
+        if (compound.hasKey("BearingPos", 10)) {
+            this.bearingPos = NBTUtil.getPosFromTag(compound.getCompoundTag("BearingPos"));
+        } else this.bearingPos = null;
     }
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
-        compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
-        compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearingPos));
+        if (this.contraption != null) compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
+        else throw new IllegalStateException("Contraption is null (this should not happen)");
+        if (this.bearingPos != null) compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearingPos));
     }
 
     @Override
@@ -200,18 +237,23 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
                 BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, entry.getKey()); //self.add(entry.getKey());
                 this.world.setBlockState(pos, BlockRotationHelper.rotate(entry.getValue(), axis, rotation));
+                this.world.removeTileEntity(pos);
                 TileEntity te = this.contraption.tileEntities.get(entry.getKey());
                 if (te != null) {
                     te.setPos(pos);
                     te.validate();
-                    this.world.setTileEntity(pos, te);
-                    if (te instanceof TileEntityKinetic) {
-                        attachables.add((TileEntityKinetic) te);
+                    TileEntity copy = TileEntity.create(this.world, te.writeToNBT(new NBTTagCompound()));
+                    if (copy != null) {
+                        copy.validate();
+                        this.world.setTileEntity(pos, copy);
+                        if (copy instanceof TileEntityKinetic) {
+                            attachables.add((TileEntityKinetic) copy);
+                        }
+                        if (copy instanceof IContraptionActor) {
+                            ((IContraptionActor) te).setOnContraption(false);
+                        }
+                        copy.markDirty();
                     }
-                    if (te instanceof IContraptionActor) {
-                        ((IContraptionActor)te).setOnContraption(false);
-                    }
-                    te.markDirty();
                 }
             }
             for (GluedSurface surface : this.contraption.gluedSurfaces) {

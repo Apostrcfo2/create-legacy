@@ -269,19 +269,21 @@ public class Contraption implements IBlockAccess {
                 }
             }
             if (te != null) {
-                te.validate();
                 if (te instanceof IAssemblyBehavior) {
                     ((IAssemblyBehavior)te).onAssembly();
                 }
+                te.invalidate();
                 world.removeTileEntity(blockPos);
                 te.setPos(adjusted);
-                te.validate();
-                contraption.tileEntities.put(adjusted, te);
-                if (te instanceof IContraptionActor) {
-                    IContraptionActor actor = (IContraptionActor) te;
-                    contraption.actors.add(new ActorContext(adjusted, actor));
-                    te.setWorld(world);
-                    actor.setOnContraption(true);
+                TileEntity copy = TileEntity.create(world, te.writeToNBT(new NBTTagCompound()));
+                if (copy != null) {
+                    contraption.tileEntities.put(adjusted, te);
+                    if (copy instanceof IContraptionActor) {
+                        IContraptionActor actor = (IContraptionActor) copy;
+                        contraption.actors.add(new ActorContext(adjusted, actor));
+                        copy.setWorld(world);
+                        actor.setOnContraption(true);
+                    }
                 }
             }
 
@@ -338,19 +340,21 @@ public class Contraption implements IBlockAccess {
                 }
             }
             if (te != null) {
-                te.validate();
                 if (te instanceof IAssemblyBehavior) {
                     ((IAssemblyBehavior)te).onAssembly();
                 }
+                te.invalidate();
                 world.removeTileEntity(blockPos);
                 te.setPos(adjusted);
-                te.validate();
-                contraption.tileEntities.put(adjusted, te);
-                if (te instanceof IContraptionActor) {
-                    IContraptionActor actor = (IContraptionActor) te;
-                    contraption.actors.add(new ActorContext(adjusted, actor));
-                    te.setWorld(world);
-                    actor.setOnContraption(true);
+                TileEntity copy = TileEntity.create(world, te.writeToNBT(new NBTTagCompound()));
+                if (copy != null) {
+                    contraption.tileEntities.put(adjusted, copy);
+                    if (copy instanceof IContraptionActor) {
+                        IContraptionActor actor = (IContraptionActor) copy;
+                        contraption.actors.add(new ActorContext(adjusted, actor));
+                        copy.setWorld(world);
+                        actor.setOnContraption(true);
+                    }
                 }
             }
 
