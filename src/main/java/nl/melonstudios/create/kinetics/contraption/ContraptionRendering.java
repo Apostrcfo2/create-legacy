@@ -5,23 +5,52 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.entity.EntityContraptionBase;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class ContraptionRendering {
     public static final Set<EntityContraptionBase> CONTRAPTIONS_TO_RENDER = new ConcurrentSet<>();
+    public static final Set<EntityContraptionBase> CONTRAPTIONS_TO_REMOVE = new ConcurrentSet<>();
 
     private static final HashMap<Contraption, int[]> RENDER_LISTS = new HashMap<>();
     public static void contraptionFinalized(Contraption contraption) {
         int[] list = RENDER_LISTS.remove(contraption);
         if (list != null) {
             deleteList(list);
+        }
+    }
+
+    private static final List<EntityContraptionBase> COLLECTED_CONTRAPTIONS = new ArrayList<>();
+    @SideOnly(Side.CLIENT)
+    public static void collectContraptions(World world) {
+        COLLECTED_CONTRAPTIONS.clear();
+        for (Entity entity : world.loadedEntityList) {
+            if (entity instanceof EntityContraptionBase) {
+                COLLECTED_CONTRAPTIONS.add((EntityContraptionBase) entity);
+            }
+        }
+    }
+    @SideOnly(Side.CLIENT)
+    public static List<EntityContraptionBase> getCollectedContraptions() {
+        return COLLECTED_CONTRAPTIONS;
+    }
+    public static void cleanupContraptions(World world) {
+        if (!world.isRemote) throw new IllegalArgumentException("Rendering only exists for client worlds!");
+        List<EntityContraptionBase> entities = world.getEntities(EntityContraptionBase.class, e -> true);
+        for (EntityContraptionBase entity : entities) {
+            Contraption ctr = entity.attachedContraption();
+            if (ctr != null && available(ctr)) {
+                contraptionFinalized(ctr);
+            }
         }
     }
 
@@ -43,6 +72,7 @@ public class ContraptionRendering {
             return list;
         }
     }
+    @Nullable
     public static int[] getListNoCreate(Contraption contraption) {
         return RENDER_LISTS.get(contraption);
     }

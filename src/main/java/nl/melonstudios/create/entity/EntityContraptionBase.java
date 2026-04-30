@@ -44,7 +44,7 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
         super.onAddedToWorld();
 
         if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
-            ContraptionRendering.CONTRAPTIONS_TO_RENDER.add(this);
+            //ContraptionRendering.CONTRAPTIONS_TO_RENDER.add(this);
         }
     }
 
@@ -54,6 +54,7 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
         if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
             ContraptionRendering.CONTRAPTIONS_TO_RENDER.remove(this);
+            ContraptionRendering.CONTRAPTIONS_TO_REMOVE.add(this);
         }
     }
 

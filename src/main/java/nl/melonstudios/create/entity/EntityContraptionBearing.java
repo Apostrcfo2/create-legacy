@@ -102,7 +102,8 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this.setFire(0);
         if (this.bearing == null) {
             if (this.bearingPos == null) {
-                this.setDead();
+                this.specialCondition = true;
+                this.world.removeEntity(this);
                 return;
             }
             TileEntity te = this.world.getTileEntity(this.bearingPos);
@@ -111,11 +112,16 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 this.cachedAxis = ((TileEntityBearingBase) te).getFacing().getAxis();
                 this.resetBB();
             } else {
-                this.setDead();
+                this.world.removeEntity(this);
                 return;
             }
         }
 
+        if (!this.bearing.isAssembled()) {
+            this.specialCondition = true;
+            this.world.removeEntity(this);
+            return;
+        }
         if (this.bearing.isInvalid()) this.bearing = null;
 
         if (!this.contraption.actors.isEmpty()) {
@@ -199,10 +205,9 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             this.contraption = new Contraption(this);
             this.contraption.loadNBT(compound.getCompoundTag("Contraption"));
         } else throw new IllegalStateException("No contraption data (this should not happen)");
-
         if (compound.hasKey("BearingPos", 10)) {
             this.bearingPos = NBTUtil.getPosFromTag(compound.getCompoundTag("BearingPos"));
-        } else this.bearingPos = null;
+        } else throw new IllegalStateException("No bearingPos data (this should not happen)");
     }
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
@@ -210,6 +215,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         if (this.contraption != null) compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
         else throw new IllegalStateException("Contraption is null (this should not happen)");
         if (this.bearingPos != null) compound.setTag("BearingPos", NBTUtil.createPosTag(this.bearingPos));
+        else throw new IllegalStateException("BearingPos is null (this should not happen)");
     }
 
     @Override
@@ -225,10 +231,12 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         return this.world.getBiome(this.getPosition());
     }
 
+    private boolean specialCondition = false;
     @Override
     public void setDead() {
         super.setDead();
 
+        if (this.contraption == null || this.specialCondition) return;
         if (!this.world.isRemote) {
             List<TileEntityKinetic> attachables = new ArrayList<>();
             BlockPos self = this.getPosition();

@@ -16,6 +16,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.block.BlockRender;
+import nl.melonstudios.create.kinetics.FastStateRendering;
 import nl.melonstudios.create.tileentity.actor.TileEntityHarvester;
 import nl.melonstudios.create.util.EnumRenderPart;
 
@@ -41,8 +42,9 @@ public class TESRHarvester extends TileEntitySpecialRenderer<TileEntityHarvester
         GlStateManager.translate(-0.5F, -0.5F, -0.5F);
 
         IBlockState state = BlockRender.byEnum(EnumRenderPart.HARVESTER);
-        IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(state);
-        this.renderBakedModel(model, state);
+        //IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(state);
+        //this.renderBakedModel(model, state);
+        FastStateRendering.INSTANCE.renderFast(state);
 
         GlStateManager.popMatrix();
     }

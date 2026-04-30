@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +34,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
@@ -53,7 +56,6 @@ import nl.melonstudios.create.kinetics.KNManager;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.ITileEntityWithContraption;
-import nl.melonstudios.create.kinetics.contraption.RenderContraption;
 import nl.melonstudios.create.recipe.sequence.SequenceRecipe;
 import nl.melonstudios.create.recipe.sequence.SequenceStep;
 import nl.melonstudios.create.recipe.sequence.SequencedRecipes;
@@ -261,10 +263,19 @@ public class CreateLegacyEventHandler {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public static void postFrame(TickEvent.RenderTickEvent event) {
+    public static void renderTickEvent(TickEvent.RenderTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_REMOVE) {
+                Contraption contraption = entity.attachedContraption();
+                if (contraption != null && ContraptionRendering.available(contraption)) {
+                    ContraptionRendering.contraptionFinalized(contraption);
+                }
+            }
+            ContraptionRendering.CONTRAPTIONS_TO_REMOVE.clear();
+        }
         if (event.phase == TickEvent.Phase.END) {
             PerFrameDebugInfo.renderAgain = true;
-            for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
+            for (EntityContraptionBase entity : ContraptionRendering.getCollectedContraptions()) {
                 Contraption contraption = entity.attachedContraption();
                 if (contraption != null && !ContraptionRendering.available(contraption)) {
                     ContraptionRendering.getList(contraption);

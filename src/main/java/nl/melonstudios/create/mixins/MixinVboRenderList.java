@@ -2,6 +2,7 @@ package nl.melonstudios.create.mixins;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.VboRenderList;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -21,22 +22,34 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @Mixin(VboRenderList.class)
 public class MixinVboRenderList {
     @Inject(method = "renderChunkLayer", at = @At("HEAD"))
     public void renderChunkLayer(BlockRenderLayer layer, CallbackInfo ci) {
         Minecraft.getMinecraft().mcProfiler.startSection("contraptions");
-        synchronized (ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
-            if (!ContraptionRendering.CONTRAPTIONS_TO_RENDER.isEmpty()) {
+
+        if (layer == BlockRenderLayer.SOLID) ContraptionRendering.collectContraptions(Minecraft.getMinecraft().world);
+
+        List<EntityContraptionBase> entities = ContraptionRendering.getCollectedContraptions();
+        synchronized (entities) {
+            if (!entities.isEmpty()) {
                 GlStateManager.pushMatrix();
+
                 ((IExtensionChunkRenderContainer)this).create$resetPositionToZero();
                 float pt = ContraptionRendering.pt();
-                for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
+
+                for (EntityContraptionBase entity : entities) {
                     Contraption contraption = entity.attachedContraption();
+
                     if (contraption != null && ContraptionRendering.available(contraption)) {
                         GlStateManager.pushMatrix();
+
                         entity.applyRenderTransforms(pt);
-                        GlStateManager.callList(ContraptionRendering.getListNoCreate(contraption)[layer.ordinal()]);
+                        int[] list = ContraptionRendering.getListNoCreate(contraption);
+                        if (list != null) GlStateManager.callList(list[layer.ordinal()]);
+
                         GlStateManager.popMatrix();
                         PerFrameDebugInfo.contraptionsRendered[layer.ordinal()]++;
                     } else PerFrameDebugInfo.contraptionsSkipped[layer.ordinal()]++;
@@ -44,20 +57,7 @@ public class MixinVboRenderList {
                 GlStateManager.popMatrix();
             }
         }
-        /*
-        for (RenderContraption contraption : ContraptionRendering.getRenderContraptions()) {
-            if (ContraptionRendering.available(contraption.contraption)) {
-                GlStateManager.pushMatrix();
-                ((IExtensionChunkRenderContainer) this).create$preRenderContraption(contraption);
-                GlStateManager.callList(ContraptionRendering.getListNoCreate(contraption.contraption)[layer.ordinal()]);
-                GlStateManager.popMatrix();
-                PerFrameDebugInfo.contraptionsRendered[layer.ordinal()]++;
-            } else PerFrameDebugInfo.contraptionsSkipped[layer.ordinal()]++;
-        }
-        */
-        //if (layer == BlockRenderLayer.CUTOUT) {
-        //    ContraptionRendering.clearRenderContraptions();
-        //}
+
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
@@ -66,30 +66,44 @@ public class MixinVboRenderList {
         if (layer == BlockRenderLayer.CUTOUT) {
             Minecraft.getMinecraft().mcProfiler.startSection("contraptions");
             Minecraft.getMinecraft().mcProfiler.startSection("tileentities");
-            synchronized (ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
-                if (!ContraptionRendering.CONTRAPTIONS_TO_RENDER.isEmpty()) {
+            List<EntityContraptionBase> entities = ContraptionRendering.getCollectedContraptions();
+
+            synchronized (entities) {
+                if (!entities.isEmpty()) {
                     int oldPass = ForgeHooksClient.getWorldRenderPass();
                     ForgeHooksClient.setRenderPass(1);
+
                     RenderHelper.enableStandardItemLighting();
                     GlStateManager.pushMatrix();
                     ((IExtensionChunkRenderContainer)this).create$resetPositionToZero();
                     float pt = ContraptionRendering.pt();
-                    for (EntityContraptionBase entity : ContraptionRendering.CONTRAPTIONS_TO_RENDER) {
+
+                    for (EntityContraptionBase entity : entities) {
                         Contraption contraption = entity.attachedContraption();
+
                         if (contraption != null && !contraption.tileEntities.isEmpty()) {
                             GlStateManager.pushMatrix();
                             entity.applyRenderTransforms(pt);
+
                             for (TileEntity te : contraption.tileEntities.values()) {
                                 if (contraption.blacklistedForRendering.contains(te)) continue;
                                 TileEntitySpecialRenderer<TileEntity> tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
+
                                 if (tesr != null) {
                                     GlStateManager.pushMatrix();
+
+                                    int light = contraption.getCombinedLight(te.getPos(), 0);
+                                    int j = light % 65536;
+                                    int k = light / 65536;
+                                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+
                                     try {
                                         tesr.render(te, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), pt, -1, 1.0F);
                                     } catch (Throwable e) {
                                         CreateLegacy.logger.warn("Exception rendering tile entity", e);
                                         contraption.blacklistedForRendering.add(te);
                                     }
+
                                     GlStateManager.popMatrix();
                                 }
                             }
@@ -97,10 +111,12 @@ public class MixinVboRenderList {
                         }
                     }
                     GlStateManager.popMatrix();
+
                     RenderHelper.disableStandardItemLighting();
                     ForgeHooksClient.setRenderPass(oldPass);
                 }
             }
+
             Minecraft.getMinecraft().mcProfiler.endSection();
             Minecraft.getMinecraft().mcProfiler.endSection();
         }

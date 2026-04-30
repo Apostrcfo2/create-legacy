@@ -12,6 +12,7 @@ import nl.melonstudios.create.entity.EntityContraptionBearing;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.contraption.*;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.util.Utils;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -70,7 +71,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
     }
     public boolean disassemble() {
         if (this.assemblyChanged) return false;
-        if (this.world.isRemote) return true;
+        //if (this.world.isRemote) return true;
         this.assemblyChanged = true;
         List<EntityContraptionBearing> bearings = this.world.getEntities(
                 EntityContraptionBearing.class,
@@ -78,11 +79,9 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         );
         for (EntityContraptionBearing bearing : bearings) {
             this.world.removeEntity(bearing);
+            this.world.onEntityRemoved(bearing);
         }
-        this.preventNextRemoval();
-        this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, false));
-        this.validate();
-        this.world.setTileEntity(this.pos, this);
+        Utils.setBlockKineticTESafe(this.world, this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, false), 3);
         this.angle = 0.0F;
         this.sync();
         this.world.playSound(null, this.pos, SoundInit.contraption_disassemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -92,11 +91,6 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         if (this.assemblyChanged) return false;
         if (this.world.isRemote) return true;
         this.assemblyChanged = true;
-        //EntityContraptionBearing bearing = new EntityContraptionBearing(this, null, this.pos);
-        //if (bearing.contraption == null) return false;
-        //if (bearing.contraption.tileEntities.containsValue(this)) return false; //Prevent bearing picking up itself
-        //if (bearing.contraption.blocks.containsKey(this.pos)) return false; //Ditto
-        //if (!this.world.isRemote) this.world.spawnEntity(bearing);
         EntityContraptionBearing bearing = new EntityContraptionBearing(this);
         ContraptionResult result = this.assembleContraption(bearing);
         if (result.hasFailed()) {
@@ -107,7 +101,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         }
         this.lastFailure = null;
         bearing.contraption = result.getContraption();
-        if (!this.world.isRemote) this.world.spawnEntity(bearing);
+        this.world.spawnEntity(bearing);
         this.preventNextRemoval();
         this.world.setBlockState(this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, true));
         this.validate();

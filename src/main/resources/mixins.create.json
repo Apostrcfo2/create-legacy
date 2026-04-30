@@ -17,6 +17,7 @@
     "MixinChunkRenderContainer",
     "MixinEntityRenderer",
     "MixinGuiContainer",
+    "MixinGuiNewChat",
     "MixinGuiPonder",
     "MixinMinecraft",
     "MixinPonderScene",
