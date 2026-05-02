@@ -58,6 +58,8 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
         }
     }
 
+    public abstract void placeBlocks();
+
     @Override
     protected void entityInit() {
         this.resetBB();
@@ -236,9 +238,9 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
         super.setDead();
         if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
             ContraptionRendering.CONTRAPTIONS_TO_RENDER.remove(this);
-            Contraption ctr = this.attachedContraption();
-            if (ctr != null)
-                ContraptionRendering.contraptionFinalized(ctr);
+            //Contraption ctr = this.attachedContraption();
+            //if (ctr != null)
+            //    ContraptionRendering.contraptionFinalized(ctr);
         }
     }
 }

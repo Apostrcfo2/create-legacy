@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -27,6 +28,7 @@ import nl.melonstudios.create.util.Utils;
 import nl.melonstudios.create.util.interfaces.ICogwheel;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class BlockCrafter extends BlockKineticHorizontalBase implements ICogwheel, ITileEntityProvider {
@@ -61,6 +63,12 @@ public class BlockCrafter extends BlockKineticHorizontalBase implements ICogwhee
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityCrafter();
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add("this does not work (it WILL crash maybe)");
     }
 
     @Override

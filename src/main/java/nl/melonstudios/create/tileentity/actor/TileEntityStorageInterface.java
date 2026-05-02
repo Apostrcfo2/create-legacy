@@ -25,6 +25,7 @@ public class TileEntityStorageInterface extends TileEntityContraptionInterfaceBa
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (!simulate && !this.getInventory().hasNoInventories()) this.setDisconnectionTimer(20);
         return this.getInventory().getInventoryRepresentation().insertItem(slot, stack, simulate);
     }
 

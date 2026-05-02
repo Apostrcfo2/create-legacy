@@ -134,9 +134,9 @@ public class TileEntityBearingWindmill extends TileEntityBearingBase implements 
 
     public boolean tryAssemble() {
         if (this.isAssembled()) {
-            return this.disassemble();
-        }
-        return this.assemble();
+            this.enableDisassembly();
+        } else this.enableAssembly();
+        return true;
     }
 
     @Override

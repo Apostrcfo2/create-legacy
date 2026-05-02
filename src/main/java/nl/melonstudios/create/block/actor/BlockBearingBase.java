@@ -79,7 +79,7 @@ public abstract class BlockBearingBase extends BlockKineticDirectionalBase imple
     @Override
     public boolean onWrenched(World world, BlockPos pos, IBlockState state, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (super.onWrenched(world, pos, state, side, hitX, hitY, hitZ)) {
-            withTEDo(world, pos, TileEntityBearingBase.class, TileEntityBearingBase::disassemble);
+            withTEDo(world, pos, TileEntityBearingBase.class, TileEntityBearingBase::emergencyDisassemble);
             return true;
         }
         return false;

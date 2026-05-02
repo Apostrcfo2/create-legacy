@@ -88,7 +88,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     public BlockPos bearingPos;
     public TileEntityBearingBase bearing;
     public Contraption contraption;
-    public float cachedAngle;
+    public float cachedAngleOld, cachedAngle;
     public EnumFacing.Axis cachedAxis;
 
     @Override
@@ -102,8 +102,10 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this.setFire(0);
         if (this.bearing == null) {
             if (this.bearingPos == null) {
-                this.specialCondition = true;
-                this.world.removeEntity(this);
+                if (!this.world.isRemote) {
+                    this.specialCondition = true;
+                    this.world.removeEntity(this);
+                }
                 return;
             }
             TileEntity te = this.world.getTileEntity(this.bearingPos);
@@ -112,17 +114,23 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                 this.cachedAxis = ((TileEntityBearingBase) te).getFacing().getAxis();
                 this.resetBB();
             } else {
-                this.world.removeEntity(this);
+                if (!this.world.isRemote) this.world.removeEntity(this);
                 return;
             }
+        } else {
+            this.bearing.attachedContraptionEntity = this;
+            this.bearing.attachedContraptionUUID = this.getPersistentID();
+            this.bearingPos = this.bearing.getPos();
         }
 
         if (!this.bearing.isAssembled()) {
-            this.specialCondition = true;
-            this.world.removeEntity(this);
+            if (!this.world.isRemote) {
+                this.specialCondition = true;
+                this.world.removeEntity(this);
+            }
             return;
         }
-        if (this.bearing.isInvalid()) this.bearing = null;
+        if (this.bearing.isInvalid() && !this.world.isRemote) this.bearing = null;
 
         if (!this.contraption.actors.isEmpty()) {
             BlockPos anchor = this.getPosition();
@@ -182,7 +190,6 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         if (this.bearing != null) this.cachedAxis = this.bearing.getFacing().getAxis();
         if (this.cachedAxis != null) {
             float angle = (this.bearing != null ? ((float)MathHelper.clampedLerp(this.bearing.angleOld, this.bearing.angle, pt)) : this.cachedAngle);
-            this.cachedAngle = angle;
             switch (this.cachedAxis) {
                 case X:
                     GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
@@ -235,48 +242,49 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     @Override
     public void setDead() {
         super.setDead();
+    }
 
-        if (this.contraption == null || this.specialCondition) return;
-        if (!this.world.isRemote) {
-            List<TileEntityKinetic> attachables = new ArrayList<>();
-            BlockPos self = this.getPosition();
-            Rotation rotation = BlockRotationHelper.getRotationForAngle(this.bearing != null ? this.bearing.angle : this.cachedAngle);
-            EnumFacing.Axis axis = this.bearing != null ? this.bearing.getFacing().getAxis() : this.cachedAxis;
-            for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
-                BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, entry.getKey()); //self.add(entry.getKey());
-                this.world.setBlockState(pos, BlockRotationHelper.rotate(entry.getValue(), axis, rotation));
-                this.world.removeTileEntity(pos);
-                TileEntity te = this.contraption.tileEntities.get(entry.getKey());
-                if (te != null) {
-                    te.setPos(pos);
-                    te.validate();
-                    TileEntity copy = TileEntity.create(this.world, te.writeToNBT(new NBTTagCompound()));
-                    if (copy != null) {
-                        copy.validate();
-                        this.world.setTileEntity(pos, copy);
-                        if (copy instanceof TileEntityKinetic) {
-                            attachables.add((TileEntityKinetic) copy);
-                        }
-                        if (copy instanceof IContraptionActor) {
-                            ((IContraptionActor) te).setOnContraption(false);
-                        }
-                        copy.markDirty();
+    @Override
+    public void placeBlocks() {
+        if (this.contraption == null) return;
+        List<TileEntityKinetic> attachables = new ArrayList<>();
+        BlockPos self = this.getPosition();
+        Rotation rotation = BlockRotationHelper.getRotationForAngle(this.bearing != null ? this.bearing.angle : this.cachedAngle);
+        EnumFacing.Axis axis = this.bearing != null ? this.bearing.getFacing().getAxis() : this.cachedAxis;
+        for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
+            BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, entry.getKey()); //self.add(entry.getKey());
+            this.world.setBlockState(pos, BlockRotationHelper.rotate(entry.getValue(), axis, rotation));
+            this.world.removeTileEntity(pos);
+            TileEntity te = this.contraption.tileEntities.get(entry.getKey());
+            if (te != null) {
+                te.setPos(pos);
+                te.validate();
+                TileEntity copy = TileEntity.create(this.world, te.writeToNBT(new NBTTagCompound()));
+                if (copy != null) {
+                    copy.validate();
+                    this.world.setTileEntity(pos, copy);
+                    if (copy instanceof TileEntityKinetic) {
+                        attachables.add((TileEntityKinetic) copy);
                     }
+                    if (copy instanceof IContraptionActor) {
+                        ((IContraptionActor) te).setOnContraption(false);
+                    }
+                    copy.markDirty();
                 }
             }
-            for (GluedSurface surface : this.contraption.gluedSurfaces) {
-                BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, surface.pos); // self.add(surface.pos);
-                EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, BlockRotationHelper.rotate(surface.side, axis, rotation)));
-                entityGlue.wasCovered = true;
-                this.world.spawnEntity(entityGlue);
-            }
-            for (TrackedPouf pouf : this.contraption.poufs) {
-                if (pouf.entity != null) this.world.removeEntity(pouf.entity);
-            }
+        }
+        for (GluedSurface surface : this.contraption.gluedSurfaces) {
+            BlockPos pos = BlockRotationHelper.transform(self, axis, rotation, surface.pos); // self.add(surface.pos);
+            EntityGlue entityGlue = new EntityGlue(this.world, new GluedSurface(pos, BlockRotationHelper.rotate(surface.side, axis, rotation)));
+            entityGlue.wasCovered = true;
+            this.world.spawnEntity(entityGlue);
+        }
+        for (TrackedPouf pouf : this.contraption.poufs) {
+            if (pouf.entity != null) this.world.removeEntity(pouf.entity);
+        }
 
-            for (TileEntityKinetic te : attachables) {
-                te.attachKinetics();
-            }
+        for (TileEntityKinetic te : attachables) {
+            te.attachKinetics();
         }
     }
 
