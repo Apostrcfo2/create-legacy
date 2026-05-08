@@ -109,6 +109,7 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.CHASSIS_LINEAR, 0, "chassis_linear");
         CreateLegacy.proxy.setItemModel(BlockInit.CHASSIS_LINEAR, 1, "chassis_linear_secondary");
         CreateLegacy.proxy.setItemModel(BlockInit.SAIL_ITEM);
+        CreateLegacy.proxy.setItemModel(BlockInit.PISTON_POLE);
         CreateLegacy.proxy.setItemModel(BlockInit.SPEEDOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.STRESSOMETER);
         CreateLegacy.proxy.setItemModel(BlockInit.PRESS);

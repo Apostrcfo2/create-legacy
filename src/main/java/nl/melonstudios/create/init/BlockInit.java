@@ -87,6 +87,10 @@ public final class BlockInit {
         GameData.getBlockItemMap().forcePut(SAIL_EAST, SAIL_ITEM);
     }
 
+    public static final BlockPistonPole PISTON_POLE = (BlockPistonPole)
+            registerBlockWithItem(new BlockPistonPole()
+            .setRegistryName("piston_pole").setUnlocalizedName("create.piston_pole"));
+
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)
             .setRegistryName("speedometer").setUnlocalizedName("create.speedometer"));

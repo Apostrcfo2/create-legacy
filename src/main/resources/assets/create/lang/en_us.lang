@@ -35,6 +35,7 @@ tile.create.chassis_linear.name=Linear Chassis
 tile.create.chassis_linear_secondary.name=Secondary Linear Chassis
 tile.create.chassis_radial.name=Radial Chassis
 tile.create.sail.name=Windmill Sail
+tile.create.piston_pole.name=Piston Extension Pole
 
 tile.create.speedometer.name=Speedometer
 tile.create.stressometer.name=Stressometer
