@@ -11,6 +11,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -99,5 +101,30 @@ public class BlockPistonPole extends Block {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(AXIS, EnumFacing.Axis.values()[meta % 3]);
+    }
+
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+        return state;
+    }
+
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot) {
+        if (rot == Rotation.NONE || rot == Rotation.CLOCKWISE_180) return state;
+        switch (state.getValue(AXIS)) {
+            case X: return state.withProperty(AXIS, EnumFacing.Axis.Z);
+            case Z: return state.withProperty(AXIS, EnumFacing.Axis.X);
+            default:return state;
+        }
+    }
+
+    @Override
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+        EnumFacing.Axis axis = blockState.getValue(AXIS);
+        if (side.getAxis() == axis) {
+            IBlockState hi = blockAccess.getBlockState(pos.offset(side));
+            if (hi == blockState) return false;
+        }
+        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
 }
