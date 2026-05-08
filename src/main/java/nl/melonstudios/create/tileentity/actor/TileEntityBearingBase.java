@@ -206,14 +206,14 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
                     this.angleOld %= 360.0F;
                     this.angle %= 360.0F;
                 }
-                EntityContraptionBearing entity = this.getAttachedContraption();
-                if (entity != null) {
-                    entity.bearing = this;
-                    entity.bearingPos = this.pos;
-                    entity.cachedAngleOld = this.angleOld;
-                    entity.cachedAngle = this.angle;
-                } else CreateLegacy.logger.error("vro {}", this.world.isRemote);
             }
+            EntityContraptionBearing entity = this.getAttachedContraption();
+            if (entity != null) {
+                entity.bearing = this;
+                entity.bearingPos = this.pos;
+                entity.cachedAngleOld = this.angleOld;
+                entity.cachedAngle = this.angle;
+            } else CreateLegacy.logger.error("vro {}", this.world.isRemote);
             if (!this.world.isRemote && (this.world.getTotalWorldTime() & 63) == 0) {
                 //Synchronize every so often to make sure it is equal at all times
                 this.sync();

@@ -27,9 +27,9 @@ public class BlockProperties {
     public static final AxisAlignedBB GEAR_Y_AABB = AABB.create(2, 0, 2, 14, 16, 14);
     public static final AxisAlignedBB GEAR_Z_AABB = AABB.create(2, 2, 0, 14, 14, 16);
 
-    public static final AxisAlignedBB POLE_X_AABB = AABB.create(0, 4, 4, 16, 10, 10);
-    public static final AxisAlignedBB POLE_Y_AABB = AABB.create(4, 0, 4, 10, 16, 10);
-    public static final AxisAlignedBB POLE_Z_AABB = AABB.create(4, 4, 0, 10, 10, 16);
+    public static final AxisAlignedBB POLE_X_AABB = AABB.create(0, 6, 6, 16, 10, 10);
+    public static final AxisAlignedBB POLE_Y_AABB = AABB.create(6, 0, 6, 10, 16, 10);
+    public static final AxisAlignedBB POLE_Z_AABB = AABB.create(6, 6, 0, 10, 10, 16);
 
     public static final AxisAlignedBB CASING_12PX_UP = AABB.create(0, 0, 0, 16, 12, 16);
     public static final AxisAlignedBB CASING_12PX_DOWN = AABB.create(0, 4, 0, 16, 16, 16);

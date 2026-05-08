@@ -57,7 +57,7 @@ public class TileEntityCreativeMotor extends TileEntityKineticGeneratorBase {
     @Override
     public void initialize() {
         super.initialize();
-        this.updateGeneratedRotation();
+        //this.updateGeneratedRotation();
     }
 
     @SideOnly(Side.CLIENT)

@@ -290,7 +290,9 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         }
 
         for (TileEntityKinetic te : attachables) {
+            te.speed = 0.0F;
             te.attachKinetics();
+            te.sync();
         }
     }
 

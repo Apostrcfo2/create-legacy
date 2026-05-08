@@ -41,6 +41,12 @@ public abstract class TileEntityKineticGeneratorBase extends TileEntityKinetic {
         }
     }
 
+    @Override
+    public void initialize() {
+        super.initialize();
+        this.updateGeneratedRotation();
+    }
+
     public void updateGeneratedRotation() {
         final float speed = this.getGeneratedSpeed();
         final float lastSpeed = this.speed;
