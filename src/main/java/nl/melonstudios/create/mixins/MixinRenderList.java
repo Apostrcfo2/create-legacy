@@ -46,14 +46,16 @@ public class MixinRenderList {
                     Contraption contraption = entity.attachedContraption();
 
                     if (contraption != null && ContraptionRendering.available(contraption)) {
-                        GlStateManager.pushMatrix();
-
-                        entity.applyRenderTransforms(pt);
                         int[] list = ContraptionRendering.getListNoCreate(contraption);
-                        if (list != null) GlStateManager.callList(list[layer.ordinal()]);
+                        if (list != null) {
+                            GlStateManager.pushMatrix();
 
-                        GlStateManager.popMatrix();
-                        PerFrameDebugInfo.contraptionsRendered[layer.ordinal()]++;
+                            entity.applyRenderTransforms(pt);
+                            GlStateManager.callList(list[layer.ordinal()]);
+
+                            GlStateManager.popMatrix();
+                            PerFrameDebugInfo.contraptionsRendered[layer.ordinal()]++;
+                        } else PerFrameDebugInfo.contraptionsSkipped[layer.ordinal()]++;
                     } else PerFrameDebugInfo.contraptionsSkipped[layer.ordinal()]++;
                 }
                 GlStateManager.popMatrix();
@@ -61,66 +63,5 @@ public class MixinRenderList {
         }
 
         Minecraft.getMinecraft().mcProfiler.endSection();
-    }
-
-    @Inject(method = "renderChunkLayer", at = @At("RETURN"))
-    public void renderChunkLayerTEs(BlockRenderLayer layer, CallbackInfo ci) {
-        if (layer == BlockRenderLayer.CUTOUT) {
-            Minecraft.getMinecraft().mcProfiler.startSection("contraptions");
-            Minecraft.getMinecraft().mcProfiler.startSection("tileentities");
-            List<EntityContraptionBase> entities = ContraptionRendering.getCollectedContraptions();
-
-            synchronized (entities) {
-                if (!entities.isEmpty()) {
-                    int oldPass = ForgeHooksClient.getWorldRenderPass();
-                    ForgeHooksClient.setRenderPass(1);
-
-                    RenderHelper.enableStandardItemLighting();
-                    GlStateManager.pushMatrix();
-                    ((IExtensionChunkRenderContainer)this).create$resetPositionToZero();
-                    float pt = ContraptionRendering.pt();
-
-                    for (EntityContraptionBase entity : entities) {
-                        Contraption contraption = entity.attachedContraption();
-
-                        if (contraption != null && !contraption.tileEntities.isEmpty()) {
-                            GlStateManager.pushMatrix();
-                            entity.applyRenderTransforms(pt);
-
-                            for (TileEntity te : contraption.tileEntities.values()) {
-                                if (contraption.blacklistedForRendering.contains(te)) continue;
-                                TileEntitySpecialRenderer<TileEntity> tesr = TileEntityRendererDispatcher.instance.getRenderer(te);
-                                if (tesr != null) {
-                                    GlStateManager.pushMatrix();
-
-                                    int light = contraption.getCombinedLight(te.getPos(), 0);
-                                    int j = light % 65536;
-                                    int k = light / 65536;
-                                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-
-                                    try {
-                                        tesr.render(te, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), pt, -1, 1.0F);
-                                    } catch (Throwable e) {
-                                        CreateLegacy.logger.warn("Exception rendering tile entity", e);
-                                        contraption.blacklistedForRendering.add(te);
-                                    }
-
-                                    GlStateManager.popMatrix();
-                                }
-                            }
-                            GlStateManager.popMatrix();
-                        }
-                    }
-                    GlStateManager.popMatrix();
-
-                    RenderHelper.disableStandardItemLighting();
-
-                    ForgeHooksClient.setRenderPass(oldPass);
-                }
-            }
-
-            Minecraft.getMinecraft().mcProfiler.endSection();
-            Minecraft.getMinecraft().mcProfiler.endSection();
-        }
     }
 }

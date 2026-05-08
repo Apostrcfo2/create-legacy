@@ -76,11 +76,11 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         if (this.attachedContraptionEntity != null) {
             this.attachedContraptionEntity.placeBlocks();
             this.world.removeEntity(this.attachedContraptionEntity);
-            this.world.onEntityRemoved(this.attachedContraptionEntity);
+            //this.world.onEntityRemoved(this.attachedContraptionEntity);
             this.attachedContraptionEntity = null;
             this.attachedContraptionUUID = null;
             this.world.playSound(null, this.pos, SoundInit.contraption_disassemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        } else CreateLegacy.logger.error("WHERE IS MY CONTRAPTION? (2) {}", this.world.isRemote);
+        }
     }
     public boolean disassemble() {
         if (this.assemblyChanged) return false;
@@ -89,9 +89,11 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         this.assemblyChanged = true;
         if (this.attachedContraptionEntity != null) {
             this.attachedContraptionEntity.placeBlocks();
+            this.attachedContraptionEntity.bearing = null;
+            this.attachedContraptionEntity.bearingPos = null;
             this.world.removeEntity(this.attachedContraptionEntity);
-            this.world.onEntityRemoved(this.attachedContraptionEntity);
-        } else CreateLegacy.logger.error("WHERE IS MY CONTRAPTION? {}", this.world.isRemote);
+            //this.world.onEntityRemoved(this.attachedContraptionEntity);
+        }
         this.attachedContraptionUUID = null;
         this.attachedContraptionEntity = null;
         Utils.setBlockKineticTESafe(this.world, this.pos, this.getState().withProperty(BlockBearingBase.ASSEMBLED, false), 3);
@@ -169,6 +171,10 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
 
         this.mightAssemble = this.mightDisassemble = false;
 
+        if (this.attachedContraptionEntity != null && (this.attachedContraptionEntity.isDead || this.attachedContraptionEntity.world != this.world)) {
+            CreateLegacy.logger.debug("gng {}", this.world.isRemote);
+            this.attachedContraptionEntity = null;
+        }
         if (this.attachedContraptionUUID != null && this.attachedContraptionEntity == null) {
             List<EntityContraptionBearing> list = this.world.getEntitiesWithinAABB(EntityContraptionBearing.class, AABB.wrap(this.pos, 3),
                     (e) -> e.getPersistentID().equals(this.attachedContraptionUUID));
@@ -202,6 +208,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
                 }
                 EntityContraptionBearing entity = this.getAttachedContraption();
                 if (entity != null) {
+                    entity.bearing = this;
+                    entity.bearingPos = this.pos;
                     entity.cachedAngleOld = this.angleOld;
                     entity.cachedAngle = this.angle;
                 } else CreateLegacy.logger.error("vro {}", this.world.isRemote);
@@ -232,8 +240,9 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         super.readFromNBT(nbt);
 
         this.angle = nbt.getFloat("angle");
-        if (nbt.hasKey("AttachedContraptionUUID")) this.attachedContraptionUUID = nbt.getUniqueId("AttachedContraptionUUID");
-        else {
+        if (nbt.hasKey("AttachedContraptionUUID")) {
+            this.attachedContraptionUUID = nbt.getUniqueId("AttachedContraptionUUID");
+        } else {
             this.attachedContraptionUUID = null;
             this.attachedContraptionEntity = null;
         }
@@ -270,8 +279,8 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
             this.attachedContraptionUUID = new UUID(buf.readLong(), buf.readLong());
         } else {
             this.attachedContraptionUUID = null;
-            this.attachedContraptionEntity = null;
         }
+        this.attachedContraptionEntity = null;
     }
 
     @Override

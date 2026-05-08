@@ -23,6 +23,7 @@
     "MixinPonderScene",
     "MixinRenderGlobal",
     "MixinRenderList",
+    "MixinTileEntityRendererDispatcher",
     "MixinVboRenderList"
   ],
   "server": []

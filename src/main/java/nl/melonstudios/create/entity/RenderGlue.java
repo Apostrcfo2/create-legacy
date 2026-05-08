@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.item.ItemGlue;
@@ -22,6 +24,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @SideOnly(Side.CLIENT)
 public class RenderGlue extends Render<EntityGlue> {
+    private static final Class<?> PONDER_WORLD_CHECKER;
+    static {
+        try {
+            // if ponder is not loaded there is no WorldPonder class
+            PONDER_WORLD_CHECKER = Loader.isModLoaded("ponder") ? Class.forName("nl.melonstudios.ponder.world.WorldPonder") : EntityGlue.class;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static final ResourceLocation GLUE_TEXTURES = new ResourceLocation("create", "textures/entity/glue.png");
     public RenderGlue(RenderManager renderManager) {
         super(renderManager);
@@ -29,7 +41,7 @@ public class RenderGlue extends Render<EntityGlue> {
 
     @Override
     public boolean shouldRender(EntityGlue livingEntity, ICamera camera, double camX, double camY, double camZ) {
-        return livingEntity.world instanceof WorldPonder || ((Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof ItemGlue
+        return PONDER_WORLD_CHECKER.isInstance(livingEntity.world) || ((Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof ItemGlue
                 || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() instanceof ItemGlue)
                 && super.shouldRender(livingEntity, camera, camX, camY, camZ));
     }

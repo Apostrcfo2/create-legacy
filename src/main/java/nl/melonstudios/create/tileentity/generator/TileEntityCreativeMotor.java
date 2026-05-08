@@ -54,6 +54,12 @@ public class TileEntityCreativeMotor extends TileEntityKineticGeneratorBase {
         this.speedIndex = buf.readUnsignedByte();
     }
 
+    @Override
+    public void initialize() {
+        super.initialize();
+        this.updateGeneratedRotation();
+    }
+
     @SideOnly(Side.CLIENT)
     public EnumFacing getRenderFacing() {
         return this.getState().getValue(BlockStateProperties.FACING);

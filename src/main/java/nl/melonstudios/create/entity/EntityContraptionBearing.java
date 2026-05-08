@@ -1,5 +1,6 @@
 package nl.melonstudios.create.entity;
 
+import com.melonstudios.melonlib.tileentity.ISyncedTE;
 import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
@@ -17,6 +18,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.kinetics.contraption.*;
 import nl.melonstudios.create.kinetics.contraption.accessor.CAccessorBearing;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
@@ -130,7 +132,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             }
             return;
         }
-        if (this.bearing.isInvalid() && !this.world.isRemote) this.bearing = null;
+        if (this.bearing.isInvalid()) this.bearing = null;
 
         if (!this.contraption.actors.isEmpty()) {
             BlockPos anchor = this.getPosition();
@@ -182,6 +184,9 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
     @SideOnly(Side.CLIENT)
     @Override
     public void applyRenderTransforms(float pt) {
+        //Float bearingAngleDebug = this.bearing != null ? this.bearing.angle : null;
+        //Float bearingAngleOldDebug = this.bearing != null ? this.bearing.angleOld : null;
+        //CreateLegacy.logger.debug("a:{} ba:{} bao:{} a:{} ao:{}", this.cachedAxis, bearingAngleDebug, bearingAngleOldDebug, this.cachedAngle, this.cachedAngleOld);
         GlStateManager.translate(
                 MathHelper.clampedLerp(this.prevPosX, this.posX, pt),
                 MathHelper.clampedLerp(this.prevPosY, this.posY, pt),
@@ -189,7 +194,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         );
         if (this.bearing != null) this.cachedAxis = this.bearing.getFacing().getAxis();
         if (this.cachedAxis != null) {
-            float angle = (this.bearing != null ? ((float)MathHelper.clampedLerp(this.bearing.angleOld, this.bearing.angle, pt)) : this.cachedAngle);
+            float angle = (float)MathHelper.clampedLerp(this.cachedAngleOld, this.cachedAngle, pt);
             switch (this.cachedAxis) {
                 case X:
                     GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
@@ -269,7 +274,8 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
                     if (copy instanceof IContraptionActor) {
                         ((IContraptionActor) te).setOnContraption(false);
                     }
-                    copy.markDirty();
+                    if (copy instanceof ISyncedTE) ((ISyncedTE)copy).sync();
+                    else copy.markDirty();
                 }
             }
         }

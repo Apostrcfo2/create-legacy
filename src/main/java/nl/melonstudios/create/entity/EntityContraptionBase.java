@@ -50,12 +50,15 @@ public abstract class EntityContraptionBase extends Entity implements IContrapti
 
     @Override
     public void onRemovedFromWorld() {
+        CreateLegacy.logger.info("I guess this is the end... {} {}", this.getPersistentID(), this.world != null ? this.world.isRemote : "null");
         super.onRemovedFromWorld();
 
-        if (this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
+        if (this.world != null && this.world.isRemote && CreateLegacy.proxy.getSide() == Side.CLIENT) {
             ContraptionRendering.CONTRAPTIONS_TO_RENDER.remove(this);
             ContraptionRendering.CONTRAPTIONS_TO_REMOVE.add(this);
         }
+
+        this.world = null;
     }
 
     public abstract void placeBlocks();

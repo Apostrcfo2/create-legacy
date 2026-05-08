@@ -93,7 +93,7 @@ public class CreateLegacyEventHandler {
                 .tracker(64, 10, false).build());
         event.getRegistry().register(EntityEntryBuilder.create().entity(EntityPouf.class)
                 .factory(EntityPouf::new).id("create:pouf", 1).name("create.pouf")
-                .tracker(16, 20, false).build());
+                .tracker(256, 1, false).build());
         event.getRegistry().register(EntityEntryBuilder.create().entity(EntityContraptionBearing.class)
                 .factory(EntityContraptionBearing::new).id("create:contraption_bearing", 10).name("create.contraption")
                 .tracker(256, 10, false).build());
