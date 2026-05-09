@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "C",
+    "I"
+  ],
+  "key": {
+    "#": {
+      "item": "create:turntable"
+    },
+    "C": {
+      "item": "create:casing",
+      "data": 0
+    },
+    "I": {
+      "item": "create:piston_pole"
+    }
+  },
+  "result": {
+    "item": "create:mechanical_piston"
+  }
+}

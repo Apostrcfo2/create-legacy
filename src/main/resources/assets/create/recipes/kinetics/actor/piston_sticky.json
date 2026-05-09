@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "create:mechanical_piston"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "slimeball"
+    }
+  },
+  "result": {
+    "item": "create:mechanical_piston_sticky"
+  }
+}

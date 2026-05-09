@@ -4,14 +4,17 @@ import com.melonstudios.melonlib.tileentity.ISyncedTE;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,10 +56,14 @@ public class EntityContraptionPiston extends EntityContraptionBase implements IC
         this.cachedExtensionOld = piston.extensionOld;
     }
 
-    protected AxisAlignedBB updatedContraptionBB = null;
+    public AxisAlignedBB updatedContraptionBB = null;
     public void moveBB() {
         EnumFacing facing = this.cachedFacing;
-        if (facing == null || this.contraptionBB == null) return;
+        if (this.contraptionBB == null) this.resetBB();
+        if (facing == null) {
+            CreateLegacy.logger.debug("HELP");
+            return;
+        }
         double dx = (this.cachedExtension) * facing.getFrontOffsetX();
         double dy = (this.cachedExtension) * facing.getFrontOffsetY();
         double dz = (this.cachedExtension) * facing.getFrontOffsetZ();
@@ -129,7 +136,60 @@ public class EntityContraptionPiston extends EntityContraptionBase implements IC
             //mat.translate(facing.getFrontOffsetX() * extension, facing.getFrontOffsetY() * extension, facing.getFrontOffsetZ() * extension);
             this.contraption.updatePoufs(this.world, this.posX + facing.getFrontOffsetX() * extension, this.posY + facing.getFrontOffsetY() * extension, this.posZ + facing.getFrontOffsetZ() * extension, mat);
         }
+
+        this.moveBB();
+
+        if (HANDLE_COLLISION_IN_ENTITY) {
+            //CreateLegacy.logger.debug("test {} : {} {} {}", this.world.isRemote, this.cachedFacing, this.contraption, this.updatedContraptionBB);
+            if (this.cachedFacing != null && this.contraption != null && this.updatedContraptionBB != null) {
+                Profiler profiler = this.world.profiler;
+                profiler.startSection("pushoutEntities");
+                List<EntityLivingBase> entities = this.world.getEntitiesWithinAABB(EntityLivingBase.class, this.updatedContraptionBB);
+                if (!entities.isEmpty()) {
+                    List<AxisAlignedBB> pushouts = new ArrayList<>();
+                    double dx = this.posX - 0.5 + this.cachedFacing.getFrontOffsetX() * this.cachedExtension;
+                    double dy = this.posY - 0.5 + this.cachedFacing.getFrontOffsetY() * this.cachedExtension;
+                    double dz = this.posZ - 0.5 + this.cachedFacing.getFrontOffsetZ() * this.cachedExtension;
+                    profiler.startSection("collectAABB");
+                    for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
+                        BlockPos local = entry.getKey();
+                        AxisAlignedBB bounds = entry.getValue().getCollisionBoundingBox(this.contraption, local);
+                        if (bounds != null) {
+                            pushouts.add(bounds.offset(dx + local.getX(), dy + local.getY(), dz + local.getZ()));
+                        }
+                    }
+                    if (!pushouts.isEmpty()) {
+                        profiler.endStartSection("pushout");
+                        loop:
+                        for (EntityLivingBase entity : entities) {
+                            AxisAlignedBB entityBB = entity.getEntityBoundingBox();
+                            Vec3d center = new Vec3d(entity.posX, entity.posY + entity.height * 0.5, entity.posZ);
+                            for (AxisAlignedBB aabb : pushouts) {
+                                if (aabb.intersects(entityBB)) {
+                                    if (entity.posY < aabb.maxY && center.y >= aabb.maxY) {
+                                        entity.setPosition(entity.posX, aabb.maxY, entity.posZ);
+                                        entity.onGround = true;
+                                        entity.fallDistance = 0.0F;
+                                        entity.motionY = 0.0F;
+                                        //entity.prevPosY = entity.posY;
+                                        continue loop;
+                                    }
+                                    if (entity.posY + entity.height > aabb.minY && center.y <= aabb.minY) {
+                                        entity.setPosition(entity.posX, aabb.minY - entity.height, entity.posZ);
+                                        //entity.prevPosY = entity.posY;
+                                        continue loop;
+                                    }
+                                }
+                            }
+                        }
+                        profiler.endSection();
+                    }
+                }
+                profiler.endSection();
+            }
+        }
     }
+    private static final boolean HANDLE_COLLISION_IN_ENTITY = true;
 
     @SideOnly(Side.CLIENT)
     @Override

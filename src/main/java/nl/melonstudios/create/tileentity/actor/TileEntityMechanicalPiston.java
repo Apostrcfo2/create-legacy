@@ -344,13 +344,13 @@ public class TileEntityMechanicalPiston extends TileEntityKinetic implements ITi
                 if (piston.cachedExtension != this.extension) {
                     piston.cachedExtension = this.extension;
                     try {
-                        piston.moveBB();
+                        //piston.moveBB();
                     } catch (Exception e) {
                         CrashReport report = new CrashReport("Exception moving piston AABB", e);
                         throw new ReportedException(report);
                     }
                 }
-            } //else CreateLegacy.logger.error("vro {}", this.world.isRemote);
+            } else CreateLegacy.logger.error("vro {}", this.world.isRemote);
             if (!this.world.isRemote && (this.world.getTotalWorldTime() & 63) == 0) {
                 //Synchronize every so often to make sure it is equal at all times
                 this.sync();

@@ -132,9 +132,8 @@ public class CreateLegacyEventHandler {
         AxisAlignedBB aabb = event.getAabb();
         if (aabb == null) return;
         List<AxisAlignedBB> collisions = event.getCollisionBoxesList();
-        AxisAlignedBB expand = aabb.grow(0.25);
         for (ITileEntityWithContraption contraption : ((IExtensionWorld)event.getWorld()).create$getContraptionTileEntities()) {
-            contraption.collectCollisions(expand, collisions);
+            contraption.collectCollisions(aabb, collisions);
         }
     }
 

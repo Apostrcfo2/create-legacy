@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "C",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "plankWood"
+    },
+    "C": {
+      "item": "create:ingredient",
+      "data": 15
+    }
+  },
+  "result": {
+    "item": "create:piston_pole",
+    "count": 8
+  }
+}
