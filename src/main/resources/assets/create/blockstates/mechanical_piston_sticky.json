@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=up,rotated=false": {
+      "model": "create:mechanical_piston_sticky"
+    },
+    "facing=down,rotated=false": {
+      "model": "create:mechanical_piston_sticky",
+      "x": 180
+    },
+    "facing=north,rotated=false": {
+      "model": "create:mechanical_piston_sticky",
+      "x": 90
+    },
+    "facing=south,rotated=false": {
+      "model": "create:mechanical_piston_sticky",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,rotated=false": {
+      "model": "create:mechanical_piston_sticky",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rotated=false": {
+      "model": "create:mechanical_piston_sticky",
+      "x": 90,
+      "y": 90
+    },
+    "facing=up,rotated=true": {
+      "model": "create:mechanical_piston_sticky_rotated"
+    },
+    "facing=down,rotated=true": {
+      "model": "create:mechanical_piston_sticky_rotated",
+      "x": 180
+    },
+    "facing=north,rotated=true": {
+      "model": "create:mechanical_piston_sticky_rotated",
+      "x": 90
+    },
+    "facing=south,rotated=true": {
+      "model": "create:mechanical_piston_sticky_rotated",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,rotated=true": {
+      "model": "create:mechanical_piston_sticky_rotated",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rotated=true": {
+      "model": "create:mechanical_piston_sticky_rotated",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

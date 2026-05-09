@@ -29,15 +29,15 @@ import nl.melonstudios.create.extensions.IExtensionTileEntity;
 import nl.melonstudios.create.tileentity.TileEntityDepot;
 import nl.melonstudios.create.tileentity.marker.IAssemblyBehavior;
 import nl.melonstudios.create.util.Utils;
-import org.joml.Matrix3d;
-import org.joml.Matrix3dc;
-import org.joml.Vector3d;
+import org.joml.*;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.lang.Math;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -227,8 +227,9 @@ public class Contraption implements IBlockAccess {
         return this.getBlockState(pos).isSideSolid(this, pos, side);
     }
 
-    public static final Matrix3dc IDENTITY = new Matrix3d().identity();
-    public void updatePoufs(World world, double x, double y, double z, Matrix3dc transforms) {
+    public static final Matrix4dc IDENTITY = new Matrix4d().identity();
+    private static final Vector4d TEMP_VEC = new Vector4d();
+    public void updatePoufs(World world, double x, double y, double z, Matrix4dc transforms) {
         Vector3d vec = new Vector3d();
         for (TrackedPouf pouf : this.poufs) {
             if (pouf.entity == null) {
@@ -240,7 +241,9 @@ public class Contraption implements IBlockAccess {
                 }
             }
             vec.set(pouf.localPos.getX(), pouf.localPos.getY(), pouf.localPos.getZ());
-            vec.mul(transforms);
+            TEMP_VEC.set(vec, 0);
+            TEMP_VEC.mul(transforms);
+            vec.set(TEMP_VEC);
             pouf.entity.setPositionAndUpdate(x + vec.x, y + vec.y - 0.4, z + vec.z);
         }
     }
@@ -312,6 +315,9 @@ public class Contraption implements IBlockAccess {
     }
 
     public static ContraptionResult assemble(IContraptionHolder holder, BlockPos pos, @Nullable BlockPos exclude, Function<ContraptionAssembly, String> checker) {
+        return assemble(holder, pos, exclude != null ? exclude::equals : (obj) -> false, checker);
+    }
+    public static ContraptionResult assemble(IContraptionHolder holder, BlockPos pos, @Nullable Predicate<BlockPos> exclude, Function<ContraptionAssembly, String> checker) {
         World world = holder.getWorld();
 
         Set<BlockPos> positions = new HashSet<>();
@@ -322,7 +328,7 @@ public class Contraption implements IBlockAccess {
 
         if (failed.get()) return new ContraptionResult("assembly_failure.immovable");
         if (positions.isEmpty()) return new ContraptionResult("assembly_failure.no_structure");
-        if (positions.contains(exclude)) return new ContraptionResult("assembly_failure.moving_self");
+        if (exclude != null && positions.stream().anyMatch(exclude)) return new ContraptionResult("assembly_failure.moving_self");
         String err = checker.apply(assembly);
         if (err != null) return new ContraptionResult(err);
 

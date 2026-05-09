@@ -1,0 +1,255 @@
+package nl.melonstudios.create.entity;
+
+import com.melonstudios.melonlib.tileentity.ISyncedTE;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import nl.melonstudios.create.CreateLegacy;
+import nl.melonstudios.create.block.actor.BlockMechanicalPiston;
+import nl.melonstudios.create.kinetics.contraption.*;
+import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
+import nl.melonstudios.create.tileentity.TileEntityKinetic;
+import nl.melonstudios.create.tileentity.actor.TileEntityMechanicalPiston;
+import org.joml.Matrix4d;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+public class EntityContraptionPiston extends EntityContraptionBase implements IContraptionHolder {
+    public final IContraptionAccessor contraptionAccessor;
+    public EntityContraptionPiston(World worldIn) {
+        super(worldIn);
+
+        this.setSize(1.0F, 1.0F);
+
+        this.contraptionAccessor = null;
+    }
+
+    public EntityContraptionPiston(TileEntityMechanicalPiston piston) {
+        this(piston.getWorld());
+
+        BlockPos pos = piston.getPos().offset(piston.getState().getValue(BlockMechanicalPiston.FACING));
+        this.setPositionAndUpdateInternal(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+
+        this.piston = piston;
+        this.pistonPos = piston.getPos();
+        this.cachedFacing = piston.getFacing();
+        this.cachedExtension = piston.extension;
+        this.cachedExtensionOld = piston.extensionOld;
+    }
+
+    protected AxisAlignedBB updatedContraptionBB = null;
+    public void moveBB() {
+        EnumFacing facing = this.cachedFacing;
+        if (facing == null || this.contraptionBB == null) return;
+        double dx = (this.cachedExtension) * facing.getFrontOffsetX();
+        double dy = (this.cachedExtension) * facing.getFrontOffsetY();
+        double dz = (this.cachedExtension) * facing.getFrontOffsetZ();
+        this.updatedContraptionBB = new AxisAlignedBB(
+                this.contraptionBB.minX + dx,
+                this.contraptionBB.minY + dy,
+                this.contraptionBB.minZ + dz,
+                this.contraptionBB.maxX + dx,
+                this.contraptionBB.maxY + dy,
+                this.contraptionBB.maxZ + dz
+        );
+    }
+
+    @Override
+    public AxisAlignedBB getEntityBoundingBox() {
+        return this.updatedContraptionBB != null ? this.updatedContraptionBB : super.getEntityBoundingBox();
+    }
+
+    private static final Matrix4d TRANSFORMS = new Matrix4d();
+    public BlockPos pistonPos;
+    public TileEntityMechanicalPiston piston;
+    public Contraption contraption;
+    public float cachedExtensionOld, cachedExtension;
+    public EnumFacing cachedFacing;
+
+    @Nullable
+    @Override
+    public Contraption attachedContraption() {
+        return this.contraption;
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        this.setFire(0);
+        if (this.piston == null) {
+            if (this.pistonPos == null) {
+                if (!this.world.isRemote) {
+                    this.world.removeEntity(this);
+                }
+                return;
+            }
+            TileEntity te = this.world.getTileEntity(this.pistonPos);
+            if (te instanceof TileEntityMechanicalPiston) {
+                this.piston = (TileEntityMechanicalPiston) te;
+                this.cachedFacing = ((TileEntityMechanicalPiston) te).getState().getValue(BlockMechanicalPiston.FACING);
+                this.resetBB();
+            } else {
+                if (!this.world.isRemote) this.world.removeEntity(this);
+                return;
+            }
+        } else {
+            this.piston.attachedContraptionEntity = this;
+            this.piston.attachedContraptionUUID = this.getPersistentID();
+            this.pistonPos = this.piston.getPos();
+        }
+
+        if (!this.piston.isAssembled()) {
+            if (!this.world.isRemote) {
+                this.world.removeEntity(this);
+            }
+            return;
+        }
+        if (this.piston.isInvalid()) this.piston = null;
+
+        if (!this.contraption.poufs.isEmpty()) {
+            Matrix4d mat = TRANSFORMS.identity();
+            EnumFacing facing = this.cachedFacing;
+            double extension = this.cachedExtension;
+            //mat.translate(facing.getFrontOffsetX() * extension, facing.getFrontOffsetY() * extension, facing.getFrontOffsetZ() * extension);
+            this.contraption.updatePoufs(this.world, this.posX + facing.getFrontOffsetX() * extension, this.posY + facing.getFrontOffsetY() * extension, this.posZ + facing.getFrontOffsetZ() * extension, mat);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void applyRenderTransforms(float pt) {
+        GlStateManager.translate(
+                MathHelper.clampedLerp(this.prevPosX, this.posX, pt) - 0.5,
+                MathHelper.clampedLerp(this.prevPosY, this.posY, pt) - 0.5,
+                MathHelper.clampedLerp(this.prevPosZ, this.posZ, pt) - 0.5
+        );
+        if (this.piston != null) this.cachedFacing = this.piston.getFacing();
+        if (this.cachedFacing != null) {
+            GlStateManager.translate(
+                    MathHelper.clampedLerp(this.cachedExtensionOld, this.cachedExtension, pt) * this.cachedFacing.getFrontOffsetX(),
+                    MathHelper.clampedLerp(this.cachedExtensionOld, this.cachedExtension, pt) * this.cachedFacing.getFrontOffsetY(),
+                    MathHelper.clampedLerp(this.cachedExtensionOld, this.cachedExtension, pt) * this.cachedFacing.getFrontOffsetZ()
+            );
+        } else {
+            //GlStateManager.translate(0, pt, 0);
+        }
+    }
+
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+        if (compound.hasKey("Contraption", 10)) {
+            this.contraption = new Contraption(this);
+            this.contraption.loadNBT(compound.getCompoundTag("Contraption"));
+        } else throw new IllegalStateException("No contraption data (this should not happen)");
+        if (compound.hasKey("BearingPos", 10)) {
+            this.pistonPos = NBTUtil.getPosFromTag(compound.getCompoundTag("BearingPos"));
+        } else throw new IllegalStateException("No bearingPos data (this should not happen)");
+    }
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound compound) {
+        super.writeEntityToNBT(compound);
+        if (this.contraption != null) compound.setTag("Contraption", this.contraption.saveNBT(new NBTTagCompound()));
+        else throw new IllegalStateException("Contraption is null (this should not happen)");
+        if (this.pistonPos != null) compound.setTag("BearingPos", NBTUtil.createPosTag(this.pistonPos));
+        else throw new IllegalStateException("BearingPos is null (this should not happen)");
+    }
+
+    @Override
+    public void placeBlocks() {
+        if (this.contraption == null) return;
+        List<TileEntityKinetic> attachables = new ArrayList<>();
+        int extension = Math.round(this.cachedExtension);
+        final int offsetX, offsetY, offsetZ;
+        if (this.cachedFacing != null && extension != 0) {
+            offsetX = this.cachedFacing.getFrontOffsetX() * extension;
+            offsetY = this.cachedFacing.getFrontOffsetY() * extension;
+            offsetZ = this.cachedFacing.getFrontOffsetZ() * extension;
+        } else {
+            offsetX = 0;
+            offsetY = 0;
+            offsetZ = 0;
+        }
+
+        BlockPos self = this.getPosition().add(offsetX, offsetY, offsetZ);
+        for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
+            BlockPos pos = self.add(entry.getKey());
+            this.world.setBlockState(pos, entry.getValue());
+            this.world.removeTileEntity(pos);
+            TileEntity te = this.contraption.tileEntities.get(entry.getKey());
+            if (te != null) {
+                te.setPos(pos);
+                te.validate();
+                TileEntity copy = TileEntity.create(this.world, te.writeToNBT(new NBTTagCompound()));
+                if (copy != null) {
+                    copy.validate();
+                    this.world.setTileEntity(pos, copy);
+                    if (copy instanceof TileEntityKinetic) {
+                        attachables.add((TileEntityKinetic) copy);
+                    }
+                    if (copy instanceof IContraptionActor) {
+                        ((IContraptionActor) te).setOnContraption(false);
+                    }
+                    if (copy instanceof ISyncedTE) ((ISyncedTE)copy).sync();
+                    else copy.markDirty();
+                }
+            }
+        }
+        for (GluedSurface surface : this.contraption.gluedSurfaces) {
+            BlockPos pos = self.add(surface.pos);
+            EntityGlue glue = new EntityGlue(this.world, new GluedSurface(pos, surface.side));
+            glue.wasCovered = true;
+            this.world.spawnEntity(glue);
+        }
+        for (TrackedPouf pouf : this.contraption.poufs) {
+            if (pouf.entity != null) this.world.removeEntity(pouf.entity);
+        }
+
+        for (TileEntityKinetic te : attachables) {
+            te.speed = 0.0F;
+            te.attachKinetics();
+            te.sync();
+        }
+    }
+
+    @Override
+    public void writeSpawnData(ByteBuf buf) {
+        buf.writeLong(this.pistonPos.toLong());
+
+        new PacketBuffer(buf).writeCompoundTag(this.contraption.saveNBT(new NBTTagCompound()));
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf buf) {
+        try {
+            this.pistonPos = BlockPos.fromLong(buf.readLong());
+
+            this.contraption = new Contraption(this);
+            this.contraption.loadNBT(Objects.requireNonNull(new PacketBuffer(buf).readCompoundTag()));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read contraption spawn data", e);
+        }
+    }
+
+    public void pauseContraption() {
+        if (this.piston != null) {
+            //this.piston.pauseContraption();
+        }
+    }
+}

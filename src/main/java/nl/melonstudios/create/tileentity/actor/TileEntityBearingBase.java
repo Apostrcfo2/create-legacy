@@ -77,10 +77,10 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
             this.attachedContraptionEntity.placeBlocks();
             this.world.removeEntity(this.attachedContraptionEntity);
             //this.world.onEntityRemoved(this.attachedContraptionEntity);
-            this.attachedContraptionEntity = null;
-            this.attachedContraptionUUID = null;
             this.world.playSound(null, this.pos, SoundInit.contraption_disassemble, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
+        this.attachedContraptionEntity = null;
+        this.attachedContraptionUUID = null;
     }
     public boolean disassemble() {
         if (this.assemblyChanged) return false;
@@ -240,7 +240,7 @@ public abstract class TileEntityBearingBase extends TileEntityKinetic implements
         super.readFromNBT(nbt);
 
         this.angle = nbt.getFloat("angle");
-        if (nbt.hasKey("AttachedContraptionUUID")) {
+        if (nbt.hasKey("AttachedContraptionUUIDLeast")) {
             this.attachedContraptionUUID = nbt.getUniqueId("AttachedContraptionUUID");
         } else {
             this.attachedContraptionUUID = null;

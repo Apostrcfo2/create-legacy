@@ -1,0 +1,72 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "create:block/piston/pole",
+		"pole": "create:block/piston/pole",
+		"side": "create:block/piston/side_casing",
+		"side_gearbox": "create:block/piston/side_gearbox",
+		"hole": "create:block/square_hole"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#side"},
+				"east": {"uv": [0, 14, 16, 16], "texture": "#side_gearbox"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#side"},
+				"west": {"uv": [0, 14, 16, 16], "texture": "#side_gearbox"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#hole"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#hole"}
+			}
+		},
+		{
+			"from": [0, 2, 0],
+			"to": [2, 12, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [14, 4, 16, 14], "texture": "#side_gearbox"},
+				"east": {"uv": [0, 4, 16, 14], "texture": "#side"},
+				"south": {"uv": [0, 4, 2, 14], "texture": "#side_gearbox"},
+				"west": {"uv": [0, 4, 16, 14], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#hole"}
+			}
+		},
+		{
+			"from": [2, 2, 2],
+			"to": [14, 12, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [2, 4, 14, 14], "texture": "#side_gearbox"},
+				"south": {"uv": [2, 4, 14, 14], "texture": "#side_gearbox"},
+				"up": {"uv": [2, 2, 14, 14], "rotation": 270, "texture": "#hole"}
+			}
+		},
+		{
+			"from": [14, 2, 0],
+			"to": [16, 12, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 2, 14], "texture": "#side_gearbox"},
+				"east": {"uv": [0, 4, 16, 14], "texture": "#side"},
+				"south": {"uv": [14, 4, 16, 14], "texture": "#side_gearbox"},
+				"west": {"uv": [0, 4, 16, 14], "texture": "#side"},
+				"up": {"uv": [0, 14, 16, 16], "rotation": 270, "texture": "#hole"}
+			}
+		},
+		{
+			"name": "pole",
+			"from": [6.05, 12, 6.05],
+			"to": [9.95, 16, 9.95],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [6, 0, 10, 4], "texture": "#pole"},
+				"east": {"uv": [6, 0, 10, 4], "texture": "#pole"},
+				"south": {"uv": [6, 0, 10, 4], "texture": "#pole"},
+				"west": {"uv": [6, 0, 10, 4], "texture": "#pole"}
+			}
+		}
+	]
+}

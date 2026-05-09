@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=up,sticky=false": {
+      "model": "create:mechanical_piston_head"
+    },
+    "facing=down,sticky=false": {
+      "model": "create:mechanical_piston_head",
+      "x": 180
+    },
+    "facing=north,sticky=false": {
+      "model": "create:mechanical_piston_head",
+      "x": 90
+    },
+    "facing=south,sticky=false": {
+      "model": "create:mechanical_piston_head",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,sticky=false": {
+      "model": "create:mechanical_piston_head",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,sticky=false": {
+      "model": "create:mechanical_piston_head",
+      "x": 90,
+      "y": 90
+    },
+    "facing=up,sticky=true": {
+      "model": "create:mechanical_piston_head_sticky"
+    },
+    "facing=down,sticky=true": {
+      "model": "create:mechanical_piston_head_sticky",
+      "x": 180
+    },
+    "facing=north,sticky=true": {
+      "model": "create:mechanical_piston_head_sticky",
+      "x": 90
+    },
+    "facing=south,sticky=true": {
+      "model": "create:mechanical_piston_head_sticky",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,sticky=true": {
+      "model": "create:mechanical_piston_head_sticky",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,sticky=true": {
+      "model": "create:mechanical_piston_head_sticky",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

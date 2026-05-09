@@ -26,6 +26,7 @@ import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.util.BlockRotationHelper;
 import org.joml.Matrix3d;
+import org.joml.Matrix4d;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -86,7 +87,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
         this.cachedAngle = this.bearing.angle;
     }
 
-    private static final Matrix3d TRANSFORMS = new Matrix3d();
+    private static final Matrix4d TRANSFORMS = new Matrix4d();
     public BlockPos bearingPos;
     public TileEntityBearingBase bearing;
     public Contraption contraption;
@@ -163,7 +164,7 @@ public class EntityContraptionBearing extends EntityContraptionBase implements I
             }
         }
         if (!this.contraption.poufs.isEmpty()) {
-            Matrix3d mat = TRANSFORMS.identity();
+            Matrix4d mat = TRANSFORMS.identity();
             EnumFacing.Axis axis = this.cachedAxis;
             double angle = this.cachedAngle * (double) BlockRotationHelper.RADIANS;
             switch (axis) {

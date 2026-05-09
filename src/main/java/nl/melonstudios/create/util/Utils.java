@@ -170,6 +170,7 @@ public class Utils {
         TileEntityKinetic kinetic = cast(te, TileEntityKinetic.class);
         if (kinetic != null) {
             kinetic.preventNextRemoval();
+            kinetic.removeSource();
             kinetic.detachKinetics();
         }
         world.setBlockState(pos, state, flags);
@@ -180,6 +181,19 @@ public class Utils {
         }
         if (kinetic != null) {
             kinetic.attachKinetics();
+        }
+    }
+    public static void setBlockKineticTESafe2(World world, BlockPos pos, IBlockState state, int flags) {
+        TileEntity te = world.getTileEntity(pos);
+        TileEntityKinetic kinetic = cast(te, TileEntityKinetic.class);
+        if (kinetic != null) {
+            kinetic.preventNextRemoval();
+        }
+        world.setBlockState(pos, state, flags);
+        if (te != null) {
+            te.validate();
+            world.setTileEntity(pos, te);
+            te.updateContainingBlockInfo();
         }
     }
 

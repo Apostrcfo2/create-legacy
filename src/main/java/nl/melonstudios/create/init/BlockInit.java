@@ -90,6 +90,22 @@ public final class BlockInit {
     public static final BlockPistonPole PISTON_POLE = (BlockPistonPole)
             registerBlockWithItem(new BlockPistonPole()
             .setRegistryName("piston_pole").setUnlocalizedName("create.piston_pole"));
+    public static final BlockMechanicalPistonHead PISTON_HEAD = (BlockMechanicalPistonHead)
+            registerBlock(new BlockMechanicalPistonHead()
+            .setRegistryName("piston_head").setUnlocalizedName("create.piston_head"));
+
+    public static final BlockMechanicalPiston MECHANICAL_PISTON = (BlockMechanicalPiston)
+            registerBlockWithItem(new BlockMechanicalPiston(false, false)
+            .setRegistryName("mechanical_piston").setUnlocalizedName("create.mechanical_piston"));
+    public static final BlockMechanicalPiston MECHANICAL_PISTON_STICKY = (BlockMechanicalPiston)
+            registerBlockWithItem(new BlockMechanicalPiston(true, false)
+            .setRegistryName("mechanical_piston_sticky").setUnlocalizedName("create.mechanical_piston_sticky"));
+    public static final BlockMechanicalPiston MECHANICAL_PISTON_EXTENDED = (BlockMechanicalPiston)
+            registerBlock(new BlockMechanicalPiston(false, true)
+            .setRegistryName("mechanical_piston_extended").setUnlocalizedName("create.mechanical_piston"));
+    public static final BlockMechanicalPiston MECHANICAL_PISTON_STICKY_EXTENDED = (BlockMechanicalPiston)
+            registerBlock(new BlockMechanicalPiston(true, true)
+            .setRegistryName("mechanical_piston_sticky_extended").setUnlocalizedName("create.mechanical_piston_sticky"));
 
     public static final BlockGauge SPEEDOMETER = (BlockGauge)
             registerBlockWithItem(new BlockGauge(MapColor.WOOD, SoundType.WOOD, BlockGauge.Type.SPEED)

@@ -72,6 +72,7 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     protected final IBlockState[] shaftlessCogs = new IBlockState[3];
     @Override
     public void render(T te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        if (!this.shouldRender(te)) return;
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
         this.bindTexture(destroyStage >= 0 ? DESTROY_STAGES[destroyStage] : porkchop ? PORK : TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -85,6 +86,10 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     }
 
     protected abstract void render(T te, float pt, float alpha);
+
+    public boolean shouldRender(T te) {
+        return true;
+    }
 
     protected final void spinShaft(TileEntityKinetic te, float pt, EnumFacing.Axis axis) {
         IBlockState state = Utils.axis_choose(axis, this.shaftX, this.shaftY, this.shaftZ);

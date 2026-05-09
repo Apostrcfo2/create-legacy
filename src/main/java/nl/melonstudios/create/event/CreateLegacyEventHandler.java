@@ -42,10 +42,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.cfg.ClientConfig;
-import nl.melonstudios.create.entity.EntityContraptionBase;
-import nl.melonstudios.create.entity.EntityContraptionBearing;
-import nl.melonstudios.create.entity.EntityGlue;
-import nl.melonstudios.create.entity.EntityPouf;
+import nl.melonstudios.create.entity.*;
 import nl.melonstudios.create.extensions.IExtensionWorld;
 import nl.melonstudios.create.init.BlockInit;
 import nl.melonstudios.create.init.ItemInit;
@@ -97,6 +94,9 @@ public class CreateLegacyEventHandler {
         event.getRegistry().register(EntityEntryBuilder.create().entity(EntityContraptionBearing.class)
                 .factory(EntityContraptionBearing::new).id("create:contraption_bearing", 10).name("create.contraption")
                 .tracker(256, 10, false).build());
+        event.getRegistry().register(EntityEntryBuilder.create().entity(EntityContraptionPiston.class)
+                .factory(EntityContraptionPiston::new).id("create:contraption_piston", 11).name("create.contraption")
+                .tracker(256, 10, false).build());
         CreateLegacy.proxy.registerEntityRenderers();
     }
 
@@ -132,8 +132,9 @@ public class CreateLegacyEventHandler {
         AxisAlignedBB aabb = event.getAabb();
         if (aabb == null) return;
         List<AxisAlignedBB> collisions = event.getCollisionBoxesList();
+        AxisAlignedBB expand = aabb.grow(0.25);
         for (ITileEntityWithContraption contraption : ((IExtensionWorld)event.getWorld()).create$getContraptionTileEntities()) {
-            contraption.collectCollisions(aabb, collisions);
+            contraption.collectCollisions(expand, collisions);
         }
     }
 
