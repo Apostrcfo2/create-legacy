@@ -25,6 +25,7 @@ import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityMechanicalPiston;
 import org.joml.Matrix4d;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -129,6 +130,11 @@ public class EntityContraptionPiston extends EntityContraptionBase implements IC
         }
         if (this.piston.isInvalid()) this.piston = null;
 
+        if (!this.contraption.actors.isEmpty()) {
+            BlockPos anchor = this.getPosition();
+            Vector3f vec = new Vector3f();
+            Vector3f movement = new Vector3f();
+        }
         if (!this.contraption.poufs.isEmpty()) {
             Matrix4d mat = TRANSFORMS.identity();
             EnumFacing facing = this.cachedFacing;
