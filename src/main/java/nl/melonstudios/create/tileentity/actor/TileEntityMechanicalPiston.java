@@ -428,25 +428,29 @@ public class TileEntityMechanicalPiston extends TileEntityKinetic implements ITi
         this.invalidateRenderBoundingBox();
     }
 
+    private static final boolean USE_OPTIMIZED_AABB = true;
     @Override
     public void collectCollisions(AxisAlignedBB aabb, List<AxisAlignedBB> collisions) {
         if (this.attachedContraptionEntity != null) {
             if (aabb.intersects(this.attachedContraptionEntity.getEntityBoundingBox())) {
                 Contraption contraption = this.attachedContraptionEntity.attachedContraption();
                 if (contraption != null) {
-                    EnumFacing facing = this.getFacing();
-                    double dx = this.attachedContraptionEntity.posX - 0.5 + (facing.getFrontOffsetX() * this.extension);
-                    double dy = this.attachedContraptionEntity.posY - 0.5 + (facing.getFrontOffsetY() * this.extension);
-                    double dz = this.attachedContraptionEntity.posZ - 0.5 + (facing.getFrontOffsetZ() * this.extension);
-                    for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
-                        AxisAlignedBB bounds = entry.getValue().getCollisionBoundingBox(contraption, entry.getKey());
-                        if (bounds != null) {
-                            bounds = bounds.offset(
-                                    entry.getKey().getX() + dx,
-                                    entry.getKey().getY() + dy,
-                                    entry.getKey().getZ() + dz
-                            );
-                            if (bounds.intersects(aabb)) collisions.add(bounds);
+                    if (USE_OPTIMIZED_AABB) collisions.addAll(contraption.optimizedAABB);
+                    else {
+                        EnumFacing facing = this.getFacing();
+                        double dx = this.attachedContraptionEntity.posX - 0.5 + (facing.getFrontOffsetX() * this.extension);
+                        double dy = this.attachedContraptionEntity.posY - 0.5 + (facing.getFrontOffsetY() * this.extension);
+                        double dz = this.attachedContraptionEntity.posZ - 0.5 + (facing.getFrontOffsetZ() * this.extension);
+                        for (Map.Entry<BlockPos, IBlockState> entry : contraption.blocks.entrySet()) {
+                            AxisAlignedBB bounds = entry.getValue().getCollisionBoundingBox(contraption, entry.getKey());
+                            if (bounds != null) {
+                                bounds = bounds.offset(
+                                        entry.getKey().getX() + dx,
+                                        entry.getKey().getY() + dy,
+                                        entry.getKey().getZ() + dz
+                                );
+                                if (bounds.intersects(aabb)) collisions.add(bounds);
+                            }
                         }
                     }
                 }
