@@ -1,13 +1,9 @@
 package nl.melonstudios.create.tileentity.marker;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@Deprecated
 public interface IInventoryDebloated extends IInventory {
     @Override
     default int getField(int id) {

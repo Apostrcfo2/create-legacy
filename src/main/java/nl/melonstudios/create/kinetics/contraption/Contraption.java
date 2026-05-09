@@ -31,11 +31,13 @@ import nl.melonstudios.create.extensions.IExtensionTileEntity;
 import nl.melonstudios.create.tileentity.TileEntityDepot;
 import nl.melonstudios.create.tileentity.marker.IAssemblyBehavior;
 import nl.melonstudios.create.util.Utils;
-import org.joml.*;
+import org.joml.Matrix4d;
+import org.joml.Matrix4dc;
+import org.joml.Vector3d;
+import org.joml.Vector4d;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.lang.Math;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;

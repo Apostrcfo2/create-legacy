@@ -15,17 +15,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.kinetics.contraption.*;
 import nl.melonstudios.create.kinetics.contraption.accessor.CAccessorBearing;
 import nl.melonstudios.create.kinetics.contraption.accessor.IContraptionAccessor;
 import nl.melonstudios.create.tileentity.TileEntityKinetic;
 import nl.melonstudios.create.tileentity.actor.TileEntityBearingBase;
 import nl.melonstudios.create.util.BlockRotationHelper;
-import org.joml.Matrix3d;
 import org.joml.Matrix4d;
 import org.joml.Vector3f;
 

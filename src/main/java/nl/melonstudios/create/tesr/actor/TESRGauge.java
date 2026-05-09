@@ -3,7 +3,6 @@ package nl.melonstudios.create.tesr.actor;
 import com.melonstudios.melonlib.misc.BlockStateProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.ForgeHooksClient;
 import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.entity.EntityContraptionBase;
-import nl.melonstudios.create.extensions.IExtensionChunkRenderContainer;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import org.spongepowered.asm.mixin.Mixin;

@@ -2,7 +2,6 @@ package nl.melonstudios.create.entity;
 
 import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +17,6 @@ import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.kinetics.contraption.Contraption;
 import nl.melonstudios.create.kinetics.contraption.ContraptionRendering;
 import nl.melonstudios.create.kinetics.contraption.IContraptionHolder;
-import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
