@@ -1,6 +1,7 @@
 package nl.melonstudios.create.kinetics.contraption;
 
 import com.melonstudios.melonlib.blockdict.BlockDictionary;
+import com.melonstudios.melonlib.misc.AABB;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -113,6 +115,7 @@ public class Contraption implements IBlockAccess {
         this.inventory.reindex(this);
 
         this.compileLight();
+        this.compileAABB();
     }
 
     public NBTTagCompound saveNBT(NBTTagCompound nbt) {
@@ -169,6 +172,7 @@ public class Contraption implements IBlockAccess {
     public final Object2IntOpenHashMap<BlockPos> lightSources = new Object2IntOpenHashMap<>();
     public final HashSet<ActorContext> actors = new HashSet<>();
     public final ContraptionInventory inventory = new ContraptionInventory();
+    public List<AxisAlignedBB> optimizedAABB = new ArrayList<>();
 
     @Nullable
     @Override
@@ -195,6 +199,18 @@ public class Contraption implements IBlockAccess {
             light = Math.max(light, entry.getIntValue() - Utils.dist_manh(pos, entry.getKey()));
         }
         return light;
+    }
+
+    private void compileAABB() {
+        List<AxisAlignedBB> list = new ArrayList<>();
+        for (Map.Entry<BlockPos, IBlockState> entry : this.blocks.entrySet()) {
+            BlockPos local = entry.getKey();
+            AxisAlignedBB bounds = entry.getValue().getCollisionBoundingBox(this, local);
+            if (bounds != null) {
+                list.add(bounds.offset(local));
+            }
+        }
+        this.optimizedAABB = AABB.optimize(list, EnumFacing.Axis.Y, 256);
     }
 
     @Override
@@ -311,6 +327,7 @@ public class Contraption implements IBlockAccess {
 
         contraption.inventory.reindex(contraption);
         contraption.compileLight();
+        contraption.compileAABB();
         return contraption;
     }
 
@@ -391,6 +408,7 @@ public class Contraption implements IBlockAccess {
 
         contraption.inventory.reindex(contraption);
         contraption.compileLight();
+        contraption.compileAABB();
         return new ContraptionResult(contraption);
     }
 

@@ -151,45 +151,71 @@ public class EntityContraptionPiston extends EntityContraptionBase implements IC
                     double dy = this.posY - 0.5 + this.cachedFacing.getFrontOffsetY() * this.cachedExtension;
                     double dz = this.posZ - 0.5 + this.cachedFacing.getFrontOffsetZ() * this.cachedExtension;
                     profiler.startSection("collectAABB");
-                    for (Map.Entry<BlockPos, IBlockState> entry : this.contraption.blocks.entrySet()) {
-                        BlockPos local = entry.getKey();
-                        AxisAlignedBB bounds = entry.getValue().getCollisionBoundingBox(this.contraption, local);
-                        if (bounds != null) {
-                            pushouts.add(bounds.offset(dx + local.getX(), dy + local.getY(), dz + local.getZ()));
-                        }
+                    for (AxisAlignedBB bb : this.contraption.optimizedAABB) {
+                        pushouts.add(bb.offset(dx, dy, dz));
                     }
                     if (!pushouts.isEmpty()) {
                         profiler.endStartSection("pushout");
+                        EnumFacing.Axis pushAxis = this.cachedFacing.getAxis();
                         loop:
                         for (EntityLivingBase entity : entities) {
                             AxisAlignedBB entityBB = entity.getEntityBoundingBox();
                             Vec3d center = new Vec3d(entity.posX, entity.posY + entity.height * 0.5, entity.posZ);
+                            double half = entity.width * 0.5;
                             for (AxisAlignedBB aabb : pushouts) {
                                 if (aabb.intersects(entityBB)) {
-                                    if (entity.posY < aabb.maxY && center.y >= aabb.maxY) {
-                                        entity.setPosition(entity.posX, aabb.maxY, entity.posZ);
-                                        entity.onGround = true;
-                                        entity.fallDistance = 0.0F;
-                                        entity.motionY = 0.0F;
-                                        //entity.prevPosY = entity.posY;
-                                        continue loop;
-                                    }
-                                    if (entity.posY + entity.height > aabb.minY && center.y <= aabb.minY) {
-                                        entity.setPosition(entity.posX, aabb.minY - entity.height, entity.posZ);
-                                        //entity.prevPosY = entity.posY;
-                                        continue loop;
+                                    switch (pushAxis) {
+                                        case Y:
+                                            if (entity.posY < aabb.maxY && center.y >= aabb.maxY) {
+                                                entity.setPosition(entity.posX, aabb.maxY, entity.posZ);
+                                                entity.onGround = true;
+                                                entity.fallDistance = 0.0F;
+                                                entity.motionY = 0.0F;
+                                                //entity.prevPosY = entity.posY;
+                                                continue loop;
+                                            }
+                                            if (entity.posY + entity.height > aabb.minY && center.y <= aabb.minY) {
+                                                entity.setPosition(entity.posX, aabb.minY - entity.height, entity.posZ);
+                                                //entity.prevPosY = entity.posY;
+                                                continue loop;
+                                            }
+                                            break;
+                                        case X:
+                                            if (entity.posX - half < aabb.maxX && center.x >= aabb.maxX) {
+                                                entity.setPosition(aabb.maxX + half, entity.posY, entity.posZ);
+                                                entity.motionX = 0.0;
+                                                continue loop;
+                                            } else if (entity.posX + half > aabb.minX && center.x <= aabb.minX) {
+                                                entity.setPosition(aabb.minX - half, entity.posY, entity.posZ);
+                                                entity.motionX = 0.0;
+                                                continue loop;
+                                            }
+                                            break;
+                                        case Z:
+                                            if (entity.posZ - half < aabb.maxZ && center.z >= aabb.maxZ) {
+                                                entity.setPosition(entity.posX, entity.posY, aabb.minZ + half);
+                                                entity.motionZ = 0.0;
+                                                continue loop;
+                                            }
+                                            if (entity.posZ + half > aabb.minZ && center.z <= aabb.minZ) {
+                                                entity.setPosition(entity.posX, entity.posY, aabb.minZ - half);
+                                                entity.motionZ = 0.0;
+                                                continue loop;
+                                            }
+                                            break;
                                     }
                                 }
                             }
                         }
-                        profiler.endSection();
                     }
+                    profiler.endSection();
                 }
                 profiler.endSection();
             }
         }
     }
     private static final boolean HANDLE_COLLISION_IN_ENTITY = true;
+    private static final boolean DO_SIDEWAYS_COLLISION = false;
 
     @SideOnly(Side.CLIENT)
     @Override
