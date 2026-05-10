@@ -63,6 +63,10 @@ tile.create.belt.name=Mechanical Belt
 
 tile.create.item_drain.name=Item Drain
 
+## Create's Redstone ##
+tile.create.latch.name=Powered Latch
+tile.create.toggle_latch.name=Powered Toggle Latch
+
 ## Create's Decorations ##
 tile.create.window_oak.name=Oak Window
 tile.create.window_spruce.name=Spruce Window

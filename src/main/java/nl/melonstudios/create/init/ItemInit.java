@@ -3,9 +3,7 @@ package nl.melonstudios.create.init;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import nl.melonstudios.create.CreateLegacy;
@@ -131,6 +129,9 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(BlockInit.BASIN);
         CreateLegacy.proxy.setItemModel(BlockInit.CHUTE);
         CreateLegacy.proxy.setItemModel(BlockInit.ITEM_DRAIN);
+
+        CreateLegacy.proxy.setItemModel(BlockInit.LATCH);
+        CreateLegacy.proxy.setItemModel(BlockInit.TOGGLE_LATCH);
 
         for (int i = 0; i < 4; i++) {
             String type = BlockFramedGlass.Variant.byId(i).getName();

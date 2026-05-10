@@ -14,6 +14,8 @@ import nl.melonstudios.create.block.*;
 import nl.melonstudios.create.block.actor.*;
 import nl.melonstudios.create.block.deco.*;
 import nl.melonstudios.create.block.generator.*;
+import nl.melonstudios.create.block.redstone.BlockRedstoneLatch;
+import nl.melonstudios.create.block.redstone.BlockRedstoneToggleLatch;
 import nl.melonstudios.create.item.ItemBlockBlazeBurner;
 import nl.melonstudios.create.item.ItemBlockDepotActor;
 import nl.melonstudios.create.item.ItemBlockSail;
@@ -171,6 +173,22 @@ public final class BlockInit {
     public static final BlockItemDrain ITEM_DRAIN = (BlockItemDrain)
             registerBlockWithItem(new BlockItemDrain()
             .setRegistryName("item_drain").setUnlocalizedName("create.item_drain"));
+    //endregion
+
+    //region Redstone components
+    public static final BlockRedstoneLatch LATCH = (BlockRedstoneLatch)
+            registerBlockWithItem(new BlockRedstoneLatch(false)
+            .setRegistryName("latch").setUnlocalizedName("create.latch"));
+    public static final BlockRedstoneLatch LATCH_POWERED = (BlockRedstoneLatch)
+            registerBlock(new BlockRedstoneLatch(true)
+                    .setRegistryName("latch_powered").setUnlocalizedName("create.latch"));
+
+    public static final BlockRedstoneToggleLatch TOGGLE_LATCH = (BlockRedstoneToggleLatch)
+            registerBlockWithItem(new BlockRedstoneToggleLatch(false)
+            .setRegistryName("toggle_latch").setUnlocalizedName("create.toggle_latch"));
+    public static final BlockRedstoneToggleLatch TOGGLE_LATCH_POWERED = (BlockRedstoneToggleLatch)
+            registerBlock(new BlockRedstoneToggleLatch(true)
+            .setRegistryName("toggle_latch_powered").setUnlocalizedName("create.toggle_latch"));
     //endregion
 
     //region Decorations
