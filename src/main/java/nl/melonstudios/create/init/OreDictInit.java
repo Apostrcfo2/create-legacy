@@ -128,6 +128,10 @@ public final class OreDictInit {
         BlockDictionary.registerOre("create:sail", BlockInit.SAIL_EAST, true);
         //endregion
 
+        //region Immovable
+        BlockDictionary.registerOre("create:immovable", Blocks.BEDROCK, false);
+        //endregion
+
         BlockDictionary.registerOre("create:depotActorCompatible", BlockInit.DEPOT, false);
         BlockDictionary.registerOre("create:depotActorCompatible", BlockInit.BASIN, true);
         BlockDictionary.registerOre("create:depotActorCompatible", BlockInit.BELT_STRAIGHT, true);

@@ -25,6 +25,7 @@ import nl.melonstudios.create.tileentity.actor.TileEntityMechanicalPiston;
 import nl.melonstudios.create.util.BlockProperties;
 import nl.melonstudios.create.util.TextBuilder;
 import nl.melonstudios.create.util.Utils;
+import nl.melonstudios.create.util.interfaces.ISelectiveImmovable;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
-public class BlockMechanicalPiston extends BlockKineticDirectionalBase implements ITileEntityProvider {
+public class BlockMechanicalPiston extends BlockKineticDirectionalBase implements ITileEntityProvider, ISelectiveImmovable {
     public static final PropertyBool ROTATED = CreateStateProperties.ROTATED;
 
     public final boolean sticky;
@@ -177,5 +178,11 @@ public class BlockMechanicalPiston extends BlockKineticDirectionalBase implement
         STATE_TO_AXIS_LOOKUP[9] = EnumFacing.Axis.Y;
         STATE_TO_AXIS_LOOKUP[10] = EnumFacing.Axis.Z;
         STATE_TO_AXIS_LOOKUP[11] = EnumFacing.Axis.Y;
+    }
+
+    @Override
+    public boolean isImmovable(World world, BlockPos pos, IBlockState state) {
+        TileEntityMechanicalPiston te = Utils.cast(world.getTileEntity(pos), TileEntityMechanicalPiston.class);
+        return te != null && te.isAssembled();
     }
 }

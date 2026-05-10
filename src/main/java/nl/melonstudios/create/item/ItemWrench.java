@@ -1,6 +1,5 @@
 package nl.melonstudios.create.item;
 
-import com.melonstudios.melonlib.blockdict.BlockDictionary;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,6 +11,7 @@ import net.minecraft.world.World;
 import nl.melonstudios.create.init.ItemInit;
 import nl.melonstudios.create.init.SoundInit;
 import nl.melonstudios.create.kinetics.contraption.IWrenchable;
+import nl.melonstudios.create.util.CreateTagHelper;
 
 public class ItemWrench extends Item {
     public ItemWrench() {
@@ -25,7 +25,7 @@ public class ItemWrench extends Item {
         if (hand != EnumHand.MAIN_HAND) return EnumActionResult.PASS;
         IBlockState state = worldIn.getBlockState(pos);
         if (player.isSneaking()) {
-            if (BlockDictionary.isBlockTagged(state, "create:wrenchPickup")) {
+            if (CreateTagHelper.isWrenchPickup(state)) {
                 NonNullList<ItemStack> drops = NonNullList.create();
                 state.getBlock().getDrops(drops, worldIn, pos, state, 0);
                 for (ItemStack stack : drops) player.inventory.addItemStackToInventory(stack);

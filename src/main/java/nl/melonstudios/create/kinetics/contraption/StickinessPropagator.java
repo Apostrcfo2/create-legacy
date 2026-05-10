@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import nl.melonstudios.create.entity.EntityGlue;
 import nl.melonstudios.create.extensions.IExtensionBlock;
+import nl.melonstudios.create.util.CreateTagHelper;
+import nl.melonstudios.create.util.interfaces.ISelectiveImmovable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +85,12 @@ public class StickinessPropagator {
         }
         IBlockState state = world.getBlockState(pos);
         if (state.getMaterial().isLiquid() || state.getBlock() instanceof BlockLiquid) return;
+        if (CreateTagHelper.isImmovable(state)) {
+            positions.clear();
+            failed.set(true);
+            return;
+        }
+        //Replace with create:immovable?
         if (state.getMobilityFlag() == EnumPushReaction.BLOCK) {
             positions.clear();
             failed.set(true);
@@ -90,6 +98,11 @@ public class StickinessPropagator {
         }
         if (state.getBlock().isAir(state, world, pos)) return;
         if (state.getBlock() instanceof BlockBush && !positions.contains(pos.down())) return;
+        if (state.getBlock() instanceof ISelectiveImmovable && ((ISelectiveImmovable)state.getBlock()).isImmovable(world, pos, state)) {
+            positions.clear();
+            failed.set(true);
+            return;
+        }
         positions.add(pos);
         checker.incrementCounter(state);
         List<BlockPos> list = new ArrayList<>();
