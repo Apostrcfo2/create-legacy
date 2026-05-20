@@ -119,7 +119,7 @@ public class TESRSawProcessing extends TESRKineticBase<TileEntitySawProcessing> 
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
-            IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(stack, te.getWorld(), null);
+            IBakedModel model = this.mc.getRenderItem().getItemModelWithOverrides(stack, this.getWorld(), null);
             GlStateManager.translate(0.5F, 0.75F, 0.5F);
 
 

@@ -183,6 +183,11 @@ public class TileEntityItemDrain extends TileEntityOptimizedBase implements ITop
     }
 
     @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        return this.draining.isEmpty();
+    }
+
+    @Override
     public ItemStack tryInsertItem(ItemStack stack, @Nullable EnumFacing side) {
         if (this.draining.isEmpty()) {
             this.rollingDirection = side != null ? side.getOpposite() : null;

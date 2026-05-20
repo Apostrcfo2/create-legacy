@@ -164,6 +164,11 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ITopOpen
     }
 
     @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        return this.mainItem.isEmpty();
+    }
+
+    @Override
     public void destroy() {
         super.destroy();
 
@@ -174,6 +179,12 @@ public class TileEntityDepot extends TileEntityOptimizedBase implements ITopOpen
     @Override
     public ItemStack getPresentedItem() {
         return this.mainItem;
+    }
+
+    @Override
+    public void setPresentedItem(ItemStack stack) {
+        this.mainItem = stack;
+        this.sync();
     }
 
     @Override

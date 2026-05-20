@@ -1,0 +1,144 @@
+package nl.melonstudios.create.tileentity.funnel;
+
+import com.melonstudios.melonlib.network.TrackedByteBuf;
+import com.melonstudios.melonlib.tileentity.ISyncedTE;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
+import nl.melonstudios.create.init.ItemInit;
+import nl.melonstudios.create.tileentity.marker.ITileEntityWithSubInteractions;
+import nl.melonstudios.create.util.SubInteractionBox;
+import nl.melonstudios.create.util.filter.IItemFilter;
+import nl.melonstudios.create.util.filter.ItemFilterExact;
+
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+
+public class TileEntityFunnelWallAdvanced extends TileEntityFunnelWall implements ISyncedTE, ITileEntityWithSubInteractions {
+    private Collection<SubInteractionBox> subInteractionBoxes = null;
+
+    public IItemFilter filter = null;
+    public int extractionAmount = 64;
+    public boolean extractionAmountExact = false;
+
+    public TileEntityFunnelWallAdvanced() {
+        super();
+    }
+
+    @Override
+    public void updateContainingBlockInfo() {
+        super.updateContainingBlockInfo();
+
+        this.subInteractionBoxes = null;
+    }
+
+    @Nullable
+    @Override
+    public IItemFilter getFilter() {
+        return this.filter;
+    }
+    @Override
+    protected int getExtractionAmount() {
+        return this.extractionAmount;
+    }
+    @Override
+    protected boolean isExtractionAmountExact() {
+        return this.extractionAmountExact;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+
+        if (this.filter != null) {
+            nbt.setTag("Filter", this.filter.serialize(new NBTTagCompound()));
+        }
+        nbt.setInteger("extraction", this.extractionAmount);
+        nbt.setBoolean("extractionExact", this.extractionAmountExact);
+
+        return nbt;
+    }
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        if (nbt.hasKey("Filter", 10)) {
+            this.filter = IItemFilter.deserialize(nbt.getCompoundTag("Filter"));
+        } else this.filter = null;
+        this.extractionAmount = Math.min(Math.max(nbt.getInteger("extraction"), 1), 64);
+        this.extractionAmountExact = nbt.getBoolean("extractionExact");
+    }
+
+    @Override
+    public void writePacket(TrackedByteBuf buf) throws IOException {
+        if (this.filter != null) {
+            buf.writeBoolean(true);
+            this.filter.serialize(buf);
+        } else buf.writeBoolean(false);
+        buf.writeByte(this.extractionAmount);
+        buf.writeBoolean(this.extractionAmountExact);
+    }
+    @Override
+    public void readPacket(ByteBuf buf) throws IOException {
+        if (buf.readBoolean()) {
+            this.filter = IItemFilter.deserialize(buf);
+        } else this.filter = null;
+        this.extractionAmount = buf.readUnsignedByte();
+        this.extractionAmountExact = buf.readBoolean();
+    }
+
+    private void createSubInteractions() {
+        this.subInteractionBoxes = Collections.singleton(
+                SubInteractionBox.Helper.forFunnel(this.getFacing(this.getBlockMetadata()),
+                        0.25F, false, new FunnelInteraction(this)));
+    }
+    @Override
+    public Collection<SubInteractionBox> getSubInteractionBoxes() {
+        if (this.subInteractionBoxes == null) this.createSubInteractions();
+        return this.subInteractionBoxes;
+    }
+
+    private static class FunnelInteraction implements SubInteractionBox.ScrollInteraction {
+        private final TileEntityFunnelWallAdvanced te;
+        public FunnelInteraction(TileEntityFunnelWallAdvanced te) {
+            this.te = te;
+        }
+
+        @Override
+        public boolean interact(@Nullable EntityPlayer player, boolean sneaking, ItemStack held) {
+            if (sneaking) return false;
+            if (held.isEmpty()) {
+                this.te.filter = null;
+                this.te.sync();
+            } else {
+                if (held.getItem() == ItemInit.WRENCH) {
+                    this.te.extractionAmountExact = !this.te.extractionAmountExact;
+                    this.te.sync();
+                } else {
+                    this.te.filter = new ItemFilterExact(held);
+                    this.te.sync();
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public boolean scroll(EntityPlayer player, boolean sneaking, ItemStack held, int direction) {
+            if (held.isEmpty() || held.getItem() != ItemInit.WRENCH) return false;
+            direction = MathHelper.floor(Math.signum(direction));
+            int old = this.te.extractionAmount;
+            if (sneaking) {
+                int temp = (this.te.extractionAmount >> 4) << 4;
+                this.te.extractionAmount = Math.max(Math.min(temp + (direction << 3), 64), 1);
+            } else {
+                this.te.extractionAmount = Math.max(Math.min(this.te.extractionAmount + direction, 64), 1);
+            }
+            if (this.te.extractionAmount != old) this.te.sync();
+            return true;
+        }
+    }
+}

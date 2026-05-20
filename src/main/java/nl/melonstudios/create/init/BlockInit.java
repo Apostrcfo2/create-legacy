@@ -13,8 +13,10 @@ import nl.melonstudios.create.CreateLegacy;
 import nl.melonstudios.create.block.*;
 import nl.melonstudios.create.block.actor.*;
 import nl.melonstudios.create.block.deco.*;
+import nl.melonstudios.create.block.funnel.BlockFunnelWall;
 import nl.melonstudios.create.block.generator.*;
 import nl.melonstudios.create.block.redstone.BlockRedstoneLatch;
+import nl.melonstudios.create.block.redstone.BlockRedstoneLinker;
 import nl.melonstudios.create.block.redstone.BlockRedstoneToggleLatch;
 import nl.melonstudios.create.item.ItemBlockBlazeBurner;
 import nl.melonstudios.create.item.ItemBlockDepotActor;
@@ -26,6 +28,8 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public final class BlockInit {
+    public static void load() {}
+
     public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 
     public static final BlockRender RENDER = registerBlock(new BlockRender());
@@ -173,6 +177,13 @@ public final class BlockInit {
     public static final BlockItemDrain ITEM_DRAIN = (BlockItemDrain)
             registerBlockWithItem(new BlockItemDrain()
             .setRegistryName("item_drain").setUnlocalizedName("create.item_drain"));
+
+    public static final BlockFunnelWall FUNNEL_ANDESITE_WALL = (BlockFunnelWall)
+            registerBlock(new BlockFunnelWall("andesite", false)
+            .setRegistryName("funnel_andesite_wall").setUnlocalizedName("create.funnel_andesite"));
+    public static final BlockFunnelWall FUNNEL_BRASS_WALL = (BlockFunnelWall)
+            registerBlock(new BlockFunnelWall("brass", true)
+            .setRegistryName("funnel_brass_wall").setUnlocalizedName("create.funnel_brass"));
     //endregion
 
     //region Redstone components
@@ -189,6 +200,13 @@ public final class BlockInit {
     public static final BlockRedstoneToggleLatch TOGGLE_LATCH_POWERED = (BlockRedstoneToggleLatch)
             registerBlock(new BlockRedstoneToggleLatch(true)
             .setRegistryName("toggle_latch_powered").setUnlocalizedName("create.toggle_latch"));
+
+    public static final BlockRedstoneLinker REDSTONE_LINKER = (BlockRedstoneLinker)
+            registerBlockWithItem(new BlockRedstoneLinker(false)
+            .setRegistryName("redstone_linker").setUnlocalizedName("create.redstone_linker"));
+    public static final BlockRedstoneLinker REDSTONE_LINKER_RECEIVER = (BlockRedstoneLinker)
+            registerBlock(new BlockRedstoneLinker(true)
+            .setRegistryName("redstone_linker_receiving").setUnlocalizedName("create.redstone_linker"));
     //endregion
 
     //region Decorations

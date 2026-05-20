@@ -272,14 +272,24 @@ public final class SubInteractionBox {
             }
         }
 
-        public static SubInteractionBox forFunnel(EnumFacing side, float size, Interaction interaction) {
+        public static SubInteractionBox forFunnel(EnumFacing side, float size, boolean flat, Interaction interaction) {
             Objects.requireNonNull(interaction, "Interaction cannot be null!");
             if (Objects.requireNonNull(side, "Side cannot be null!").getAxis() == EnumFacing.Axis.Y) {
                 throw new IllegalArgumentException("Side must be horizontal!");
             }
             float halfSize = size * 0.5F;
+            if (!flat) return new SubInteractionBox(0.5F-halfSize, 0.75F-halfSize, 0.5F-halfSize, size, interaction);
             switch (side) {
-                default:throw new IllegalArgumentException("???");
+                case NORTH:
+                    return new SubInteractionBox(0.5F-halfSize, 0.75F-halfSize, 0.75F-halfSize, size, interaction);
+                case SOUTH:
+                    return new SubInteractionBox(0.5F-halfSize, 0.75F-halfSize, 0.25F-halfSize, size, interaction);
+                case WEST:
+                    return new SubInteractionBox(0.75F-halfSize, 0.75F-halfSize, 0.5F-halfSize, size, interaction);
+                case EAST:
+                    return new SubInteractionBox(0.25F-halfSize, 0.75F-halfSize, 0.5F-halfSize, size, interaction);
+                default:
+                    throw new IllegalArgumentException("Unexpected value: " + side);
             }
         }
 

@@ -18,7 +18,10 @@ import nl.melonstudios.create.recipe.server.MixingRecipes;
 import nl.melonstudios.create.recipe.server.PressingRecipes;
 import nl.melonstudios.create.tileentity.*;
 import nl.melonstudios.create.tileentity.actor.*;
+import nl.melonstudios.create.tileentity.funnel.TileEntityFunnelWall;
+import nl.melonstudios.create.tileentity.funnel.TileEntityFunnelWallAdvanced;
 import nl.melonstudios.create.tileentity.generator.*;
+import nl.melonstudios.create.tileentity.redstone.TileEntityRedstoneLinker;
 
 public class CommonProxy {
     public Side getSide() {
@@ -85,6 +88,9 @@ public class CommonProxy {
         this.registerTE(TileEntityBeltStraight.class, "belt_straight");
         this.registerTE(TileEntityBeltDiagonal.class, "belt_diagonal");
         this.registerTE(TileEntityItemDrain.class, "item_drain");
+        this.registerTE(TileEntityFunnelWall.class, "funnel_wall");
+        this.registerTE(TileEntityFunnelWallAdvanced.class, "funnel_wall_advanced");
+        this.registerTE(TileEntityRedstoneLinker.class, "redstone_linker");
     }
     public void registerEntityRenderers() {}
 

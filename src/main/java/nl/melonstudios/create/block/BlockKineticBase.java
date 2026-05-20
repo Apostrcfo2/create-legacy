@@ -59,6 +59,21 @@ public abstract class BlockKineticBase extends Block implements IRotate, IGoggle
     public static boolean isPosPowered(World world, BlockPos pos) {
         return world.isBlockPowered(pos) || world.isBlockIndirectlyGettingPowered(pos) > 0;
     }
+    public static int getPosPower(World world, BlockPos pos) {
+        int power = world.getRedstonePower(pos.down(), EnumFacing.DOWN);
+        if (power >= 15) return power;
+        power = Math.max(power, world.getRedstonePower(pos.up(), EnumFacing.UP));
+        if (power >= 15) return power;
+        power = Math.max(power, world.getRedstonePower(pos.north(), EnumFacing.NORTH));
+        if (power >= 15) return power;
+        power = Math.max(power, world.getRedstonePower(pos.south(), EnumFacing.SOUTH));
+        if (power >= 15) return power;
+        power = Math.max(power, world.getRedstonePower(pos.east(), EnumFacing.EAST));
+        if (power >= 15) return power;
+        power = Math.max(power, world.getRedstonePower(pos.west(), EnumFacing.WEST));
+        if (power >= 15) return power;
+        return Math.max(power, world.isBlockIndirectlyGettingPowered(pos));
+    }
 
     @Override
     public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {

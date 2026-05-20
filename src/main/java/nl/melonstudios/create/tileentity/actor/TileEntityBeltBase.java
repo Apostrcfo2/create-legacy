@@ -378,6 +378,16 @@ public abstract class TileEntityBeltBase extends TileEntityKinetic implements IT
     }
 
     @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        if (this.block().isFunctional(this.getState()) && this.getSpeed() != 0.0F) {
+            if (this.getFlag()) {
+                return this.left.isEmpty();
+            } else return this.right.isEmpty();
+        }
+        return false;
+    }
+
+    @Override
     public ItemStack tryInsertItem(ItemStack stack, @Nullable EnumFacing side) {
         if (this.getSpeed() != 0.0F && side != null && this.block().isFunctional(this.getState())) {
             if (EnumFacing.getFacingFromAxis(this.getFlag() ? EnumFacing.AxisDirection.NEGATIVE : EnumFacing.AxisDirection.POSITIVE,

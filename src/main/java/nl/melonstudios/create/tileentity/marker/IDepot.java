@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 public interface IDepot {
     ItemStack getPresentedItem();
+    void setPresentedItem(ItemStack stack);
     void decreasePresentedAndAddOutput(ItemStack output);
     double getItemHeight();
     boolean isWool();

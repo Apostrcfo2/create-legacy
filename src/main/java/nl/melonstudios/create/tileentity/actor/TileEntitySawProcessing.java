@@ -318,6 +318,11 @@ public class TileEntitySawProcessing extends TileEntityKinetic implements ITileE
     }
 
     @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        return this.currentlyProcessing.isEmpty() && this.outputQueue.isEmpty();
+    }
+
+    @Override
     public int getSlots() {
         return 2;
     }

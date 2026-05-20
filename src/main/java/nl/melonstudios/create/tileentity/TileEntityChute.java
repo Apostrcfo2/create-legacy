@@ -219,4 +219,9 @@ public class TileEntityChute extends TileEntityOptimizedBase implements IItemHan
             } else return stack;
         } else return stack;
     }
+
+    @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        return this.stack.isEmpty();
+    }
 }

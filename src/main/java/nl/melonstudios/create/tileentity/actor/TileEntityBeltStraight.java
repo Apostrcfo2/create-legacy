@@ -86,6 +86,17 @@ public class TileEntityBeltStraight extends TileEntityBeltBase implements IDepot
     }
 
     @Override
+    public void setPresentedItem(ItemStack stack) {
+        if (this.getSpeed() == 0.0F) return;
+        if (this.getFlag()) {
+            this.left = stack;
+        } else {
+            this.right = stack;
+        }
+        this.sync();
+    }
+
+    @Override
     public void decreasePresentedAndAddOutput(ItemStack output) {
         if (this.getSpeed() == 0.0F) throw new UnsupportedOperationException("How did this even happen?");
         if (this.getFlag()) {

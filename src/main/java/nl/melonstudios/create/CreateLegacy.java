@@ -41,6 +41,8 @@ public class CreateLegacy {
 
     // Pre pre init
     static {
+        BlockInit.load();
+        ItemInit.load();
         FluidInit.init();
     }
 

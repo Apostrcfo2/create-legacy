@@ -35,7 +35,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @SideOnly(Side.CLIENT)
-public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileEntitySpecialRenderer<T> {
+public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TESRBase<T> {
     private static boolean porkchop = false;
     private static final ResourceLocation PORK =
             new ResourceLocation("create", "textures/pork.png");
@@ -48,8 +48,7 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
     }
 
     public TESRKineticBase() {
-        this.rendererDispatcher = TileEntityRendererDispatcher.instance;
-        this.mc = Minecraft.getMinecraft();
+        super();
         this.shaftX = BlockInit.SHAFT.getStateFromMeta(0);
         this.shaftY = BlockInit.SHAFT.getStateFromMeta(1);
         this.shaftZ = BlockInit.SHAFT.getStateFromMeta(2);
@@ -60,13 +59,6 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
             this.shaftlessCogs[axis.ordinal()] = BlockRender.byEnum(EnumRenderPart.getShaftlessCog(axis));
         }
     }
-
-    private static final boolean USE_LOCAL_TIME = true;
-    protected final float getAdjustedTime(float pt) {
-        return USE_LOCAL_TIME ? CreateLegacy.getRenderTimeF(pt) : this.getWorld().getTotalWorldTime() + pt;
-    }
-
-    protected final Minecraft mc;
     protected final IBlockState shaftX, shaftY, shaftZ;
     protected final IBlockState[] halfShafts = new IBlockState[6];
     protected final IBlockState[] shaftlessCogs = new IBlockState[3];
@@ -140,38 +132,6 @@ public abstract class TESRKineticBase<T extends TileEntityKinetic> extends TileE
         float time = this.getAdjustedTime(pt);
 
         return ((time * 0.3F * te.getSpeed() * m) % 360) + (addOffset ? te.getAxisShift(axis) : 0.0F);
-    }
-
-    private static final HashSet<Class<?>> VIOLATORS = new HashSet<>();
-    protected final void renderBakedModel(float brightness, IBakedModel model, @Nullable IBlockState state) {
-        long start = System.nanoTime();
-        if (ClientConfig.fastKineticRendering) {
-            if (state != null) {
-                FastStateRendering.INSTANCE.renderFast(state);
-                PerFrameDebugInfo.renderTimeNs += (System.nanoTime() - start);
-                return;
-            } else {
-                if (VIOLATORS.add(this.getClass())) {
-                    CreateLegacy.logger.error("{} tried to fast render model but state was null", this.getClass().getName());
-                }
-            }
-        }
-        for (EnumFacing facing : EnumFacing.VALUES) this.renderBakedQuads(brightness, model.getQuads(state, facing, 0));
-        this.renderBakedQuads(brightness, model.getQuads(state, null, 0));
-        PerFrameDebugInfo.renderTimeNs += (System.nanoTime() - start);
-    }
-    protected final void renderBakedQuads(float brightness, List<BakedQuad> quads) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        for (BakedQuad quad : quads) {
-            builder.begin(7, DefaultVertexFormats.ITEM);
-            builder.addVertexData(quad.getVertexData());
-            builder.putColorRGB_F4(brightness, brightness, brightness);
-
-            Vec3i vec3i = quad.getFace().getDirectionVec();
-            builder.putNormal(vec3i.getX(), vec3i.getY(), vec3i.getZ());
-            tessellator.draw();
-        }
     }
 
     public static boolean isAxisShifted(BlockPos pos, EnumFacing.Axis axis) {

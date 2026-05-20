@@ -160,6 +160,7 @@ public class Utils {
         if (optimized != null) optimized.preventNextRemoval();
         world.setBlockState(pos, state, flags);
         if (te != null) {
+            world.removeTileEntity(pos);
             te.validate();
             world.setTileEntity(pos, te);
             te.updateContainingBlockInfo();

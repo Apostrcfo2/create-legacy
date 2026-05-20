@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import nl.melonstudios.create.tileentity.marker.ITopOpenInventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,10 +23,18 @@ public abstract class MixinTileEntityHopper implements ITopOpenInventory {
         return null;
     }
 
+    @Shadow
+    private NonNullList<ItemStack> inventory;
+
     @Override
     public ItemStack tryInsertItem(ItemStack stack) {
         if (this.isFull() || stack.isEmpty()) return stack;
         ((TileEntity)(Object)this).markDirty();
         return this.putStackInInventoryAllSlots(null, (IInventory) this, stack.copy(), EnumFacing.UP);
+    }
+
+    @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        return true;
     }
 }

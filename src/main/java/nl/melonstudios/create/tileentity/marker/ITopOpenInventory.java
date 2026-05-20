@@ -13,6 +13,8 @@ public interface ITopOpenInventory {
      */
     ItemStack tryInsertItem(ItemStack stack);
 
+    boolean isInsertionSlotEmpty(ItemStack stack);
+
     /**
      * Inserts an item into this inventory from a specific side, in the sense of "sliding it on top".
      * Direction sensitive version. Defaults to null side.

@@ -13,6 +13,7 @@ import nl.melonstudios.create.block.deco.BlockWindowIron;
 import nl.melonstudios.create.block.deco.BlockWindowWood;
 import nl.melonstudios.create.block.state.EnumOrestoneVariant;
 import nl.melonstudios.create.item.*;
+import nl.melonstudios.create.util.FunnelSets;
 import nl.melonstudios.create.util.ModTabs;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public final class ItemInit {
+    public static void load() {}
+
     public static final CreativeTabs TAB_CREATE = new ModTabs("create", () -> new ItemStack(BlockInit.COG_SMALL));
     public static final CreativeTabs TAB_CREATE_DECORATIONS = new ModTabs("create.decorations", () -> new ItemStack(BlockInit.WINDOW_IRON));
 
@@ -51,6 +54,9 @@ public final class ItemInit {
     public static final ItemAssembly ASSEMBLY = registerItem(new ItemAssembly());
     public static final ItemSceneWand SCENE_WAND = registerItem(new ItemSceneWand());
 
+    public static final ItemBlockFunnel FUNNEL_ANDESITE = registerItem(new ItemBlockFunnel("andesite"));
+    public static final ItemBlockFunnel FUNNEL_BRASS = registerItem(new ItemBlockFunnel("brass"));
+
     private static <T extends Item> T registerItem(T item) {
         ITEMS.add(item);
         return item;
@@ -76,6 +82,8 @@ public final class ItemInit {
         CreateLegacy.proxy.setItemModel(SCENE_WAND);
         CreateLegacy.proxy.setItemModel(ASSEMBLY, 0, "assembly/" + ItemAssembly.NAME_LOOKUP[0]);
         CreateLegacy.proxy.setItemModel(ASSEMBLY, 1, "assembly/" + ItemAssembly.NAME_LOOKUP[1]);
+        CreateLegacy.proxy.setItemModel(FUNNEL_ANDESITE);
+        CreateLegacy.proxy.setItemModel(FUNNEL_BRASS);
 
         // blocks
         CreateLegacy.proxy.setItemModel(BlockInit.ORE, 0, "ore_copper");
@@ -132,6 +140,7 @@ public final class ItemInit {
 
         CreateLegacy.proxy.setItemModel(BlockInit.LATCH);
         CreateLegacy.proxy.setItemModel(BlockInit.TOGGLE_LATCH);
+        CreateLegacy.proxy.setItemModel(BlockInit.REDSTONE_LINKER);
 
         for (int i = 0; i < 4; i++) {
             String type = BlockFramedGlass.Variant.byId(i).getName();

@@ -263,6 +263,14 @@ public class TileEntityBasin extends TileEntityOptimizedBase implements ITileEnt
     }
 
     @Override
+    public boolean isInsertionSlotEmpty(ItemStack stack) {
+        return stack.getCount() <= 16 &&
+                this.inventory.stream().noneMatch(item ->
+                        (ItemStack.areItemsEqual(item, stack) && ItemStack.areItemStackTagsEqual(item, stack))
+                );
+    }
+
+    @Override
     public int getSlots() {
         return this.inventory.size()+1;
     }
