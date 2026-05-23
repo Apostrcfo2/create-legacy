@@ -1,0 +1,142 @@
+# Translation by Apostrcfo
+
+#basic copper items
+item.create:ingot_copper.name=Barra de Cobre
+item.create:nugget_copper.name=Pepita de Cobre
+item.create:plate_copper.name=Placa de Cobre
+
+#basic zinc items
+item.create:ingot_zinc.name=Barra de Zinco
+item.create:nugget_zinc.name=Pepita de Zinco
+item.create:plate_zinc.name=Placa de Zinco
+
+#basic brass items
+item.create:ingot_brass.name=Barra de Latão
+item.create:nugget_brass.name=Pepita de Latão
+item.create:plate_brass.name=Placa de Latão
+
+#other basic items
+item.create:andesite_alloy.name=Liga de Andesito
+item.create:plate_gold.name=Placa de Ouro
+item.create:plate_iron.name=Placa de Ferro
+item.create:plate_obsidian.name=Placa de Obsidiana Reforçada
+item.create:rose_quartz.name=Quartzo Rosa
+item.create:rose_quartz_polished.name=Quartzo Rosa Polido
+
+#dust items
+item.create:dust_netherrack.name=Pó de Netherrack
+item.create:dust_obsidian.name=Pó de Obsidiana
+
+#crushed items
+item.create:crushed_iron.name=Ferro Triturado
+item.create:crushed_gold.name=Ouro Triturado
+item.create:crushed_copper.name=Cobre Triturado
+item.create:crushed_zinc.name=Zinco Triturado
+
+#crushed items (compat)
+item.create:crushed_aluminium.name=Alumínio Triturado
+item.create:crushed_lead.name=Chumbo Triturado
+item.create:crushed_nickel.name=Níquel Triturado
+item.create:crushed_osmium.name=Ósmio Triturado
+item.create:crushed_platinum.name=Platina Triturada
+item.create:crushed_quicksilver.name=Mercúrio Triturado
+item.create:crushed_silver.name=Prata Triturada
+item.create:crushed_tin.name=Estanho Triturado
+item.create:crushed_uranium.name=Urânio Triturado
+
+#Food n stuff
+item.create:wheat_flour.name=Farinha de Trigo
+item.create:dough.name=Massa
+item.create:chocolate_ingot.name=Barra de Chocolate
+item.create:apple_honey.name=Maçã com Mel
+item.create:sweet_roll.name=Pão Doce
+item.create:chocolate_berries.name=Frutas com Chocolate
+item.create:blazecake_base.name=Base de Blazecake
+item.create:blazecake.name=Blazecake
+item.create:blazecake_creative.name=Blazecake (Criativo)
+
+#material storage blocks & ores
+tile.create:ore_copper.name=Minério de Cobre
+tile.create:ore_zinc.name=Minério de Zinco
+tile.create:storage_block_copper.name=Bloco de Cobre
+tile.create:storage_block_zinc.name=Bloco de Zinco
+tile.create:storage_block_brass.name=Bloco de Latão
+tile.create:storage_block_andesite_alloy.name=Bloco de Liga de Andesito
+
+#Advanced ingredients
+item.create:whisk.name=Batedor
+item.create:propeller.name=Hélice
+item.create:electron_tube.name=Tubo Eletrônico
+item.create:brass_hand.name=Mão de Latão
+item.create:integrated_circuit.name=Circuito Integrado
+item.create:precision_mechanism.name=Mecanismo de Precisão
+item.create:shadow_steel.name=Aço Sombrio
+item.create:refined_radiance.name=Radiância Refinada
+
+#casings
+tile.create:casing_andesite.name=Revestimento de Andesito
+tile.create:casing_copper.name=Revestimento de Cobre
+tile.create:casing_brass.name=Revestimento de Latão
+tile.create:casing_train.name=Revestimento de Trem
+
+#Kinetic Appliances
+tile.create:axle.name=Eixo
+tile.create:cogwheel.name=Engrenagem
+tile.create:hand_crank.name=Manivela
+tile.create:depot.name=Depósito
+tile.create:basin.name=Bacia
+tile.create:blaze_burner_empty.name=Queimador de Blaze (Vazio)
+tile.create:blaze_burner_passive.name=Queimador de Blaze
+tile.create:blaze_burner_heated.name=Queimador de Blaze Aquecido
+tile.create:blaze_burner_superheated.name=Queimador de Blaze Superaquecido
+tile.create:creative_motor.name=Motor Criativo
+tile.create:water_wheel.name=Roda d'Água
+tile.create:furnace_engine.name=Motor de Fornalha
+tile.create:furnace_flywheel.name=Volante de Fornalha
+tile.create:drill.name=Broca Mecânica
+tile.create:saw.name=Serra Mecânica
+tile.create:press.name=Prensa Mecânica
+tile.create:mixer.name=Misturador Mecânico
+tile.create:fan.name=Ventilador com Revestimento
+tile.create:chassis.name=Chassi
+tile.create:gearbox.name=Caixa de Engrenagens
+tile.create:clutch.name=Embreagem
+tile.create:gearshift.name=Seletor de Marcha
+tile.create:axle_encased_andesite.name=Eixo com Revestimento de Andesito
+tile.create:axle_encased_brass.name=Eixo com Revestimento de Latão
+tile.create:belt.name=Correia Mecânica
+tile.create:chute.name=Calha
+tile.create:funnel.name=Funil de Andesito
+tile.create:funnel_advanced.name=Funil de Latão
+tile.create:millstone.name=Moinho
+tile.create:piston.name=Pistão Mecânico
+tile.create:piston_sticky.name=Pistão Mecânico Grudento
+tile.create:piston_pole.name=Extensão de Pistão
+
+#Overige
+itemGroup.tab_create=Create
+itemGroup.tab_create_decorations=Decorações do Create
+itemGroup.tab_create_other=Outros Blocos do Create
+item.create:evil_item.create:name=Item Maligno!
+item.create:sandpaper.name=Lixa
+item.create:incomplete_precision_mechanism.name=Mecanismo de Precisão Incompleto
+item.create:incomplete_plate_obsidian.name=Placa de Obsidiana Não Processada
+tile.create:schedule_wash.name=Agendar Lavagem com Ventilador
+tile.create:schedule_cook.name=Agendar Cozimento com Ventilador
+tile.create:network_inspector_speed.name=Velocímetro
+tile.create:network_inspector_stress.name=Medidor de Estresse
+tile.create:deployer.name=Implantador
+
+item.create:wrench.name=Chave Inglesa
+
+item.create:filter_ore_dict.name=Filtro de Minérios
+message.create:filter.set=Filtro definido para
+message.create:filter.clear=Filtro limpo
+
+tooltip.stressImpact=Impacto de Estresse Cinético: %d x RS
+tooltip.stressCapacity=Capacidade de Estresse Cinético: %d x RS
+
+tile.create:chigwanker.name=Chigwanker Mecindustrial
+
+networkContext.infiniteSU=Sem estresse na rede
+networkContext.noData=Nenhum dado encontrado
